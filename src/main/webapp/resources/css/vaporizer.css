@@ -1,0 +1,63 @@
+.body
+{
+	font-family:verdana;
+}
+
+.oddTd{
+	background:#BDBDBD;
+}
+.header{
+	background:#000;
+	width:100%;
+	min-height:40px;
+	height:20%;
+	padding-left:10px
+}
+.headerV{
+	font-family:verdana;
+	 font-size:40px; 
+	color:red;
+}
+
+.headerRest
+{
+	font-family:verdana;
+	font-size:35px; 
+	color:#fff;
+}
+.mainContent{
+	
+	margin:20px;
+	height:800px;
+}
+.container
+{
+	padding:0px !important;	
+	width:100% !important;
+	border:2px solid black;
+}
+.table_header_details{
+	background:black;
+	color:white;
+	font:verdana;
+	text-align:center;
+}
+.credential_container
+{
+	width:100% !important;
+	background:green;
+}
+.vaporizerTr th
+{
+	
+	background:black !important;
+	color:white !important;
+	font-family:verdana !important;
+	font-weight:normal !important;
+	
+}
+.mappingTableSection{
+	
+	 width:100% !important; 
+	 background:red;
+}
