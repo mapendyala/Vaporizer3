@@ -88,43 +88,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="mappingTableSection">
-				dedfsdfsf
-				<!-- <table class="table">
-					<tr class="vaporizerTr">
-						<th>Firstname</th>
-						<th>Lastname</th>
-						<th>Savings</th>
-						<th>Firstname</th>
-						<th>Lastname</th>
-						<th>Savings</th>
-						<th>Firstname</th>
-						<th>Lastname</th>
-						<th>Savings</th>
-						<th>Firstname</th>
-						<th>Lastname</th>
-						<th>Savings</th>
-
-					</tr>
-					<tr>
-						<td>Peter</td>
-						<td>Griffin</td>
-						<td>$100</td>
-						<td>Peter</td>
-						<td>Griffin</td>
-						<td>$100</td>
-						<td>Peter</td>
-						<td>Griffin</td>
-						<td>$100</td>
-						<td>Peter</td>
-						<td>Griffin</td>
-						<td>$100</td>
-
-					</tr>
-
-
-				</table> -->
-			</div>
+			
 		</div>
 	</div>
 </body>
