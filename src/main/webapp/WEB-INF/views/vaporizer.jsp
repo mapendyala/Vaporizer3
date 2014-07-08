@@ -101,13 +101,13 @@
 						<th>Add Ons</th>						
 					</tr>
 					
-					<c:forEach items="${displayProduct}" var="p">
+				<%-- 	<c:forEach items="${displayProduct}" var="p">
     <tr>
         <td><c:out value="${p.name}"/></td>
         <td><c:out value="${p.price}"/></td>
         <td><c:out value="${p.quantity}"/></td>
     </tr>
-</c:forEach>
+</c:forEach> --%>
 					
 				</table>
 			</div>
