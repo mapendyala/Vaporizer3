@@ -29,9 +29,7 @@
 </head>
 <body>
 	<div class="container">
-		<div class="header">
-			<span class="headerV">V</span><span class="headerRest">aporizer</span>
-		</div>
+		
 		<div class="mainContent">
 			<div class="credential_container">
 				<div>
@@ -47,49 +45,77 @@
 					</div>
 				</div>
 				<div>
-					<div style="float: left; width: 50%">
+					<div style="float: left; width: 48%">
 						<div class="table_header_details">Seibel</div>
 						<div>
-						<table class="table">
-							<tr>
-								<td class="oddTd">Siebel DSN</td>
-								<td>SBLDB</td>
-							</tr>
-							<tr>
-								<td class="oddTd">Seibel Login</td>
-								<td>SnetUser1</td>
-							<tr>
-								<td class="oddTd">Seibel Password</td>
-								<td>SnetUser1</td>
-							</tr>
+							<table class="table">
+								<tr>
+									<td class="oddTd">Siebel DSN</td>
+									<td>SBLDB</td>
+								</tr>
+								<tr>
+									<td class="oddTd">Seibel Login</td>
+									<td>SnetUser1</td>
+								<tr>
+									<td class="oddTd">Seibel Password</td>
+									<td>SnetUser1</td>
+								</tr>
 
-						</table>
+							</table>
 						</div>
 					</div>
 					<div style="float: right; width: 50%">
 						<div class="table_header_details">SFDC</div>
 						<div>
-						
-						<table class="table">
-							<tr>
-								<td class="oddTd">SFDC Login</td>
-								<td>ranfernandes@deloitte.com.data</td>
-							</tr>
-							<tr>
-								<td class="oddTd">SFDC Password</td>
-								<td>93458f2aa223f884bfbb35e36e182ef1</td>
-							</tr>
-							<tr>
-								<td class="oddTd"></td>
-								<td></td>
-							</tr>
-						</table>
+
+							<table class="table">
+								<tr>
+									<td class="oddTd">SFDC Login</td>
+									<td>ranfernandes@deloitte.com.data</td>
+								</tr>
+								<tr>
+									<td class="oddTd">SFDC Password</td>
+									<td>93458f2aa223f884bfbb35e36e182ef1</td>
+								</tr>
+								<tr>
+									<td class="oddTd"></td>
+									<td></td>
+								</tr>
+							</table>
 						</div>
 					</div>
 				</div>
 			</div>
-			
+			<div class="mappingContainer" style="height: 500px;width:100%;">
+				<table class="table" style="margin:0px !important;">
+					<tr>
+						<th>Migrate?</th>
+						<th>Sequence</th>
+						<th>Siebel Object</th>
+						<th>Primary Base Table</th>
+						<th>Threshold</th>
+						<th>Child Base tables</th>
+						<th>SFDC Object</th>
+						<th>Mapping</th>
+						<th>Status</th>
+						<th>Add Ons</th>						
+					</tr>
+					
+					<c:forEach items="${displayProduct}" var="p">
+    <tr>
+        <td><c:out value="${p.name}"/></td>
+        <td><c:out value="${p.price}"/></td>
+        <td><c:out value="${p.quantity}"/></td>
+    </tr>
+</c:forEach>
+					
+				</table>
+			</div>
 		</div>
+
+
+
+
 	</div>
 </body>
 </html>
