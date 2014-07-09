@@ -1,6 +1,7 @@
 .body
 {
 	font-family:verdana;
+	overflow: hidden !important;
 }
 .table {
     width: 100%;
@@ -26,7 +27,7 @@
 
 .headerRest
 {
-	font-family:verdana;
+	font-family:verdana !important;
 	font-size:35px; 
 	color:#fff;
 }
@@ -44,9 +45,10 @@
 .table_header_details{
 	background:black;
 	color:white;
-	font:verdana;
+	font:verdana !important;
 	text-align:center;
 	height:35px;
+	padding:8px;
 }
 .credential_container
 {

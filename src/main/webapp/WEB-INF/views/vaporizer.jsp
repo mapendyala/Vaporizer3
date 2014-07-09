@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 
 <%@ page session="false"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -101,13 +101,27 @@
 						<th>Add Ons</th>						
 					</tr>
 					
-				<%-- 	<c:forEach items="${displayProduct}" var="p">
-    <tr>
-        <td><c:out value="${p.name}"/></td>
-        <td><c:out value="${p.price}"/></td>
-        <td><c:out value="${p.quantity}"/></td>
-    </tr>
-</c:forEach> --%>
+					<c:forEach  var="i" begin="1" end="5" >
+					
+					    <tr>
+					        <td><input type="checkbox" /></td>
+					        <td><c:out value="${i}"/></td>
+					         <td><c:out value="${i}"/></td>
+					          <td><c:out value="${i}"/></td>
+					           <td><input type="number" name="quantity" min="1" max="5" style="width:40px"></td>
+					            <td><a href="">Select</a></td>
+					             <td><c:out value="${i}"/></td>
+					              <td><a href="">Select</a></td>
+					               <td><c:out value="${i}"/></td>
+					                <td>
+					                <input class="btn btn-inverse" type="button" name="Extract" value="E"/>
+					                <input class="btn btn-inverse" type="button" name="transform" value="T"/>
+					                <input  class="btn btn-inverse" type="button" name="delete" value="-"/>
+					                </td>
+					           
+					        <%-- <td><c:out value="${p.quantity}"/></td> --%>
+					    </tr>
+					</c:forEach> 
 					
 				</table>
 			</div>
