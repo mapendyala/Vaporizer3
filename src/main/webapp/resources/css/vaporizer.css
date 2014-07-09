@@ -24,7 +24,13 @@
 	 font-size:40px; 
 	color:red;
 }
-
+.buttonContainer
+{
+	text-align: right !Important;
+	float:right;
+	padding-top:20px;
+	
+}
 .headerRest
 {
 	font-family:verdana !important;

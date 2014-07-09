@@ -1,6 +1,7 @@
 package com.force.example.fulfillment;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -31,8 +32,13 @@ public class HomeController {
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
 		
 		String formattedDate = dateFormat.format(date);
-		
+		ArrayList<String> siebelList=new ArrayList<String>();
+		siebelList.add("Account");
+		siebelList.add("Contact");
+		siebelList.add("Order");
+		siebelList.add("Vaporizer");
 		model.addAttribute("serverTime", formattedDate );
+		model.addAttribute("siebelList",siebelList);
 		
 		return "vaporizer";
 	}

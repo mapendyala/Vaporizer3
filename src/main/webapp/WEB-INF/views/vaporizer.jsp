@@ -86,7 +86,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="mappingContainer" style="height: 500px;width:100%;">
+			<div class="mappingContainer" style="width:100%;">
 				<table class="table" style="margin:0px !important;">
 					<tr>
 						<th>Migrate?</th>
@@ -123,6 +123,43 @@
 					    </tr>
 					</c:forEach> 
 					
+				</table>
+			</div>
+			<div class="buttonContainer">
+				<table style="border: 0">
+					<tr>
+						<td colspan="2"
+							style="float: right; width: 350px; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
+							<input class="btn btn-block btn-inverse" type="button"
+							name="Extract" value="Extract All" />
+						</td>
+					</tr>
+					<tr>
+						<td
+							style="float: left;  padding: 50px; width: 450px !Important; padding-top: 10px; padding-bottom: 10px;">
+							<input type="text" style="width:100%;" placeholder="CSV Location" />
+						</td>
+						<td
+							style="float: right; padding: 50px;width:350px !Important; padding-top: 10px; padding-bottom: 10px;">
+							<input class="btn btn-block btn-inverse" type="button"
+							name="Location" value="CSV File location" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2"
+							style="float: right; width:350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
+							<input class="btn btn-block btn-inverse" type="button"
+							name="Extract" value="Create CSV File" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2"
+							style="float: right; width: 350px; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
+							<input class="btn btn-block btn-inverse" type="button"
+							name="Extract" value="Migrate To SFDC" />
+						</td>
+					</tr>
+
 				</table>
 			</div>
 		</div>
