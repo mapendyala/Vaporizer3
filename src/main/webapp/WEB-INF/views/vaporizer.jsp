@@ -11,9 +11,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="stylesheet"
-	href="<c:url value="/resources/css/vaporizer.css" />" type="text/css"
-	media="screen, projection">
+
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet"
 	href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
@@ -23,8 +21,20 @@
 	href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 
 <!-- Latest compiled and minified JavaScript -->
+<link rel="stylesheet"
+	href="<c:url value="/resources/css/vaporizer.css" />" type="text/css"
+	media="screen, projection">
 <script
 	src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<style type="text/css">
+	
+	
+	.btn .btn-block .btn-inverse :HOVER
+{
+	background-color: black !Important;
+	color: white !Important;
+}
+</style>
 <title>Vaporizer</title>
 </head>
 <body>

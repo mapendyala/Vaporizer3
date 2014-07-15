@@ -3,6 +3,7 @@
 	font-family:verdana;
 	overflow: hidden !important;
 }
+/* created by piyush */
 .table {
     width: 100%;
     max-width: 100%;
@@ -11,6 +12,11 @@
 
 .oddTd{
 	background:#BDBDBD;
+}
+.btn :HOVER
+{
+	background-color: black !Important;
+	color: white !Important;
 }
 .header{
 	background:#000;
