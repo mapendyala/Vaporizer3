@@ -17,6 +17,8 @@ import canvas.CanvasContext;
 import canvas.CanvasEnvironmentContext;
 import canvas.CanvasRequest;
 import canvas.SignedRequest;
+
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
@@ -57,6 +59,7 @@ public class CanvasUIController {
     @RequestMapping(method= RequestMethod.POST)
     public String postSignedRequest(Model model,@RequestParam(value="signed_request")String signedRequest, HttpServletRequest request){
         String srJson = SignedRequest.verifyAndDecodeAsJson(signedRequest, getConsumerSecret());
+        JSONObject json= new JSONObject(srJson);
         CanvasRequest cr = SignedRequest.verifyAndDecode(signedRequest, getConsumerSecret());
         HttpSession session = request.getSession(true);
         model.addAttribute(SIGNED_REQUEST, srJson);
