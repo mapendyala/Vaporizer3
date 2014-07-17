@@ -17,6 +17,8 @@ import canvas.CanvasContext;
 import canvas.CanvasEnvironmentContext;
 import canvas.CanvasRequest;
 import canvas.SignedRequest;
+
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
@@ -57,35 +59,18 @@ public class CanvasUIController {
     @RequestMapping(method= RequestMethod.POST)
     public String postSignedRequest(Model model,@RequestParam(value="signed_request")String signedRequest, HttpServletRequest request){
         String srJson = SignedRequest.verifyAndDecodeAsJson(signedRequest, getConsumerSecret());
+        JSONObject json= new JSONObject(srJson);
         CanvasRequest cr = SignedRequest.verifyAndDecode(signedRequest, getConsumerSecret());
         HttpSession session = request.getSession(true);
         model.addAttribute(SIGNED_REQUEST, srJson);
         cc = cr.getContext();
         CanvasEnvironmentContext ce = cc.getEnvironmentContext();
         Map<String, Object> params = ce.getParameters();
-        if (params.containsKey("orderId")) {
-            invoiceService.setSignedRequest(cr);
-            Integer orderId = Integer.parseInt(params.get("orderId").toString());
-            if(orderId != null) {
-                Order order = orderService.findOrder(orderId);
-                if (order == null) {
-                    throw new ResourceNotFoundException(orderId);
-                }
-                model.addAttribute("order", order);
-
-                Invoice invoice;
-                try {
-                    invoice = invoiceService.findInvoice(order.getId());
-                } catch (ApiException ae) {
-                    // No match
-                    invoice = new Invoice();
-                }
-                model.addAttribute("invoice", invoice);
-
-                return "order";
-            }
-        }
-        return getOrdersPage(model);
+        JSONObject parameters=json.getJSONObject("context").getJSONObject("environment").getJSONObject("parameters");
+        String projectId=parameters.getString("projectId");
+    	
+ 	   session.setAttribute("projectId", projectId);
+ 	  return "vaporizer";
     }
 
     @RequestMapping(method=RequestMethod.GET)
