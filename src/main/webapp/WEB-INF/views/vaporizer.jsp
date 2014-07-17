@@ -39,7 +39,8 @@
 </head>
 <body>
 	<div class="container">
-		
+		<h6>${error}</h6>
+		<h6>${databaseUrl}</h6>
 		<div class="mainContent">
 			<div class="credential_container">
 				<div>
@@ -81,7 +82,7 @@
 					           <td><input type="number" name="quantity" min="1" max="5" style="width:40px"></td>
 					            <td><a href="">Select</a></td>
 					             <td><c:out value="${i}"/></td>
-					              <td><a href="">Select</a></td>
+					              <td><a href="mapping">Select</a></td>
 					               <td><c:out value="${i}"/></td>
 					                <td>
 					                <input class="btn btn-inverse" type="button" name="Extract" value="E"/>
