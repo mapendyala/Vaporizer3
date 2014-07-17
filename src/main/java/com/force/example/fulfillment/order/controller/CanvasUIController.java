@@ -1,5 +1,6 @@
 package com.force.example.fulfillment.order.controller;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,6 +32,10 @@ import com.force.example.fulfillment.order.service.OrderService;
 import com.force.api.ApiException;
 import com.force.example.fulfillment.order.model.Invoice;
 import com.force.example.fulfillment.order.service.InvoiceService;
+import com.force.partner.PartnerWSDL;
+import com.force.utility.UtilityClass;
+import com.sforce.ws.ConnectionException;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -70,6 +75,16 @@ public class CanvasUIController {
         String projectId=parameters.getString("projectId");
     	
  	   session.setAttribute("projectId", projectId);
+ 	   PartnerWSDL partnerWSDL= new PartnerWSDL();
+ 	   partnerWSDL.login();
+ 	   JSONObject connectionData=partnerWSDL.getConnectionData(projectId);
+ 	   UtilityClass utilityClass= new UtilityClass();
+ 	   try {
+ 		   utilityClass.getConnection(connectionData);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			model.addAttribute("error", "Connection to Siebel database unsuccessful. Either username/password/DatabaseUrl is incorrect.");
+		}
  	  return "vaporizer";
     }
 
