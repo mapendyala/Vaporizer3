@@ -29,8 +29,8 @@ public class PartnerWSDL {
 	 * String username = "smansuri@deloitte.com.dev"; String password =
 	 * "shama33#ruqxL5DhkZdN6Z4DNrsytv091";
 	 */
-	String username = "yakuluri@vaporizer.mappings.com";
-	String password = "deloitte.3";
+	String username = "rachitjain@deloitte.com.vaporizer";
+	String password = "deloitte@13";
 	/*
 	 * String username = "mrgr@deloitte.com"; String password =
 	 * "deloitte.2ltle01z2C81Xg6q8x4oXQOAhe";
