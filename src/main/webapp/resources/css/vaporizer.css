@@ -3,14 +3,20 @@
 	font-family:verdana;
 	overflow: hidden !important;
 }
+/* created by piyush */
 .table {
     width: 100%;
     max-width: 100%;
     margin-bottom: 0px !important;
 }
-
+/*trial pull*/
 .oddTd{
 	background:#BDBDBD;
+}
+.btn :HOVER
+{
+	background-color: black !Important;
+	color: white !Important;
 }
 .header{
 	background:#000;
@@ -59,7 +65,7 @@
 .credential_container
 {
 	width:100% !important;
-	height:250px;
+	height:150px;
 	
 	/* background:green; */
 }

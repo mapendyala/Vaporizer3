@@ -2,18 +2,17 @@
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 
-<%@ page session="false"%>
+<%@ page session="true"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <html>
 <head>
+<!--try piyush-->
 <!-- rachita try commit -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="stylesheet"
-	href="<c:url value="/resources/css/vaporizer.css" />" type="text/css"
-	media="screen, projection">
+
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet"
 	href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
@@ -23,8 +22,20 @@
 	href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 
 <!-- Latest compiled and minified JavaScript -->
+<link rel="stylesheet"
+	href="<c:url value="/resources/css/vaporizer.css" />" type="text/css"
+	media="screen, projection">
 <script
 	src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<style type="text/css">
+	
+	
+	.btn .btn-block .btn-inverse :HOVER
+{
+	background-color: black !Important;
+	color: white !Important;
+}
+</style>
 <title>Vaporizer</title>
 </head>
 <body>
@@ -39,53 +50,13 @@
 						<table class="table">
 							<tr>
 								<td class="oddTd">Name</td>
-								<td>Sample Project One</td>
+								<td><%=request.getSession().getAttribute("projectId")%></td>
 							</tr>
 
 						</table>
 					</div>
 				</div>
-				<div>
-					<div style="float: left; width: 48%">
-						<div class="table_header_details">Seibel</div>
-						<div>
-							<table class="table">
-								<tr>
-									<td class="oddTd">Siebel DSN</td>
-									<td>SBLDB</td>
-								</tr>
-								<tr>
-									<td class="oddTd">Seibel Login</td>
-									<td>SnetUser1</td>
-								<tr>
-									<td class="oddTd">Seibel Password</td>
-									<td>SnetUser1</td>
-								</tr>
-
-							</table>
-						</div>
-					</div>
-					<div style="float: right; width: 50%">
-						<div class="table_header_details">SFDC</div>
-						<div>
-
-							<table class="table">
-								<tr>
-									<td class="oddTd">SFDC Login</td>
-									<td>ranfernandes@deloitte.com.data</td>
-								</tr>
-								<tr>
-									<td class="oddTd">SFDC Password</td>
-									<td>93458f2aa223f884bfbb35e36e182ef1</td>
-								</tr>
-								<tr>
-									<td class="oddTd"></td>
-									<td></td>
-								</tr>
-							</table>
-						</div>
-					</div>
-				</div>
+		
 			</div>
 			<div class="mappingContainer" style="width:100%;">
 				<table class="table" style="margin:0px !important;">
@@ -153,6 +124,7 @@
 							name="Extract" value="Create CSV File" />
 						</td>
 					</tr>
+					<!-- try me -->
 					<tr>
 						<td colspan="2"
 							style="float: right; width: 350px; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
