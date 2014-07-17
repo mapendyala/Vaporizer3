@@ -30,6 +30,7 @@
 <body>
 	<div class="container">
 		<h6>${error}</h6>
+		<h6>${databaseUrl}</h6>
 		<div class="mainContent">
 			<div class="credential_container">
 				<div>
