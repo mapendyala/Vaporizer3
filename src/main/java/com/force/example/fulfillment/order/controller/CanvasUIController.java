@@ -66,29 +66,11 @@ public class CanvasUIController {
         cc = cr.getContext();
         CanvasEnvironmentContext ce = cc.getEnvironmentContext();
         Map<String, Object> params = ce.getParameters();
-        if (params.containsKey("orderId")) {
-            invoiceService.setSignedRequest(cr);
-            Integer orderId = Integer.parseInt(params.get("orderId").toString());
-            if(orderId != null) {
-                Order order = orderService.findOrder(orderId);
-                if (order == null) {
-                    throw new ResourceNotFoundException(orderId);
-                }
-                model.addAttribute("order", order);
-
-                Invoice invoice;
-                try {
-                    invoice = invoiceService.findInvoice(order.getId());
-                } catch (ApiException ae) {
-                    // No match
-                    invoice = new Invoice();
-                }
-                model.addAttribute("invoice", invoice);
-
-                return "order";
-            }
-        }
-        return getOrdersPage(model);
+        JSONObject parameters=json.getJSONObject("context").getJSONObject("environment").getJSONObject("parameters");
+        String projectId=parameters.getString("projectId");
+    	
+ 	   session.setAttribute("projectId", projectId);
+ 	  return "vaporizer";
     }
 
     @RequestMapping(method=RequestMethod.GET)
