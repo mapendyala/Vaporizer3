@@ -83,7 +83,7 @@ public class CanvasUIController {
  	   UtilityClass utilityClass= new UtilityClass();
  	   try {
  		   utilityClass.getConnection(connectionData);
- 		   model.addAttribute("databaseUrl","rachita"+connectionData.getString("databaseUrl"));
+ 		   
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			model.addAttribute("error", "Connection to Siebel database unsuccessful. Either username/password/DatabaseUrl is incorrect.");
