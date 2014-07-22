@@ -43,4 +43,44 @@ public class HomeController {
 		return "vaporizer";
 	}
 	
+	@RequestMapping(value = "/mapping", method = RequestMethod.GET)
+	public String home1(Locale locale, Model model) {
+		// TODO!!!
+		logger.info("Welcome home! the client locale is "+ locale.toString());
+		
+		Date date = new Date();
+		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+		
+		String formattedDate = dateFormat.format(date);
+		ArrayList<String> siebelList=new ArrayList<String>();
+		siebelList.add("Account");
+		siebelList.add("Contact");
+		siebelList.add("Order");
+		siebelList.add("Vaporizer");
+		model.addAttribute("serverTime", formattedDate );
+		model.addAttribute("siebelList",siebelList);
+		
+		return "mapping";
+	}
+	
+	@RequestMapping(value = "/child", method = RequestMethod.GET)
+	public String home2(Locale locale, Model model) {
+		// TODO!!!
+		logger.info("Welcome home! the client locale is "+ locale.toString());
+		
+		Date date = new Date();
+		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+		
+		String formattedDate = dateFormat.format(date);
+		ArrayList<String> siebelList=new ArrayList<String>();
+		siebelList.add("Account");
+		siebelList.add("Contact");
+		siebelList.add("Order");
+		siebelList.add("Vaporizer");
+		model.addAttribute("serverTime", formattedDate );
+		model.addAttribute("siebelList",siebelList);
+		
+		return "ChildBase";
+	}
+	
 }
