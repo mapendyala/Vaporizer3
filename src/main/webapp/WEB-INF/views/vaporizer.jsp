@@ -82,7 +82,7 @@
 					         <td><c:out value="${i}"/></td>
 					          <td><c:out value="${i}"/></td>
 					           <td><input type="number" name="quantity" min="1" max="5" style="width:40px"></td>
-					            <td><a href="">Select</a></td>
+					            <td><a href="ChildBase">Select</a></td>
 					             <td><c:out value="${i}"/></td>
 					              <td><a href="mapping">Select</a></td>
 					               <td><c:out value="${i}"/></td>
