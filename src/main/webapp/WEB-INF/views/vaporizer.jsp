@@ -28,9 +28,9 @@
 	src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 	
 	<!-- Madhuri code -->
-	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+	<link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 <!-- 	 <script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
 <link rel="stylesheet" href="/resources/demos/style.css">
 
@@ -71,9 +71,9 @@ var rowNum = 1;
 								
 								+ "<td><input id='primeBaseTable' readonly/></td>"
 								+ "<td><input type='text' id = 'threshold' onchange='makeReadonly()'></td>"
-								+ "<td><a href='Select'>Select</a></td>"
+								+ "<td><a href='ChildBase'>Select</a></td>"
 								+ "<td><c:out value='Account'/></td>"
-								+ "<td><a href='Select'>Select</a></td>"
+								+ "<td><a href='mapping'>Select</a></td>"
 								+ "<td><c:out value='Selected'/></td>"
 								+ "<td>"
 								+ "<input class='btn btn-inverse' type='button' name='Extract' value='E' />"
@@ -181,7 +181,7 @@ var rowNum = 1;
 						<table class="table">
 							<tr>
 								<td class="oddTd">Name</td>
-								<td>Sample Project One</td>
+							<td><%=request.getSession().getAttribute("projectName")%></td>
 							</tr>
 
 						</table>
@@ -230,8 +230,9 @@ var rowNum = 1;
 				</div>
 			</div>
 	<!-- Madhuri code start -->
+	<br><br><br><br>
 		<button class="btn btn-primary" id="addRow" onclick="addRow()">[+]</button>			
-		<br>
+		<br><br>
 			
 				 <table id = "masterTable">
 			<thead>
