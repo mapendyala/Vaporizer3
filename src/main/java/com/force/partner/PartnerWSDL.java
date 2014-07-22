@@ -156,7 +156,7 @@ public class PartnerWSDL {
 					projectName=(String) records[i].getField("Name");
 					
 				}
-				System.out.println("========================================================="+projectName);
+				System.out.println("==========================================================="+projectName);
 				if (qr.isDone()) {
 					done = true;
 				} else {
