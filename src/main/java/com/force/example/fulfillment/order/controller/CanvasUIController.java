@@ -26,9 +26,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
+//import com.deloitte.bean.Team;
 import com.force.example.fulfillment.order.model.Order;
 import com.force.example.fulfillment.order.service.OrderService;
-
 import com.force.api.ApiException;
 import com.force.example.fulfillment.order.model.Invoice;
 import com.force.example.fulfillment.order.service.InvoiceService;
@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping(value="/canvasui")
@@ -75,10 +76,12 @@ public class CanvasUIController {
         String projectId=parameters.getString("projectId");        
         session.setAttribute("projectId", projectId);
  	    PartnerWSDL partnerWSDL= new PartnerWSDL();
- 	   String projectName=partnerWSDL.getProjectName(projectId);
- 	   System.out.println(projectName);
- 	   session.setAttribute("projectName", projectName);/*added by piyush*/
+ 	  
+ 	 //  System.out.println(projectName);
+ 	  
  	   partnerWSDL.login();
+ 	  String projectName=partnerWSDL.getProjectName(projectId);
+ 	 session.setAttribute("projectName", projectName);/*added by piyush*/
  	   JSONObject connectionData=partnerWSDL.getConnectionData(projectId);
  	   UtilityClass utilityClass= new UtilityClass();
  	   try {
@@ -90,7 +93,16 @@ public class CanvasUIController {
 		}
  	  return "vaporizer";
     }
-
+    
+    @RequestMapping(value="/getSFDCObject", method=RequestMethod.GET)
+	public String getSFDCObject(Model model,@RequestParam(value="signed_request")String signedRequest, HttpServletRequest request)
+	{
+    	PartnerWSDL partnerWSDL= new PartnerWSDL();
+   	   	String SFDCObjectName=partnerWSDL.getSFDCObjectName("seibelBaseTable","ProjectID");
+   	   	model.addAttribute("SFDCObjectName",SFDCObjectName);
+		return "vaporizer";
+	}
+    
     @RequestMapping(method=RequestMethod.GET)
     public String getOrdersPage(Model model) {
         model.addAttribute("order", new Order());
