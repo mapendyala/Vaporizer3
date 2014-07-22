@@ -45,7 +45,7 @@ public class HomeController {
 	
 	@RequestMapping(value = "/mapping", method = RequestMethod.GET)
 	public String home1(Locale locale, Model model) {
-		// @Amrita For mapping Link 
+		// TODO!!!
 		logger.info("Welcome home! the client locale is "+ locale.toString());
 		
 		Date date = new Date();
@@ -63,9 +63,9 @@ public class HomeController {
 		return "mapping";
 	}
 	
-	@RequestMapping(value = "/child", method = RequestMethod.GET)
+	@RequestMapping(value = "/ChildBase", method = RequestMethod.GET)
 	public String home2(Locale locale, Model model) {
-		//// @Amrita For SiebelChild Link 
+		// TODO!!!
 		logger.info("Welcome home! the client locale is "+ locale.toString());
 		
 		Date date = new Date();
