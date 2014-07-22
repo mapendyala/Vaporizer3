@@ -72,10 +72,12 @@ public class CanvasUIController {
         CanvasEnvironmentContext ce = cc.getEnvironmentContext();
         Map<String, Object> params = ce.getParameters();
         JSONObject parameters=json.getJSONObject("context").getJSONObject("environment").getJSONObject("parameters");
-        String projectId=parameters.getString("projectId");
-    	
- 	   session.setAttribute("projectId", projectId);
- 	   PartnerWSDL partnerWSDL= new PartnerWSDL();
+        String projectId=parameters.getString("projectId");        
+        session.setAttribute("projectId", projectId);
+ 	    PartnerWSDL partnerWSDL= new PartnerWSDL();
+ 	   String projectName=partnerWSDL.getProjectName(projectId);
+ 	   System.out.println(projectName);
+ 	   session.setAttribute("projectName", projectName);
  	   partnerWSDL.login();
  	   JSONObject connectionData=partnerWSDL.getConnectionData(projectId);
  	   UtilityClass utilityClass= new UtilityClass();

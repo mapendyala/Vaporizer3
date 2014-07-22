@@ -10,6 +10,8 @@ import java.util.Map;
 import org.json.JSONObject;
 
 
+
+
 import com.sforce.soap.partner.DescribeGlobalResult;
 import com.sforce.soap.partner.DescribeGlobalSObjectResult;
 import com.sforce.soap.partner.DescribeSObjectResult;
@@ -82,6 +84,7 @@ public class PartnerWSDL {
 		}
 		return success;
 	}
+	
 
 	public JSONObject getConnectionData(String projectId) {
 
@@ -126,6 +129,48 @@ public class PartnerWSDL {
 		}
 		System.out.println("\nQuery execution completed.");
 		return connData;
+	}
+
+
+	public String getProjectName(String projectId) {
+
+
+		String projectName=null;
+		try {
+			partnerConnection.setQueryOptions(250);
+			// SOQL query to use
+				//Select Name, Parent_Project__c, Type__c from Project__c where Name= ‘PreDefined Mapping’
+			String soqlQuery = " Select Name, Parent_Project__c, Type__c from Project__c where id= '"
+					+ projectId + "'";
+			// Make the query call and get the query results
+			QueryResult qr = partnerConnection.query(soqlQuery);
+			boolean done = false;
+
+			int loopCount = 0;
+			// Loop through the batches of returned results
+			while (!done) {
+
+				SObject[] records = qr.getRecords();
+				
+				// Process the query results
+				for (int i = 0; i < records.length; i++) {
+					projectName=(String) records[i].getField("Name");
+					
+				}
+				System.out.println("========================================================="+projectName);
+				if (qr.isDone()) {
+					done = true;
+				} else {
+					qr = partnerConnection.queryMore(qr.getQueryLocator());
+				}
+
+			}
+		} catch (ConnectionException ce) {
+			ce.printStackTrace();
+		}
+		System.out.println("\nQuery execution completed.");
+		return projectName;
+	
 	}
 
 	/*public List<String > addObjectToTable(List<SiebelObject> listOfObjects,
