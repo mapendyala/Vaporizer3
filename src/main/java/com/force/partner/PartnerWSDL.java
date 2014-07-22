@@ -139,6 +139,8 @@ public class PartnerWSDL {
 		String projectName=null;
 		try {
 			partnerConnection.setQueryOptions(250);
+			if(projectId==null)
+				projectId="a0PG000000B23yKMAR";
 			// SOQL query to use
 		   String soqlQuery = " Select Name, Parent_Project__c, Type__c from Project__c where id= '"+ projectId + "'";
 			// Make the query call and get the query results
@@ -173,7 +175,7 @@ public class PartnerWSDL {
 	}
 
 
-	public String getSFDCObjectName(String seibelBaseTable, String projectId) {
+	public String getSFDCObjectName(String seibelBaseTable, String projectId) {/*
 
 
 
@@ -213,7 +215,8 @@ public class PartnerWSDL {
 		return projectName;
 	
 	
-	}
+	*/
+		return null;}
 
 	/*public List<String > addObjectToTable(List<SiebelObject> listOfObjects,
 			String projectId) {
