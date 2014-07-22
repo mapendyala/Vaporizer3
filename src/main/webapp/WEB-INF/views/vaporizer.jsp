@@ -64,7 +64,7 @@ var rowNum = 1;
 		
 		$("#masterTable tbody")
 				.append(
-						"<tr style='height:45px' 'width:45px'>"
+						"<tr style='height:45px ;width:45px'>"
 								+ "<td><input type='checkbox'></td>"
 								+ "<td>"+ rowNum+"</td>"
 								+ "<td><input id="+objName+" readonly/><button type='button' id="+srchObj+" style='display: inline;' onclick='getPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
@@ -187,75 +187,42 @@ var rowNum = 1;
 						</table>
 					</div>
 				</div>
-				<div>
-					<div style="float: left; width: 48%">
-						<div class="table_header_details">Seibel</div>
-						<div>
-							<table class="table">
-								<tr>
-									<td class="oddTd">Siebel DSN</td>
-									<td>SBLDB</td>
-								</tr>
-								<tr>
-									<td class="oddTd">Seibel Login</td>
-									<td>SnetUser1</td>
-								<tr>
-									<td class="oddTd">Seibel Password</td>
-									<td>SnetUser1</td>
-								</tr>
-
-							</table>
-						</div>
-					</div>
-					<div style="float: right; width: 50%">
-						<div class="table_header_details">SFDC</div>
-						<div>
-
-							<table class="table">
-								<tr>
-									<td class="oddTd">SFDC Login</td>
-									<td>ranfernandes@deloitte.com.data</td>
-								</tr>
-								<tr>
-									<td class="oddTd">SFDC Password</td>
-									<td>93458f2aa223f884bfbb35e36e182ef1</td>
-								</tr>
-								<tr>
-									<td class="oddTd"></td>
-									<td></td>
-								</tr>
-							</table>
-						</div>
-					</div>
-				</div>
+				
 			</div>
 	<!-- Madhuri code start -->
 	<br><br><br><br>
 		<button class="btn btn-primary" id="addRow" onclick="addRow()">[+]</button>			
 		<br><br>
-			
-				 <table id = "masterTable">
-			<thead>
-				  <tr>
-				    <th class="table_header_details" style="float: center;">Migrate?</th>
-				    <th class="table_header_details" style="float: center;">Sequence</th>
-				    <th class="table_header_details" style="float: center;">Siebel Object</th>
-				    <!-- <th class="table_header_details" style="float: center;"></th> -->
-				    <th class="table_header_details" style="float: center;">Prim Base Table</th>
-				    <th class="table_header_details" style="float: center;">Treshold</th>
-				    <th class="table_header_details" style="float: center;">Child Base Tables</th>
-				    <th class="table_header_details" style="float: center;">SFDC Object</th>
-				    <th class="table_header_details" style="float: center;">Mapping</th>
-				    <th class="table_header_details" style="float: center;">Status</th>
-				    <th class="table_header_details" style="float: center;">Add Ons</th>
-				  </tr>
-				 </thead> 
-				<tbody>
-						</tbody>
 
-						</table>
-				
-		 <div class="buttonContainer">
+
+<div class="mappingContainer" style="width:100%;">
+			<table id="masterTable" class="table">
+				<thead>
+					<tr>
+						<th class="table_header_details" style="float: center;">Migrate?</th>
+						<th class="table_header_details" style="float: center;">Sequence</th>
+						<th class="table_header_details" style="float: center;">Siebel
+							Object</th>
+						<!-- <th class="table_header_details" style="float: center;"></th> -->
+						<th class="table_header_details" style="float: center;">Prim
+							Base Table</th>
+						<th class="table_header_details" style="float: center;">Treshold</th>
+						<th class="table_header_details" style="float: center;">Child
+							Base Tables</th>
+						<th class="table_header_details" style="float: center;">SFDC
+							Object</th>
+						<th class="table_header_details" style="float: center;">Mapping</th>
+						<th class="table_header_details" style="float: center;">Status</th>
+						<th class="table_header_details" style="float: center;">Add
+							Ons</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+
+			</table>
+</div>
+			<div class="buttonContainer">
 				<table style="border: 0">
 					<tr>
 						<td colspan="2"
