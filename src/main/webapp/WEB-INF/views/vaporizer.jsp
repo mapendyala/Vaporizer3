@@ -50,6 +50,7 @@
 						<table class="table">
 							<tr>
 								<td class="oddTd">Name</td>
+								<!--FOr displaying project Name  -->
 								<td><%=request.getSession().getAttribute("projectName")%></td>
 							</tr>
 

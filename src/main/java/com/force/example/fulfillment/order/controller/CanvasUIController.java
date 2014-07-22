@@ -77,7 +77,7 @@ public class CanvasUIController {
  	    PartnerWSDL partnerWSDL= new PartnerWSDL();
  	   String projectName=partnerWSDL.getProjectName(projectId);
  	   System.out.println(projectName);
- 	   session.setAttribute("projectName", projectName);
+ 	   session.setAttribute("projectName", projectName);/*added by piyush*/
  	   partnerWSDL.login();
  	   JSONObject connectionData=partnerWSDL.getConnectionData(projectId);
  	   UtilityClass utilityClass= new UtilityClass();
