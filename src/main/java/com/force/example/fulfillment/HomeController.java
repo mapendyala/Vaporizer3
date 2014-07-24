@@ -42,7 +42,7 @@ public class HomeController {
 		
 		return "vaporizer";
 	}
-	
+	//Added by Amrita
 	@RequestMapping(value = "/mapping", method = RequestMethod.GET)
 	public String home1(Locale locale, Model model) {
 		// TODO!!!
@@ -81,6 +81,26 @@ public class HomeController {
 		model.addAttribute("siebelList",siebelList);
 		
 		return "ChildBase";
+	}
+
+	@RequestMapping(value = "/Done", method = RequestMethod.GET)
+	public String home3(Locale locale, Model model) {
+		// TODO!!!
+		logger.info("Welcome home! the client locale is "+ locale.toString());
+		System.out.println("inside demo");
+		Date date = new Date();
+		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+		
+		String formattedDate = dateFormat.format(date);
+		ArrayList<String> siebelList=new ArrayList<String>();
+		siebelList.add("Account");
+		siebelList.add("Contact");
+		siebelList.add("Order");
+		siebelList.add("Vaporizer");
+		model.addAttribute("serverTime", formattedDate );
+		model.addAttribute("siebelList",siebelList);
+		
+		return "vaporizer";
 	}
 	
 }
