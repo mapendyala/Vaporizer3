@@ -127,7 +127,7 @@
 							style="float: right; width:350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
 							
 							<button id="cancel" type="button" style="float: right;"
-						class="btn btn-block btn-inverse">Cancel</button>
+						class="btn btn-block btn-inverse">Done</button>
 							
 						</td>
 					</tr>
