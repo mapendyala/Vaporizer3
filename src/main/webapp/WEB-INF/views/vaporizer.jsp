@@ -31,49 +31,33 @@
 	<link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-<!-- 	 <script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
-<link rel="stylesheet" href="/resources/demos/style.css">
 
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" media="all" />
- -->
-
-	<%-- <script type="text/javascript"
-	src="<c:url value="/resources/jquery-1.4.min.js" /> "></script> --%>
 <script type="text/javascript"
 	src="<c:url value="/resources/json.min.js" /> "></script>
-	
-	
-<!-- <style type="text/css">
-.image {
-	height: 50px;
-	position: fixed;
-	top: 350px;
-	left: 700px;
-}
-</style> -->
 	
 <script type="text/javascript">
 
 var rowNum = 1;
+var primBaseTable;
 
 	function addRow() {
-		/* var rowCount = $('#masterTable tr').length; */
 		
 		var objName = "objectName"+(rowNum);
 		var srchObj = "searchObject"+(rowNum);
+		var primTable = "prim"+(rowNum);
+		var thresholdId = "thresh"+(rowNum);
 		
 		$("#masterTable tbody")
 				.append(
-						"<tr style='height:45px ;width:45px'>"
-								+ "<td><input type='checkbox'></td>"
+						"<tr style='height:45px' 'width:45px'>"
+								+ "<td><input  type='checkbox' style='margin-left:35px;'></td>"
 								+ "<td>"+ rowNum+"</td>"
-								+ "<td><input id="+objName+" readonly/><button type='button' id="+srchObj+" style='display: inline;' onclick='getPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
-								
-								+ "<td><input id='primeBaseTable' readonly/></td>"
-								+ "<td><input type='text' id = 'threshold' onchange='makeReadonly()'></td>"
-								+ "<td><a href='ChildBase'>Select</a></td>"
-								+ "<td><c:out value='Account'/></td>"
-								+ "<td><a href='mapping'>Select</a></td>"
+								+ "<td><input size='35' id="+objName+" placeholder='Click on Search' readonly style='margin-left:35px;'/><button type='button' id="+srchObj+" style='display: inline;' onclick='getPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
+								+ "<td><input id="+primTable+" readonly style='margin-left:35px;'/></td>"
+								+ "<td><input type='text' id ="+thresholdId+" onchange='makeReadonly("+rowNum+")' style='margin-left:35px;'></td>"
+								+ "<td><a href='ChildBase' style='margin-left:35px;'>Select</a></td>"
+								+ "<td><c:out value='Account'/><button type='button' style='display: inline;'><span class='glyphicon glyphicon-search'></span></button></td>"
+								+ "<td><a href='mapping' style='margin-left:15px;'>Select</a></td>"
 								+ "<td><c:out value='Selected'/></td>"
 								+ "<td>"
 								+ "<input class='btn btn-inverse' type='button' name='Extract' value='E' />"
@@ -84,84 +68,102 @@ var rowNum = 1;
 		
 		rowNum = rowNum+1;
 	}
-	</script>
-	
-	<script type="text/javascript">
-	function populateObjectName(id){
+
+	function populateObjectName(id, primId){
 	var s =$('input[name=selectedObject]:radio:checked').val();
-		$("#"+id).val(s); 
+	var value = s.split("+");
+		$("#"+id).val(value[0]); 
+		$("#"+primId).val(value[1]);
 	}
-	</script>
-	
-	<script type="text/javascript">
 		
-	 function makeReadonly(){
-	
-		var threshold = $("#threshold").val();
-		/* var objName = $("#objName").val(); */
+	 function makeReadonly(rowNum){
+		 var thresholdId = "thresh"+(rowNum);
+		var threshold = $("#"+thresholdId).val();
+		var primTableId = "prim"+(rowNum);
+		var primBaseTable =  $("#"+primTableId).val();
 		$.ajax({
 			type : "POST",
-			url : "object/add",
-		 	data : {value:threshold},
-			/*  contentType : 'String',
-			success :  $("#tableValue").val() */	});
+			url : "set/Threshold",
+		 	data : {threshold:threshold, primBaseName:primBaseTable}
+			});
 	}
-	</script>
 	
-	
-	
-	 <script type="text/javascript">
 	  function getPopup(rowNum){
-		 /*  var selectedRow = $("#row").val(); */
-		var id="objectName"+(rowNum);
-		 
-	/* 	$.ajax({
-			type : "POST",
-			url : "object/add",
-		/* 	data : {value:threshold, objectName:objName},
-			 contentType : 'application/json',
-			success : function(html) {
-				window.location.href = $(
-						"#tableValue").val(); 
-			}
-		}); */
-		
+		var id="objectName"+(rowNum);	
+		var primId = "prim"+(rowNum);
+	
 		$("#obj").dialog({title: "Select an Siebel Object",
-			 
-			width: 430,
-			 
-			height: 250,
-			 
+			width: 500,
+			height: 500,
 			buttons: {
 				"OK": function () {
-					populateObjectName(id);
-				
+					populateObjectName(id, primId);
+					if(document.getElementById("dyncTblCntnt")){
+						var noOfChilds = $("#dyncTblCntnt").children().length;
+						if(noOfChilds > 1){
+							$("#dyncTblCntnt").children().remove();
+						}
+					}
+					$("#objName").val("");
 					$(this).dialog("close");
 			
 				},"Close": function(){
+					if(document.getElementById("dyncTblCntnt")){
+						var noOfChilds = $("#dyncTblCntnt").children().length;
+						if(noOfChilds > 1){
+							$("#dyncTblCntnt").children().remove();
+						}
+					}
+					$("#objName").val("");
 					$(this).dialog("close");
-					
 				}
-			
 			},
-			 
-			
-			 
 			});
 		} 
-	</script>
-	
-	<script type="text/javascript">
 	
 	function  getObjectName(){
 		var objName = $("#objName").val();
-	
-		$.ajax({
+		  $.ajax({
 			type : "POST",
-			url : "object/add",
-			data : {objectName:objName}
-			
-			}); 
+			url : "get/SiebelObject",
+			data : {objectName:objName},
+		 	success : function(data){
+					displaySblObjTable(data);
+				}  
+			});   
+	}
+	
+	function displaySblObjTable(data){
+		if(document.getElementById("dyncTblCntnt")){
+			var noOfChilds = $("#dyncTblCntnt").children().length;
+			if(noOfChilds > 1){
+				$("#dyncTblCntnt").children().remove();
+				for(var i=0 ; i<data.length ;i++ ){
+					var tblName = data[i];
+					var selValue = obj.concat("+",primBase); 
+					$("#dyncTblCntnt").append("<input type='radio' name='selectedObject' value='"+selValue+"'><span>"+tblName.objName+"</span><br/>");
+										
+				}
+			}else{
+				for(var i=0 ; i<data.length ;i++ ){
+					var tblName = data[i];
+					var selValue = tblName.objName.concat("+").concat(tblName.primName);
+					$("#dyncTblCntnt").append("<input type='radio' name='selectedObject' value='"+selValue+"'><span>"+tblName.objName+"</span><br/>");
+									
+				}
+			}
+		}
+		else{
+			$("#obj").append("<br/>");
+			$("#obj").append("<div id='dyncTblCntnt'>");
+			for(var i=0 ; i<data.length ;i++ ){
+				var tblName = data[i];
+				var selValue = tblName.objName.concat("+").concat(tblName.primName);
+				$("#dyncTblCntnt").append("<input type='radio' name='selectedObject' value='"+selValue+"'><span>"+tblName.objName+"</span><br/>");
+			}
+			$("#obj").append("</div>");
+		}
+		
 	}
 		
 	</script>
@@ -190,39 +192,32 @@ var rowNum = 1;
 				
 			</div>
 	<!-- Madhuri code start -->
-	<br><br><br><br>
+	
 		<button class="btn btn-primary" id="addRow" onclick="addRow()">[+]</button>			
 		<br><br>
-
-
-<div class="mappingContainer" style="width:100%;">
-			<table id="masterTable" class="table">
-				<thead>
-					<tr>
-						<th class="table_header_details" style="float: center;">Migrate?</th>
-						<th class="table_header_details" style="float: center;">Sequence</th>
-						<th class="table_header_details" style="float: center;">Siebel
-							Object</th>
-						<!-- <th class="table_header_details" style="float: center;"></th> -->
-						<th class="table_header_details" style="float: center;">Prim
-							Base Table</th>
-						<th class="table_header_details" style="float: center;">Treshold</th>
-						<th class="table_header_details" style="float: center;">Child
-							Base Tables</th>
-						<th class="table_header_details" style="float: center;">SFDC
-							Object</th>
-						<th class="table_header_details" style="float: center;">Mapping</th>
-						<th class="table_header_details" style="float: center;">Status</th>
-						<th class="table_header_details" style="float: center;">Add
-							Ons</th>
-					</tr>
-				</thead>
+			
+				<table id = "masterTable" style="width:100%;">
+				
+			<thead>
+				  <tr>
+				    <th class="table_header_details" style="float: center;">Migrate?</th>
+				    <th class="table_header_details" style="float: center;">Sequence</th>
+				    <th class="table_header_details" style="float: center;">Siebel Object</th>
+				    <th class="table_header_details" style="float: center;">Prim Base Table</th>
+				    <th class="table_header_details" style="float: center;">Treshold</th>
+				    <th class="table_header_details" style="float: center;">Child Base Tables</th>
+				    <th class="table_header_details" style="float: center;">SFDC Object</th>
+				    <th class="table_header_details" style="float: center;">Mapping</th>
+				    <th class="table_header_details" style="float: center;">Status</th>
+				    <th class="table_header_details" style="float: center;">Add Ons</th>
+				  </tr>
+				 </thead> 
 				<tbody>
-				</tbody>
+						</tbody>
 
-			</table>
-</div>
-			<div class="buttonContainer">
+						</table>
+				
+		 <div class="buttonContainer">
 				<table style="border: 0">
 					<tr>
 						<td colspan="2"
@@ -263,16 +258,7 @@ var rowNum = 1;
 
 <div id=obj hidden="true">
  <input type="text" id = "objName" placeholder="Enter Object Name"><button type='button' style='display: inline;' id="search" onclick='getObjectName()'><span class='glyphicon glyphicon-search'></span></button>
-<br>
- <input id="tableValue" name="selectedObject" type="radio" value="Account">Account<br>
-<input name="selectedObject" type="radio" value="Contact">Contact<br>
-<input name="selectedObject" type="radio" value="Campaign">Campaign<br>
-<input name="selectedObject" type="radio" value="Campaign Member">Campaign Member<br>
-
-</div>
-
-
-
+ </div>
 	</div>
 	
 </body>
