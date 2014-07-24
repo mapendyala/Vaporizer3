@@ -1,14 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html>
+	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+	
+
+
 
 <%@ page session="false"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<!DOCTYPE html>
 <html>
 <head>
-
+<script type="text/javascript"
+	src="<c:url value="/resources/jquery-1.4.min.js" /> "></script>
+<script type="text/javascript"
+	src="<c:url value="/resources/json.min.js" /> "></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet"
@@ -118,8 +125,10 @@
 					<tr>
 						<td colspan="2"
 							style="float: right; width:350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
-							<input class="btn btn-block btn-inverse" type="button"
-							name="Extract" value="Done" />
+							
+							<button id="cancel" type="button" style="float: right;"
+						class="btn btn-block btn-inverse">Cancel</button>
+							
 						</td>
 					</tr>
 					
@@ -133,4 +142,13 @@
 
 	</div>
 </body>
+<script type="text/javascript">
+
+						$("#cancel").click(function() {
+							
+							window.location.href = "Done";
+						});
+					
+					
+</script>
 </html>
