@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+	
+	
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <%@ page session="false"%>
@@ -8,7 +11,10 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <html>
 <head>
-
+<script type="text/javascript"
+	src="<c:url value="/resources/jquery-1.4.min.js" /> "></script>
+<script type="text/javascript"
+	src="<c:url value="/resources/json.min.js" /> "></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet"
@@ -129,12 +135,39 @@
 </c:forEach> --%>
 					
 				</table>
+				<div class="buttonContainer">
+				<table style="border: 0">
+				
+					<tr>
+						<td colspan="2"
+							style="float: right; width:350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
+							
+							<button id="cancel" type="button" style="float: right;"
+						class="btn btn-block btn-inverse">Done</button>
+							
+						</td>
+					</tr>
+					
+
+				</table>
 			</div>
+		</div>
+			</div>
+			
 		</div>
 
 
 
 
-	</div>
+	<script type="text/javascript">
+
+						$("#cancel").click(function() {
+							
+							window.location.href = "Done";
+						});
+					
+					
+</script>
+	
 </body>
 </html>
