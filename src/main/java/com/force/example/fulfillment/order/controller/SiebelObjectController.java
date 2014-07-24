@@ -52,7 +52,7 @@ public class SiebelObjectController {
 		 HttpSession session = request.getSession(true);
 		 String userValue = request.getParameter("objectName");
 		 System.out.println("uservalues in bean is"+userValue);
-		/* try
+		 try
          {
                 Class.forName("oracle.jdbc.driver.OracleDriver");
          }
@@ -73,9 +73,9 @@ public class SiebelObjectController {
                 e.printStackTrace();
                
          }
-		 */
+		 
          
-         try{
+        /* try{
     		 PartnerWSDL partnerWSDL= new PartnerWSDL();
     		 String projectId = (String) session.getAttribute("projectName");
     		 JSONObject connectionData=partnerWSDL.getConnectionData(projectId);
@@ -86,7 +86,7 @@ public class SiebelObjectController {
              System.out.println("Connection Failed! Check output console");
              e.printStackTrace();
             
-      }
+      }*/
 		try
 		{
 		 if (connection != null)
