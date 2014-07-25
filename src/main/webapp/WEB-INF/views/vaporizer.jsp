@@ -46,6 +46,8 @@ var primBaseTable;
 		var srchObj = "searchObject"+(rowNum);
 		var primTable = "prim"+(rowNum);
 		var thresholdId = "thresh"+(rowNum);
+		var SFDCObjName = "SFDCObjName"+(rowNum);
+
 		
 		$("#masterTable tbody")
 				.append(
@@ -56,8 +58,9 @@ var primBaseTable;
 								+ "<td><input id="+primTable+" readonly style='margin-left:35px;'/></td>"
 								+ "<td><input type='text' id ="+thresholdId+" onchange='makeReadonly("+rowNum+")' style='margin-left:35px;'></td>"
 								+ "<td><a href='ChildBase' style='margin-left:35px;'>Select</a></td>"
-								+ "<td><c:out value='Account'/><button type='button' style='display: inline;'><span class='glyphicon glyphicon-search'></span></button></td>"
+								+ "<td><input id="+SFDCObjName+" readonly/><button type='button' style='display: inline;'><span class='glyphicon glyphicon-search'></span></button></td>"
 								+ "<td><a href='mapping' style='margin-left:15px;'>Select</a></td>"
+
 								+ "<td><c:out value='Selected'/></td>"
 								+ "<td>"
 								+ "<input class='btn btn-inverse' type='button' name='Extract' value='E' />"
@@ -88,16 +91,42 @@ var primBaseTable;
 			});
 	}
 	
+
+	
+	
+	 <script type="text/javascript">
+	 
+	 
+	 function getSFDCOBject(siebelObject,SFDCObjectId)
+	 {
+		
+		 $.ajax({
+			type : "GET",
+			url : "getSFDCOBject",
+		 	data :
+		 		{
+		 		siebelObject:siebelObject		 		
+		 		},
+			contentType : 'application/text',
+			success : function(response) {
+				$("#"+SFDCObjectId).val(response); 
+			}
+		});  
+	 }
+
 	  function getPopup(rowNum){
+
 		var id="objectName"+(rowNum);	
 		var primId = "prim"+(rowNum);
-	
+		 var SFDCObjectId="SFDCObjName"+(rowNum);
 		$("#obj").dialog({title: "Select an Siebel Object",
 			width: 500,
 			height: 500,
 			buttons: {
 				"OK": function () {
 					populateObjectName(id, primId);
+					var siebelObject =$('input[name=selectedObject]:radio:checked').val();			
+					getSFDCOBject(siebelObject,SFDCObjectId);
 					if(document.getElementById("dyncTblCntnt")){
 						var noOfChilds = $("#dyncTblCntnt").children().length;
 						if(noOfChilds > 1){
@@ -105,6 +134,7 @@ var primBaseTable;
 						}
 					}
 					$("#objName").val("");
+
 					$(this).dialog("close");
 			
 				},"Close": function(){

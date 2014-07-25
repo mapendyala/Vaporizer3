@@ -132,7 +132,12 @@ public class PartnerWSDL {
 		return connData;
 	}
 
-/*added by PIYUSH*/
+/**
+ * 
+ * @author piymishra
+ * @param projectId
+ * @return projectName
+ */
 	public String getProjectName(String projectId) {
 
 
@@ -174,18 +179,26 @@ public class PartnerWSDL {
 	
 	}
 
+	/**
+	 * @author piymishra
+	 * @param projectId
+	 * @param seibelBaseTable
+	 * @return SFDCObjectName
+	 */
+	public String getSFDCObjectName(String projectId, String seibelBaseTable) {
 
-	public String getSFDCObjectName(String seibelBaseTable, String projectId) {/*
-
-
-
-		String projectName=null;
+		String SFDCObjectName = "";
 		try {
+			login();
 			partnerConnection.setQueryOptions(250);
+			if(projectId==null)
+				projectId="a0PG000000AtiE5";
 			// SOQL query to use
-				
-			String soqlQuery = " Select Name, Parent_Project__c, Type__c from Project__c where id= '"
-					+ projectId + "' and seibelBaseTable='"+seibelBaseTable+"'";
+			String soqlQuery = " Select id, Object_API_Name__c, Project__r.Name, Project__r.Parent_Project__c, Table_Name__c, Type__c from Table__c where Project__r.Parent_Project__c ='"
+					+ projectId
+					+ "' and  Project__r.Name='"
+					+ seibelBaseTable
+					+ "_PreDefined_Mapping' and Parent_Table__c = null and Type__c ='Salesforce'";
 			// Make the query call and get the query results
 			QueryResult qr = partnerConnection.query(soqlQuery);
 			boolean done = false;
@@ -194,13 +207,17 @@ public class PartnerWSDL {
 			while (!done) {
 
 				SObject[] records = qr.getRecords();
-				
+				System.out
+				.println("========================================================="
+						+ records.length);
 				// Process the query results
 				for (int i = 0; i < records.length; i++) {
-					projectName=(String) records[i].getField("Name");
-					
+					SFDCObjectName = (String) records[i]
+							.getField("Table_Name__c");
 				}
-				System.out.println("========================================================="+projectName);
+				System.out
+				.println("========================================================="
+						+ SFDCObjectName);
 				if (qr.isDone()) {
 					done = true;
 				} else {
@@ -212,11 +229,9 @@ public class PartnerWSDL {
 			ce.printStackTrace();
 		}
 		System.out.println("\nQuery execution completed.");
-		return projectName;
-	
-	
-	*/
-		return null;}
+
+		return SFDCObjectName;
+	}
 
 	/*public List<String > addObjectToTable(List<SiebelObject> listOfObjects,
 			String projectId) {
