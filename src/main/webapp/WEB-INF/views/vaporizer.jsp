@@ -61,6 +61,7 @@ var rowNum = 1;
 		
 		var objName = "objectName"+(rowNum);
 		var srchObj = "searchObject"+(rowNum);
+		var SFDCObjName = "SFDCObjName"+(rowNum);
 		
 		$("#masterTable tbody")
 				.append(
@@ -72,7 +73,7 @@ var rowNum = 1;
 								+ "<td><input id='primeBaseTable' readonly/></td>"
 								+ "<td><input type='number' min='1' max='5' style='width:40px' id = 'threshold' onchange='makeReadonly()'></td>"
 								+ "<td><a href='ChildBase'>Select</a></td>"
-								+ "<td><c:out value='Account'/></td>"
+								+ "<td><input id="+SFDCObjName+" readonly/></td>"
 								+ "<td><a href='mapping'>Select</a></td>"
 								+ "<td><c:out value='Selected'/></td>"
 								+ "<td>"
@@ -113,7 +114,7 @@ var rowNum = 1;
 	 <script type="text/javascript">
 	 
 	 
-	 function getSFDCOBject(siebelObject)
+	 function getSFDCOBject(siebelObject,SFDCObjectId)
 	 {
 		
 		 $.ajax({
@@ -125,16 +126,16 @@ var rowNum = 1;
 		 		},
 			contentType : 'application/text',
 			success : function(response) {
-				
+				$("#"+SFDCObjectId).val(response); 
 			}
 		});  
 	 }
 	  function getPopup(rowNum){
 		 /*  var selectedRow = $("#row").val(); */
 		var id="objectName"+(rowNum);
-		 
-	
-		$("#obj").dialog({title: "Select an Siebel Object",
+		 var SFDCObjectId="SFDCObjName"+(rowNum);
+		$("#obj").dialog({
+			title: "Select an Siebel Object",
 			 
 			width: 430,
 			 
@@ -145,7 +146,7 @@ var rowNum = 1;
 					var siebelObject =$('input[name=selectedObject]:radio:checked').val();
 					//alert(siebelObject);
 					populateObjectName(id);					
-					getSFDCOBject(siebelObject);
+					getSFDCOBject(siebelObject,SFDCObjectId);
 					$(this).dialog("close");
 			
 				},"Close": function(){
