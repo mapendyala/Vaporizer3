@@ -73,15 +73,14 @@ public class CanvasUIController {
         CanvasEnvironmentContext ce = cc.getEnvironmentContext();
         Map<String, Object> params = ce.getParameters();
         JSONObject parameters=json.getJSONObject("context").getJSONObject("environment").getJSONObject("parameters");
-        String projectId=parameters.getString("projectId");        
+        String projectId=parameters.getString("projectId");   
+        System.out.println("================="+projectId);
         session.setAttribute("projectId", projectId);
- 	    PartnerWSDL partnerWSDL= new PartnerWSDL();
- 	  
- 	 //  System.out.println(projectName);
- 	  
- 	   partnerWSDL.login();
- 	  String projectName=partnerWSDL.getProjectName(projectId);
- 	 session.setAttribute("projectName", projectName);/*added by piyush*/
+ 	    PartnerWSDL partnerWSDL= new PartnerWSDL(); 	  
+ 	 //  System.out.println(projectName); 	  
+ 	    partnerWSDL.login();
+ 	    String projectName=partnerWSDL.getProjectName(projectId);
+ 	   session.setAttribute("projectName", projectName);/*added by piyush*/
  	   JSONObject connectionData=partnerWSDL.getConnectionData(projectId);
  	   UtilityClass utilityClass= new UtilityClass();
  	   try {
@@ -94,15 +93,7 @@ public class CanvasUIController {
  	  return "vaporizer";
     }
     
-    @RequestMapping(value="/getSFDCObject", method=RequestMethod.GET)
-	public String getSFDCObject(Model model,@RequestParam(value="signed_request")String signedRequest, HttpServletRequest request)
-	{
-    	PartnerWSDL partnerWSDL= new PartnerWSDL();
-   	   	String SFDCObjectName=partnerWSDL.getSFDCObjectName("seibelBaseTable","ProjectID");
-   	   	model.addAttribute("SFDCObjectName",SFDCObjectName);
-		return "vaporizer";
-	}
-    
+   
     @RequestMapping(method=RequestMethod.GET)
     public String getOrdersPage(Model model) {
         model.addAttribute("order", new Order());

@@ -70,7 +70,7 @@ var rowNum = 1;
 								+ "<td><input id="+objName+" readonly/><button type='button' id="+srchObj+" style='display: inline;' onclick='getPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
 								
 								+ "<td><input id='primeBaseTable' readonly/></td>"
-								+ "<td><input type='text' id = 'threshold' onchange='makeReadonly()'></td>"
+								+ "<td><input type='number' min='1' max='5' style='width:40px' id = 'threshold' onchange='makeReadonly()'></td>"
 								+ "<td><a href='ChildBase'>Select</a></td>"
 								+ "<td><c:out value='Account'/></td>"
 								+ "<td><a href='mapping'>Select</a></td>"
@@ -111,21 +111,29 @@ var rowNum = 1;
 	
 	
 	 <script type="text/javascript">
+	 
+	 
+	 function getSFDCOBject(siebelObject)
+	 {
+		
+		 $.ajax({
+			type : "GET",
+			url : "getSFDCOBject",
+		 	data :
+		 		{
+		 		siebelObject:siebelObject		 		
+		 		},
+			contentType : 'application/text',
+			success : function(response) {
+				
+			}
+		});  
+	 }
 	  function getPopup(rowNum){
 		 /*  var selectedRow = $("#row").val(); */
 		var id="objectName"+(rowNum);
 		 
-	/* 	$.ajax({
-			type : "POST",
-			url : "object/add",
-		/* 	data : {value:threshold, objectName:objName},
-			 contentType : 'application/json',
-			success : function(html) {
-				window.location.href = $(
-						"#tableValue").val(); 
-			}
-		}); */
-		
+	
 		$("#obj").dialog({title: "Select an Siebel Object",
 			 
 			width: 430,
@@ -134,8 +142,10 @@ var rowNum = 1;
 			 
 			buttons: {
 				"OK": function () {
-					populateObjectName(id);
-				
+					var siebelObject =$('input[name=selectedObject]:radio:checked').val();
+					//alert(siebelObject);
+					populateObjectName(id);					
+					getSFDCOBject(siebelObject);
 					$(this).dialog("close");
 			
 				},"Close": function(){
