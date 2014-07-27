@@ -94,7 +94,7 @@ var primBaseTable;
 
 	
 	
-	 <script type="text/javascript">
+	
 	 
 	 
 	 function getSFDCOBject(siebelObject,SFDCObjectId)
@@ -221,8 +221,7 @@ var primBaseTable;
 				</div>
 				
 			</div>
-	<!-- Madhuri code start -->
-	
+	<!-- Madhuri code start -->	
 		<button class="btn btn-primary" id="addRow" onclick="addRow()">[+]</button>			
 		<br><br>
 			
