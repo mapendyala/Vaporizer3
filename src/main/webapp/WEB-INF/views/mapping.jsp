@@ -118,8 +118,8 @@
 					<tr>
 						<td colspan="2"
 							style="float: right; width:350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
-							<input class="btn btn-block btn-inverse" type="button"
-							name="Extract" value="Done" />
+							<input class="btn btn-block btn-inverse" type="submit"
+							name="Extract" value="Done"  />
 						</td>
 					</tr>
 					
