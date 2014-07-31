@@ -26,9 +26,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
+//import com.deloitte.bean.Team;
 import com.force.example.fulfillment.order.model.Order;
 import com.force.example.fulfillment.order.service.OrderService;
-
 import com.force.api.ApiException;
 import com.force.example.fulfillment.order.model.Invoice;
 import com.force.example.fulfillment.order.service.InvoiceService;
@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping(value="/canvasui")
@@ -72,11 +73,14 @@ public class CanvasUIController {
         CanvasEnvironmentContext ce = cc.getEnvironmentContext();
         Map<String, Object> params = ce.getParameters();
         JSONObject parameters=json.getJSONObject("context").getJSONObject("environment").getJSONObject("parameters");
-        String projectId=parameters.getString("projectId");
-    	
- 	   session.setAttribute("projectId", projectId);
- 	   PartnerWSDL partnerWSDL= new PartnerWSDL();
- 	   partnerWSDL.login();
+        String projectId=parameters.getString("projectId");   
+        System.out.println("================="+projectId);
+        session.setAttribute("projectId", projectId);
+ 	    PartnerWSDL partnerWSDL= new PartnerWSDL(); 	  
+ 	 //  System.out.println(projectName); 	  
+ 	    partnerWSDL.login();
+ 	    String projectName=partnerWSDL.getProjectName(projectId);
+ 	   session.setAttribute("projectName", projectName);/*added by piyush*/
  	   JSONObject connectionData=partnerWSDL.getConnectionData(projectId);
  	   UtilityClass utilityClass= new UtilityClass();
  	   try {
@@ -88,7 +92,8 @@ public class CanvasUIController {
 		}
  	  return "vaporizer";
     }
-
+    
+   
     @RequestMapping(method=RequestMethod.GET)
     public String getOrdersPage(Model model) {
         model.addAttribute("order", new Order());

@@ -10,6 +10,9 @@ import java.util.Map;
 import org.json.JSONObject;
 
 
+
+
+
 import com.sforce.soap.partner.DescribeGlobalResult;
 import com.sforce.soap.partner.DescribeGlobalSObjectResult;
 import com.sforce.soap.partner.DescribeSObjectResult;
@@ -82,6 +85,7 @@ public class PartnerWSDL {
 		}
 		return success;
 	}
+	
 
 	public JSONObject getConnectionData(String projectId) {
 
@@ -126,6 +130,107 @@ public class PartnerWSDL {
 		}
 		System.out.println("\nQuery execution completed.");
 		return connData;
+	}
+
+/**
+ * 
+ * @author piymishra
+ * @param projectId
+ * @return projectName
+ */
+	public String getProjectName(String projectId) {
+
+
+		String projectName=null;
+		try {
+			partnerConnection.setQueryOptions(250);
+			if(projectId==null)
+				projectId="a0PG000000B23yKMAR";
+			// SOQL query to use
+		   String soqlQuery = " Select Name, Parent_Project__c, Type__c from Project__c where id= '"+ projectId + "'";
+			// Make the query call and get the query results
+			QueryResult qr = partnerConnection.query(soqlQuery);
+			boolean done = false;
+
+			int loopCount = 0;
+			// Loop through the batches of returned results
+			while (!done) {
+
+				SObject[] records = qr.getRecords();
+				
+				// Process the query results
+				for (int i = 0; i < records.length; i++) {
+					projectName=(String) records[i].getField("Name");
+					
+				}
+				System.out.println("==========================================================="+projectName);
+				if (qr.isDone()) {
+					done = true;
+				} else {
+					qr = partnerConnection.queryMore(qr.getQueryLocator());
+				}
+
+			}
+		} catch (ConnectionException ce) {
+			ce.printStackTrace();
+		}
+		System.out.println("\nQuery execution completed.");
+		return projectName;
+	
+	}
+
+	/**
+	 * @author piymishra
+	 * @param projectId
+	 * @param seibelBaseTable
+	 * @return SFDCObjectName
+	 */
+	public String getSFDCObjectName(String projectId, String seibelBaseTable) {
+
+		String SFDCObjectName = "";
+		try {
+			login();
+			partnerConnection.setQueryOptions(250);
+			if(projectId==null)
+				projectId="a0PG000000AtiE5";
+			// SOQL query to use
+			String soqlQuery = " Select id, Object_API_Name__c, Project__r.Name, Project__r.Parent_Project__c, Table_Name__c, Type__c from Table__c where Project__r.Parent_Project__c ='"
+					+ projectId
+					+ "' and  Project__r.Name='"
+					+ seibelBaseTable
+					+ "_PreDefined_Mapping' and Parent_Table__c = null and Type__c ='Salesforce'";
+			// Make the query call and get the query results
+			QueryResult qr = partnerConnection.query(soqlQuery);
+			boolean done = false;
+			int loopCount = 0;
+			// Loop through the batches of returned results
+			while (!done) {
+
+				SObject[] records = qr.getRecords();
+				System.out
+				.println("========================================================="
+						+ records.length);
+				// Process the query results
+				for (int i = 0; i < records.length; i++) {
+					SFDCObjectName = (String) records[i]
+							.getField("Table_Name__c");
+				}
+				System.out
+				.println("========================================================="
+						+ SFDCObjectName);
+				if (qr.isDone()) {
+					done = true;
+				} else {
+					qr = partnerConnection.queryMore(qr.getQueryLocator());
+				}
+
+			}
+		} catch (ConnectionException ce) {
+			ce.printStackTrace();
+		}
+		System.out.println("\nQuery execution completed.");
+
+		return SFDCObjectName;
 	}
 
 	/*public List<String > addObjectToTable(List<SiebelObject> listOfObjects,
