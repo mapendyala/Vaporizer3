@@ -178,6 +178,55 @@ public class PartnerWSDL {
 		return projectName;
 	
 	}
+	public JSONObject getTargetOrgDetails(String projectId) {
+
+		JSONObject connData = new JSONObject();
+		
+		try {
+			partnerConnection.setQueryOptions(250);
+			if(projectId==null)
+				projectId="a0PG000000B23yKMAR";
+			// SOQL query to use
+		   String soqlQuery = " Select Salesforce_Password__c, Salesforce_Token__c, Salesforce_Username__c from Project__c where id= '"+ projectId + "'";
+			// Make the query call and get the query results
+			QueryResult qr = partnerConnection.query(soqlQuery);
+			boolean done = false;
+
+			int loopCount = 0;
+			// Loop through the batches of returned results
+			while (!done) {
+
+				SObject[] records = qr.getRecords();
+				
+				// Process the query results
+				for (int i = 0; i < records.length; i++) {
+					String password=(String) records[i].getField("Salesforce_Password__c");
+					String token=(String) records[i].getField("Salesforce_Token__c");
+					System.out.println("token "+token);
+					String username=(String) records[i].getField("Salesforce_Username__c");
+					connData.put("password", password);
+					if(token==null){
+						token="";
+					}
+					connData.put("token", token);
+					connData.put("username", username);
+					System.out.println("connData "+connData);
+				}
+				
+				if (qr.isDone()) {
+					done = true;
+				} else {
+					qr = partnerConnection.queryMore(qr.getQueryLocator());
+				}
+
+			}
+		} catch (ConnectionException ce) {
+			ce.printStackTrace();
+		}
+		System.out.println("\nQuery execution completed.");
+		return connData;
+	
+	}
 
 	/**
 	 * @author piymishra

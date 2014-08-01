@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
+
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.force.partner.PartnerWSDL;
+import com.force.partner.TargetPartner;
+
 import javax.servlet.http.HttpSession;
 
 
@@ -46,6 +50,17 @@ public class HomeController {
 		model.addAttribute("serverTime", formattedDate );
 		model.addAttribute("siebelList",siebelList);
 		
+		PartnerWSDL partnerWSDL= new PartnerWSDL(); 	  
+	 	 //  System.out.println(projectName); 	  
+	 	    partnerWSDL.login();
+	 	    JSONObject connData=partnerWSDL.getTargetOrgDetails("a0PG000000B248h");
+	 	   String password=(String)connData.get("password");
+			String token=(String)connData.get("token");
+			String username=(String)connData.get("username");
+			TargetPartner targetPartner= new TargetPartner(username, password+token);
+			System.out.println(targetPartner.login());
+	 	  
+	 	   
 		return "vaporizer";
 	}
 
