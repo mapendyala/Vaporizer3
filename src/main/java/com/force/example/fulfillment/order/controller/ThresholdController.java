@@ -47,32 +47,16 @@ public class ThresholdController {
 {
 	 List<SiebelObjectBO> objList=new ArrayList<SiebelObjectBO>();  
 	 HttpSession session = request.getSession(true);
-	/* try
-    {
-           Class.forName("oracle.jdbc.driver.OracleDriver");
-    }
-    catch(ClassNotFoundException e)
-    {
-           System.out.println("Where is your Oracle JDBC Driver?");
-           e.printStackTrace();
-          
-    }
-    System.out.println("Oracle JDBC Driver Registered!");
-  
-    try
-    {
-           connection = DriverManager.getConnection("jdbc:oracle:thin:@167.219.18.231:443/SBLDB", "snetuser1","snetuser1");
-    }
-    catch (SQLException e)
-    {
-           System.out.println("Connection Failed! Check output console");
-           e.printStackTrace();
-          
-    }*/
 	 
 	 try{
 		 PartnerWSDL partnerWSDL= new PartnerWSDL();
 		 String projectId = (String) session.getAttribute("projectName");
+		 System.out.println("project id+"+projectId);
+		 if(projectId==null){
+			 projectId="a0PG0000008NkHDMA0";
+		 }
+		 System.out.println("project id+"+projectId);
+		 partnerWSDL.login();
 		 JSONObject connectionData=partnerWSDL.getConnectionData(projectId);
 		  UtilityClass utilityClass= new UtilityClass();
 		  connection= utilityClass.getConnection(connectionData);
@@ -104,6 +88,7 @@ public class ThresholdController {
        while(mySet.next())
        {
        	System.out.println("myset is"+mySet.getString(1));
+       
 
 
 }

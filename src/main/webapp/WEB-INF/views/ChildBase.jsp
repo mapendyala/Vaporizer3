@@ -135,7 +135,34 @@
 </c:forEach> --%>
 					
 				</table>
+				<form:form method="post" action="save1.html" modelAttribute="dataForm">
 				<div class="buttonContainer">
+				<table id = "masterTable" style="width:100%;visibility: hidden;">
+				
+			<thead>
+				  <tr>
+				    <th class="table_header_details" style="float: center;">Migrate?</th>
+				    <th class="table_header_details" style="float: center;">Sequence</th>
+				    <th class="table_header_details" style="float: center;">Siebel Object</th>
+				    <th class="table_header_details" style="float: center;">Prim Base Table</th>
+				    
+				  </tr>
+				 </thead> 
+				<tbody>
+				
+				<c:forEach items="${dataForm.data}" var="data" varStatus="status">
+				
+				<tr>
+					<td><input name="data[${status.index}].sequence" value="${data.sequence}"/></td>
+            <td><input name="data[${status.index}].siebelObject" value="${data.siebelObject}"/></td>
+            <td><input name="data[${status.index}].primBase" value="${data.primBase}"/></td>
+            
+				</tr>
+				
+				</c:forEach>
+						</tbody>
+
+						</table>
 				<table style="border: 0">
 				
 					<tr>
@@ -151,6 +178,8 @@
 
 				</table>
 			</div>
+				<input type="submit" value="Save" />
+			</form:form>
 		</div>
 			</div>
 			
