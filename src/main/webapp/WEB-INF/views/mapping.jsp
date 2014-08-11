@@ -53,7 +53,7 @@
 					<tr><br/>
 					<td style="width: 45px;text-align: left;" align="left">Siebel Entity</td>
 					
-					<td style="width: 45px;text-align: left;" align="left">SAccount</td>
+					<td style="width: 45px;text-align: left;" align="left">${mappingData[0].siebleBaseTable }</td>
 					
 					
 					</tr>
@@ -61,7 +61,7 @@
 					<tr>
 					<td style="width: 45px;text-align: left;" align="left">SFDC Entity</td>
 					
-					<td style="width: 45px;text-align: left;" align="left">SAccount</td></tr>
+					<td style="width: 45px;text-align: left;" align="left">${mappingData[0].sfdcObjectName }</td></tr>
 					
 					
 					</table></div>
@@ -84,9 +84,9 @@
 											
 					</tr>
 					
-					<c:forEach  var="i" begin="1" end="10" varStatus="lineInfo">
+				<c:forEach items="${mappingData}" var="mapping" varStatus="status">
 					<c:choose>
-   <c:when test="${lineInfo.count % 2 == 0}">
+   <c:when test="${status.index % 2 == 0}">
      <tr bgcolor="#CECEF6"> 
    </c:when>
                               
@@ -103,14 +103,14 @@
 					
 					   
 					        <td><input type="checkbox" /></td>
-					        <td><c:out value="${i}"/></td>
-					         <td><c:out value="${i}"/></td>
-					          <td><c:out value="${i}"/></td>
-					           <td>hello</td>
-					            <td>Select</a></td>
-					             <td><c:out value="${i}"/></td>
-					              <td>Select</a></td>
-					                <td><a href="mapping">View</a></td>
+					        <td><c:out value="${mapping.siebleBaseTable}"/></td>
+					         <td><c:out value="${mapping.siebleBaseTableColumn}"/></td>
+					          <td><c:out value=""/></td>
+					           <td><c:out value=""/></td>
+					            <td><c:out value="${mapping.sfdcObjectName} "/></td>
+					             <td><c:out value="${mapping.sfdcFieldTable}"/></td>
+					              <td><c:out value=""/></td>
+					                <td></td>
 					                
 					           
 					        <%-- <td><c:out value="${p.quantity}"/></td> --%>
@@ -125,8 +125,8 @@
 					<tr>
 						<td colspan="2"
 							style="float: right; width:350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
-							<input class="btn btn-block btn-inverse" type="submit"
-							name="Extract" value="Done"  />
+							<!-- <input class="btn btn-block btn-inverse" type="submit"
+							name="Extract" value="Done"  /> -->
 							
 							<button id="cancel" type="button" style="float: right;"
 						class="btn btn-block btn-inverse">Done</button>

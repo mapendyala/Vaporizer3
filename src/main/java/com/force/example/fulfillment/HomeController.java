@@ -3,6 +3,7 @@ package com.force.example.fulfillment;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
@@ -16,8 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.force.api.http.HttpRequest;
+import com.force.example.fulfillment.order.controller.ThresholdController;
+import com.force.example.fulfillment.order.model.MappingModel;
 import com.force.partner.PartnerWSDL;
 import com.force.partner.TargetPartner;
+import com.force.utility.SiebelObjectBO;
 
 import javax.servlet.http.HttpSession;
 
@@ -82,21 +88,25 @@ public class HomeController {
 	
 
 	@RequestMapping(value = "/mapping", method = RequestMethod.GET)
-	public String home1(Locale locale, Model model) {
+	public String home1(Locale locale, Model model,HttpServletRequest request) {
 		// TODO!!!
 		logger.info("Welcome home! the client locale is "+ locale.toString());
-		
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-		
-		String formattedDate = dateFormat.format(date);
-		ArrayList<String> siebelList=new ArrayList<String>();
-		siebelList.add("Account");
-		siebelList.add("Contact");
-		siebelList.add("Order");
-		siebelList.add("Vaporizer");
-		model.addAttribute("serverTime", formattedDate );
-		model.addAttribute("siebelList",siebelList);
+		String threshold=request.getParameter("threshold");
+		String primBase=request.getParameter("primBase");
+		System.out.println("---------------"+threshold+" "+primBase);
+		//ThresholdController tc= new ThresholdController();
+		//List<SiebelObjectBO> listSiebelObject = tc.fetchSiebelObjects(request);
+		PartnerWSDL partnerWSDL= new PartnerWSDL();
+		partnerWSDL.login();
+		HttpSession session=request.getSession();
+		String parentProjectId=(String)session.getAttribute("projectId");
+		if(parentProjectId==null){
+			parentProjectId="a0PG000000AtiE5";
+		}
+		String subprojectId=partnerWSDL.getsubprojects(parentProjectId);
+		JSONObject tableName=partnerWSDL.getRelatedSiebelTable(subprojectId);
+		List<MappingModel> mappingData=partnerWSDL.getFieldMapping(tableName);
+		model.addAttribute("mappingData",mappingData);
 		
 		return "mapping";
 	}
