@@ -54,12 +54,12 @@ var primBaseTable;
 						"<tr style='height:45px' 'width:45px'>"
 								+ "<td><input  type='checkbox' style='margin-left:35px;'></td>"
 								+ "<td>"+ rowNum+"</td>"
-								+ "<td><input size='35' id="+objName+" placeholder='Click on Search' readonly style='margin-left:35px;'/><button type='button' id="+srchObj+" style='display: inline;' onclick='getPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
+								+ "<td><input size='25' id="+objName+" placeholder='Click on Search' readonly style='margin-left:35px;'/><button type='button'id="+srchObj+" style='display: inline;' onclick='getPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
 								+ "<td><input id="+primTable+" readonly style='margin-left:35px;'/></td>"
-								+ "<td><input type='text' id ="+thresholdId+" onchange='makeReadonly("+rowNum+")' style='margin-left:35px;'></td>"
-								+ "<td><a href='ChildBase' style='margin-left:35px;'>Select</a></td>"
+								+ "<td><input type='text' id ="+thresholdId+" onchange='makeReadonly("+rowNum+")' style='margin-left:15px;'></td>"
+								+ "<td><a href='ChildBase' style='margin-left:35px;'>Select</a></td>" 
 								+ "<td><input id="+SFDCObjName+" readonly/><button type='button' style='display: inline;'><span class='glyphicon glyphicon-search'></span></button></td>"
-								+ "<td><a href='mapping' style='margin-left:15px;'>Select</a></td>"
+								+ "<td><a  onclick='callMapping("+rowNum+")'style='margin-left:15px;'>Select</a></td>"
 
 								+ "<td><c:out value='Selected'/></td>"
 								+ "<td>"
@@ -71,7 +71,13 @@ var primBaseTable;
 		
 		rowNum = rowNum+1;
 	}
-
+function callMapping(rowNum){
+	var threshold=$("#"+ "thresh"+(rowNum)).val();
+	var primBase=$("#"+ "prim"+(rowNum)).val();
+	alert(threshold+" "+primBase);
+	window.location.href="/example/mapping?threshold="+threshold+"&primBaseName="+primBase;
+	
+}
 	function populateObjectName(id, primId){
 	var s =$('input[name=selectedObject]:radio:checked').val();
 	var value = s.split("+");
@@ -89,6 +95,7 @@ var primBaseTable;
 			url : "set/Threshold",
 		 	data : {threshold:threshold, primBaseName:primBaseTable}
 			});
+		$("#"+thresholdId).attr('readonly',true);
 	}
 	
 
@@ -225,7 +232,7 @@ var primBaseTable;
 		<button class="btn btn-primary" id="addRow" onclick="addRow()">[+]</button>			
 		<br><br>
 			
-				<table id = "masterTable" style="width:100%;">
+				<table id = "masterTable" style="width:90%;">
 				
 			<thead>
 				  <tr>
@@ -233,7 +240,7 @@ var primBaseTable;
 				    <th class="table_header_details" style="float: center;">Sequence</th>
 				    <th class="table_header_details" style="float: center;">Siebel Object</th>
 				    <th class="table_header_details" style="float: center;">Prim Base Table</th>
-				    <th class="table_header_details" style="float: center;">Treshold</th>
+				    <th class="table_header_details" style="float: center;">Threshold</th>
 				    <th class="table_header_details" style="float: center;">Child Base Tables</th>
 				    <th class="table_header_details" style="float: center;">SFDC Object</th>
 				    <th class="table_header_details" style="float: center;">Mapping</th>
