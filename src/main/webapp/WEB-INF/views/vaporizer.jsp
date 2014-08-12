@@ -54,7 +54,7 @@ var primBaseTable;
 						"<tr style='height:45px' 'width:45px'>"
 								+ "<td><input  type='checkbox' style='margin-left:35px;'></td>"
 								+ "<td>"+ rowNum+"</td>"
-								+ "<td><input size='25' id="+objName+" placeholder='Click on Search' readonly style='margin-left:35px;'/><button type='button'id="+srchObj+" style='display: inline;' onclick='getPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
+								+ "<td><input size='20' id="+objName+" placeholder='Click on Search' readonly style='margin-left:35px;'/><button type='button'id="+srchObj+" style='display: inline;' onclick='getPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
 								+ "<td><input id="+primTable+" readonly style='margin-left:35px;'/></td>"
 								+ "<td><input type='text' id ="+thresholdId+" onchange='makeReadonly("+rowNum+")' style='margin-left:15px;'></td>"
 								+ "<td><a href='ChildBase' style='margin-left:35px;'>Select</a></td>" 
