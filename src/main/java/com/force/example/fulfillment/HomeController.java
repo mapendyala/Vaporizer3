@@ -83,7 +83,7 @@ public class HomeController {
 		    String projectId=(String) session.getAttribute("projectId");
 	    	PartnerWSDL partnerWSDL= new PartnerWSDL();
 	    	
-	    	String SFDCObjectName=partnerWSDL.getSFDCObjectName(projectId,siebelObject);	  
+	    	String SFDCObjectName=partnerWSDL.getSFDCObjectName(siebelObject);	  
 	    	System.out.println(SFDCObjectName);
 	    	return SFDCObjectName;
 		}

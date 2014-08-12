@@ -236,14 +236,14 @@ public class PartnerWSDL {
 	 * @param seibelBaseTable
 	 * @return SFDCObjectName
 	 */
-	public String getSFDCObjectName(String projectId, String seibelBaseTable) {
+	public String getSFDCObjectName( String seibelBaseTable) {
 
 		String SFDCObjectName = "";
 		try {
 			login();
 			partnerConnection.setQueryOptions(250);
-			if(projectId==null)
-				projectId="a0PG000000AtiE5";
+			
+			String	projectId="a0PG000000AtiE5";
 		String s = seibelBaseTable	+ "_PreDefined_Mapping";
 			// SOQL query to use
 			String soqlQuery = " Select id, Object_API_Name__c, Project__r.Name, Project__r.Parent_Project__c, Table_Name__c, Type__c from Table__c where Project__r.Parent_Project__c ='"
