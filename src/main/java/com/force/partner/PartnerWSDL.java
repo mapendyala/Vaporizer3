@@ -244,12 +244,13 @@ public class PartnerWSDL {
 			partnerConnection.setQueryOptions(250);
 			if(projectId==null)
 				projectId="a0PG000000AtiE5";
+		String s = seibelBaseTable	+ "_PreDefined_Mapping";
 			// SOQL query to use
 			String soqlQuery = " Select id, Object_API_Name__c, Project__r.Name, Project__r.Parent_Project__c, Table_Name__c, Type__c from Table__c where Project__r.Parent_Project__c ='"
 					+ projectId
-					+ "' and  Project__r.Name='"
-					+ seibelBaseTable
-					+ "_PreDefined_Mapping' and Parent_Table__c = null and Type__c ='Salesforce'";
+					+ "' and  Project__r.Name='"+ s+"' and Parent_Table__c = null and Type__c ='Salesforce'";
+			System.out.println(soqlQuery);
+			//String soqlQuery ="Select id, Object_API_Name__c, Table_Name__c, Type__c from Table__c where Project__c ='"+projectId+"' and Parent_Table__c = null and Type__c ='Salesforce' and Object_API_Name__c='"+seibelBaseTable+"'";
 			// Make the query call and get the query results
 			QueryResult qr = partnerConnection.query(soqlQuery);
 			boolean done = false;

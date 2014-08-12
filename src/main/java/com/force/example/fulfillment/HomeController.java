@@ -78,10 +78,13 @@ public class HomeController {
 	 @ResponseBody
 		public String getSFDCObject(Locale locale,Model model,HttpServletRequest request,@RequestParam("siebelObject")String siebelObject)
 		{
+		 System.out.println("This methos is nt getting called"+siebelObject);
 		    HttpSession session = request.getSession(true);
 		    String projectId=(String) session.getAttribute("projectId");
 	    	PartnerWSDL partnerWSDL= new PartnerWSDL();
-	    	String SFDCObjectName=partnerWSDL.getSFDCObjectName(projectId,siebelObject);	   	 	
+	    	
+	    	String SFDCObjectName=partnerWSDL.getSFDCObjectName(projectId,siebelObject);	  
+	    	System.out.println(SFDCObjectName);
 	    	return SFDCObjectName;
 		}
 	    

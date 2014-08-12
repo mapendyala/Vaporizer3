@@ -74,8 +74,8 @@ var primBaseTable;
 function callMapping(rowNum){
 	var threshold=$("#"+ "thresh"+(rowNum)).val();
 	var primBase=$("#"+ "prim"+(rowNum)).val();
-	alert(threshold+" "+primBase);
-	window.location.href="/example/mapping?threshold="+threshold+"&primBaseName="+primBase;
+	
+	window.location.href="/mapping?threshold="+threshold+"&primBaseName="+primBase;
 	
 }
 	function populateObjectName(id, primId){
@@ -106,6 +106,7 @@ function callMapping(rowNum){
 	 
 	 function getSFDCOBject(siebelObject,SFDCObjectId)
 	 {
+		 
 		
 		 $.ajax({
 			type : "GET",
@@ -116,6 +117,7 @@ function callMapping(rowNum){
 		 		},
 			contentType : 'application/text',
 			success : function(response) {
+				
 				$("#"+SFDCObjectId).val(response); 
 			}
 		});  
@@ -132,8 +134,9 @@ function callMapping(rowNum){
 			buttons: {
 				"OK": function () {
 					populateObjectName(id, primId);
-					var siebelObject =$('input[name=selectedObject]:radio:checked').val();			
-					getSFDCOBject(siebelObject,SFDCObjectId);
+					var siebelObject =$('input[name=selectedObject]:radio:checked').val();
+					var value = siebelObject.split("+");
+					getSFDCOBject(value[0],SFDCObjectId);
 					if(document.getElementById("dyncTblCntnt")){
 						var noOfChilds = $("#dyncTblCntnt").children().length;
 						if(noOfChilds > 1){
