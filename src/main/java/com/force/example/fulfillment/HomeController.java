@@ -96,17 +96,15 @@ public class HomeController {
 		logger.info("Welcome home! the client locale is "+ locale.toString());
 		String threshold=request.getParameter("threshold");
 		String primBase=request.getParameter("primBase");
+		String siebelTableName=request.getParameter("siebelTableName");
 		System.out.println("---------------"+threshold+" "+primBase);
 		//ThresholdController tc= new ThresholdController();
 		//List<SiebelObjectBO> listSiebelObject = tc.fetchSiebelObjects(request);
 		PartnerWSDL partnerWSDL= new PartnerWSDL();
 		partnerWSDL.login();
 		HttpSession session=request.getSession();
-		String parentProjectId=(String)session.getAttribute("projectId");
-		if(parentProjectId==null){
-			parentProjectId="a0PG000000AtiE5";
-		}
-		String subprojectId=partnerWSDL.getsubprojects(parentProjectId);
+		
+		String subprojectId=partnerWSDL.getsubprojects(siebelTableName);
 		JSONObject tableName=partnerWSDL.getRelatedSiebelTable(subprojectId);
 		List<MappingModel> mappingData=partnerWSDL.getFieldMapping(tableName);
 		model.addAttribute("mappingData",mappingData);

@@ -72,10 +72,11 @@ var primBaseTable;
 		rowNum = rowNum+1;
 	}
 function callMapping(rowNum){
+	
 	var threshold=$("#"+ "thresh"+(rowNum)).val();
 	var primBase=$("#"+ "prim"+(rowNum)).val();
-	
-	window.location.href="/mapping?threshold="+threshold+"&primBaseName="+primBase;
+	var siebelTableName = $("#objectName"+(rowNum)).val();
+	window.location.href="/mapping?threshold="+threshold+"&primBaseName="+primBase+"&siebelTableName="+siebelTableName;
 	
 }
 	function populateObjectName(id, primId){

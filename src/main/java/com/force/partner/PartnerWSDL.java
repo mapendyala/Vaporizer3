@@ -336,13 +336,14 @@ public class PartnerWSDL {
 	}
 
 	
-	public  String getsubprojects(String parentProjectId){
+	public  String getsubprojects(String siebelTableName){
 		String subprojectId=null;
+		String parentProjectId="a0PG000000AtiE5";
 		try {
 			partnerConnection.setQueryOptions(250);
 			// SOQL query to use
-			
-			String soqlQuery = "Select Id, Name, Parent_Project__c, Type__c from Project__c where Parent_Project__c='"+parentProjectId+"' and Name='Account_PreDefined_Mapping'";
+			String tabelName=siebelTableName+"_PreDefined_Mapping";
+			String soqlQuery = "Select Id, Name, Parent_Project__c, Type__c from Project__c where Parent_Project__c='"+parentProjectId+"' and Name='"+tabelName+"'";
 			// Make the query call and get the query results
 			QueryResult qr = partnerConnection.query(soqlQuery);
 			boolean done = false;
