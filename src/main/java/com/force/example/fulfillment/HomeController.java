@@ -77,8 +77,7 @@ public class HomeController {
 			TargetPartner targetPartner= new TargetPartner(username, password+token);
 			System.out.println(targetPartner.login());
 	 	  
-	 	   
-			return new ModelAndView("vaporizer" , "data", data);
+			return new ModelAndView("vaporizer", "data", data);
 	}
 
 	//Added by Amrita
