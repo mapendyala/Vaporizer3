@@ -1,7 +1,6 @@
 package com.force.example.fulfillment.order.controller;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,9 +26,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
-
-
-import com.force.example.fulfillment.order.model.MainPage;
 //import com.deloitte.bean.Team;
 import com.force.example.fulfillment.order.model.Order;
 import com.force.example.fulfillment.order.service.OrderService;
@@ -44,17 +40,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping(value="/canvasui")
-@SessionAttributes("data")
 public class CanvasUIController {
 
     private static final String SIGNED_REQUEST = "signedRequestJson";
     private CanvasContext cc = new CanvasContext();
-    public List<MainPage> data = new ArrayList<MainPage>();
 
     @Autowired
     private OrderService orderService;
@@ -70,7 +63,7 @@ public class CanvasUIController {
     }
 
     @RequestMapping(method= RequestMethod.POST)
-    public ModelAndView postSignedRequest(Model model,@RequestParam(value="signed_request")String signedRequest, HttpServletRequest request){
+    public String postSignedRequest(Model model,@RequestParam(value="signed_request")String signedRequest, HttpServletRequest request){
         String srJson = SignedRequest.verifyAndDecodeAsJson(signedRequest, getConsumerSecret());
         JSONObject json= new JSONObject(srJson);
         CanvasRequest cr = SignedRequest.verifyAndDecode(signedRequest, getConsumerSecret());
@@ -97,7 +90,7 @@ public class CanvasUIController {
 			// TODO Auto-generated catch block
 			model.addAttribute("error", "Connection to Siebel database unsuccessful. Either username/password/DatabaseUrl is incorrect.");
 		}
- 	  return new ModelAndView("vaporizer", "data", data);
+ 	  return "vaporizer";
     }
     
    
