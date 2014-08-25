@@ -76,7 +76,7 @@ public class HomeController {
 			String username=(String)connData.get("username");
 			TargetPartner targetPartner= new TargetPartner(username, password+token);
 			System.out.println(targetPartner.login());
-	 	  
+	 	  System.out.println("In home page");
 			return new ModelAndView("vaporizer", "data", data);
 	}
 
