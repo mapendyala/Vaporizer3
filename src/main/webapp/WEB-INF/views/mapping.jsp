@@ -120,22 +120,26 @@
 				</table>
 			</div>
 			<div class="buttonContainer">
+			<form:form method="post" action="childSave" modelAttribute="data">
 				<table style="border: 0">
 				
 					<tr>
 						<td colspan="2"
 							style="float: right; width:350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
-							<!-- <input class="btn btn-block btn-inverse" type="submit"
-							name="Extract" value="Done"  /> -->
+							<input class="btn btn-block btn-inverse" type="submit"
+							name="Extract" value="Done"  />
 							
-							<button id="cancel" type="button" style="float: right;"
-						class="btn btn-block btn-inverse">Done</button>
+							<!-- <button id="cancel" type="button" style="float: right;"
+						class="btn btn-block btn-inverse">Done</button> -->
+					<!-- <button id="cancel" type="submit" style="float: right;"
+						class="btn btn-block btn-inverse">Done</button> -->
 							
 						</td>
 					</tr>
 					
 
 				</table>
+				</form:form>	
 			</div>
 		</div>
 
