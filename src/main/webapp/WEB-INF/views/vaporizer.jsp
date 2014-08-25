@@ -318,7 +318,6 @@ function callMapping(rowNum){
 						 <div id="row"><input id="rowCount" name='rowCount' type="hidden" value="${data.size()}"></div>
 						  <div id="page"><input id="pageName" name='pageName' type="hidden" readonly></div>
 						 <div id="No"><input id="rowNo" name='rowNo' type="hidden" readonly></div>
-					<input type="button" onclick="submitForm()" value="Submit Form">
 			</form:form>
 		 <div class="buttonContainer">
 				<table style="border: 0">
