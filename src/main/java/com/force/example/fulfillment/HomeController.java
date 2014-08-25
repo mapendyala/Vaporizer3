@@ -78,7 +78,7 @@ public class HomeController {
 			System.out.println(targetPartner.login());
 	 	  
 	 	   
-			return new ModelAndView("Copy of vaporizer" , "data", data);
+			return new ModelAndView("vaporizer" , "data", data);
 	}
 
 	//Added by Amrita
@@ -166,7 +166,7 @@ public class HomeController {
        // System.out.println(dataForm.getData());
         System.out.println("doneeeeeeee-------------");
         //System.out.println(data.get(0).getSiebelObject());
-        return new ModelAndView("Copy of vaporizer" , "data", data);
+        return new ModelAndView("vaporizer" , "data", data);
     }
 	
 	/*@RequestMapping(value = "/Done", method = RequestMethod.GET)
