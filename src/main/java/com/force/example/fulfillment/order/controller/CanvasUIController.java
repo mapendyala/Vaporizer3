@@ -116,7 +116,7 @@ public class CanvasUIController {
     public ModelAndView getOrdersPage(Model model, @ModelAttribute("data") List<MainPage> data) {
         model.addAttribute("order", new Order());
         model.addAttribute("orders", orderService.listOrders());
-
+System.out.println("Data size:" +data.size());
         return new ModelAndView("vaporizer", "data", data);
     }
 
