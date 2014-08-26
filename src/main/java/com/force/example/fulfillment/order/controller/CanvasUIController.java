@@ -69,7 +69,7 @@ public class CanvasUIController {
         this.validator = validator;
     }
 
-    @RequestMapping(method= RequestMethod.POST)
+    @RequestMapping(method= RequestMethod.GET)
     public ModelAndView postSignedRequest(Model model,@RequestParam(value="signed_request")String signedRequest, HttpServletRequest request){
         String srJson = SignedRequest.verifyAndDecodeAsJson(signedRequest, getConsumerSecret());
         JSONObject json= new JSONObject(srJson);
