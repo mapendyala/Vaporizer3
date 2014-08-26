@@ -29,6 +29,7 @@ import org.springframework.ui.Model;
 
 
 
+
 import com.force.example.fulfillment.order.model.MainPage;
 //import com.deloitte.bean.Team;
 import com.force.example.fulfillment.order.model.Order;
@@ -40,6 +41,7 @@ import com.force.partner.PartnerWSDL;
 import com.force.utility.UtilityClass;
 import com.sforce.ws.ConnectionException;
 
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -54,7 +56,7 @@ public class CanvasUIController {
 
     private static final String SIGNED_REQUEST = "signedRequestJson";
     private CanvasContext cc = new CanvasContext();
-    public List<MainPage> data = new ArrayList<MainPage>();
+//    public List<MainPage> data = new ArrayList<MainPage>();
 
     @Autowired
     private OrderService orderService;
@@ -110,8 +112,8 @@ public class CanvasUIController {
         return "orders";
     }*/
     
-    @RequestMapping(method=RequestMethod.GET)
-    public ModelAndView getOrdersPage(Model model) {
+    @RequestMapping(method=RequestMethod.GET )
+    public ModelAndView getOrdersPage(Model model, @ModelAttribute("data") List<MainPage> data) {
         model.addAttribute("order", new Order());
         model.addAttribute("orders", orderService.listOrders());
 
