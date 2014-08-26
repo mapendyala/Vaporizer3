@@ -49,12 +49,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping(value="/canvasui")
-@SessionAttributes("data")
 public class CanvasUIController {
 
     private static final String SIGNED_REQUEST = "signedRequestJson";
     private CanvasContext cc = new CanvasContext();
-    public List<MainPage> data = new ArrayList<MainPage>();
 
     @Autowired
     private OrderService orderService;
