@@ -49,10 +49,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping(value="/canvasui")
+@SessionAttributes("data")
 public class CanvasUIController {
 
     private static final String SIGNED_REQUEST = "signedRequestJson";
     private CanvasContext cc = new CanvasContext();
+    public List<MainPage> data = new ArrayList<MainPage>();
 
     @Autowired
     private OrderService orderService;
@@ -100,12 +102,20 @@ public class CanvasUIController {
     }
     
    
-    @RequestMapping(method=RequestMethod.GET)
+  /*  @RequestMapping(method=RequestMethod.GET)
     public String getOrdersPage(Model model) {
         model.addAttribute("order", new Order());
         model.addAttribute("orders", orderService.listOrders());
 
         return "orders";
+    }*/
+    
+    @RequestMapping(method=RequestMethod.GET)
+    public ModelAndView getOrdersPage(Model model) {
+        model.addAttribute("order", new Order());
+        model.addAttribute("orders", orderService.listOrders());
+
+        return new ModelAndView("vaporizer", "data", data);
     }
 
     private static final String getConsumerSecret(){
