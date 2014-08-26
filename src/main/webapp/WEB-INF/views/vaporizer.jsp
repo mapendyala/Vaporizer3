@@ -42,34 +42,40 @@ var primBaseTable;
 
 	function addRow() {
 		
+		  if($("#rowCount").val()!=''){
+			rowNum = Number($("#rowCount").val())+1;
+		} 
+		 
+		$("#rowCount").val(rowNum);
+		 
 		var objName = "objectName"+(rowNum);
 		var srchObj = "searchObject"+(rowNum);
 		var primTable = "prim"+(rowNum);
 		var thresholdId = "thresh"+(rowNum);
 		var SFDCObjName = "SFDCObjName"+(rowNum);
-
+		var migrateId = "migrate"+(rowNum);
+		var seqId = "seq"+(rowNum);
 		
-		$("#masterTable tbody")
+		 $("#masterTable tbody")
 				.append(
-						"<tr style='height:45px' 'width:45px'>"
-								+ "<td><input  type='checkbox' style='margin-left:35px;'></td>"
-								+ "<td>"+ rowNum+"</td>"
-								+ "<td><input size='20' id="+objName+" placeholder='Click on Search' readonly style='margin-left:35px;'/><button type='button'id="+srchObj+" style='display: inline;' onclick='getPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
-								+ "<td><input id="+primTable+" readonly style='margin-left:35px;'/></td>"
-								+ "<td><input type='text' id ="+thresholdId+" onchange='makeReadonly("+rowNum+")' style='margin-left:15px;'></td>"
-								+ "<td><a href='ChildBase' style='margin-left:35px;'>Select</a></td>" 
-								+ "<td><input id="+SFDCObjName+" readonly/><button type='button' style='display: inline;'><span class='glyphicon glyphicon-search'></span></button></td>"
-								+ "<td><a  onclick='callMapping("+rowNum+")'style='margin-left:15px;'>Select</a></td>"
-
+						
+						"<tr style='height:45px; width:45px;'>"
+								+ "<td><input name="+migrateId+" type='checkbox'></td>"
+								+ "<td><input name= "+seqId+" hidden value="+rowNum+">"+rowNum+"</td>"
+								+ "<td><input size='20' name="+objName+" id = "+objName+" placeholder='Click on Search' readonly style='margin-left:35px;'/><button type='button'id="+srchObj+" style='display: inline;' onclick='getPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
+								+ "<td><input name="+primTable+" id="+primTable+" readonly style='margin-left:35px;'/></td>"
+								+ "<td><input type='text' id ="+thresholdId+" name="+thresholdId+" onchange='makeReadonly("+rowNum+")' style='margin-left:15px;'></td>"
+								+ "<td><a href='#' onclick='submitForm("+rowNum+")' style='margin-left:15px;'>Select</a></td>" 
+								+ "<td><input id="+SFDCObjName+" name="+SFDCObjName+" readonly style='margin-left:35px;'/><button type='button' style='display: inline;'><span class='glyphicon glyphicon-search'></span></button></td>"
+								+ "<td><a href='#' onclick='submit("+rowNum+")' style='margin-left:15px;'>Select</a></td>"
 								+ "<td><c:out value='Selected'/></td>"
 								+ "<td>"
 								+ "<input class='btn btn-inverse' type='button' name='Extract' value='E' />"
-								+ "<input class='btn btn-inverse' type='button' name='transform' value='T' style='margin-left:5px;'/>"
-				                + "<input class='btn btn-inverse' type='button' name='delete' value='-' style='margin-left:5px;'/>"
+								+ "<input class='btn btn-inverse' type='button' name='transform' value='T' style='margin-left:10px;'/>"
+				                + "<input class='btn btn-inverse' type='button' name='delete' value='-' style='margin-left:10px;'/>"
 				                + "</td>"
 				                + "</tr>");
 		
-		rowNum = rowNum+1;
 	}
 function callMapping(rowNum){
 	
@@ -161,6 +167,27 @@ function callMapping(rowNum){
 			},
 			});
 		} 
+	  
+	  
+	  function submitForm(rowNum)
+	  
+	  {		
+		  var page = "child";
+		  $("#rowNo").val(rowNum); 
+		  $("#pageName").val(page);
+		  $("#mainForm").submit(); 
+				 
+	  }
+	  
+ function submit(rowNum)
+	  
+	  {		
+		  var page = "map";
+		  $("#rowNo").val(rowNum); 
+		  $("#pageName").val(page);
+		  $("#mainForm").submit(); 
+				 
+	  }
 	
 	function  getObjectName(){
 		var objName = $("#objName").val();
@@ -235,8 +262,8 @@ function callMapping(rowNum){
 	<!-- Madhuri code start -->	
 		<button class="btn btn-primary" id="addRow" onclick="addRow()">[+]</button>			
 		<br><br>
-			
-				<table id = "masterTable" style="width:100%;">
+			<form:form action = "saveData" method = "post" id="mainForm" name="master" commandName="data">
+				<table id = "masterTable" style="width:90%;">
 				
 			<thead>
 				  <tr>
@@ -253,10 +280,45 @@ function callMapping(rowNum){
 				  </tr>
 				 </thead> 
 				<tbody>
+				
+				  <c:if test="${not empty data}"> 
+				   <c:forEach items="${data}" var="mainPage"> 
+				    
+				<tr style="height: 45px; width: 45px;" >
+								<td>
+								<c:choose>
+								<c:when test="${mainPage.migrate == 'on'}">
+								<input name="migrate${mainPage.sequence}" type='checkbox' checked="checked">
+								</c:when>
+								<c:otherwise>
+								<input name="migrate${mainPage.sequence}" type='checkbox'>
+								</c:otherwise>
+								</c:choose>
+								</td>
+								<td><input type="hidden" name="seq${mainPage.sequence}" value="${mainPage.sequence}">${mainPage.sequence}</td>
+								<td><input name="objectName${mainPage.sequence}" id="objectName${mainPage.sequence}" value="${mainPage.siebelObject}" size='20' placeholder='Click on Search' readonly style='margin-left:35px;'/><button type='button' style='display: inline;' onclick="getPopup(${mainPage.sequence})"><span class='glyphicon glyphicon-search'></span></button></td>
+								<td><input value="${mainPage.primBaseTable}" id="prim${mainPage.sequence}" name="prim${mainPage.sequence}" readonly style='margin-left:35px;'/></td>
+								<td><input type='text' id="thresh${mainPage.sequence}" name="thresh${mainPage.sequence}" value="${mainPage.threshold}" onchange='makeReadonly(${mainPage.sequence})' style='margin-left:15px;'></td>
+								<td><a href="#" onclick='submitForm(${mainPage.sequence})' style='margin-left:15px;'>Select</a></td>
+								<td><input  readonly style='margin-left:35px;'/><button type='button' style='display: inline;'><span class='glyphicon glyphicon-search'></span></button></td>
+								<td><a href='#' onclick='submit(${mainPage.sequence})' style='margin-left:15px;'>Select</a></td>
+								<td><c:out value='Selected'/></td>
+								<td>
+								<input class='btn btn-inverse' type='button' name='Extract' value='E' />
+								<input class='btn btn-inverse' type='button' name='transform' value='T' style='margin-left:5px;'/>
+				                <input class='btn btn-inverse' type='button' name='delete' value='-' style='margin-left:5px;'/>
+				                </td>
+				                </tr>
+				               
+				               </c:forEach> 
+				                 </c:if> 
 						</tbody>
 
 						</table>
-				
+						 <div id="row"><input id="rowCount" name='rowCount' type="hidden" value="${data.size()}"></div>
+						  <div id="page"><input id="pageName" name='pageName' type="hidden" readonly></div>
+						 <div id="No"><input id="rowNo" name='rowNo' type="hidden" readonly></div>
+			</form:form>
 		 <div class="buttonContainer">
 				<table style="border: 0">
 					<tr>
