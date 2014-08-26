@@ -263,7 +263,7 @@ function callMapping(rowNum){
 		<button class="btn btn-primary" id="addRow" onclick="addRow()">[+]</button>			
 		<br><br>
 			<form:form action = "saveData" method = "post" id="mainForm" name="master" commandName="data">
-				<table id = "masterTable" style="width:90%;">
+				<table id = "masterTable" style="width:100%;">
 				
 			<thead>
 				  <tr>
