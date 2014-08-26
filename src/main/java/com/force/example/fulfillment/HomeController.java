@@ -42,11 +42,11 @@ import javax.servlet.http.HttpSession;
 @Controller
 @SessionAttributes("data")
 public class HomeController {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	public static String rowCount;
 	public List<MainPage> data = new ArrayList<MainPage>();
-	
+
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
@@ -54,10 +54,10 @@ public class HomeController {
 	public ModelAndView home(Locale locale, Model model) {
 		// TODO!!!
 		logger.info("Welcome home! the client locale is "+ locale.toString());
-		
+
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-		
+
 		String formattedDate = dateFormat.format(date);
 		ArrayList<String> siebelList=new ArrayList<String>();
 		siebelList.add("Account");
@@ -66,39 +66,35 @@ public class HomeController {
 		siebelList.add("Vaporizer");
 		model.addAttribute("serverTime", formattedDate );
 		model.addAttribute("siebelList",siebelList);
-		
+
 		PartnerWSDL partnerWSDL= new PartnerWSDL(); 	  
-	 	 //  System.out.println(projectName); 	  
-	 	    partnerWSDL.login();
-	 	    JSONObject connData=partnerWSDL.getTargetOrgDetails("a0PG000000B248h");
-	 	   String password=(String)connData.get("password");
-			String token=(String)connData.get("token");
-			String username=(String)connData.get("username");
-			TargetPartner targetPartner= new TargetPartner(username, password+token);
-			System.out.println(targetPartner.login());
-	 	  System.out.println("In home page");
-			return new ModelAndView("vaporizer", "data", data);
+		//  System.out.println(projectName); 	  
+		partnerWSDL.login();
+		JSONObject connData=partnerWSDL.getTargetOrgDetails("a0PG000000B248h");
+		String password=(String)connData.get("password");
+		String token=(String)connData.get("token");
+		String username=(String)connData.get("username");
+		TargetPartner targetPartner= new TargetPartner(username, password+token);
+		System.out.println(targetPartner.login());
+		System.out.println("In home page");
+		return new ModelAndView("vaporizer", "data", data);
 	}
 
-	//Added by Amrita
+	@RequestMapping(value="/getSFDCOBject", method=RequestMethod.GET,produces="text/plain")
+	@ResponseBody
+	public String getSFDCObject(Locale locale,Model model,HttpServletRequest request,@RequestParam("siebelObject")String siebelObject)
+	{
+		System.out.println("This methos is nt getting called"+siebelObject);
+		HttpSession session = request.getSession(true);
+		String projectId=(String) session.getAttribute("projectId");
+		PartnerWSDL partnerWSDL= new PartnerWSDL();
 
-	
-	
-	 @RequestMapping(value="/getSFDCOBject", method=RequestMethod.GET,produces="text/plain")
-	 @ResponseBody
-		public String getSFDCObject(Locale locale,Model model,HttpServletRequest request,@RequestParam("siebelObject")String siebelObject)
-		{
-		 System.out.println("This methos is nt getting called"+siebelObject);
-		    HttpSession session = request.getSession(true);
-		    String projectId=(String) session.getAttribute("projectId");
-	    	PartnerWSDL partnerWSDL= new PartnerWSDL();
-	    	
-	    	String SFDCObjectName=partnerWSDL.getSFDCObjectName(projectId,siebelObject);	  
-	    	System.out.println(SFDCObjectName);
-	    	return SFDCObjectName;
-		}
-	    
-	
+		String SFDCObjectName=partnerWSDL.getSFDCObjectName(projectId,siebelObject);	  
+		System.out.println(SFDCObjectName);
+		return SFDCObjectName;
+	}
+
+
 
 	@RequestMapping(value = "/mapping", method = RequestMethod.GET)
 	public String home1(Locale locale, Model model,HttpServletRequest request) {
@@ -113,15 +109,15 @@ public class HomeController {
 		PartnerWSDL partnerWSDL= new PartnerWSDL();
 		partnerWSDL.login();
 		HttpSession session=request.getSession();
-		
+
 		String subprojectId=partnerWSDL.getsubprojects(siebelTableName);
 		JSONObject tableName=partnerWSDL.getRelatedSiebelTable(subprojectId);
 		List<MappingModel> mappingData=partnerWSDL.getFieldMapping(tableName);
 		model.addAttribute("mappingData",mappingData);
-		
+
 		return "mapping";
 	}
-	
+
 	@RequestMapping(value = "/ChildBase", method = RequestMethod.GET)
 	public String home2(Locale locale, Model model) {
 		// TODO!!!
@@ -132,7 +128,7 @@ public class HomeController {
 		//mc.getSiebelFielddata(request, model, data);
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-		
+
 		String formattedDate = dateFormat.format(date);
 		ArrayList<String> siebelList=new ArrayList<String>();
 		siebelList.add("Account");
@@ -141,17 +137,17 @@ public class HomeController {
 		siebelList.add("Vaporizer");
 		model.addAttribute("serverTime", formattedDate );
 		model.addAttribute("siebelList",siebelList);
-		
+
 		return "ChildBase";
 	}
 
 	@RequestMapping(value = "childSave", method = RequestMethod.POST)
-    public ModelAndView save1(@ModelAttribute("data") List<MainPage> data, Locale locale, Model model) {
+	public ModelAndView save1(@ModelAttribute("data") List<MainPage> data, Locale locale, Model model) {
 		logger.info("Welcome home! the client locale is "+ locale.toString());
 		System.out.println("inside demo");
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-		
+
 		String formattedDate = dateFormat.format(date);
 		ArrayList<String> siebelList=new ArrayList<String>();
 		siebelList.add("Account");
@@ -160,14 +156,14 @@ public class HomeController {
 		siebelList.add("Vaporizer");
 		model.addAttribute("serverTime", formattedDate );
 		model.addAttribute("siebelList",siebelList);
-    	System.out.println("----------doneeeeeeee");
-        //System.out.println(dataForm);
-       // System.out.println(dataForm.getData());
-        System.out.println("doneeeeeeee-------------");
-        //System.out.println(data.get(0).getSiebelObject());
-        return new ModelAndView("vaporizer" , "data", data);
-    }
-	
+		System.out.println("----------doneeeeeeee");
+		//System.out.println(dataForm);
+		// System.out.println(dataForm.getData());
+		System.out.println("doneeeeeeee-------------");
+		//System.out.println(data.get(0).getSiebelObject());
+		return new ModelAndView("vaporizer" , "data", data);
+	}
+
 	/*@RequestMapping(value = "/Done", method = RequestMethod.GET)
 	public String home3(Locale locale, Model model) {
 		// TODO!!!
@@ -175,7 +171,7 @@ public class HomeController {
 		System.out.println("inside demo");
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-		
+
 		String formattedDate = dateFormat.format(date);
 		ArrayList<String> siebelList=new ArrayList<String>();
 		siebelList.add("Account");
@@ -184,10 +180,10 @@ public class HomeController {
 		siebelList.add("Vaporizer");
 		model.addAttribute("serverTime", formattedDate );
 		model.addAttribute("siebelList",siebelList);
-		
+
 		return "Copy of vaporizer";
 	}*/
-	
+
 	@RequestMapping(value="saveData",method = RequestMethod.POST)
 	public ModelAndView getSiebelFielddata(HttpServletRequest request, Map<String, Object> model) {
 		System.out.println("In main controller");
@@ -196,7 +192,7 @@ public class HomeController {
 		rowCount= request.getParameter("rowCount");
 		String rowNo = request.getParameter("rowNo");
 		String page = request.getParameter("pageName");
-/*		String threshold ="thresh"+rowNo;
+		/*		String threshold ="thresh"+rowNo;
 		String primBase = "prim"+rowNo;
 		String siebelTableName = "objectName"+rowNo;*/
 		String thresholdValue=request.getParameter("thresh"+rowNo);
@@ -212,7 +208,7 @@ public class HomeController {
 			String primTable = "prim"+i;
 			String thresholdId = "thresh"+i;
 			String SFDCObjName = "SFDCObjName"+i;
-			
+
 			mainPage.setMigrate(request.getParameter(migrate));
 			mainPage.setSequence(request.getParameter(seq));
 			mainPage.setSiebelObject(request.getParameter(objName));
@@ -220,15 +216,15 @@ public class HomeController {
 			mainPage.setThreshold(request.getParameter(thresholdId));
 			data.add(mainPage);
 		}
-		
-		
- 		 
+
+
+
 		if(page.equals("child")){
-		
-		return new ModelAndView("ChildBase" , "data", data);}
+
+			return new ModelAndView("ChildBase" , "data", data);}
 		else{
 			return new ModelAndView("mapping", "data", data);
 		}
 	}
-	
+
 }
