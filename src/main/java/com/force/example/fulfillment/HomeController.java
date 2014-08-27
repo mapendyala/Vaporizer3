@@ -84,7 +84,7 @@ public class HomeController {
 		return new ModelAndView("vaporizer", "data", data);
 	}
 
-	 /*Added by Subhojit*/
+	 /*Added by Subhojitc*/
 	 
 	 @RequestMapping(value="/initiateDataLoader", method=RequestMethod.GET,produces="text/plain")
 	 @ResponseBody
