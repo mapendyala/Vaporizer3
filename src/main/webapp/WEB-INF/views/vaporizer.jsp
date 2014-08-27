@@ -91,6 +91,31 @@ function callMapping(rowNum){
 		$("#"+id).val(value[0]); 
 		$("#"+primId).val(value[1]);
 	}
+	
+	
+	 function initiateDataLoad()
+	 {
+		 alert('hiii'); 
+		 var dataFileUrlVar= $("[id$='dataFileUrl']").val();
+		 alert('hiii');
+		 $.ajax({
+			type : "GET",
+			url : "initiateDataLoader",
+		 	data :
+		 		{
+		 		dataFileUrl:dataFileUrlVar		 		
+		 		},
+			contentType : 'application/text',
+			success : function(response) {
+				
+				//$("#"+SFDCObjectId).val(response); 
+			}
+		});  
+	 }
+	
+	
+	
+	
 		
 	 function makeReadonly(rowNum){
 		 var thresholdId = "thresh"+(rowNum);
@@ -350,7 +375,7 @@ function callMapping(rowNum){
 						<td colspan="2"
 							style="float: right; width: 350px; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
 							<input class="btn btn-block btn-inverse" type="button"
-							name="Extract" value="Migrate To SFDC" />
+							name="Extract" value="Migrate To SFDC" id="dataloadtoSFDC" onclick='initiateDataLoad()'/> />
 						</td>
 					</tr>	
 

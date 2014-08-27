@@ -1,5 +1,6 @@
 package com.force.example.fulfillment;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
@@ -32,6 +34,8 @@ import com.force.example.fulfillment.order.model.MappingModel;
 import com.force.partner.PartnerWSDL;
 import com.force.partner.TargetPartner;
 import com.force.utility.SiebelObjectBO;
+import com.sforce.async.AsyncApiException;
+import com.sforce.ws.ConnectionException;
 
 import javax.servlet.http.HttpSession;
 
@@ -80,7 +84,22 @@ public class HomeController {
 		return new ModelAndView("vaporizer", "data", data);
 	}
 
+	 /*Added by Subhojit*/
+	 
+	 @RequestMapping(value="/initiateDataLoader", method=RequestMethod.GET,produces="text/plain")
+	 @ResponseBody
+	public void initiateDataLoader(Locale locale,Model model,HttpServletRequest request,@RequestParam("datafileUrl")String datafileUrl) throws IOException, AsyncApiException, ConnectionException
+		{
+		// System.out.println("This methos is nt getting called"+siebelObject);
+	
+		 com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
+		
+			dt.dataUploadController(datafileUrl);
+		
+			// TODO Auto-generated catch block
+			
 
+	}
 	
 	
 	 @RequestMapping(value="/getSFDCOBject", method=RequestMethod.GET,produces="text/plain")
