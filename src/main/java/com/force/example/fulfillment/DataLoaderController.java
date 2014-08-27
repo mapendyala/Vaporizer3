@@ -17,13 +17,19 @@ public class DataLoaderController {
 	Integer checkI=0;
     File DataFileVal=null;
     File MapFileVal=null;
+ /*   public static void main(String args[]) throws IOException, AsyncApiException, ConnectionException{
+    	DataLoaderController dt=new DataLoaderController();
+    	dt.dataUploadController("https://na11.salesforce.com/00PG000000HyILz","subhchakraborty@deloitte.com.vaporizer","May@2013","Account");
+    	
+    	
+    }*/
     public void dataUploadController(String dataFileUrl,String userId,String pwd,String objectName) throws IOException, AsyncApiException, ConnectionException
     {
     	DataLoaderController example = new DataLoaderController();
     	File[] fileList=new File[2];
     	
     	/* Get Data File    f   */
-    	dataFileUrl=dataFileUrl.substring(29,dataFileUrl.length()-2);
+    	dataFileUrl=dataFileUrl.substring(29,dataFileUrl.length());
     	String dataFile=getUploadedFile(dataFileUrl,false,userId,pwd);
     	dataFile=dataFile.replaceAll("\\\\r", "");
     	dataFile=dataFile.replaceAll("\"", "");
