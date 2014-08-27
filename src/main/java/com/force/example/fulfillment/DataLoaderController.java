@@ -22,7 +22,7 @@ public class DataLoaderController {
     	DataLoaderController example = new DataLoaderController();
     	File[] fileList=new File[2];
     	
-    	/* Get Data File       */
+    	/* Get Data File    f   */
     	dataFileUrl=dataFileUrl.substring(29,dataFileUrl.length()-2);
     	String dataFile=getUploadedFile(dataFileUrl,false,userId,pwd);
     	dataFile=dataFile.replaceAll("\\\\r", "");
