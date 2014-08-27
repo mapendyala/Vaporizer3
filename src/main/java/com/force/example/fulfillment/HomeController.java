@@ -41,7 +41,7 @@ import javax.servlet.http.HttpSession;
 
 
 /**
- * Handles requests for the application home page.
+ * Handles requests for the application home page..
  */
 @Controller
 @SessionAttributes("data")
