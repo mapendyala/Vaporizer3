@@ -106,7 +106,7 @@ function callMapping(rowNum){
 		var s2=res[1];
 		 var finUrl=s[1]+"-"+s2;
 		 alert('hiii');
-		 $("#dialog").append('<div id="stat"><h4> Data Loading status: In Progress</h4></div>');
+		 $("#statusBlock").append('<div id="stat"><h4> Data Loading status: In Progress</h4></div>');
 		 $.ajax({
 			type : "GET",
 			url : "initiateDataloader",
@@ -122,8 +122,8 @@ function callMapping(rowNum){
 				var total=strList[0]+strList[1];
 				var successNo=strList[0];
 				var failureNo=strList[1];
-				$("#stat").html('<h4> Data Loading Status : Complete</h4>');
-				$("#dialog").append("<h4> No Of Record  : "+total+"</h4>" +
+				$("#statusBlock").html('<h4> Data Loading Status : Complete</h4>');
+				$("#statusBlock").append("<h4> No Of Record  : "+total+"</h4>" +
 				"<h6> Success : "+successNo+"</h6>"+
 				"<h6> Failure : "+failureNo+"</h6>");
 				//$("#"+SFDCObjectId).val(response); 
@@ -282,6 +282,9 @@ function callMapping(rowNum){
 <title>Vaporizer</title>
 </head>
 <body>
+<div id="statusBlock">
+
+</div>
 
 	<div id="dialog" class="container">
 		<h6>${error}</h6>
