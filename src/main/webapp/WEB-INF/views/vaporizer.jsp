@@ -111,7 +111,7 @@ function callMapping(rowNum){
 			url : "initiateDataloader",
 		 	data :
 		 		{
-		 		dataFileUrl:finUrl	 		
+		 		datafileUrl:finUrl	 		
 		 		},
 			contentType : 'application/text',
 			success : function(response) {
