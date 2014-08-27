@@ -88,7 +88,7 @@ public class HomeController {
 	 
 	 @RequestMapping(value="/initiateDataloader", method=RequestMethod.GET,produces="text/plain")
 	 @ResponseBody
-	public void initiateDataLoader(Locale locale,Model model,HttpServletRequest request,@RequestParam("datafileUrl")String datafileUrl) throws IOException, AsyncApiException, ConnectionException
+	public String initiateDataLoader(Locale locale,Model model,HttpServletRequest request,@RequestParam("datafileUrl")String datafileUrl) throws IOException, AsyncApiException, ConnectionException
 		{
 		// System.out.println("This methos is nt getting called"+siebelObject);
 		 PartnerWSDL partnerWSDL= new PartnerWSDL(); 	  
@@ -104,7 +104,7 @@ public class HomeController {
 			com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
 		    String objectName="Account";
 		   
-			dt.dataUploadController(datafileUrl,username,password+token,objectName);
+			return dt.dataUploadController(datafileUrl,username,password+token,objectName);
 		
 			// TODO Auto-generated catch block
 			

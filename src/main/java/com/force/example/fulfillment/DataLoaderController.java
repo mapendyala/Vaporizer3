@@ -23,7 +23,7 @@ public class DataLoaderController {
     	
     	
     }*/
-    public void dataUploadController(String dataFileUrl,String userId,String pwd,String objectName) throws IOException, AsyncApiException, ConnectionException
+    public String dataUploadController(String dataFileUrl,String userId,String pwd,String objectName) throws IOException, AsyncApiException, ConnectionException
     {
     	DataLoaderController example = new DataLoaderController();
     	File[] fileList=new File[2];
@@ -76,7 +76,7 @@ public class DataLoaderController {
     	
     	
         
-    	example.runSample(objectName, userId, pwd, "DataFile.csv","MapFile.sdl");
+    return	example.runSample(objectName, userId, pwd, "DataFile.csv","MapFile.sdl");
     	
     	//example.runSample("Account", "subhchakraborty@deloitte.com.vaporizer", "May@2013", "DataFile.csv","C:\\Users\\subhchakraborty\\Downloads\\Sep.sdl");
         
@@ -331,7 +331,7 @@ System.out.println( connection.getResponseMessage());
      * Creates a Bulk API job and uploads batches for a CSV file.
      */
     
-    public void runSample(String sobjectType, String userName,
+    public String runSample(String sobjectType, String userName,
               String password, String sampleFileName,String mappingFileName)
             throws AsyncApiException, ConnectionException, IOException {
         BulkConnection connection = getBulkConnection(userName, password);
@@ -340,7 +340,7 @@ System.out.println( connection.getResponseMessage());
             sampleFileName,mappingFileName);
         closeJob(connection, job.getId());
         awaitCompletion(connection, job, batchInfoList);
-        checkResults(connection, job, batchInfoList);
+       return checkResults(connection, job, batchInfoList);
     }
 
 
@@ -348,11 +348,12 @@ System.out.println( connection.getResponseMessage());
     /**
      * Gets the results of the operation and checks for errors.
      */
-    private void checkResults(BulkConnection connection, JobInfo job,
+    private String checkResults(BulkConnection connection, JobInfo job,
               List<BatchInfo> batchInfoList)
             throws AsyncApiException, IOException {
         // batchInfoList was populated when batches were created and submitted
-    	
+    	int noOfSuccess=0;
+    	int noOfFailure=0;
         for (BatchInfo b : batchInfoList) {
             CSVReader rdr =
               new CSVReader(connection.getBatchResultStream(job.getId(), b.getId()));
@@ -371,7 +372,7 @@ System.out.println( connection.getResponseMessage());
                 String error = resultInfo.get("Error");
                 if (success && created) {
                     System.out.println("Created row with id " + id);
-                    
+                    noOfSuccess++;
                     if(checkI==0)
                     	 System.out.println("Data File" + id);
                     else
@@ -379,10 +380,12 @@ System.out.println( connection.getResponseMessage());
                     
                     } else if (!success) {
                     System.out.println("Failed with error: " + error);
+                    noOfFailure++;
                 }
             }
             checkI++;  
         }
+        return (String.valueOf(noOfSuccess)+"_"+String.valueOf(noOfFailure));
     }
 
 

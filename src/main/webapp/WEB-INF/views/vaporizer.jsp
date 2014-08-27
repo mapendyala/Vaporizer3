@@ -92,7 +92,7 @@ function callMapping(rowNum){
 		$("#"+primId).val(value[1]);
 	}
 	
-	
+	//Added by Subhojit
 	 function initiateDataLoad()
 	 {
 		 alert('hiii'); 
@@ -115,7 +115,18 @@ function callMapping(rowNum){
 		 		},
 			contentType : 'application/text',
 			success : function(response) {
+				var str=response;
+				alert(response);
+				var strList=str.split("_");
+				var total=strList[0]+strList[1];
+				var successNo=strList[0];
+				var failureNo=strList[1];
+				$("#dialog").append("<h4> No Of Record  : "+total+"</h4>" +
+						
+				"<h6> Success : "+successNo+"</h6>"+
+				"<h6> Failure : "+failureNo+"</h6>"+
 				
+				);
 				//$("#"+SFDCObjectId).val(response); 
 			}
 		});  
