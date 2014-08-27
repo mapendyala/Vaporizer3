@@ -17,12 +17,12 @@ public class DataLoaderController {
 	Integer checkI=0;
     File DataFileVal=null;
     File MapFileVal=null;
- /*   public static void main(String args[]) throws IOException, AsyncApiException, ConnectionException{
+   public static void main(String args[]) throws IOException, AsyncApiException, ConnectionException{
     	DataLoaderController dt=new DataLoaderController();
-    	dt.dataUploadController("https://na11.salesforce.com/00PG000000HyILz","subhchakraborty@deloitte.com.vaporizer","May@2013","Account");
+    	dt.dataUploadController("https://na11.salesforce.com/00PG000000HyL41","subhchakraborty@deloitte.com.vaporizer","May@2013","Account");
     	
     	
-    }*/
+    }
     public String dataUploadController(String dataFileUrl,String userId,String pwd,String objectName) throws IOException, AsyncApiException, ConnectionException
     {
     	DataLoaderController example = new DataLoaderController();
@@ -258,7 +258,7 @@ public class DataLoaderController {
         System.out.println(loginResult.getSessionId());
         String targetURL ="";
         if(isMap)
-           targetURL = "https://na11.salesforce.com/services/apexrest/GetUploadFile/"+fileId+"1";
+           targetURL = "https://na11.salesforce.com/services/apexrest/GetUploadFile/"+fileId+"_1";
         else
         	targetURL = "https://na11.salesforce.com/services/apexrest/GetUploadFile/"+fileId;
         System.out.println("URL..."+targetURL);
@@ -530,7 +530,7 @@ System.out.println( connection.getResponseMessage());
         	}
         	}
         }
-        System.out.println(".........."+mapA.get("Account Type"));
+        System.out.println(csvFileName+".........."+mapA.get("Account Type"));
         
         BufferedReader rdr = new BufferedReader( new FileReader(csvFileName));
        // );
@@ -539,7 +539,7 @@ System.out.println( connection.getResponseMessage());
        
         System.out.println(mapA.keySet()+"..........Map...."+mapA.values());
         String doc2 = new String(headerBytes, "UTF-8");
-        System.out.println("....."+doc2);
+        System.out.println(".ui..."+doc2);
         String arr[]=doc2.split(",");
        String headerString="";
         for(int j=0;j<arr.length;j++){

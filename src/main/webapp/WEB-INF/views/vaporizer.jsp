@@ -95,7 +95,7 @@ function callMapping(rowNum){
 	//Added by Subhojit
 	 function initiateDataLoad()
 	 {
-		 alert('hiii'); 
+		// alert('hiii'); 
 		 var dataFileUrlVar= $("[id$='datafileUrl']").val();
 		  var str = dataFileUrlVar;
 		    var res = str.split(".salesforce.com/");
@@ -105,7 +105,8 @@ function callMapping(rowNum){
 		var s=res[0].split("https://");
 		var s2=res[1];
 		 var finUrl=s[1]+"-"+s2;
-		 alert('hiii');
+		// alert('hiii');
+		$("#statusBlock").empty();
 		 $("#statusBlock").append('<div id="stat"><h4> Data Loading status: In Progress</h4></div>');
 		 $.ajax({
 			type : "GET",
@@ -117,7 +118,7 @@ function callMapping(rowNum){
 			contentType : 'application/text',
 			success : function(response) {
 				var str=response;
-				alert(response);
+				//alert(response);
 				var strList=str.split("_");
 				var total=+strList[0] + +strList[1];
 				var successNo=strList[0];
