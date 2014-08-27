@@ -119,7 +119,7 @@ function callMapping(rowNum){
 				var str=response;
 				alert(response);
 				var strList=str.split("_");
-				var total=strList[0]+strList[1];
+				var total=+strList[0] + +strList[1];
 				var successNo=strList[0];
 				var failureNo=strList[1];
 				$("#statusBlock").html('<h4> Data Loading Status : Complete</h4>');
