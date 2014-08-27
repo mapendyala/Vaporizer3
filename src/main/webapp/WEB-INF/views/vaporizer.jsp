@@ -122,9 +122,8 @@ function callMapping(rowNum){
 				var successNo=strList[0];
 				var failureNo=strList[1];
 				$("#dialog").append("<h4> No Of Record  : "+total+"</h4>" +
-						
 				"<h6> Success : "+successNo+"</h6>"+
-				"<h6> Failure : "+failureNo+"</h6>"+
+				"<h6> Failure : "+failureNo+"</h6>"
 				
 				);
 				//$("#"+SFDCObjectId).val(response); 
