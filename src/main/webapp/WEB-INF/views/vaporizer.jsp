@@ -361,7 +361,7 @@ function callMapping(rowNum){
 						<td
 							style="float: right; padding: 50px;width:350px !Important; padding-top: 10px; padding-bottom: 10px;">
 							<input class="btn btn-block btn-inverse" type="button"
-							name="Location"  id="datafileUrl" />
+							name="CSV Location"  id="datafileUrl" />
 						</td>
 					</tr>
 					<tr>
