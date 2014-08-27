@@ -91,10 +91,17 @@ public class HomeController {
 	public void initiateDataLoader(Locale locale,Model model,HttpServletRequest request,@RequestParam("datafileUrl")String datafileUrl) throws IOException, AsyncApiException, ConnectionException
 		{
 		// System.out.println("This methos is nt getting called"+siebelObject);
-	
-		 com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
-		
-			dt.dataUploadController(datafileUrl);
+		 PartnerWSDL partnerWSDL= new PartnerWSDL(); 	  
+		  
+			partnerWSDL.login();
+			 HttpSession session = request.getSession(true);
+			JSONObject connData=partnerWSDL.getTargetOrgDetails((String) session.getAttribute("projectId"));
+			String password=(String)connData.get("password");
+			String token=(String)connData.get("token");
+			String username=(String)connData.get("username");
+		 DataLoaderController dt=new DataLoaderController();
+		    String objectName="Account";
+			dt.dataUploadController(datafileUrl,username,password+token,objectName);
 		
 			// TODO Auto-generated catch block
 			
