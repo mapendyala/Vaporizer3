@@ -99,6 +99,8 @@ public class HomeController {
 			String password=(String)connData.get("password");
 			String token=(String)connData.get("token");
 			String username=(String)connData.get("username");
+			String[] strList=datafileUrl.split("-");
+			datafileUrl="https://"+strList[0]+".salesforce.com/"+strList[1];
 			com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
 		    String objectName="Account";
 		   

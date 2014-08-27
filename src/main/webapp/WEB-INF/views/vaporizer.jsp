@@ -97,13 +97,21 @@ function callMapping(rowNum){
 	 {
 		 alert('hiii'); 
 		 var dataFileUrlVar= $("[id$='datafileUrl']").val();
+		  var str = dataFileUrlVar;
+		    var res = str.split(".salesforce.com/");
+		    var s=res[0].split("https://");
+		    var s2=res[1];
+		    var res = str.split(".salesforce.com/");
+		var s=res[0].split("https://");
+		var s2=res[1];
+		 var finUrl=s[1]+"-"+s2;
 		 alert('hiii');
 		 $.ajax({
 			type : "GET",
 			url : "initiateDataLoader",
 		 	data :
 		 		{
-		 		dataFileUrl:dataFileUrlVar		 		
+		 		dataFileUrl:finUrl	 		
 		 		},
 			contentType : 'application/text',
 			success : function(response) {
@@ -358,7 +366,10 @@ function callMapping(rowNum){
 							style="float: left;  padding: 50px; width: 450px !Important; padding-top: 10px; padding-bottom: 10px;">
 							<input type="text" style="width:100%;" placeholder="CSV Location" id="datafileUrl" />
 						</td>
-						
+						<td
+							style="float: right; padding: 50px;width:350px !Important; padding-top: 10px; padding-bottom: 10px;">
+							<input class="btn btn-block btn-inverse" type="button" name="CSV Location"   />
+						</td>
 					</tr>
 					<tr>
 						<td colspan="2"
