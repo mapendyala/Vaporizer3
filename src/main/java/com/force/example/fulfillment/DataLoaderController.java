@@ -17,12 +17,12 @@ public class DataLoaderController {
 	Integer checkI=0;
     File DataFileVal=null;
     File MapFileVal=null;
-   public static void main(String args[]) throws IOException, AsyncApiException, ConnectionException{
+  /* public static void main(String args[]) throws IOException, AsyncApiException, ConnectionException{
     	DataLoaderController dt=new DataLoaderController();
     	dt.dataUploadController("https://na11.salesforce.com/00PG000000HyL41","subhchakraborty@deloitte.com.vaporizer","May@2013","Account");
     	
     	
-    }
+    }*/
     public String dataUploadController(String dataFileUrl,String userId,String pwd,String objectName) throws IOException, AsyncApiException, ConnectionException
     {
     	DataLoaderController example = new DataLoaderController();
