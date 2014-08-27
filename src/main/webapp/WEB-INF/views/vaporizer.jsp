@@ -108,7 +108,7 @@ function callMapping(rowNum){
 		 alert('hiii');
 		 $.ajax({
 			type : "GET",
-			url : "initiateDataLoader",
+			url : "initiateDataloader",
 		 	data :
 		 		{
 		 		dataFileUrl:finUrl	 		
@@ -368,7 +368,7 @@ function callMapping(rowNum){
 						</td>
 						<td
 							style="float: right; padding: 50px;width:350px !Important; padding-top: 10px; padding-bottom: 10px;">
-							<input class="btn btn-block btn-inverse" type="button" name="CSV Location"   />
+							<input class="btn btn-block btn-inverse" type="button" name="Location" value="CSV File location"   />
 						</td>
 					</tr>
 					<tr>

@@ -86,7 +86,7 @@ public class HomeController {
 
 	 /*Added by Subhojitcg*/
 	 
-	 @RequestMapping(value="/initiateDataLoader", method=RequestMethod.GET,produces="text/plain")
+	 @RequestMapping(value="/initiateDataloader", method=RequestMethod.GET,produces="text/plain")
 	 @ResponseBody
 	public void initiateDataLoader(Locale locale,Model model,HttpServletRequest request,@RequestParam("datafileUrl")String datafileUrl) throws IOException, AsyncApiException, ConnectionException
 		{
