@@ -107,7 +107,7 @@ function callMapping(rowNum){
 		 var finUrl=s[1]+"-"+s2;
 		// alert('hiii');
 		$("#statusBlock").empty();
-		 $("#statusBlock").append('<div id="stat"><h4> Data Loading status: In Progress</h4></div>');
+		 $("#statusBlock").append('<div id="stat"><h4> Data Loading status: In Progress&nbsp;&nbsp;<img src="<c:url value="/resources/images/2.gif" />"/></h4></div>');
 		 $.ajax({
 			type : "GET",
 			url : "initiateDataloader",
@@ -119,6 +119,7 @@ function callMapping(rowNum){
 			success : function(response) {
 				var str=response;
 				//alert(response);
+				if(str!="Error"){
 				var strList=str.split("_");
 				var total=+strList[0] + +strList[1];
 				var successNo=strList[0];
@@ -129,6 +130,15 @@ function callMapping(rowNum){
 				"<h6> Failure : "+failureNo+"</h6>");
 				//$("#"+SFDCObjectId).val(response); 
 			}
+				else{
+					$("#statusBlock").html('<h4> Data Loading Status : Failed</h4>');
+					$("#statusBlock").append("<h4> No Of Record  : "+total+"</h4>" +
+					"<h6> Success : "+successNo+"</h6>"+
+					"<h6> Failure : "+failureNo+"</h6>");
+				}
+					
+				
+				
 		});  
 	 }
 	
