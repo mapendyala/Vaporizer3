@@ -126,12 +126,11 @@ function callMapping(rowNum){
 				var failureNo=strList[1];
 				$("#statusBlock").html('<h4> Data Loading Status : Complete</h4>');
 				$("#statusBlock").append("<h4> No Of Record  : "+total+"</h4>" +
-				"<h6> Success : "+successNo+"</h6>"+
-				"<h6> Failure : "+failureNo+"</h6>");
+				"<h6> Success : "+successNo+"</h6>"+"<h6> Failure : "+failureNo+"</h6>");
 				//$("#"+SFDCObjectId).val(response); 
 							
 					
-				
+			}	
 				
 		});  
 	 }
