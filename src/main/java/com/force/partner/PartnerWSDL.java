@@ -1,11 +1,16 @@
 package com.force.partner;
 
 import java.io.FileNotFoundException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 
@@ -13,6 +18,15 @@ import org.json.JSONObject;
 
 
 
+
+
+
+
+
+
+
+
+import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.MappingModel;
 import com.google.gson.JsonArray;
 import com.sforce.soap.partner.DescribeGlobalResult;
@@ -30,6 +44,15 @@ import com.sforce.ws.ConnectorConfig;
 public class PartnerWSDL {
 
 	PartnerConnection partnerConnection = null;
+	public PartnerConnection getPartnerConnection() {
+		return partnerConnection;
+	}
+
+
+	public void setPartnerConnection(PartnerConnection partnerConnection) {
+		this.partnerConnection = partnerConnection;
+	}
+
 	/*
 	 * String username = "smansuri@deloitte.com.dev"; String password =
 	 * "shama33#ruqxL5DhkZdN6Z4DNrsytv091";
@@ -79,6 +102,7 @@ public class PartnerWSDL {
 			config.setPrettyPrintXml(true);
 
 			partnerConnection = new PartnerConnection(config);
+			setPartnerConnection(partnerConnection);
 			success = true;
 		} catch (ConnectionException ce) {
 			ce.printStackTrace();
@@ -146,8 +170,8 @@ public class PartnerWSDL {
 		String projectName=null;
 		try {
 			partnerConnection.setQueryOptions(250);
-			/*if(projectId==null)
-				projectId="a0PG000000B23yKMAR";*/
+			if(projectId==null)
+				projectId="a0PG000000B23yKMAR";
 			// SOQL query to use
 		   String soqlQuery = " Select Name, Parent_Project__c, Type__c from Project__c where id= '"+ projectId + "'";
 			// Make the query call and get the query results
@@ -238,17 +262,17 @@ public class PartnerWSDL {
 	 */
 	public String getSFDCObjectName( String projectId, String seibelBaseTable) {
 
-		String SFDCObjectName = "No data";
+		String SFDCObjectName = "";
 		try {
 			login();
 			partnerConnection.setQueryOptions(250);
 			
 			//String	projectId="a0PG000000AtiE5";
-			String s = seibelBaseTable	+ "_PreDefined_Mapping";
+		String s = seibelBaseTable	+ "_PreDefined_Mapping";
 			// SOQL query to use
-			String soqlQuery = " Select id, Object_API_Name__c, Project__r.Name, Project__r.Parent_Project__c, Table_Name__c, Type__c from Table__c where "
-					
-					+ " Project__r.Name='"+ s+"' and  Parent_Table__c = null and Type__c ='Salesforce'";
+			String soqlQuery = " Select id, Object_API_Name__c, Project__r.Name, Project__r.Parent_Project__c, Table_Name__c, Type__c from Table__c where Project__r.Parent_Project__c ='"
+					+ projectId
+					+ "' and  Project__r.Name='"+ s+"' and Parent_Table__c = null and Type__c ='Salesforce'";
 			System.out.println(soqlQuery);
 			//String soqlQuery ="Select id, Object_API_Name__c, Table_Name__c, Type__c from Table__c where Project__c ='"+projectId+"' and Parent_Table__c = null and Type__c ='Salesforce' and Object_API_Name__c='"+seibelBaseTable+"'";
 			// Make the query call and get the query results
@@ -428,9 +452,143 @@ public class PartnerWSDL {
 		//Project__c p = [Select Id, Name, Parent_Project__c, Type__c from Project__c where Parent_Project__c='a0PG000000AtiE5' and Name='Account_PreDefined_Mapping'];
 	}
 
+	public void saveDataDB(List<MainPage> data, HttpServletRequest request, String projId) throws ConnectionException{
+		 HttpSession session = request.getSession(true);
+		
+		//String [] dataArray = data.toArray(new String[data.size()]);
+		 login();
+	     SObject[] contacts = new SObject[data.size()];
+	     int counter=0;
+		//data.get(0).getMigrate();
+		for (Iterator<MainPage> iterator = data.iterator(); iterator.hasNext();) {
+			MainPage mainPage = (MainPage) iterator.next();
+			if(mainPage.getSfdcId().equals("")){
+			 SObject contact = new SObject();
+		     contact.setType("Mapping_Staging_Table__c");
+		   /*  if((mainPage.getMigrate()).equals("on")){
+		    	 contact.setField("Migrate__c", true);	 
+		     }else{*/
+		    	 contact.setField("Migrate__c", Boolean.parseBoolean(mainPage.getMigrate()));	 
+		     
+		    	 contact.setField("Sequence__c", mainPage.getSequence());
+		     contact.setField("Prim_Base_Table__c", mainPage.getPrimBaseTable());
+		     contact.setField("Project__c", ((String)session.getAttribute("projectId")));
+		     contact.setField("SFDC_Object__c", mainPage.getSfdcObject());	
+		     contact.setField("Siebel_Object__c", mainPage.getSiebelObject());
+		     contact.setField("Threshold__c", mainPage.getThreshold());
+		     contacts[counter] = contact;
+		     counter++;
+		     // Add this sObject to an array 
+		     SaveResult[] saveResults = getPartnerConnection().create(contacts);
+		     for(int j=0;j<saveResults.length;j++){
+	    			System.out.println(saveResults[j].isSuccess());
+	    			//System.out.println(results[i].getErrors()[i].getMessage());
+	    		}
+		   //  contacts[0] = contact;
+			}else{
+				 String sqlQuery = "Select Id from Mapping_Staging_Table__c where Id ='"+mainPage.getSfdcId()+"'";
+		    		QueryResult qr = partnerConnection.query(sqlQuery);
+		    		SObject[] records = qr.getRecords();
+		    		for(int i=0;i<records.length;i++){
+		    		SObject updateContact = new SObject();
+					updateContact.setType("Mapping_Staging_Table__c");
+					// Set the ID of the contact to update
+					updateContact.setId(mainPage.getSfdcId());
+					// Set the Phone field with a new value
+					updateContact.setField("Migrate__c", Boolean.parseBoolean(mainPage.getMigrate()));
+					updateContact.setField("Prim_Base_Table__c", mainPage.getPrimBaseTable());
+					updateContact.setField("Project__c", ((String)session.getAttribute("projectId")));
+					updateContact.setField("SFDC_Object__c", mainPage.getSfdcObject());	
+					updateContact.setField("Siebel_Object__c", mainPage.getSiebelObject());
+					updateContact.setField("Threshold__c", mainPage.getThreshold());
+					updateContact.setField("Sequence__c", mainPage.getSequence());
+					// updateContact.setField("Phone", "(415) 555-1212");
+					// Create another contact that will cause an error
+					// because it has an invalid ID.
 
+					SaveResult[] saveResults = partnerConnection
+							.update(new SObject[] { updateContact });
+					for(int j=0;j<saveResults.length;j++){
+		    			System.out.println(saveResults[j].isSuccess());
+		    			//System.out.println(results[i].getErrors()[i].getMessage());
+		    		}
+		    		
+			}
+		    		
+		    		
+		}
+		
+		}
+	     }
+		
+		public List<MainPage> getSavedDBData(String projectId, List<MainPage> data){
+			try {
+				partnerConnection.setQueryOptions(250);
+				// SOQL query to use
+				//String subprojectId="a0PG000000AtiEAMAZ";
+				String soqlQuery = "Select Id, Migrate__c, Sequence__c, Prim_Base_Table__c, Project__c, SFDC_Object__c, Siebel_Object__c, Threshold__c from Mapping_Staging_Table__c where Project__c ='"+projectId+"'";
+				// Make the query call and get the query results
+				QueryResult qr = partnerConnection.query(soqlQuery);
+				boolean done = false;
 
+				int loopCount = 0;
+				// Loop through the batches of returned results
+				data.clear();
+				
+while(!done){
+					SObject[] records = qr.getRecords();
+					// Process the query results
+					for (int i = 0; i < records.length; i++) {
+						MainPage mainPage = new MainPage();
+						SObject contact = records[i];
+						String id = (String) contact
+								.getField("Id");
+						mainPage.setSfdcId(id);
+						String siebelTableName = (String) contact
+								.getField("Siebel_Object__c");
+						mainPage.setSiebelObject(siebelTableName);
+						String sfdcTableName = (String) contact
+								.getField("SFDC_Object__c");
+						mainPage.setSfdcObject(sfdcTableName);
+						String migrate =  (String) contact
+								.getField("Migrate__c");
+						mainPage.setMigrate(migrate);
+						String seq = (String) contact
+								.getField("Sequence__c");
+						mainPage.setSequence(seq);
+						String primBaseTable = (String) contact.getField("Prim_Base_Table__c");
+						mainPage.setPrimBaseTable(primBaseTable);
+						String projId = (String) contact.getField("Project__c");
+						mainPage.setProjId(projId);
+						String threshold = (String) contact.getField("Threshold__c");
+						mainPage.setThreshold(threshold);
+						data.add(mainPage);
+					}
+					Collections.sort(data, new Comparator<MainPage>(){
+						@Override
+				        public int compare(MainPage  mainPage1, MainPage  mainPage2)
+				        {
 
+				            return  mainPage1.getSequence().compareTo(mainPage2.getSequence());
+				        }
+				    });
+					
+					if (qr.isDone()) {
+						done = true;
+					} else {
+						qr = partnerConnection.queryMore(qr.getQueryLocator());
+					}
+
+				}
+
+			} catch (ConnectionException ce) {
+				ce.printStackTrace();
+			} 
+			System.out.println("\nQuery execution completed.");
+			return data;
+			}
+		
+		
 	/*public List<String > addObjectToTable(List<SiebelObject> listOfObjects,
 			String projectId) {
 		List<String > result = null;
