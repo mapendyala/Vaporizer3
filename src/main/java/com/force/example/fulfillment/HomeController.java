@@ -28,11 +28,13 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.force.api.http.HttpRequest;
+import com.force.example.fulfillment.order.controller.SiebelObjectController;
 import com.force.example.fulfillment.order.controller.ThresholdController;
 import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.MappingModel;
 import com.force.partner.PartnerWSDL;
 import com.force.partner.TargetPartner;
+import com.force.utility.ChildObjectBO;
 import com.force.utility.SiebelObjectBO;
 import com.sforce.async.AsyncApiException;
 import com.sforce.ws.ConnectionException;
@@ -220,7 +222,7 @@ public class HomeController {
 	}*/
 
 	@RequestMapping(value="saveData",method = RequestMethod.POST)
-	public ModelAndView getSiebelFielddata(HttpServletRequest request, Map<String, Object> model) {
+	public ModelAndView getSiebelFielddata(HttpServletRequest request, Map<String, Object> model,Model modelChild) {
 		System.out.println("In main controller");
 		//System.out.println(request.getParameter("rowNum"));
 		data.clear();
@@ -232,7 +234,9 @@ public class HomeController {
 		String siebelTableName = "objectName"+rowNo;*/
 		String thresholdValue=request.getParameter("thresh"+rowNo);
 		String primBaseValue=request.getParameter("prim"+rowNo);
+		System.out.println("in MY getSiebl meth"+primBaseValue);
 		String siebelTableNameValue=request.getParameter("objectName"+rowNo);
+		System.out.println("in MY getSiebl Siebel Table"+siebelTableNameValue);
 		System.out.println("RowCount is: " +rowCount);
 		for(int i=1;i<=Integer.parseInt(rowCount);i++){
 			//mainPage[i] =  new MainPage();
@@ -252,11 +256,18 @@ public class HomeController {
 			data.add(mainPage);
 		}
 
-
-
 		if(page.equals("child")){
-
-			return new ModelAndView("ChildBase" , "data", data);}
+			System.out.println("in MY child bliok");
+			SiebelObjectController siObj=new SiebelObjectController();
+			//ArrayList<String> myList=new ArrayList<String>();
+			List<ChildObjectBO> myChildList=siObj.fetchChildObjects(request, primBaseValue);
+			if(myChildList!=null)
+			{
+				System.out.println("mychild list is"+myChildList.size());
+			}
+			modelChild.addAttribute("myChildList",myChildList);
+			return new ModelAndView("ChildBase" , "data", data);
+			}
 		else{
 			return new ModelAndView("mapping", "data", data);
 		}

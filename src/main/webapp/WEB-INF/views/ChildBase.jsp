@@ -95,13 +95,15 @@
 			</div>
 			<div class="mappingContainer" style="height: 500px;width:100%;">
 			<form:form method="post" action="childSave" modelAttribute="data">
+			<h2>HELLO MY NEW PAGE</h2>
 				<table class="table" style="margin:0px !important;">
 					<tr>
+						
 						<th>S.NO</th>
 						<th>Primary Table</th>
 						<th>Child Table</th>
 						<th>Join Condition</th>
-						<th>Delete</th>
+						<!-- <th>Delete</th> -->
 						<!-- <th>Child Base tables</th>
 						<th>SFDC Object</th>
 						<th>Mapping</th>
@@ -109,31 +111,15 @@
 						<th>Add Ons</th>	 -->					
 					</tr>
 					
-					<tr>
-					<td>1</td>
-				<td>S_ORG_EXT</td>
-				<td>S_ADDR_ORG</td>
-				<td>PBT.PR_ADDR_ID=CBT.ROW_ID</td>
-				<td>[-]</td>
 					
-					</tr>
-					
-					<tr>
-					<td>2</td>
-				<td>S_ORG_EXT</td>
-				<td>S_POSTN</td>
-				<td>PBT.PR_POSTN_ID=CBT.ROW_ID</td>
-				<td>[-]</td>
-					
-					</tr>
-					
-				<%-- 	<c:forEach items="${displayProduct}" var="p">
+					<c:forEach items="${myChildList}" var="childItem">
     <tr>
-        <td><c:out value="${p.name}"/></td>
-        <td><c:out value="${p.price}"/></td>
-        <td><c:out value="${p.quantity}"/></td>
+        <td><c:out value="${childItem.seqNum}"/></td>
+        <td><c:out value="${childItem.baseObjName}"/></td>
+        <td><c:out value="${childItem.childObjName}"/></td>
+        <td><c:out value="${childItem.joinCondition}"/></td>
     </tr>
-</c:forEach> --%>
+</c:forEach> 
 					
 				</table>
 				<div class="buttonContainer">
