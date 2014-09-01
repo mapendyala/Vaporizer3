@@ -95,7 +95,6 @@
 			</div>
 			<div class="mappingContainer" style="height: 500px;width:100%;">
 			<form:form method="post" action="childSave" modelAttribute="data">
-			<h2>HELLO MY NEW PAGE</h2>
 				<table class="table" style="margin:0px !important;">
 					<tr>
 						
