@@ -121,8 +121,7 @@ public class HomeController {
 		// System.out.println("This methos is nt getting called"+siebelObject);
 		    HttpSession session = request.getSession(true);
 		    String projectId=(String) session.getAttribute("projectId");
-	    	PartnerWSDL partnerWSDL= new PartnerWSDL();	    	
-
+	    	PartnerWSDL partnerWSDL= new PartnerWSDL();
 			String SFDCObjectName=partnerWSDL.getSFDCObjectName(projectId,siebelObject);	  
 			System.out.println(SFDCObjectName);
 			return SFDCObjectName;

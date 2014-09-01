@@ -146,8 +146,8 @@ public class PartnerWSDL {
 		String projectName=null;
 		try {
 			partnerConnection.setQueryOptions(250);
-			if(projectId==null)
-				projectId="a0PG000000B23yKMAR";
+			/*if(projectId==null)
+				projectId="a0PG000000B23yKMAR";*/
 			// SOQL query to use
 		   String soqlQuery = " Select Name, Parent_Project__c, Type__c from Project__c where id= '"+ projectId + "'";
 			// Make the query call and get the query results
@@ -238,17 +238,17 @@ public class PartnerWSDL {
 	 */
 	public String getSFDCObjectName( String projectId, String seibelBaseTable) {
 
-		String SFDCObjectName = "";
+		String SFDCObjectName = "No data";
 		try {
 			login();
 			partnerConnection.setQueryOptions(250);
 			
 			//String	projectId="a0PG000000AtiE5";
-		String s = seibelBaseTable	+ "_PreDefined_Mapping";
+			String s = seibelBaseTable	+ "_PreDefined_Mapping";
 			// SOQL query to use
-			String soqlQuery = " Select id, Object_API_Name__c, Project__r.Name, Project__r.Parent_Project__c, Table_Name__c, Type__c from Table__c where Project__r.Parent_Project__c ='"
-					+ projectId
-					+ "' and  Project__r.Name='"+ s+"' and Parent_Table__c = null and Type__c ='Salesforce'";
+			String soqlQuery = " Select id, Object_API_Name__c, Project__r.Name, Project__r.Parent_Project__c, Table_Name__c, Type__c from Table__c where "
+					
+					+ " Project__r.Name='"+ s+"' and  Parent_Table__c = null and Type__c ='Salesforce'";
 			System.out.println(soqlQuery);
 			//String soqlQuery ="Select id, Object_API_Name__c, Table_Name__c, Type__c from Table__c where Project__c ='"+projectId+"' and Parent_Table__c = null and Type__c ='Salesforce' and Object_API_Name__c='"+seibelBaseTable+"'";
 			// Make the query call and get the query results
