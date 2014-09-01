@@ -56,7 +56,7 @@ public class CanvasUIController {
 
     private static final String SIGNED_REQUEST = "signedRequestJson";
     private CanvasContext cc = new CanvasContext();
-//    public List<MainPage> data = new ArrayList<MainPage>();
+    public List<MainPage> data = new ArrayList<MainPage>();
 
     @Autowired
     private OrderService orderService;
@@ -72,7 +72,7 @@ public class CanvasUIController {
     }
 
     @RequestMapping(method= RequestMethod.POST)
-    public String postSignedRequest(Model model,@RequestParam(value="signed_request")String signedRequest, HttpServletRequest request){
+    public ModelAndView postSignedRequest(Model model,@RequestParam(value="signed_request")String signedRequest, HttpServletRequest request){
         String srJson = SignedRequest.verifyAndDecodeAsJson(signedRequest, getConsumerSecret());
         JSONObject json= new JSONObject(srJson);
         CanvasRequest cr = SignedRequest.verifyAndDecode(signedRequest, getConsumerSecret());
@@ -88,6 +88,7 @@ public class CanvasUIController {
  	    PartnerWSDL partnerWSDL= new PartnerWSDL(); 	  
  	 //  System.out.println(projectName); 	  
  	    partnerWSDL.login();
+ 	  data= partnerWSDL.getSavedDBData(projectId, data);
  	    String projectName=partnerWSDL.getProjectName(projectId);
  	   session.setAttribute("projectName", projectName);/*added by piyush*/
  	   JSONObject connectionData=partnerWSDL.getConnectionData(projectId);
@@ -99,8 +100,8 @@ public class CanvasUIController {
 			// TODO Auto-generated catch block
 			model.addAttribute("error", "Connection to Siebel database unsuccessful. Either username/password/DatabaseUrl is incorrect.");
 		}
- 	  return "vaporizer";
- 	  //return new ModelAndView("vaporizer", "data", data);
+ 	 // return "vaporizer";
+ 	  return new ModelAndView("vaporizer", "data", data);
     }
     
    
@@ -113,10 +114,14 @@ public class CanvasUIController {
     }*/
     
     @RequestMapping(method=RequestMethod.GET )
-    public ModelAndView getOrdersPage(Model model, @ModelAttribute("data") List<MainPage> data) {
+    public ModelAndView getOrdersPage(Model model, @ModelAttribute("data") List<MainPage> data, HttpServletRequest request) {
         model.addAttribute("order", new Order());
         model.addAttribute("orders", orderService.listOrders());
 System.out.println("Data size:" +data.size());
+HttpSession session = request.getSession(true);
+PartnerWSDL partnerWSDL= new PartnerWSDL(); 	  
+partnerWSDL.login();
+ data= partnerWSDL.getSavedDBData((String)session.getAttribute("projectId"), data);
         return new ModelAndView("vaporizer", "data", data);
     }
 
