@@ -57,7 +57,7 @@ public class HomeController {
 	 * Simply selects the home view to render by returning its name.
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ModelAndView home(Locale locale, Model model) {
+	public ModelAndView home(Locale locale, Model model, HttpServletRequest request) {
 		// TODO!!!
 		logger.info("Welcome home! the client locale is "+ locale.toString());
 
@@ -76,11 +76,16 @@ public class HomeController {
 		PartnerWSDL partnerWSDL= new PartnerWSDL(); 	  
 		//  System.out.println(projectName); 	  
 		partnerWSDL.login();
+		 HttpSession session = request.getSession(true);
+		String projectId="a0PG000000B23yKMAR";
+		session.setAttribute("projectId", projectId);
+		partnerWSDL.login();
 		JSONObject connData=partnerWSDL.getTargetOrgDetails("a0PG000000B248h");
 		String password=(String)connData.get("password");
 		String token=(String)connData.get("token");
 		String username=(String)connData.get("username");
 		TargetPartner targetPartner= new TargetPartner(username, password+token);
+		data = partnerWSDL.getSavedDBData(projectId, data);
 		System.out.println(targetPartner.login());
 		System.out.println("In home page");
 		return new ModelAndView("vaporizer", "data", data);
@@ -121,7 +126,8 @@ public class HomeController {
 		// System.out.println("This methos is nt getting called"+siebelObject);
 		    HttpSession session = request.getSession(true);
 		    String projectId=(String) session.getAttribute("projectId");
-	    	PartnerWSDL partnerWSDL= new PartnerWSDL();
+	    	PartnerWSDL partnerWSDL= new PartnerWSDL();	    	
+
 			String SFDCObjectName=partnerWSDL.getSFDCObjectName(projectId,siebelObject);	  
 			System.out.println(SFDCObjectName);
 			return SFDCObjectName;
@@ -221,9 +227,10 @@ public class HomeController {
 	}*/
 
 	@RequestMapping(value="saveData",method = RequestMethod.POST)
-	public ModelAndView getSiebelFielddata(HttpServletRequest request, Map<String, Object> model,Model modelChild) {
+	public ModelAndView getSiebelFielddata(HttpServletRequest request, Map<String, Object> model, Model modelChild) throws ConnectionException {
+		HttpSession session = request.getSession(true);
 		System.out.println("In main controller");
-		//System.out.println(request.getParameter("rowNum"));
+		PartnerWSDL partnerWSDL= new PartnerWSDL(); 
 		data.clear();
 		rowCount= request.getParameter("rowCount");
 		String rowNo = request.getParameter("rowNo");
@@ -246,14 +253,27 @@ public class HomeController {
 			String primTable = "prim"+i;
 			String thresholdId = "thresh"+i;
 			String SFDCObjName = "SFDCObjName"+i;
-
-			mainPage.setMigrate(request.getParameter(migrate));
+			String sfdcId = "SfdcId"+i;
+			if(request.getParameter(migrate)==null){
+				mainPage.setMigrate("false");
+			}else{
+				mainPage.setMigrate("true");
+			}
 			mainPage.setSequence(request.getParameter(seq));
 			mainPage.setSiebelObject(request.getParameter(objName));
 			mainPage.setPrimBaseTable(request.getParameter(primTable));
 			mainPage.setThreshold(request.getParameter(thresholdId));
+			if(request.getParameter(sfdcId)==null){
+				mainPage.setSfdcId("");
+			}else{
+				mainPage.setSfdcId(request.getParameter(sfdcId));
+			}
+			mainPage.setSfdcObject(request.getParameter(SFDCObjName));
 			data.add(mainPage);
 		}
+
+		partnerWSDL.saveDataDB(data, request, (String)session.getAttribute("projectId"));
+
 
 		if(page.equals("child")){
 			System.out.println("in MY child bliok");
