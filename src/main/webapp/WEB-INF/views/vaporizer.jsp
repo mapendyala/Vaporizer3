@@ -327,6 +327,7 @@ function callMapping(rowNum){
 				    <th class="table_header_details" style="float: center;">Mapping</th>
 				    <th class="table_header_details" style="float: center;">Status</th>
 				    <th class="table_header_details" style="float: center;">Add Ons</th>
+				     <th hidden="true" class="table_header_details" style="float: center;">ID</th>
 				  </tr>
 				 </thead> 
 				<tbody>
@@ -337,7 +338,7 @@ function callMapping(rowNum){
 				<tr style="height: 45px; width: 45px;" >
 								<td>
 								<c:choose>
-								<c:when test="${mainPage.migrate == 'on'}">
+								<c:when test="${mainPage.migrate == true}">
 								<input name="migrate${mainPage.sequence}" type='checkbox' checked="checked">
 								</c:when>
 								<c:otherwise>
@@ -358,6 +359,7 @@ function callMapping(rowNum){
 								<input class='btn btn-inverse' type='button' name='transform' value='T' style='margin-left:5px;'/>
 				                <input class='btn btn-inverse' type='button' name='delete' value='-' style='margin-left:5px;'/>
 				                </td>
+				                <td><input id="SfdcId" name='SfdcId${mainPage.sequence}' type="hidden" value="${mainPage.sfdcId}">
 				                </tr>
 				               
 				               </c:forEach> 

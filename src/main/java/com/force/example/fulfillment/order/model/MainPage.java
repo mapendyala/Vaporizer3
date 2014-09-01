@@ -19,6 +19,21 @@ public class MainPage {
 	private String rowCount;
 	private String rowNo;
 	private String pageName;
+	private String sfdcId;
+	
+	public String getSfdcId() {
+		return sfdcId;
+	}
+	public void setSfdcId(String sfdcId) {
+		this.sfdcId = sfdcId;
+	}
+	public String getProjId() {
+		return projId;
+	}
+	public void setProjId(String projId) {
+		this.projId = projId;
+	}
+	private String projId;
 	
 	public String getRowNo() {
 		return rowNo;
