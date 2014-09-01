@@ -171,8 +171,15 @@ function callMapping(rowNum){
 		 		},
 			contentType : 'application/text',
 			success : function(response) {
-				
-				$("#"+SFDCObjectId).val(response); 
+				if(response!='No data')
+				$("#"+SFDCObjectId).val(response);
+				else
+					{
+					
+					$("#"+SFDCObjectId).val('');
+					alert("No SFDC mapping available.");
+					}
+					
 			}
 		});  
 	 }
