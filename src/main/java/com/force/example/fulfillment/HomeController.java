@@ -231,6 +231,7 @@ public class HomeController {
 		HttpSession session = request.getSession(true);
 		System.out.println("In main controller");
 		PartnerWSDL partnerWSDL= new PartnerWSDL(); 
+
 		data.clear();
 		rowCount= request.getParameter("rowCount");
 		String rowNo = request.getParameter("rowNo");
@@ -254,6 +255,7 @@ public class HomeController {
 			String thresholdId = "thresh"+i;
 			String SFDCObjName = "SFDCObjName"+i;
 			String sfdcId = "SfdcId"+i;
+
 			if(request.getParameter(migrate)==null){
 				mainPage.setMigrate("false");
 			}else{
@@ -288,6 +290,22 @@ public class HomeController {
 			return new ModelAndView("ChildBase" , "data", data);
 			}
 		else{
+logger.info("Welcome to mapping ");
+			
+			System.out.println("---------------"+thresholdValue+" "+primBaseValue);
+			//ThresholdController tc= new ThresholdController();
+			//List<SiebelObjectBO> listSiebelObject = tc.fetchSiebelObjects(request);
+			//PartnerWSDL partnerWSDL= new PartnerWSDL();
+			//partnerWSDL.login();
+			//HttpSession session=request.getSession();
+
+			String subprojectId=partnerWSDL.getsubprojects(siebelTableNameValue);
+			if(null != subprojectId){
+			JSONObject tableName=partnerWSDL.getRelatedSiebelTable(subprojectId);
+			List<MappingModel> mappingData=partnerWSDL.getFieldMapping(tableName);
+			modelChild.addAttribute("mappingData",mappingData);}
+
+
 			return new ModelAndView("mapping", "data", data);
 		}
 	}
