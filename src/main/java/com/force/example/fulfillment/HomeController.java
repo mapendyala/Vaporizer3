@@ -292,7 +292,7 @@ public class HomeController {
 		else{
 logger.info("Welcome to mapping ");
 			
-			System.out.println("---------------"+thresholdValue+" "+primBaseValue);
+			System.out.println("--------------"+thresholdValue+" "+primBaseValue);
 			//ThresholdController tc= new ThresholdController();
 			//List<SiebelObjectBO> listSiebelObject = tc.fetchSiebelObjects(request);
 			//PartnerWSDL partnerWSDL= new PartnerWSDL();
