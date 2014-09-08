@@ -226,6 +226,16 @@ public class HomeController {
 		return "Copy of vaporizer";
 	}*/
 
+	@RequestMapping(value="/getextractData", method = RequestMethod.GET)
+	public void createExtractQuery(HttpServletRequest request){
+		System.out.println("In controller");
+		HttpSession session = request.getSession(true);
+		PartnerWSDL partnerWSDL= new PartnerWSDL();
+		partnerWSDL.login();
+		partnerWSDL.getMappingRecords((String)session.getAttribute("projectId"));
+	}
+	
+	
 	@RequestMapping(value="saveData",method = RequestMethod.POST)
 	public ModelAndView getSiebelFielddata(HttpServletRequest request, Map<String, Object> model, Model modelChild) throws ConnectionException {
 		HttpSession session = request.getSession(true);
