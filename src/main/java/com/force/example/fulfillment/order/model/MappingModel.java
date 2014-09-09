@@ -4,7 +4,14 @@ public class MappingModel {
 	public String siebleBaseTable;
 	public String siebleBaseTableColumn;
 	public String sfdcObjectName;
+	public int getMappingSeq() {
+		return mappingSeq;
+	}
+	public void setMappingSeq(int mappingSeq) {
+		this.mappingSeq = mappingSeq;
+	}
 	public String sfdcFieldTable;
+	public int mappingSeq;
 	public String getSiebleBaseTable() {
 		return siebleBaseTable;
 	}

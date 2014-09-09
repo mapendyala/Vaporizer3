@@ -45,6 +45,7 @@ import com.sforce.ws.ConnectorConfig;
 public class PartnerWSDL {
 
 	PartnerConnection partnerConnection = null;
+
 	public PartnerConnection getPartnerConnection() {
 		return partnerConnection;
 	}
@@ -58,13 +59,16 @@ public class PartnerWSDL {
 	 * String username = "smansuri@deloitte.com.dev"; String password =
 	 * "shama33#ruqxL5DhkZdN6Z4DNrsytv091";
 	 */
-	String username = "rachitjain@deloitte.com.vaporizer";
-	String password = "deloitte@13";
+
+
+	String username = "subhchakraborty@deloitte.com.vaporizer";
+	String password = "Sep@2013";
 	/*
 	 * String username = "mrgr@deloitte.com"; String password =
 	 * "deloitte.2ltle01z2C81Xg6q8x4oXQOAhe";
 	 */
 	String authEndPoint = "https://login.salesforce.com/services/Soap/u/24.0/";
+
 
 
 	public boolean login() {
@@ -273,9 +277,12 @@ public class PartnerWSDL {
 		String s = seibelBaseTable	+ "_PreDefined_Mapping";
 			// SOQL query to use
 			String soqlQuery = " Select id, Object_API_Name__c, Project__r.Name, Project__r.Parent_Project__c, Table_Name__c, Type__c from Table__c where "
+
 					
 
 					+ "  Project__r.Name='"+ s+"' and Parent_Table__c = null and Type__c ='Salesforce'";
+
+
 
 //String soqlQuery = " Select  Object_API_Name__c,Id, Project__r.Name, Table_Name__c, Type__c from Table__c where  Project__r.Name='"+ s+"'";
 		
@@ -290,7 +297,10 @@ public class PartnerWSDL {
 			while (!done) {
 
 
+
 				SObject[] records = qr.getRecords();
+
+
 
 
 				System.out
@@ -301,24 +311,34 @@ public class PartnerWSDL {
 				for (int i = 0; i < records.length; i++) {
 
 
+
+
 					SFDCObjectName = (String) records[i]
 							.getField("Table_Name__c");
 
 
 
+
+
+
 				}
+
 				System.out
 				.println("========================================================="
 						+ SFDCObjectName);
 				if (qr.isDone()) {
 
+
 					done = true;
 				} else {
+
 
 					qr = partnerConnection.queryMore(qr.getQueryLocator());
 				}
 
 			}
+
+
 
 
 		} catch (ConnectionException ce) {
@@ -384,6 +404,7 @@ public class PartnerWSDL {
 			// Make the query call and get the query results
 			QueryResult qr1 = partnerConnection.query(soqlQuery1);
 			boolean done1 = false;
+int mappingSeq=0;
 			while (!done1) {
 				System.out.println("11111");
 				SObject[] records1 = qr1.getRecords();
@@ -416,6 +437,7 @@ public class PartnerWSDL {
 				SObject[] records2 = qr2.getRecords();
 				// Process the query results
 				for (int i = 0; i < records2.length; i++) {
+mappingSeq++;
 					MappingModel mapping= new MappingModel();
 					SObject contact = records2[i];
 					String siebelTableColumn= (String) contact
@@ -427,6 +449,7 @@ public class PartnerWSDL {
 					mapping.setSfdcObjectName(sfdcTablename);
 					mapping.setSiebleBaseTable(siebelTableName);
 					mapping.setSiebleBaseTableColumn(siebelTableColumn);
+mapping.setMappingSeq(mappingSeq);
 					System.out.println("mappingsss " + siebelTableColumn
 							+ " " + sfdcTableColumn);
 					mappingData.add(mapping);
