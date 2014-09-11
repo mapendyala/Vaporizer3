@@ -104,15 +104,7 @@ public class CanvasUIController {
  	  return new ModelAndView("vaporizer", "data", data);
     }
     
-   
-  /*  @RequestMapping(method=RequestMethod.GET)
-    public String getOrdersPage(Model model) {
-        model.addAttribute("order", new Order());
-        model.addAttribute("orders", orderService.listOrders());
 
-        return "orders";
-    }*/
-    
     @RequestMapping(method=RequestMethod.GET )
     public ModelAndView getOrdersPage(Model model, @ModelAttribute("data") List<MainPage> data, HttpServletRequest request) {
         model.addAttribute("order", new Order());

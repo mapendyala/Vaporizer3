@@ -1,6 +1,14 @@
 package com.force.partner;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -13,6 +21,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
+
+
+
+
+
+
+
+
 
 
 
@@ -53,49 +69,18 @@ public class PartnerWSDL {
 		this.partnerConnection = partnerConnection;
 	}
 
-	/*
-	 * String username = "smansuri@deloitte.com.dev"; String password =
-	 * "shama33#ruqxL5DhkZdN6Z4DNrsytv091";
-	 */
-	String username = "rachitjain@deloitte.com.vaporizer";
-	String password = "deloitte@13";
-	/*
-	 * String username = "mrgr@deloitte.com"; String password =
-	 * "deloitte.2ltle01z2C81Xg6q8x4oXQOAhe";
-	 */
+
+	String username = "subhchakraborty@deloitte.com.vaporizer";
+	String password = "Sep@2013";
 	String authEndPoint = "https://login.salesforce.com/services/Soap/u/24.0/";
 
 	public boolean login() {
 		boolean success = false;
-		try {
-			/*Properties configProp = new Properties();
-
-			InputStream in = this.getClass().getResourceAsStream(
-					"/resources/config.properties");
-
-			try {
-
-				configProp.load(in);
-
-			} catch (IOException e) {
-
-				// TODO Auto-generated catch block
-
-				e.printStackTrace();
-
-			}
-*/
-		/*	String username = configProp.getProperty("salesforce_username");
-
-			String password = configProp.getProperty("salesforce_password");
-
-			String authEndPoint = configProp
-					.getProperty("salesforce_authEndPoint");*/
+		try {	
 
 			ConnectorConfig config = new ConnectorConfig();
 			config.setUsername(username);
 			config.setPassword(password);
-
 			config.setAuthEndpoint(authEndPoint);
 			config.setTraceFile("traceLogs.txt");
 			config.setTraceMessage(true);
@@ -103,6 +88,7 @@ public class PartnerWSDL {
 
 			partnerConnection = new PartnerConnection(config);
 			setPartnerConnection(partnerConnection);
+		
 			success = true;
 		} catch (ConnectionException ce) {
 			ce.printStackTrace();
@@ -111,7 +97,7 @@ public class PartnerWSDL {
 		}
 		return success;
 	}
-	
+
 
 	public JSONObject getConnectionData(String projectId) {
 
@@ -142,7 +128,7 @@ public class PartnerWSDL {
 					connData.put("username", username);
 					connData.put("password", password);
 					connData.put("databaseUrl", databaseUrl);
-					
+
 				}
 				if (qr.isDone()) {
 					done = true;
@@ -158,12 +144,12 @@ public class PartnerWSDL {
 		return connData;
 	}
 
-/**
- * 
- * @author piymishra
- * @param projectId
- * @return projectName
- */
+	/**
+	 * 
+	 * @author piymishra
+	 * @param projectId
+	 * @return projectName
+	 */
 	public String getProjectName(String projectId) {
 
 
@@ -173,7 +159,7 @@ public class PartnerWSDL {
 			if(projectId==null)
 				projectId="a0PG000000B23yKMAR";
 			// SOQL query to use
-		   String soqlQuery = " Select Name, Parent_Project__c, Type__c from Project__c where id= '"+ projectId + "'";
+			String soqlQuery = " Select Name, Parent_Project__c, Type__c from Project__c where id= '"+ projectId + "'";
 			// Make the query call and get the query results
 			QueryResult qr = partnerConnection.query(soqlQuery);
 			boolean done = false;
@@ -183,11 +169,11 @@ public class PartnerWSDL {
 			while (!done) {
 
 				SObject[] records = qr.getRecords();
-				
+
 				// Process the query results
 				for (int i = 0; i < records.length; i++) {
 					projectName=(String) records[i].getField("Name");
-					
+
 				}
 				System.out.println("==========================================================="+projectName);
 				if (qr.isDone()) {
@@ -202,18 +188,18 @@ public class PartnerWSDL {
 		}
 		System.out.println("\nQuery execution completed.");
 		return projectName;
-	
+
 	}
 	public JSONObject getTargetOrgDetails(String projectId) {
 
 		JSONObject connData = new JSONObject();
-		
+
 		try {
 			partnerConnection.setQueryOptions(250);
 			if(projectId==null)
 				projectId="a0PG000000B23yKMAR";
 			// SOQL query to use
-		   String soqlQuery = " Select Salesforce_Password__c, Salesforce_Token__c, Salesforce_Username__c from Project__c where id= '"+ projectId + "'";
+			String soqlQuery = " Select Salesforce_Password__c, Salesforce_Token__c, Salesforce_Username__c from Project__c where id= '"+ projectId + "'";
 			// Make the query call and get the query results
 			QueryResult qr = partnerConnection.query(soqlQuery);
 			boolean done = false;
@@ -223,7 +209,7 @@ public class PartnerWSDL {
 			while (!done) {
 
 				SObject[] records = qr.getRecords();
-				
+
 				// Process the query results
 				for (int i = 0; i < records.length; i++) {
 					String password=(String) records[i].getField("Salesforce_Password__c");
@@ -238,7 +224,7 @@ public class PartnerWSDL {
 					connData.put("username", username);
 					System.out.println("connData "+connData);
 				}
-				
+
 				if (qr.isDone()) {
 					done = true;
 				} else {
@@ -251,7 +237,7 @@ public class PartnerWSDL {
 		}
 		System.out.println("\nQuery execution completed.");
 		return connData;
-	
+
 	}
 
 	/**
@@ -266,12 +252,12 @@ public class PartnerWSDL {
 		try {
 			login();
 			partnerConnection.setQueryOptions(250);
-			
+
 			//String	projectId="a0PG000000AtiE5";
-		String s = seibelBaseTable	+ "_PreDefined_Mapping";
+			String s = seibelBaseTable	+ "_PreDefined_Mapping";
 			// SOQL query to use
 			String soqlQuery = " Select id, Object_API_Name__c, Project__r.Name, Project__r.Parent_Project__c, Table_Name__c, Type__c from Table__c where "
-					
+
 					+ "  Project__r.Name='"+ s+"' and Parent_Table__c = null and Type__c ='Salesforce'";
 			System.out.println(soqlQuery);
 			//String soqlQuery ="Select id, Object_API_Name__c, Table_Name__c, Type__c from Table__c where Project__c ='"+projectId+"' and Parent_Table__c = null and Type__c ='Salesforce' and Object_API_Name__c='"+seibelBaseTable+"'";
@@ -308,10 +294,91 @@ public class PartnerWSDL {
 
 		return SFDCObjectName;
 	}
-		public  List<MappingModel> getFieldMapping(JSONObject tableData){
-			List<MappingModel> mappingData= new LinkedList<MappingModel>();
-			String siebelTableName=tableData.getString("siebelTableName");
-			String sfdcTablename=tableData.getString("sfdcTableName");
+
+	public  String getFile(File file,String fileName,String content,String projId,String dataFileUrl){
+	    	HttpURLConnection connection = null; 
+	    	try {
+	    	URL url;	        
+	    	login();
+	        String sessionId=	partnerConnection.getSessionHeader().getSessionId();
+	        System.out.println("SessionId is :: "+sessionId);
+	        String targetURL="";
+	        if(dataFileUrl==null)
+	        	targetURL = "https://na11.salesforce.com/services/apexrest/uploadFile/"+projId;
+	        else
+	        	targetURL = "https://na11.salesforce.com/services/apexrest/uploadFile/"+projId;
+			//Create connection
+	          url = new URL(targetURL);
+	          connection = (HttpURLConnection)url.openConnection();
+	          connection.setRequestMethod("POST");
+	          connection.setRequestProperty("Content-Type", content);
+	             //  "application/vnd.ms-excel");
+	          connection.setRequestProperty("filename", 
+	                  (dataFileUrl!=null)?fileName.split("\\.")[0]+"_"+dataFileUrl+"\\.csv":fileName);	
+	          connection.setRequestProperty("Authorization", "Bearer " +sessionId); 
+	          //connection.setRequestProperty("Content-Language", "en-US");  
+	    			
+	          connection.setUseCaches (false);
+	          connection.setDoInput(true);
+	          connection.setDoOutput(true);
+
+	          
+	          BufferedReader rdr = new BufferedReader(new FileReader(file));
+	         
+	          DataOutputStream wr = new DataOutputStream (
+	                      connection.getOutputStream ());
+	       //   String urlParameters = "s=hii";
+	          String doc2 ="";
+	          byte[] headerBytes1=(rdr.readLine()+"\n").getBytes("UTF-8");
+	          doc2 = new String(headerBytes1, "UTF-8");
+	          wr.writeBytes (doc2);
+	          System.out.println(">>>out>>>"+doc2);
+	          while((doc2=rdr.readLine())!=null){
+	        	 // byte[] headerBytes=null;
+	       
+	    	   //headerBytes = (rdr.readLine()).getBytes("UTF-8");
+	           //doc2 = new String(headerBytes, "UTF-8");
+	           System.out.println(">>>>>>"+doc2);
+	           
+	           wr.writeBytes (doc2+"\n");
+	        
+	          }
+		      
+	          wr.flush ();
+	          wr.close ();
+	          System.out.println( connection.getResponseMessage());
+	          //Get Response	
+	          InputStream is = connection.getInputStream();
+	          BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+	          String line;
+	          StringBuffer response = new StringBuffer(); 
+	          while((line = rd.readLine()) != null) {
+	            response.append(line);
+	            response.append('\r');
+	          }
+	          rd.close();
+	          System.out.println("......"+response.toString());
+	         return response.toString();
+
+	        } catch (Exception e) {
+
+	          e.printStackTrace();
+	         return null;
+
+	        } finally {
+
+	         
+			if(connection != null) {
+	            connection.disconnect(); 
+	          }
+	        }
+	      }
+
+
+	public  List<MappingModel> getFieldMapping(JSONObject tableData){
+		List<MappingModel> mappingData= new LinkedList<MappingModel>();
+		String siebelTableName=tableData.getString("siebelTableName");
+		String sfdcTablename=tableData.getString("sfdcTableName");
 		try {
 			partnerConnection.setQueryOptions(250);
 			// SOQL query to use
@@ -324,7 +391,7 @@ public class PartnerWSDL {
 			int loopCount = 0;
 			// Loop through the batches of returned results
 			while (!done) {
-				
+
 				SObject[] records = qr.getRecords();
 				// Process the query results
 				for (int i = 0; i < records.length; i++) {
@@ -334,7 +401,7 @@ public class PartnerWSDL {
 							.getField("Source_Field__c");
 					String sfdcTableColumn = (String) contact
 							.getField("Field_Target__c");
-					
+
 					mapping.setSfdcFieldTable(sfdcTableColumn);
 					mapping.setSfdcObjectName(sfdcTablename);
 					mapping.setSiebleBaseTable(siebelTableName);
@@ -359,7 +426,7 @@ public class PartnerWSDL {
 		//Project__c p = [Select Id, Name, Parent_Project__c, Type__c from Project__c where Parent_Project__c='a0PG000000AtiE5' and Name='Account_PreDefined_Mapping'];
 	}
 
-	
+
 	public  String getsubprojects(String siebelTableName){
 		String subprojectId=null;
 		String parentProjectId="a0PG000000AtiE5";
@@ -379,10 +446,10 @@ public class PartnerWSDL {
 				// Process the query results
 				for (int i = 0; i < records.length; i++) {
 					SObject contact = records[i];
-					
-					 subprojectId = (String) contact
+
+					subprojectId = (String) contact
 							.getField("Id");
-					
+
 					System.out.println("subprojectId " + 
 							subprojectId);
 				}
@@ -432,7 +499,7 @@ public class PartnerWSDL {
 					tableData.put("id", id);
 					tableData.put("siebelTableName", siebelTableName);
 					tableData.put("sfdcTableName", sfdcTableName);
-					
+
 					System.out.println("table data " + id
 							+ " " + siebelTableName + " " + sfdcTableName);
 				}
@@ -453,44 +520,44 @@ public class PartnerWSDL {
 	}
 
 	public void saveDataDB(List<MainPage> data, HttpServletRequest request, String projId) throws ConnectionException{
-		 HttpSession session = request.getSession(true);
-		
+		HttpSession session = request.getSession(true);
+
 		//String [] dataArray = data.toArray(new String[data.size()]);
-		 login();
-	     SObject[] contacts = new SObject[data.size()];
-	     int counter=0;
+		login();
+		SObject[] contacts = new SObject[data.size()];
+		int counter=0;
 		//data.get(0).getMigrate();
 		for (Iterator<MainPage> iterator = data.iterator(); iterator.hasNext();) {
 			MainPage mainPage = (MainPage) iterator.next();
 			if(mainPage.getSfdcId().equals("")){
-			 SObject contact = new SObject();
-		     contact.setType("Mapping_Staging_Table__c");
-		   /*  if((mainPage.getMigrate()).equals("on")){
+				SObject contact = new SObject();
+				contact.setType("Mapping_Staging_Table__c");
+				/*  if((mainPage.getMigrate()).equals("on")){
 		    	 contact.setField("Migrate__c", true);	 
 		     }else{*/
-		    	 contact.setField("Migrate__c", Boolean.parseBoolean(mainPage.getMigrate()));	 
-		     
-		    	 contact.setField("Sequence__c", mainPage.getSequence());
-		     contact.setField("Prim_Base_Table__c", mainPage.getPrimBaseTable());
-		     contact.setField("Project__c", ((String)session.getAttribute("projectId")));
-		     contact.setField("SFDC_Object__c", mainPage.getSfdcObject());	
-		     contact.setField("Siebel_Object__c", mainPage.getSiebelObject());
-		     contact.setField("Threshold__c", mainPage.getThreshold());
-		     contacts[counter] = contact;
-		     counter++;
-		     // Add this sObject to an array 
-		     SaveResult[] saveResults = getPartnerConnection().create(contacts);
-		     for(int j=0;j<saveResults.length;j++){
-	    			System.out.println(saveResults[j].isSuccess());
-	    			//System.out.println(results[i].getErrors()[i].getMessage());
-	    		}
-		   //  contacts[0] = contact;
+				contact.setField("Migrate__c", Boolean.parseBoolean(mainPage.getMigrate()));	 
+
+				contact.setField("Sequence__c", mainPage.getSequence());
+				contact.setField("Prim_Base_Table__c", mainPage.getPrimBaseTable());
+				contact.setField("Project__c", ((String)session.getAttribute("projectId")));
+				contact.setField("SFDC_Object__c", mainPage.getSfdcObject());	
+				contact.setField("Siebel_Object__c", mainPage.getSiebelObject());
+				contact.setField("Threshold__c", mainPage.getThreshold());
+				contacts[counter] = contact;
+				counter++;
+				// Add this sObject to an array 
+				SaveResult[] saveResults = getPartnerConnection().create(contacts);
+				for(int j=0;j<saveResults.length;j++){
+					System.out.println(saveResults[j].isSuccess());
+					//System.out.println(results[i].getErrors()[i].getMessage());
+				}
+				//  contacts[0] = contact;
 			}else{
-				 String sqlQuery = "Select Id from Mapping_Staging_Table__c where Id ='"+mainPage.getSfdcId()+"'";
-		    		QueryResult qr = partnerConnection.query(sqlQuery);
-		    		SObject[] records = qr.getRecords();
-		    		for(int i=0;i<records.length;i++){
-		    		SObject updateContact = new SObject();
+				String sqlQuery = "Select Id from Mapping_Staging_Table__c where Id ='"+mainPage.getSfdcId()+"'";
+				QueryResult qr = partnerConnection.query(sqlQuery);
+				SObject[] records = qr.getRecords();
+				for(int i=0;i<records.length;i++){
+					SObject updateContact = new SObject();
 					updateContact.setType("Mapping_Staging_Table__c");
 					// Set the ID of the contact to update
 					updateContact.setId(mainPage.getSfdcId());
@@ -509,87 +576,89 @@ public class PartnerWSDL {
 					SaveResult[] saveResults = partnerConnection
 							.update(new SObject[] { updateContact });
 					for(int j=0;j<saveResults.length;j++){
-		    			System.out.println(saveResults[j].isSuccess());
-		    			//System.out.println(results[i].getErrors()[i].getMessage());
-		    		}
-		    		
-			}
-		    		
-		    		
-		}
-		
-		}
-	     }
-		
-		public List<MainPage> getSavedDBData(String projectId, List<MainPage> data){
-			try {
-				partnerConnection.setQueryOptions(250);
-				// SOQL query to use
-				//String subprojectId="a0PG000000AtiEAMAZ";
-				String soqlQuery = "Select Id, Migrate__c, Sequence__c, Prim_Base_Table__c, Project__c, SFDC_Object__c, Siebel_Object__c, Threshold__c from Mapping_Staging_Table__c where Project__c ='"+projectId+"'";
-				// Make the query call and get the query results
-				QueryResult qr = partnerConnection.query(soqlQuery);
-				boolean done = false;
-
-				int loopCount = 0;
-				// Loop through the batches of returned results
-				data.clear();
-				
-while(!done){
-					SObject[] records = qr.getRecords();
-					// Process the query results
-					for (int i = 0; i < records.length; i++) {
-						MainPage mainPage = new MainPage();
-						SObject contact = records[i];
-						String id = (String) contact
-								.getField("Id");
-						mainPage.setSfdcId(id);
-						String siebelTableName = (String) contact
-								.getField("Siebel_Object__c");
-						mainPage.setSiebelObject(siebelTableName);
-						String sfdcTableName = (String) contact
-								.getField("SFDC_Object__c");
-						mainPage.setSfdcObject(sfdcTableName);
-						String migrate =  (String) contact
-								.getField("Migrate__c");
-						mainPage.setMigrate(migrate);
-						String seq = (String) contact
-								.getField("Sequence__c");
-						mainPage.setSequence(seq);
-						String primBaseTable = (String) contact.getField("Prim_Base_Table__c");
-						mainPage.setPrimBaseTable(primBaseTable);
-						String projId = (String) contact.getField("Project__c");
-						mainPage.setProjId(projId);
-						String threshold = (String) contact.getField("Threshold__c");
-						mainPage.setThreshold(threshold);
-						data.add(mainPage);
-					}
-					Collections.sort(data, new Comparator<MainPage>(){
-						@Override
-				        public int compare(MainPage  mainPage1, MainPage  mainPage2)
-				        {
-
-				            return  mainPage1.getSequence().compareTo(mainPage2.getSequence());
-				        }
-				    });
-					
-					if (qr.isDone()) {
-						done = true;
-					} else {
-						qr = partnerConnection.queryMore(qr.getQueryLocator());
+						System.out.println(saveResults[j].isSuccess());
+						//System.out.println(results[i].getErrors()[i].getMessage());
 					}
 
 				}
 
-			} catch (ConnectionException ce) {
-				ce.printStackTrace();
-			} 
-			System.out.println("\nQuery execution completed.");
-			return data;
+
 			}
-		
-		
-	/*public List<String > addObjectToTable(List<SiebelObject> listOfObjects,
+
+		}
+	}
+
+	public List<MainPage> getSavedDBData(String projectId, List<MainPage> data){
+		try {
+			partnerConnection.setQueryOptions(250);
+			// SOQL query to use
+			//String subprojectId="a0PG000000AtiEAMAZ";
+			String soqlQuery = "Select Id, Migrate__c, Sequence__c, Prim_Base_Table__c, Project__c, SFDC_Object__c, Siebel_Object__c, Threshold__c from Mapping_Staging_Table__c where Project__c ='"+projectId+"'";
+			// Make the query call and get the query results
+			QueryResult qr = partnerConnection.query(soqlQuery);
+			boolean done = false;
+
+			int loopCount = 0;
+			// Loop through the batches of returned results
+			data.clear();
+
+			while(!done){
+				SObject[] records = qr.getRecords();
+				// Process the query results
+				for (int i = 0; i < records.length; i++) {
+					MainPage mainPage = new MainPage();
+					SObject contact = records[i];
+					String id = (String) contact
+							.getField("Id");
+					mainPage.setSfdcId(id);
+					String siebelTableName = (String) contact
+							.getField("Siebel_Object__c");
+					mainPage.setSiebelObject(siebelTableName);
+					String sfdcTableName = (String) contact
+							.getField("SFDC_Object__c");
+					mainPage.setSfdcObject(sfdcTableName);
+					String migrate =  (String) contact
+							.getField("Migrate__c");
+					mainPage.setMigrate(migrate);
+					String seq = (String) contact
+							.getField("Sequence__c");
+					mainPage.setSequence(seq);
+					String primBaseTable = (String) contact.getField("Prim_Base_Table__c");
+					mainPage.setPrimBaseTable(primBaseTable);
+					String projId = (String) contact.getField("Project__c");
+					mainPage.setProjId(projId);
+					String threshold = (String) contact.getField("Threshold__c");
+					mainPage.setThreshold(threshold);
+					data.add(mainPage);
+				}
+				Collections.sort(data, new Comparator<MainPage>(){
+					@Override
+					public int compare(MainPage  mainPage1, MainPage  mainPage2)
+					{
+
+						return  mainPage1.getSequence().compareTo(mainPage2.getSequence());
+					}
+				});
+
+				if (qr.isDone()) {
+					done = true;
+				} else {
+					qr = partnerConnection.queryMore(qr.getQueryLocator());
+				}
+
+			}
+
+		} catch (ConnectionException ce) {
+			ce.printStackTrace();
+		} 
+		System.out.println("\nQuery execution completed.");
+		return data;
+	}
+
+
+	void commentedCode()
+	{
+		/*public List<String > addObjectToTable(List<SiebelObject> listOfObjects,
 			String projectId) {
 		List<String > result = null;
 		try {
@@ -710,11 +779,11 @@ while(!done){
 						.println("\nA table object was created with an ID of: "
 								+ result);
 
-				
-				 * for(){
-				 * 
-				 * tableObjects[0]. }
-				 
+
+		 * for(){
+		 * 
+		 * tableObjects[0]. }
+
 			} else {
 				// There were errors during the create call,
 				// go through the errors array and write
@@ -756,7 +825,7 @@ while(!done){
 						siebelField.getRepositoryName());
 				tableObject.setField("Column_Name__c",
 						siebelField.getColumnName());
-				
+
 				tableObject.setField("Table__c", tableId);
 
 				tableObjects[counter] = tableObject;
@@ -802,12 +871,12 @@ while(!done){
 		return result;
 	}
 	// method to get the table ids and the corr siebelids
-	
+
 	public  Map<String,String>  getSiebleIdForTableId(List<String> tableIds) {
 		Map<String,String> mapofSiebelTableIds= new HashMap<String,String>();
 		try {
 			// Set query batch size
-			
+
 			partnerConnection.setQueryOptions(250);
 			String ids=new String();
 			// SOQL query to use
@@ -836,7 +905,7 @@ while(!done){
 					Object siebelId = table.getField("Siebel_ID__c");
 					System.out.println("7777777777 "+id+"  "+siebelId+" 77777777777777");
 					mapofSiebelTableIds.put(id.toString(), siebelId.toString());
-					
+
 
 				}
 				if (qr.isDone()) {
@@ -853,17 +922,17 @@ while(!done){
 	}
 
 
-	
-	
-	 * public String createSample() { String result = null; try { // Create a
-	 * new sObject of type Contact // and fill out its fields. SObject contact =
-	 * new SObject(); contact.setType("Merchandise__c");
-	 * contact.setField("Name", "Mobilessss"); contact.setField("Price__c",
-	 * "100.00"); contact.setField("Quantity__c", "5");
-	 * 
-	 * SObject[] contacts = new SObject[1]; contacts[0] = contact; result =
-	 * createSalesForceObject(result, contacts); } catch (ConnectionException
-	 * ce) { ce.printStackTrace(); } return result; }
+
+
+		 * public String createSample() { String result = null; try { // Create a
+		 * new sObject of type Contact // and fill out its fields. SObject contact =
+		 * new SObject(); contact.setType("Merchandise__c");
+		 * contact.setField("Name", "Mobilessss"); contact.setField("Price__c",
+		 * "100.00"); contact.setField("Quantity__c", "5");
+		 * 
+		 * SObject[] contacts = new SObject[1]; contacts[0] = contact; result =
+		 * createSalesForceObject(result, contacts); } catch (ConnectionException
+		 * ce) { ce.printStackTrace(); } return result; }
 	 public void getNames() {
 		try {
 			// Make the describeGlobal() call
@@ -907,42 +976,42 @@ while(!done){
 					Field field = fields[j];
 					System.out.println("\tField: " + field.getName());
 					System.out.println("\t\tLabel: " + field.getLabel());
-					
-					 * if (field.isCustom())
-					 * System.out.println("\t\tThis is a custom field.");
-					 
+
+		 * if (field.isCustom())
+		 * System.out.println("\t\tThis is a custom field.");
+
 					System.out.println("\t\tType: " + field.getType());
-					
-					 * if (field.getLength() > 0)
-					 * System.out.println("\t\tLength: " + field.getLength());
-					 * if (field.getPrecision() > 0)
-					 * System.out.println("\t\tPrecision: " +
-					 * field.getPrecision());
-					 
+
+		 * if (field.getLength() > 0)
+		 * System.out.println("\t\tLength: " + field.getLength());
+		 * if (field.getPrecision() > 0)
+		 * System.out.println("\t\tPrecision: " +
+		 * field.getPrecision());
+
 
 					// Determine whether this is a picklist field
-					
-					 * if (field.getType() == FieldType.picklist) { // Determine
-					 * whether there are picklist values PicklistEntry[]
-					 * picklistValues = field.getPicklistValues(); if
-					 * (picklistValues != null && picklistValues[0] != null) {
-					 * System.out.println("\t\tPicklist values = "); for (int k
-					 * = 0; k < picklistValues.length; k++) {
-					 * System.out.println("\t\t\tItem: " +
-					 * picklistValues[k].getLabel()); } } }
-					 
+
+		 * if (field.getType() == FieldType.picklist) { // Determine
+		 * whether there are picklist values PicklistEntry[]
+		 * picklistValues = field.getPicklistValues(); if
+		 * (picklistValues != null && picklistValues[0] != null) {
+		 * System.out.println("\t\tPicklist values = "); for (int k
+		 * = 0; k < picklistValues.length; k++) {
+		 * System.out.println("\t\t\tItem: " +
+		 * picklistValues[k].getLabel()); } } }
+
 
 					// Determine whether this is a reference field
-					
-					 * if (field.getType() == FieldType.reference) { //
-					 * Determine whether this field refers to another object
-					 * String[] referenceTos = field.getReferenceTo(); if
-					 * (referenceTos != null && referenceTos[0] != null) {
-					 * System
-					 * .out.println("\t\tField references the following objects:"
-					 * ); for (int k = 0; k < referenceTos.length; k++) {
-					 * System.out.println("\t\t\t" + referenceTos[k]); } } }
-					 
+
+		 * if (field.getType() == FieldType.reference) { //
+		 * Determine whether this field refers to another object
+		 * String[] referenceTos = field.getReferenceTo(); if
+		 * (referenceTos != null && referenceTos[0] != null) {
+		 * System
+		 * .out.println("\t\tField references the following objects:"
+		 * ); for (int k = 0; k < referenceTos.length; k++) {
+		 * System.out.println("\t\t\t" + referenceTos[k]); } } }
+
 
 				}
 			}
@@ -1061,17 +1130,17 @@ while(!done){
 						listValue.getSource());
 				tableObject.setField("Table__c",
 						listValue.getTableId());
-				
-				
+
+
 				tableObjects[counter] = tableObject;
 				counter++;
 
-				
-				 * Deployed__c Draft__c Editable__c Object_Name__c
-				 * Primary_Version__c Project_Run__c Script__c Script_1__c
-				 * Sforce_Object__c Siebel_Name__c Source_Code__c Sub_Type__c
-				 * Table__c Type__c
-				 
+
+		 * Deployed__c Draft__c Editable__c Object_Name__c
+		 * Primary_Version__c Project_Run__c Script__c Script_1__c
+		 * Sforce_Object__c Siebel_Name__c Source_Code__c Sub_Type__c
+		 * Table__c Type__c
+
 			}
 
 			result = createSalesForceObject( tableObjects);
@@ -1138,14 +1207,14 @@ while(!done){
 
 	public static void main(String args[]) {
 		PartnerWSDL partnerWSDL = new PartnerWSDL();
-		
+
 		try {
 			partnerWSDL.getSiebelScript("a0R90000007BBFa", "Account");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		  partnerWSDL.login();
 		  List<String> str= new LinkedList<String>();
 		  str.add("7897897");
@@ -1155,6 +1224,33 @@ while(!done){
 		String str="https://c.ap1.visual.force.com/apex/projectdetailpage2?pageID=2#$projectId=a0R90000007BBFaEAO#$ObjectID=j_id0:j_id10:j_id11:j_id12:block:j_id26:0:objects_field_edit";
 		str=str.replaceAll("#\\$", "%23%24");
 		System.out.println(str);
-		 
+
 	}*/
+
+
+		/*Properties configProp = new Properties();
+
+		InputStream in = this.getClass().getResourceAsStream(
+				"/resources/config.properties");
+
+		try {
+
+			configProp.load(in);
+
+		} catch (IOException e) {
+
+			// TODO Auto-generated catch block
+
+			e.printStackTrace();
+
+		}
+		 */
+		/*	String username = configProp.getProperty("salesforce_username");
+
+		String password = configProp.getProperty("salesforce_password");
+
+		String authEndPoint = configProp
+				.getProperty("salesforce_authEndPoint");*/
+	}
+
 }

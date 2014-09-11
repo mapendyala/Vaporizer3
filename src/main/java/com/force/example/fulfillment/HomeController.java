@@ -1,5 +1,6 @@
 package com.force.example.fulfillment;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,11 +13,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,6 +32,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.force.api.http.HttpRequest;
 import com.force.example.fulfillment.order.controller.SiebelObjectController;
+import com.force.example.fulfillment.order.controller.TestSFDC;
 import com.force.example.fulfillment.order.controller.ThresholdController;
 import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.MappingModel;
@@ -76,7 +80,7 @@ public class HomeController {
 		PartnerWSDL partnerWSDL= new PartnerWSDL(); 	  
 		//  System.out.println(projectName); 	  
 		partnerWSDL.login();
-		 HttpSession session = request.getSession(true);
+		HttpSession session = request.getSession(true);
 		String projectId="a0PG000000B23yKMAR";
 		session.setAttribute("projectId", projectId);
 		partnerWSDL.login();
@@ -134,8 +138,20 @@ public class HomeController {
 	
 
 	}
-
-
+	
+	 
+	 @RequestMapping(value="/tryCSV", method=RequestMethod.GET,produces="text/plain")
+	 @ResponseBody
+    public String createMappingCSVFile(Locale locale,Model model,HttpServletRequest request)
+    {
+		 HttpSession session = request.getSession(true);
+		 String projectId= (String) session.getAttribute("projectId");
+    	//String filePath=servletContext.getRealPath("/WEB-INF/CSV/") ;
+    	//System.out.println(filePath);
+      /*  File file=	TestSFDC.tryQuery(); */ 
+		return null;
+    	
+    }
 
 
 	@RequestMapping(value = "/mapping", method = RequestMethod.GET)
