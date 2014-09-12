@@ -5,10 +5,18 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,8 +38,11 @@ import org.json.JSONObject;
 
 
 
+
+
 import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.MappingModel;
+import com.force.utility.UtilityClass;
 import com.google.gson.JsonArray;
 import com.sforce.soap.partner.DescribeGlobalResult;
 import com.sforce.soap.partner.DescribeGlobalSObjectResult;
@@ -785,6 +796,178 @@ mapping.setMappingSeq(mappingSeq);
 		System.out.println("\nQuery execution completed.");
 		return data;
 	}
+
+	/**
+	 * @author piymishra
+	 * @param query
+	 * @param ProjectId
+	 */
+
+	public  void ExtractDataFromSiebel( String query, String ProjectId) 
+	{
+			
+			File file=null;  
+			File mappingFile=null;
+			Connection connection=null;;
+			try {
+				connection = UtilityClass.getSiebelConnection();
+			} catch (SQLException e1) {
+				
+				e1.printStackTrace();
+			}
+			              try
+			              {
+			            	 
+			              
+			              if (connection != null)
+			              {
+			            	  
+			                   if(query==null)
+			                   {
+			                      query="SELECT ACC.NAME AS \"Name = Name\", ACC.LOC AS \"Location = Location\", ADDR.ADDR AS \"Address1 = Street1\""
+			         					+" FROM SIEBEL.S_ORG_EXT ACC"
+			        					+" INNER JOIN SIEBEL.S_ADDR_PER ADDR ON ADDR.ROW_ID = ACC.PR_ADDR_ID";
+			                   }
+			                     System.out.println(query);
+			                     List<Object> myList=new ArrayList<Object>();			                     
+			                     Statement st=connection.createStatement();			                     
+			                     ResultSet mySet=st.executeQuery(query);
+			                     String sFileName="tryAndTest";
+			                     if(mySet.next())
+			                     {
+			                    	 
+			                      file = new File(sFileName+".csv");	
+			                      mappingFile=new File(sFileName+".sdl");
+			           		     
+			                      createFile(file);
+			                      createFile(mappingFile);
+			                     }
+			                 
+			                while(mySet.next())
+			                {
+			                	
+			                	ResultSetMetaData rsmd= mySet.getMetaData();
+			                	createCSV(mySet,rsmd,file,mappingFile);	                
+			                	
+			              
+			                }
+			                     
+
+			              }
+			              else
+			              {
+			                     System.out.println("Failed to make connection!");
+			              }
+			              
+		
+			          
+			              
+			              if(ProjectId==null)
+			            	  ProjectId="a0PG000000Atg1U";
+			              new PartnerWSDL().getFile(file, "testFile1.csv", "application/vnd.ms-excel", ProjectId, null);
+
+		}
+		catch(Exception e)
+		{
+			System.out.println(e);
+		}
+						//return file;
+
+
+
+	
+	}
+	/**
+	 * @author piymishra
+	 * @param file
+	 */
+
+	
+	public  void createFile(File file)
+	{
+		 try {
+			if (file.createNewFile()){
+			        System.out.println("File is created!");
+			        System.out.println(file.getAbsolutePath());
+			      }else{
+			        System.out.println("File already exists.Deleting Existing file");
+			        file.delete();
+			        if(file.createNewFile())
+			        {
+			         System.out.println("File is created again!");
+			      System.out.println(file.getAbsolutePath());
+			        }
+			        
+			      }
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+    /**
+     * @author piymishra
+     * @param mySet
+     * @param rsmd
+     * @param file
+     * @param mappingFile
+     * @return
+     */
+	public static File createCSV( ResultSet mySet, ResultSetMetaData rsmd, File file, File mappingFile)
+	{
+		try
+		{
+
+			
+		    FileWriter writer = new FileWriter(file);
+		    FileWriter writerMapping = new FileWriter(mappingFile);
+			for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+               
+                writerMapping.append(rsmd.getColumnName(i));
+                writer.append(rsmd.getColumnName(i).split("=")[0]);
+                if (i >= 1 && i!=rsmd.getColumnCount()) {
+                    writerMapping.append("\n");
+                    writer.append(",");
+                    }
+                if (i==rsmd.getColumnCount())	  
+                {
+    		    writerMapping.append('\n');  
+                writer.append('\n');
+                }
+            }
+		    
+			for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+               
+                int type = rsmd.getColumnType(i);
+                if (type == Types.VARCHAR || type == Types.CHAR) {
+                	writer.append(mySet.getString(i));
+                } else {
+                	writer.append((char) mySet.getLong(i));
+                }
+                if (i >= 1 && i!=rsmd.getColumnCount()) {
+                    writer.append(",");
+                    }
+                    
+                if (i==rsmd.getColumnCount())	   
+    		    writer.append('\n');
+                
+            } 
+			   writerMapping.flush();
+			   writerMapping.close();
+		  
+		    writer.flush();
+		    writer.close();
+		    return file;
+		}
+		catch(Exception e)
+		{
+		     e.printStackTrace();
+		}
+		return file; 
+		
+		
+	
+}
 
 public void getMappingRecords(String projectId){
 			String selectTables = "";
