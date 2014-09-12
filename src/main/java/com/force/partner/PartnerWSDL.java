@@ -297,6 +297,16 @@ public class PartnerWSDL {
 		return SFDCObjectName;
 	}
 
+	
+	/**
+	 * 
+	 * @param file
+	 * @param fileName
+	 * @param content
+	 * @param projId
+	 * @param dataFileUrl
+	 * @return
+	 */
 	public  String getFile(File file,String fileName,String content,String projId,String dataFileUrl){
 	    	HttpURLConnection connection = null; 
 	    	try {
@@ -864,7 +874,8 @@ mapping.setMappingSeq(mappingSeq);
 			              
 			              if(ProjectId==null)
 			            	  ProjectId="a0PG000000Atg1U";
-			              new PartnerWSDL().getFile(file, "testFile1.csv", "application/vnd.ms-excel", ProjectId, null);
+			              String mappingFileURL=getFile(file, "testFile1.csv", "application/vnd.ms-excel", ProjectId, null);
+			             String SDlFileURl= getFile(mappingFile, "testFile1.csv", "application/vnd.ms-excel", ProjectId, mappingFileURL);
 
 		}
 		catch(Exception e)
