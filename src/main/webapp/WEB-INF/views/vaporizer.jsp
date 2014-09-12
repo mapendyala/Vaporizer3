@@ -286,6 +286,14 @@ function callMapping(rowNum){
 		}
 		
 	}
+	
+	function extract(){
+		alert("inside extract");
+		 $.ajax({
+				type : "GET",
+				url : "getextractData"
+				});   
+	}
 		
 	</script>
 
@@ -361,7 +369,7 @@ function callMapping(rowNum){
 								<td><a href='#' onclick='submit(${mainPage.sequence})' style='margin-left:15px;'>Select</a></td>
 								<td><c:out value='Selected'/></td>
 								<td>
-								<input class='btn btn-inverse' type='button' name='Extract' value='E' />
+								<input class='btn btn-inverse' type='button' name='Extract' value='E' onclick="extract()" />
 								<input class='btn btn-inverse' type='button' name='transform' value='T' style='margin-left:5px;'/>
 				                <input class='btn btn-inverse' type='button' name='delete' value='-' style='margin-left:5px;'/>
 				                </td>

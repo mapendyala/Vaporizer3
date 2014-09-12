@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -21,19 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -60,6 +48,7 @@ import com.sforce.ws.ConnectorConfig;
 public class PartnerWSDL {
 
 	PartnerConnection partnerConnection = null;
+
 	public PartnerConnection getPartnerConnection() {
 		return partnerConnection;
 	}
@@ -73,6 +62,8 @@ public class PartnerWSDL {
 	String username = "subhchakraborty@deloitte.com.vaporizer";
 	String password = "Sep@2013";
 	String authEndPoint = "https://login.salesforce.com/services/Soap/u/24.0/";
+
+
 
 	public boolean login() {
 		boolean success = false;
@@ -379,6 +370,7 @@ public class PartnerWSDL {
 		List<MappingModel> mappingData= new LinkedList<MappingModel>();
 		String siebelTableName=tableData.getString("siebelTableName");
 		String sfdcTablename=tableData.getString("sfdcTableName");
+		ArrayList<String> fieldId = new ArrayList<String>();
 		try {
 			partnerConnection.setQueryOptions(250);
 			// SOQL query to use
@@ -415,6 +407,145 @@ public class PartnerWSDL {
 				} else {
 					qr = partnerConnection.queryMore(qr.getQueryLocator());
 				}
+
+			}
+			String s = sfdcTablename	+ "_PreDefined_Mapping";
+			// SOQL query to use
+			/*String soqlQuery = " Select id, Object_API_Name__c, Project__r.Name, Project__r.Parent_Project__c, Table_Name__c, Type__c from Table__c where Project__r.Parent_Project__c ='"
+					+ projectId
+					+ "' and  Project__r.Name='"+ s+"' and Parent_Table__c = null and Type__c ='Salesforce'";
+				
+*/			partnerConnection.setQueryOptions(250);
+		String soqlQuery1 = " Select  Object_API_Name__c,Id, Project__r.Name, Table_Name__c, Type__c from Table__c where  Project__r.Name='"+ s+"'";
+		System.out.println(soqlQuery1);
+			//String soqlQuery ="Select id, Object_API_Name__c, Table_Name__c, Type__c from Table__c where Project__c ='"+projectId+"' and Parent_Table__c = null and Type__c ='Salesforce' and Object_API_Name__c='"+seibelBaseTable+"'";
+			// Make the query call and get the query results
+			QueryResult qr1 = partnerConnection.query(soqlQuery1);
+			boolean done1 = false;
+int mappingSeq=0;
+			while (!done1) {
+				System.out.println("11111");
+				SObject[] records1 = qr1.getRecords();
+			for (int i = 0; i < records1.length; i++) {
+				
+					if(((String) records1[i].getField("Type__c")).equals("Siebel Child")){
+					fieldId.add((String) records1[i].getField("Id"));}
+					
+				}
+				//System.out.println("==="+ SFDCObjectName);
+				if (qr1.isDone()) {
+					System.out.println("33333333");
+					done1 = true;
+				} else {
+					System.out.println("44444");
+					qr1 = partnerConnection.queryMore(qr.getQueryLocator());
+				}
+			}
+			for (int j=0;j<fieldId.size();j++){
+				String id=fieldId.get(j);
+			String soqlQuery2 = "Select Source_Field__c, Field_Target__c, Source_Base_Table__c from Field_Mapping_Data_Migration__c where Source_Base_Table__c ='"+id+"'";
+			// Make the query call and get the query results
+			QueryResult qr2 = partnerConnection.query(soqlQuery2);
+			boolean done2 = false;
+
+			//int loopCount = 0;
+			// Loop through the batches of returned results
+			while (!done2) {
+				
+				SObject[] records2 = qr2.getRecords();
+				// Process the query results
+				for (int i = 0; i < records2.length; i++) {
+mappingSeq++;
+					MappingModel mapping= new MappingModel();
+					SObject contact = records2[i];
+					String siebelTableColumn= (String) contact
+							.getField("Source_Field__c");
+					String sfdcTableColumn = (String) contact
+							.getField("Field_Target__c");
+					
+					mapping.setSfdcFieldTable(sfdcTableColumn);
+					mapping.setSfdcObjectName(sfdcTablename);
+					mapping.setSiebleBaseTable(siebelTableName);
+					mapping.setSiebleBaseTableColumn(siebelTableColumn);
+mapping.setMappingSeq(mappingSeq);
+					System.out.println("mappingsss " + siebelTableColumn
+							+ " " + sfdcTableColumn);
+					mappingData.add(mapping);
+				}
+				if (qr2.isDone()) {
+					done2 = true;
+				} else {
+					qr2 = partnerConnection.queryMore(qr2.getQueryLocator());
+				}
+
+			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 			}
 		} catch (ConnectionException ce) {
@@ -655,7 +786,81 @@ public class PartnerWSDL {
 		return data;
 	}
 
+public void getMappingRecords(String projectId){
+			String selectTables = "";
+			String fromTables = "";
+			String joinTables ="";
+			try{
+				//String sqlQuery = "Select id, Object_API_Name__c, Project__c, Table_Name__c, Type__c from Table__c where Project__c= '"+projectId+"'";
+				String sqlQuery = "Select id, Object_API_Name__c, Project__c, Table_Name__c, Type__c from Table__c where Project__c= 'Account_PreDefined_Mapping'";
+				QueryResult qr = partnerConnection.query(sqlQuery);
+				boolean done = false;
+				while(!done){
+					SObject[] records = qr.getRecords();
+					System.out.println(records.length);
+					// Process the query results
+					for (int i = 0; i < records.length; i++) {
+						SObject contact = records[i];
+						System.out.println(records[i]);
+						String type = (String) contact.getField("Type__c");
+					
+								
+						if(type.equals("Siebel")) {
+							String table = (String) contact.getField("Table_Name__c");
+							fromTables = fromTables+" "+"SIEBEL."+table+",";	
+							String mappingQuery = "Select Field_Target__c, Source_Field__c, Source_Base_Table__c, Source_Base_Table__r.Object_API_Name__c from Field_Mapping_Data_Migration__c where "
+									+ "Source_Base_Table__c = '"+(String) contact.getField("id")+"'";
+							QueryResult result = partnerConnection.query(mappingQuery);
+							SObject[] mappingRecords = result.getRecords();
+							for(int j=0;j<mappingRecords.length;j++){
+								SObject mappingRecord = records[i];
+								String salesForceField = (String) mappingRecord.getField("Field_Target__c");
+								String siebelField = (String) mappingRecord.getField("Source_Field__c");
+								String siebelBaseTable = (String) mappingRecord.getField("Source_Base_Table__r.Object_API_Name__c");
+								selectTables = selectTables+" "+ siebelBaseTable+"."+siebelField +" "+"as"+ " "+	siebelField+"="+salesForceField+",";							
+								
+							}
+								
+							
+							}else{
+								if(type.equals("Siebel Child")){
+									String table = (String) contact.getField("Table_Name__c");
+									fromTables = fromTables+" "+"SIEBEL."+table+",";	
+									joinTables = joinTables+table+",";
+									String mappingQuery = "Select Field_Target__c, Source_Field__c, Source_Base_Table__c, Source_Base_Table__r.Object_API_Name__c from Field_Mapping_Data_Migration__c where "
+											+ "Source_Base_Table__c = '"+(String) contact.getField("id")+"'";
+									QueryResult result = partnerConnection.query(mappingQuery);
+									SObject[] mappingRecords = result.getRecords();
+									for(int j=0;j<mappingRecords.length;j++){
+										SObject mappingRecord = records[i];
+										String salesForceField = (String) mappingRecord.getField("Field_Target__c");
+										String siebelField = (String) mappingRecord.getField("Source_Field__c");
+										String childBaseTable = (String) mappingRecord.getField("Source_Base_Table__r.Object_API_Name__c");
+										selectTables = selectTables+" "+ childBaseTable+"."+siebelField +" "+"as"+ " "+	siebelField+"="+salesForceField+",";							
+										
+									}
+									
+								}
+							}
+						
+						}
+					}
+				String query = "Select"+selectTables+" "+"from"+" "+fromTables+" "+"LEFT OUTER JOIN"+" "+joinTables+" "+"on"+" ";
+					
+					if (qr.isDone()) {
+						done = true;
+					} else {
+						qr = partnerConnection.queryMore(qr.getQueryLocator());
+					}
 
+				}
+
+			 catch (ConnectionException ce) {
+				ce.printStackTrace();
+			} 
+			System.out.println("\nQuery execution completed.");
+			
+		}
 	void commentedCode()
 	{
 		/*public List<String > addObjectToTable(List<SiebelObject> listOfObjects,

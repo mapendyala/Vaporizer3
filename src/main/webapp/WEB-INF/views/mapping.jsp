@@ -32,6 +32,54 @@
 <!-- Latest compiled and minified JavaScript -->
 <script
 	src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+
+var rowNum = 1;
+var primBaseTable;
+
+	function addRow() {
+		
+		  if($("#rowCount").val()!=''){
+			rowNum = Number($("#rowCount").val())+1;
+		} 
+		 
+		$("#rowCount").val(rowNum);
+		 
+
+		var objName = $("sfdcObj").val();
+		var srchObj = "searchObject"+(rowNum);
+		var primTable = "prim"+(rowNum);
+		var thresholdId = "thresh"+(rowNum);
+		var SFDCObjName = "SFDCObjName"+(rowNum);
+		var migrateId = "migrate"+(rowNum);
+
+		var seqId = 12;
+		
+		
+		 $("#masterTable tbody")
+				.append(
+						
+						"<tr style='height:45px; width:45px;'>"
+								+ "<td><input name="+migrateId+" type='checkbox'></td>"
+
+
+							
+								+ "<td><input value="+objName+" name="+primTable+" id="+primTable+"  style='margin-left:35px;'/></td>"
+								+ "<td><input name="+primTable+" id="+primTable+"  style='margin-left:35px;'/></td>"
+								+ "<td><input name="+primTable+" id="+primTable+"  style='margin-left:35px;'/></td>"
+								+ "<td><input type='dropdown' id="+primTable+"  style='margin-left:35px;'/></td>"
+								+ "<td><input name="+primTable+" id="+primTable+" style='margin-left:35px;'/></td>"
+								+ "<td>"
+								
+				                + "</td>"
+				                + "</tr>");
+		
+	}
+	function hello(){
+
+		window.alert("hello");
+		} 
+	</script>
 <title>Vaporizer</title>
 </head>
 <body>
@@ -68,11 +116,21 @@
 						
 					</div>
 				</div>
-		
+		<button class="btn btn-primary" id="addRow" onclick="addRow()">[+]</button>	
 			<div class="mappingContainer" style="width:100%;">
-				<table class="table" style="margin:0px !important;"><br/><br/>
+				<table id = "masterTable" style="width:100%;"><br/><br/>
+				<thread>
 					<tr>
-						<th>Select</th>
+					<th class="table_header_details" style="float: center;">Select</th>
+
+			
+					<th class="table_header_details" style="float: center;">Siebel Base Table</th>
+					<th class="table_header_details" style="float: center;">Siebel Base Table Column</th>
+					<th class="table_header_details" style="float: center;">Foreign Key Table Field Name</th>
+					<th class="table_header_details" style="float: center;">SFDC Object Name</th>
+					<th class="table_header_details" style="float: center;">SFDC Field Name</th>
+					
+						<%-- <th>Select</th>
 						<th>Siebel Base Table</th>
 						<th>Siebel Base Table Column</th>
 						<th>Siebel Field Description</th>
@@ -80,44 +138,76 @@
 						<th>SFDC Object Name</th>
 						<th>SFDC Field Name</th>
 						<th>SFDC Field Description</th>
-						<th>Lov Mapping</th>
-											
+						<th>Lov Mapping</th>--%>
+
+						
+									
 					</tr>
+					</thread>
 					
+					 <c:if test="${not empty mappingData}"> 
 				<c:forEach items="${mappingData}" var="mapping" varStatus="status">
-					<c:choose>
-   <c:when test="${status.index % 2 == 0}">
-     <tr bgcolor="#CECEF6"> 
-   </c:when>
-                              
+					  <td>
+								<c:choose>
+								<c:when test="${mainPage.select == 'on'}">
+								<input name="select${mapping.mappingSeq}" type='checkbox' checked="checked">
+								</c:when>
+								<c:otherwise>
+								<input name="select${mapping.mappingSeq}" type='checkbox'>
+								</c:otherwise>
+								</c:choose>
+								</td>
 
-   <c:otherwise>
-                              
 
-     <tr bgcolor="#FBFBEF">
-                              
 
-   </c:otherwise>
- </c:choose> 
-                            
-					
-					   
-					        <td><input type="checkbox" /></td>
-					        <td><c:out value="${mapping.siebleBaseTable}"/></td>
+
+
+
+				<td><input value="${mapping.siebleBaseTable}" id="siebleBaseTable${mapping.mappingSeq}" name="siebleBaseTable${mapping.mappingSeq}" readonly style='margin-left:45px;'/></td>
+
+
+							
+					<td><input value="${mapping.siebleBaseTableColumn}" id="siebleBaseTableColumn${mapping.mappingSeq}" name="siebleBaseTableColumn${mapping.mappingSeq}" readonly style='margin-left:35px;'/></td>
+		
+				<td><input value="${mapping.siebleBaseTable}" id="siebleBaseTable${mapping.mappingSeq}" name="siebleBaseTable${mapping.mappingSeq}" readonly style='margin-left:35px;'/></td>
+			
+						  
+								<td><input value="${mapping.sfdcObjectName}" id="sfdcObjectName${mapping.mappingSeq}" name="sfdcObjectName${mapping.mappingSeq}" readonly style='margin-left:35px;'/></td>
+							  <td>
+							   
+							   <select name="colour" id="dropdown" >
+							    <option value="dropdown">${mapping.sfdcFieldTable}</option>
+							   <c:if test="${not empty mappingField}"> 
+				<c:forEach items="${mappingField}" var="field" varStatus="status">
+        <%--- <option  value="dropdown">${mappingData.field}</option>--%> 
+       
+               <option value="dropdown">${field}</option>
+              
+                  </c:forEach> 
+					  </c:if>
+            </select>
+          				
+ <input type="hidden" name="dropdown" id="dropdown" >
+ 
+    <!--  <input type="submit" value="click" name="btn_dropdown">-->
+    </td>	  
+				
+					      <%--  <td><c:out value="${mapping.siebleBaseTable}"/></td>
 					         <td><c:out value="${mapping.siebleBaseTableColumn}"/></td>
-					          <td><c:out value=""/></td>
+					         
 					           <td><c:out value=""/></td>
 					            <td><c:out value="${mapping.sfdcObjectName} "/></td>
-					             <td><c:out value="${mapping.sfdcFieldTable}"/></td>
-					              <td><c:out value=""/></td>
+					             <td><c:out value="${mapping.sfdcFieldTable}"/></td>--%> 
+					           
 					                <td></td>
 					                
 					           
 					        <%-- <td><c:out value="${p.quantity}"/></td> --%>
 					    </tr>
 					</c:forEach> 
-					
+					  </c:if> 
 				</table>
+				<div id="row"><input id="rowCount" name='rowCount' type="hidden" value="${mappingData.size()}"></div>
 			</div>
 			<div class="buttonContainer">
 			<form:form method="post" action="childSave" modelAttribute="data">

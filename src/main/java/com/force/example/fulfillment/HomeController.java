@@ -140,18 +140,7 @@ public class HomeController {
 	}
 	
 	 
-	 @RequestMapping(value="/tryCSV", method=RequestMethod.GET,produces="text/plain")
-	 @ResponseBody
-    public String createMappingCSVFile(Locale locale,Model model,HttpServletRequest request)
-    {
-		 HttpSession session = request.getSession(true);
-		 String projectId= (String) session.getAttribute("projectId");
-    	//String filePath=servletContext.getRealPath("/WEB-INF/CSV/") ;
-    	//System.out.println(filePath);
-      /*  File file=	TestSFDC.tryQuery(); */ 
-		return null;
-    	
-    }
+
 
 
 	@RequestMapping(value = "/mapping", method = RequestMethod.GET)
@@ -242,11 +231,23 @@ public class HomeController {
 		return "Copy of vaporizer";
 	}*/
 
+	@RequestMapping(value="/getextractData", method = RequestMethod.GET)
+	public void createExtractQuery(HttpServletRequest request){
+		System.out.println("In controller");
+		HttpSession session = request.getSession(true);
+		PartnerWSDL partnerWSDL= new PartnerWSDL();
+		partnerWSDL.login();
+		partnerWSDL.getMappingRecords((String)session.getAttribute("projectId"));
+	}
+	
+	
 	@RequestMapping(value="saveData",method = RequestMethod.POST)
 	public ModelAndView getSiebelFielddata(HttpServletRequest request, Map<String, Object> model, Model modelChild) throws ConnectionException {
 		HttpSession session = request.getSession(true);
 		System.out.println("In main controller");
 		PartnerWSDL partnerWSDL= new PartnerWSDL(); 
+
+
 		data.clear();
 		rowCount= request.getParameter("rowCount");
 		String rowNo = request.getParameter("rowNo");
@@ -270,6 +271,7 @@ public class HomeController {
 			String thresholdId = "thresh"+i;
 			String SFDCObjName = "SFDCObjName"+i;
 			String sfdcId = "SfdcId"+i;
+
 			if(request.getParameter(migrate)==null){
 				mainPage.setMigrate("false");
 			}else{
@@ -301,9 +303,39 @@ public class HomeController {
 				System.out.println("mychild list is"+myChildList.size());
 			}
 			modelChild.addAttribute("myChildList",myChildList);
+
+
 			return new ModelAndView("ChildBase" , "data", data);
 			}
 		else{
+logger.info("Welcome to mapping ");
+			
+			System.out.println("--------------"+thresholdValue+" "+primBaseValue);
+			//ThresholdController tc= new ThresholdController();
+			//List<SiebelObjectBO> listSiebelObject = tc.fetchSiebelObjects(request);
+
+			//PartnerWSDL partnerWSDL= new PartnerWSDL();
+			//partnerWSDL.login();
+			//HttpSession session=request.getSession();
+
+			String subprojectId=partnerWSDL.getsubprojects(siebelTableNameValue);
+			if(null != subprojectId){
+			JSONObject tableName=partnerWSDL.getRelatedSiebelTable(subprojectId);
+			List<MappingModel> mappingData=partnerWSDL.getFieldMapping(tableName);
+
+ArrayList<String> field=new ArrayList<String>();
+			for(int count=0;count<mappingData.size();count++){
+				field.add(mappingData.get(count).getSfdcFieldTable());
+			}
+			modelChild.addAttribute("sfdcObj",mappingData.get(0).getSfdcObjectName());
+			modelChild.addAttribute("mappingField",field);
+
+
+
+
+			modelChild.addAttribute("mappingData",mappingData);}
+
+
 			return new ModelAndView("mapping", "data", data);
 		}
 	}
