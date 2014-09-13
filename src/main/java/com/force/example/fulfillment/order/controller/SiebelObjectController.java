@@ -140,8 +140,75 @@ objList.add(siObj);
 	}
 		 return objList;
 	}
-	 	 
-	 	 
+	 	//Code by Amrita 
+
+		 public List<Object> fetchColumns(HttpServletRequest request,String siebelObjName,String thresholdValue){
+
+				System.out.println("in child contoller method");
+				 List<Object> myList=new ArrayList<Object>();
+				 HttpSession session = request.getSession(true);
+				/* String userValue = request.getParameter("baseObjectName");
+				 System.out.println("child uservalues in bean is"+userValue);*/
+				 System.out.println("SIEBL OBJ PARAM IS"+siebelObjName);
+				 String userValue=siebelObjName;
+				 int tvalue=0;
+				 if((null!=thresholdValue)&&(""!=thresholdValue)){
+					  tvalue = Integer.parseInt(thresholdValue);
+				 }
+				
+				 try
+		         {
+		                Class.forName("oracle.jdbc.driver.OracleDriver");
+		         }
+		         catch(ClassNotFoundException e)
+		         {
+		                System.out.println("Where is your Oracle JDBC Driver?");
+		                e.printStackTrace();
+		               
+		         }
+		         System.out.println("Oracle JDBC Driver Registered!");
+		         try
+		         {
+		                connection = DriverManager.getConnection("jdbc:oracle:thin:@167.219.18.231:443/SBLDB", "snetuser1","snetuser1");
+		         }
+		         catch (SQLException e)
+		         {
+		                System.out.println("Connection Failed! Check output console");
+		                e.printStackTrace();
+		               
+		         }
+				 
+
+		        try
+				{
+				 if (connection != null)
+		          {
+		                 System.out.println("You made it, take control your database now!");
+		           
+		                 String query="SELECT ALLTAB.COLUMN_NAME FROM ALL_TAB_COLUMNS ALLTAB WHERE ALLTAB.TABLE_NAME ='"+userValue+"' "
+		    	                 +"AND (SELECT NUM_ROWS FROM ALL_TABLES WHERE TABLE_NAME = '"+userValue+"') - ALLTAB.NUM_NULLS > ("+tvalue+" * (SELECT NUM_ROWS FROM ALL_TABLES WHERE TABLE_NAME = '"+userValue+"') / 100)";
+		                
+		                Statement st=connection.createStatement();
+		                     System.out.println("child query is"+query);
+		               ResultSet mySet=st.executeQuery(query);
+
+		                 while(mySet.next())
+			            {
+			            	System.out.println("myset is"+mySet.getString(1));
+			            	
+			            	myList.add(mySet.getString(1));
+				
+			            }
+		         
+			}
+		}
+			catch(SQLException e)
+			{
+				 System.out.println("Connection Failed! Check output console");
+		         e.printStackTrace();
+			}
+		         return myList; 	 
+		 	 }	 
 	 	 
  @RequestMapping(value="/siebelChildObject", method=RequestMethod.POST)
 	 	 
