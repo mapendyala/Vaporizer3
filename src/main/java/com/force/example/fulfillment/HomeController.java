@@ -207,6 +207,32 @@ public class HomeController {
 		// System.out.println(dataForm.getData());
 		System.out.println("doneeeeeeee-------------");
 		//System.out.println(data.get(0).getSiebelObject());
+		
+		List<ChildObjectBO> childDataList = new ArrayList<ChildObjectBO>();
+		String totalRowCount= request.getParameter("rowCount");
+		System.out.println("total row count is"+totalRowCount);
+		for(int i=1;i<=Integer.parseInt(totalRowCount);i++){
+			//mainPage[i] =  new MainPage();
+			System.out.println("my i value is "+i);
+			ChildObjectBO childObj = new ChildObjectBO();
+			
+			String sequenceNumber = "sequenceNum"+i;
+			String siebelBaseObjName = "baseObjName"+i;
+			String siebelChildObjName = "childObjName"+i;
+			String siebelJoinCondition= "joinCondition"+i;
+			
+			childObj.setSeqNum(Integer.parseInt(request.getParameter(sequenceNumber)));
+			childObj.setBaseObjName(request.getParameter(siebelBaseObjName));
+			childObj.setChildObjName(request.getParameter(siebelChildObjName));
+			childObj.setJoinCondition(request.getParameter(siebelJoinCondition));
+			System.out.println("checkbox value is"+request.getParameter("checkFlag"+i));
+			System.out.println("values are"+ childObj.getSeqNum() + "and" + childObj.getBaseObjName());
+			System.out.println("rest values are"+ childObj.getChildObjName() + "and" + childObj.getJoinCondition());
+			childDataList.add(childObj);
+		}
+		System.out.println("child data save list is"+childDataList);
+		partnerWSDL.saveChildDataDB(childDataList,request);
+		
 		return new ModelAndView("vaporizer" , "data", data);
 	}
 

@@ -1022,6 +1022,41 @@ public void getMappingRecords(String projectId){
 			System.out.println("\nQuery execution completed.");
 			
 		}
+
+	
+	public void saveChildDataDB(List<ChildObjectBO> data, HttpServletRequest request) throws ConnectionException{
+	 HttpSession session = request.getSession(true);
+	
+	//String [] dataArray = data.toArray(new String[data.size()]);
+	 login();
+    SObject[] contacts = new SObject[data.size()];
+    int counter=0;
+	//data.get(0).getMigrate();
+    System.out.println("in WSDL save child method");
+    int i=1;
+    for(ChildObjectBO childObj : data)
+    {
+   	 System.out.println("in saving for loop"+i);
+   	 SObject contact = new SObject();
+	     contact.setType("Child_Base__c");
+	     contact.setField("Primary_Table__c", childObj.getBaseObjName());
+	     contact.setField("Project__c", ((String)session.getAttribute("projectId")));
+	     contact.setField("Child_Table__c", childObj.getChildObjName());	
+	     contact.setField("Join_Condition__c", childObj.getJoinCondition());
+	     
+	     contacts[counter] = contact;
+	     counter++;
+	     i++;
+    }
+	     SaveResult[] saveResults = getPartnerConnection().create(contacts);
+	     System.out.println("save results length is"+saveResults.length);
+	     for(int j=0;j<saveResults.length;j++){
+   			System.out.println(saveResults[j].isSuccess());
+   			//System.out.println(results[i].getErrors()[i].getMessage());
+   		}
+    }
+
+
 	void commentedCode()
 	{
 		/*public List<String > addObjectToTable(List<SiebelObject> listOfObjects,
