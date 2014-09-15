@@ -40,15 +40,7 @@
 			<div class="credential_container">
 				<div>
 					<div class="table_header_details">Vaporizer</div>
-					<div>
-						<!-- <table class="table">
-							<tr>
-								<td class="oddTd">Name</td>
-								<td>Sample Project One</td>
-							</tr>
-
-						</table> -->
-					</div>
+					
 				</div>
 				<div>
 					<div style="float: left; width: 48%">
@@ -63,45 +55,24 @@
 									<td class="oddTd">Primary Table</td>
 									<td>S_ORG_EXT</td>
 								</tr>
-								<!-- <tr>
-									<td class="oddTd">Seibel Password</td>
-									<td>SnetUser1</td>
-								</tr> -->
+								
 
 							</table>
 						</div>
 					</div>
-					<!-- <div style="float: right; width: 50%">
-						<div class="table_header_details">SFDC</div>
-						<div>
-
-							<table class="table">
-								<tr>
-									<td class="oddTd">SFDC Login</td>
-									<td>ranfernandes@deloitte.com.data</td>
-								</tr>
-								<tr>
-									<td class="oddTd">SFDC Password</td>
-									<td>93458f2aa223f884bfbb35e36e182ef1</td>
-								</tr>
-								<tr>
-									<td class="oddTd"></td>
-									<td></td>
-								</tr>
-							</table>
-						</div>
-					</div> -->
+					
 				</div>
-			</div>
-			<div class="mappingContainer" style="height: 500px;width:100%;">
+			</div> <!-- //end of credential -->
+			
 			<form:form method="post" action="childSave" modelAttribute="data">
+			<div class="mappingContainer" style="height: 500px;width:100%;">
 				<table class="table" style="margin:0px !important;">
 					<tr>
-						
-						<th>S.NO</th>
-						<th>Primary Table</th>
-						<th>Child Table</th>
-						<th>Join Condition</th>
+						<th class="table_header_details" style="float: center;">Select</th>
+						<th class="table_header_details" style="float: center;">S.NO</th>
+						<th class="table_header_details" style="float: center;">Primary Table</th>
+						<th class="table_header_details" style="float: center;">Child Table</th>
+						<th class="table_header_details" style="float: center;">Join Condition</th>
 						<!-- <th>Delete</th> -->
 						<!-- <th>Child Base tables</th>
 						<th>SFDC Object</th>
@@ -111,16 +82,38 @@
 					</tr>
 					
 					
-					<c:forEach items="${myChildList}" var="childItem">
+					<%-- <c:forEach items="${myChildList}" var="childItem" >
     <tr>
-        <td><c:out value="${childItem.seqNum}"/></td>
+    <td><input type="checkbox"/></td>
+        <td name="MySeq${childItem.seqNum}" id="MySeq${childItem.seqNum}"><c:out value="${childItem.seqNum} "/></td>
         <td><c:out value="${childItem.baseObjName}"/></td>
-        <td><c:out value="${childItem.childObjName}"/></td>
+        <td name="childObjName${childItem.seqNum}" id="childObjName${childItem.seqNum}"><c:out value="${childItem.childObjName}"/></td>
         <td><c:out value="${childItem.joinCondition}"/></td>
     </tr>
+</c:forEach>   --%>
+
+<c:forEach items="${myChildList}" var="childItem">
+	<tr>
+	<td><input type="checkbox" name="checkFlag${childItem.seqNum}" id="checkFlag${childItem.seqNum}"/></td>
+	
+	<td><input value="${childItem.seqNum}" id="sequenceNum${childItem.seqNum}" name="sequenceNum${childItem.seqNum}" readonly style='margin-left:45px;'/></td>	
+	
+		<td><input value="${childItem.baseObjName}" id="baseObjName${childItem.seqNum}" name="baseObjName${childItem.seqNum}" readonly style='margin-left:45px;'/></td>	
+		
+		<td><input value="${childItem.childObjName}" id="childObjName${childItem.seqNum}" name="childObjName${childItem.seqNum}" readonly style='margin-left:45px;'/></td>
+		
+			<td ><input value="${childItem.joinCondition}" id="joinCondition${childItem.seqNum}" name="joinCondition${childItem.seqNum}" readonly style='margin-left:45px;width:130%'/></td>
+</tr>
 </c:forEach> 
-					
+
+
 				</table>
+				<div id="row"><input id="rowCount" name='rowCount' type="hidden" value="${myChildList.size()}"></div>
+				</div> <!-- //end of mapping container -->
+				
+				<div></div>
+				<div></div>
+				
 				<div class="buttonContainer">
 				<table style="border: 0">
 				
@@ -134,15 +127,14 @@
 						</td>
 					</tr>
 					
-
 				</table>
+			
+			</div> <!-- //end of button containr -->
 			</form:form>
-			</div>
 		</div>
 			</div>
 			
-		</div>
-
+		
 
 
 
