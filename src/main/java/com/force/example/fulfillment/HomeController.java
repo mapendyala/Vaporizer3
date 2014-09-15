@@ -32,7 +32,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.force.api.http.HttpRequest;
 import com.force.example.fulfillment.order.controller.SiebelObjectController;
-import com.force.example.fulfillment.order.controller.TestSFDC;
 import com.force.example.fulfillment.order.controller.ThresholdController;
 import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.MappingModel;
@@ -159,8 +158,8 @@ public class HomeController {
 
 		String subprojectId=partnerWSDL.getsubprojects(siebelTableName);
 		JSONObject tableName=partnerWSDL.getRelatedSiebelTable(subprojectId);
-		List<MappingModel> mappingData=partnerWSDL.getFieldMapping(tableName);
-		model.addAttribute("mappingData",mappingData);
+		//List<MappingModel> mappingData=partnerWSDL.getFieldMapping(tableName);
+		//model.addAttribute("mappingData",mappingData);
 
 		return "mapping";
 	}
@@ -189,12 +188,12 @@ public class HomeController {
 	}
 
 	@RequestMapping(value = "childSave", method = RequestMethod.POST)
-	public ModelAndView save1(@ModelAttribute("data") List<MainPage> data, Locale locale, Model model) {
+	public ModelAndView save1(@ModelAttribute("data") List<MainPage> data, Locale locale, Model model,HttpServletRequest request) throws ConnectionException{
 		logger.info("Welcome home! the client locale is "+ locale.toString());
 		System.out.println("inside demo");
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-
+		PartnerWSDL partnerWSDL= new PartnerWSDL();
 		String formattedDate = dateFormat.format(date);
 		ArrayList<String> siebelList=new ArrayList<String>();
 		siebelList.add("Account");
@@ -208,6 +207,32 @@ public class HomeController {
 		// System.out.println(dataForm.getData());
 		System.out.println("doneeeeeeee-------------");
 		//System.out.println(data.get(0).getSiebelObject());
+		
+		List<ChildObjectBO> childDataList = new ArrayList<ChildObjectBO>();
+		String totalRowCount= request.getParameter("rowCount");
+		System.out.println("total row count is"+totalRowCount);
+		for(int i=1;i<=Integer.parseInt(totalRowCount);i++){
+			//mainPage[i] =  new MainPage();
+			System.out.println("my i value is "+i);
+			ChildObjectBO childObj = new ChildObjectBO();
+			
+			String sequenceNumber = "sequenceNum"+i;
+			String siebelBaseObjName = "baseObjName"+i;
+			String siebelChildObjName = "childObjName"+i;
+			String siebelJoinCondition= "joinCondition"+i;
+			
+			childObj.setSeqNum(Integer.parseInt(request.getParameter(sequenceNumber)));
+			childObj.setBaseObjName(request.getParameter(siebelBaseObjName));
+			childObj.setChildObjName(request.getParameter(siebelChildObjName));
+			childObj.setJoinCondition(request.getParameter(siebelJoinCondition));
+			System.out.println("checkbox value is"+request.getParameter("checkFlag"+i));
+			System.out.println("values are"+ childObj.getSeqNum() + "and" + childObj.getBaseObjName());
+			System.out.println("rest values are"+ childObj.getChildObjName() + "and" + childObj.getJoinCondition());
+			childDataList.add(childObj);
+		}
+		System.out.println("child data save list is"+childDataList);
+		partnerWSDL.saveChildDataDB(childDataList,request);
+		
 		return new ModelAndView("vaporizer" , "data", data);
 	}
 
@@ -310,32 +335,28 @@ public class HomeController {
 		else{
 logger.info("Welcome to mapping ");
 			
-			System.out.println("--------------"+thresholdValue+" "+primBaseValue);
+			System.out.println("---------------"+thresholdValue+" "+primBaseValue);
 			//ThresholdController tc= new ThresholdController();
 			//List<SiebelObjectBO> listSiebelObject = tc.fetchSiebelObjects(request);
-
+			
+			SiebelObjectController siObj=new SiebelObjectController();
+			//ArrayList<String> myList=new ArrayList<String>();
+			List<Object> myChildList=siObj.fetchColumns(request, primBaseValue,thresholdValue);
 			//PartnerWSDL partnerWSDL= new PartnerWSDL();
-			//partnerWSDL.login();
+			partnerWSDL.login();
 			//HttpSession session=request.getSession();
 
 			String subprojectId=partnerWSDL.getsubprojects(siebelTableNameValue);
 			if(null != subprojectId){
 			JSONObject tableName=partnerWSDL.getRelatedSiebelTable(subprojectId);
-			List<MappingModel> mappingData=partnerWSDL.getFieldMapping(tableName);
-
-ArrayList<String> field=new ArrayList<String>();
+			List<MappingModel> mappingData=partnerWSDL.getFieldMapping(tableName,myChildList);
+			ArrayList<String> field=new ArrayList<String>();
 			for(int count=0;count<mappingData.size();count++){
 				field.add(mappingData.get(count).getSfdcFieldTable());
 			}
 			modelChild.addAttribute("sfdcObj",mappingData.get(0).getSfdcObjectName());
 			modelChild.addAttribute("mappingField",field);
-
-
-
-
 			modelChild.addAttribute("mappingData",mappingData);}
-
-
 			return new ModelAndView("mapping", "data", data);
 		}
 	}

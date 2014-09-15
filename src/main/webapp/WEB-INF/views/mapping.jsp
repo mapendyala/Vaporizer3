@@ -42,34 +42,39 @@ var primBaseTable;
 		  if($("#rowCount").val()!=''){
 			rowNum = Number($("#rowCount").val())+1;
 		} 
-		 
+		
 		$("#rowCount").val(rowNum);
 		 
-
-		var objName = $("sfdcObj").val();
-		var srchObj = "searchObject"+(rowNum);
+		var objName = document.getElementById("siebleBaseTable1").value;
+		var srchObj = "Account";
 		var primTable = "prim"+(rowNum);
 		var thresholdId = "thresh"+(rowNum);
 		var SFDCObjName = "SFDCObjName"+(rowNum);
 		var migrateId = "migrate"+(rowNum);
-
 		var seqId = 12;
+		var colour='';
 		
+		alert('siebleBaseTable'+rowNum);
+		alert(document.getElementById("siebleBaseTable1").value);
 		
 		 $("#masterTable tbody")
 				.append(
 						
 						"<tr style='height:45px; width:45px;'>"
 								+ "<td><input name="+migrateId+" type='checkbox'></td>"
-
-
 							
-								+ "<td><input value="+objName+" name="+primTable+" id="+primTable+"  style='margin-left:35px;'/></td>"
+								+ "<td><input value="+objName+" name="+primTable+" id="+primTable+"  readonly style='margin-left:35px;'/></td>"
 								+ "<td><input name="+primTable+" id="+primTable+"  style='margin-left:35px;'/></td>"
-								+ "<td><input name="+primTable+" id="+primTable+"  style='margin-left:35px;'/></td>"
-								+ "<td><input type='dropdown' id="+primTable+"  style='margin-left:35px;'/></td>"
+								+ "<td><input  name="+primTable+" id="+primTable+"  style='margin-left:35px;'/></td>"
 								+ "<td><input name="+primTable+" id="+primTable+" style='margin-left:35px;'/></td>"
-								+ "<td>"
+								+ "<td><select name=colour id=dropdown_"+primTable+" >"
+								+" <c:if test="${not empty mappingField}"> "
+								+"<c:forEach items="${mappingField}" var="field" varStatus="status">"
+			                    +" <option value='dropdown'>${field}</option>"
+				              
+				              +"    </c:forEach> "
+									+"  </c:if>"
+								+ "</select></td>"
 								
 				                + "</td>"
 				                + "</tr>");
@@ -122,7 +127,6 @@ var primBaseTable;
 				<thread>
 					<tr>
 					<th class="table_header_details" style="float: center;">Select</th>
-
 			
 					<th class="table_header_details" style="float: center;">Siebel Base Table</th>
 					<th class="table_header_details" style="float: center;">Siebel Base Table Column</th>
@@ -139,7 +143,6 @@ var primBaseTable;
 						<th>SFDC Field Name</th>
 						<th>SFDC Field Description</th>
 						<th>Lov Mapping</th>--%>
-
 						
 									
 					</tr>
@@ -157,15 +160,7 @@ var primBaseTable;
 								</c:otherwise>
 								</c:choose>
 								</td>
-
-
-
-
-
-
 				<td><input value="${mapping.siebleBaseTable}" id="siebleBaseTable${mapping.mappingSeq}" name="siebleBaseTable${mapping.mappingSeq}" readonly style='margin-left:45px;'/></td>
-
-
 							
 					<td><input value="${mapping.siebleBaseTableColumn}" id="siebleBaseTableColumn${mapping.mappingSeq}" name="siebleBaseTableColumn${mapping.mappingSeq}" readonly style='margin-left:35px;'/></td>
 		

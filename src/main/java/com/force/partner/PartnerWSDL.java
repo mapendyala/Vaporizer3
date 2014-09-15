@@ -42,6 +42,7 @@ import org.json.JSONObject;
 
 import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.MappingModel;
+import com.force.utility.ChildObjectBO;
 import com.force.utility.UtilityClass;
 import com.google.gson.JsonArray;
 import com.sforce.soap.partner.DescribeGlobalResult;
@@ -387,196 +388,163 @@ public class PartnerWSDL {
 	      }
 
 
-	public  List<MappingModel> getFieldMapping(JSONObject tableData){
+	public  List<MappingModel> getFieldMapping(JSONObject tableData,List<Object> myChildList){
 		List<MappingModel> mappingData= new LinkedList<MappingModel>();
 		String siebelTableName=tableData.getString("siebelTableName");
 		String sfdcTablename=tableData.getString("sfdcTableName");
-		ArrayList<String> fieldId = new ArrayList<String>();
-		try {
-			partnerConnection.setQueryOptions(250);
-			// SOQL query to use
-			//String sourceBaseTableId="a0QG000000BGG0VMAX";
-			String soqlQuery = "Select Source_Field__c, Field_Target__c, Source_Base_Table__c from Field_Mapping_Data_Migration__c where Source_Base_Table__c ='"+tableData.getString("id")+"'";
-			// Make the query call and get the query results
-			QueryResult qr = partnerConnection.query(soqlQuery);
-			boolean done = false;
+		 ArrayList<String> fieldId = new ArrayList<String>();
+	try {
+		partnerConnection.setQueryOptions(250);
+		// SOQL query to use
+		//String sourceBaseTableId="a0QG000000BGG0VMAX";
+		StringBuilder sb = new StringBuilder("Select Source_Field__c, Field_Target__c, Source_Base_Table__c from Field_Mapping_Data_Migration__c where Source_Base_Table__c ='"+tableData.getString("id")+"'and Source_Field__c  in (");
+		// Make the query call and get the query results
+		boolean added1 = false;
+		for(Object s1 : myChildList){
+		    if (added1){
+		    	sb.append(",");
+		    }      
+		    sb.append("'");
+		    sb.append(s1);
+		    sb.append("'");
+		    added1 = true;
+		  }
+		  sb.append(")");
+		String soqlQuery=  sb.toString();
+		//QueryResult qr2 = partnerConnection.query(soqlQuery2);
+		QueryResult qr = partnerConnection.query(soqlQuery);
+		boolean done = false;
 
-			int loopCount = 0;
-			// Loop through the batches of returned results
-			while (!done) {
-
-				SObject[] records = qr.getRecords();
-				// Process the query results
-				for (int i = 0; i < records.length; i++) {
-					MappingModel mapping= new MappingModel();
-					SObject contact = records[i];
-					String siebelTableColumn= (String) contact
-							.getField("Source_Field__c");
-					String sfdcTableColumn = (String) contact
-							.getField("Field_Target__c");
-
-					mapping.setSfdcFieldTable(sfdcTableColumn);
-					mapping.setSfdcObjectName(sfdcTablename);
-					mapping.setSiebleBaseTable(siebelTableName);
-					mapping.setSiebleBaseTableColumn(siebelTableColumn);
-					System.out.println("mappingsss " + siebelTableColumn
-							+ " " + sfdcTableColumn);
-					mappingData.add(mapping);
-				}
-				if (qr.isDone()) {
-					done = true;
-				} else {
-					qr = partnerConnection.queryMore(qr.getQueryLocator());
-				}
-
-			}
-			String s = sfdcTablename	+ "_PreDefined_Mapping";
-			// SOQL query to use
-			/*String soqlQuery = " Select id, Object_API_Name__c, Project__r.Name, Project__r.Parent_Project__c, Table_Name__c, Type__c from Table__c where Project__r.Parent_Project__c ='"
-					+ projectId
-					+ "' and  Project__r.Name='"+ s+"' and Parent_Table__c = null and Type__c ='Salesforce'";
+		int loopCount = 0;
+		// Loop through the batches of returned results
+		while (!done) {
+			
+			SObject[] records = qr.getRecords();
+			// Process the query results
+			for (int i = 0; i < records.length; i++) {
+				MappingModel mapping= new MappingModel();
+				SObject contact = records[i];
+				String siebelTableColumn= (String) contact
+						.getField("Source_Field__c");
+				String sfdcTableColumn = (String) contact
+						.getField("Field_Target__c");
 				
+				mapping.setSfdcFieldTable(sfdcTableColumn);
+				mapping.setSfdcObjectName(sfdcTablename);
+				mapping.setSiebleBaseTable(siebelTableName);
+				mapping.setSiebleBaseTableColumn(siebelTableColumn);
+				System.out.println("mappingsss " + siebelTableColumn
+						+ " " + sfdcTableColumn);
+				mappingData.add(mapping);
+			}
+			if (qr.isDone()) {
+				done = true;
+			} else {
+				qr = partnerConnection.queryMore(qr.getQueryLocator());
+			}
+
+		}
+		String s = sfdcTablename	+ "_PreDefined_Mapping";
+		// SOQL query to use
+		/*String soqlQuery = " Select id, Object_API_Name__c, Project__r.Name, Project__r.Parent_Project__c, Table_Name__c, Type__c from Table__c where Project__r.Parent_Project__c ='"
+				+ projectId
+				+ "' and  Project__r.Name='"+ s+"' and Parent_Table__c = null and Type__c ='Salesforce'";
+			
 */			partnerConnection.setQueryOptions(250);
-		String soqlQuery1 = " Select  Object_API_Name__c,Id, Project__r.Name, Table_Name__c, Type__c from Table__c where  Project__r.Name='"+ s+"'";
-		System.out.println(soqlQuery1);
-			//String soqlQuery ="Select id, Object_API_Name__c, Table_Name__c, Type__c from Table__c where Project__c ='"+projectId+"' and Parent_Table__c = null and Type__c ='Salesforce' and Object_API_Name__c='"+seibelBaseTable+"'";
-			// Make the query call and get the query results
-			QueryResult qr1 = partnerConnection.query(soqlQuery1);
-			boolean done1 = false;
-int mappingSeq=0;
-			while (!done1) {
-				System.out.println("11111");
-				SObject[] records1 = qr1.getRecords();
-			for (int i = 0; i < records1.length; i++) {
+	String soqlQuery1 = " Select  Object_API_Name__c,Id, Project__r.Name, Table_Name__c, Type__c from Table__c where  Project__r.Name='"+ s+"'";
+	System.out.println(soqlQuery1);
+		//String soqlQuery ="Select id, Object_API_Name__c, Table_Name__c, Type__c from Table__c where Project__c ='"+projectId+"' and Parent_Table__c = null and Type__c ='Salesforce' and Object_API_Name__c='"+seibelBaseTable+"'";
+		// Make the query call and get the query results
+		QueryResult qr1 = partnerConnection.query(soqlQuery1);
+		boolean done1 = false;
+		int mappingSeq=0;
+		while (!done1) {
+			System.out.println("11111");
+			SObject[] records1 = qr1.getRecords();
+		for (int i = 0; i < records1.length; i++) {
+			
+				if(((String) records1[i].getField("Type__c")).equals("Siebel Child")){
+				fieldId.add((String) records1[i].getField("Id"));}
 				
-					if(((String) records1[i].getField("Type__c")).equals("Siebel Child")){
-					fieldId.add((String) records1[i].getField("Id"));}
-					
-				}
-				//System.out.println("==="+ SFDCObjectName);
-				if (qr1.isDone()) {
-					System.out.println("33333333");
-					done1 = true;
-				} else {
-					System.out.println("44444");
-					qr1 = partnerConnection.queryMore(qr.getQueryLocator());
-				}
 			}
-			for (int j=0;j<fieldId.size();j++){
-				String id=fieldId.get(j);
-			String soqlQuery2 = "Select Source_Field__c, Field_Target__c, Source_Base_Table__c from Field_Mapping_Data_Migration__c where Source_Base_Table__c ='"+id+"'";
-			// Make the query call and get the query results
-			QueryResult qr2 = partnerConnection.query(soqlQuery2);
-			boolean done2 = false;
+			//System.out.println("==="+ SFDCObjectName);
+			if (qr1.isDone()) {
+				System.out.println("33333333");
+				done1 = true;
+			} else {
+				System.out.println("44444");
+				qr1 = partnerConnection.queryMore(qr.getQueryLocator());
+			}
+		}
+		for (int j=0;j<fieldId.size();j++){
+			String id=fieldId.get(j);
+			StringBuilder sb1 = new StringBuilder("Select Source_Field__c, Field_Target__c, Source_Base_Table__c from Field_Mapping_Data_Migration__c where Source_Base_Table__c ='"+id+"' and Source_Field__c  in (");
+		// Make the query call and get the query results
+		/*for(Object s1 : myChildList)
+		{
+			soqlQuery2 += "'" + myChildList + "',";
+		}
 
-			//int loopCount = 0;
-			// Loop through the batches of returned results
-			while (!done2) {
-				
-				SObject[] records2 = qr2.getRecords();
-				// Process the query results
-				for (int i = 0; i < records2.length; i++) {
-mappingSeq++;
-					MappingModel mapping= new MappingModel();
-					SObject contact = records2[i];
-					String siebelTableColumn= (String) contact
-							.getField("Source_Field__c");
-					String sfdcTableColumn = (String) contact
-							.getField("Field_Target__c");
-					
-					mapping.setSfdcFieldTable(sfdcTableColumn);
-					mapping.setSfdcObjectName(sfdcTablename);
-					mapping.setSiebleBaseTable(siebelTableName);
-					mapping.setSiebleBaseTableColumn(siebelTableColumn);
-mapping.setMappingSeq(mappingSeq);
-					System.out.println("mappingsss " + siebelTableColumn
-							+ " " + sfdcTableColumn);
-					mappingData.add(mapping);
-				}
-				if (qr2.isDone()) {
-					done2 = true;
-				} else {
-					qr2 = partnerConnection.queryMore(qr2.getQueryLocator());
-				}
+		soqlQuery2 += ")";*/
+		boolean added = false;
+		for(Object s2 : myChildList){
+		    if (added){
+		    	sb1.append(",");
+		    }      
+		    sb1.append("'");
+		    sb1.append(s2);
+		    sb1.append("'");
+		    added = true;
+		  }
+		  sb1.append(")");
+		String soqlQuery2=  sb1.toString();
+		System.out.println("amritaaaaaaaa"+soqlQuery2);
+		QueryResult qr2 = partnerConnection.query(soqlQuery2);
+		boolean done2 = false;
 
+
+		//int loopCount = 0;
+		// Loop through the batches of returned results
+		while (!done2) {
+			
+			SObject[] records2 = qr2.getRecords();
+			// Process the query results
+			for (int i = 0; i < records2.length; i++) {
+				mappingSeq++;
+				System.out.println("inside for loop ---------   "+i);
+				MappingModel mapping= new MappingModel();
+				SObject contact = records2[i];
+				String siebelTableColumn= (String) contact
+						.getField("Source_Field__c");
+				String sfdcTableColumn = (String) contact
+						.getField("Field_Target__c");
+				System.out.println("siebelTableColumn value are_"+siebelTableColumn+"-----sfdcTableColumn"+sfdcTableColumn);
+				mapping.setSfdcFieldTable(sfdcTableColumn);
+				mapping.setSfdcObjectName(sfdcTablename);
+				mapping.setSiebleBaseTable(siebelTableName);
+				mapping.setSiebleBaseTableColumn(siebelTableColumn);
+				mapping.setMappingSeq(mappingSeq);
+				System.out.println("mappingsss " + siebelTableColumn
+						+ " " + sfdcTableColumn);
+				mappingData.add(mapping);
+			}
+			if (qr2.isDone()) {
+				done2 = true;
+			} else {
+				qr2 = partnerConnection.queryMore(qr2.getQueryLocator());
 			}
 
+		}
+		}
+	} catch (ConnectionException ce) {
+		ce.printStackTrace();
+	} 
+	System.out.println("\nQuery execution completed.");
+	return mappingData;
+	//return connData;
+	//Project__c p = [Select Id, Name, Parent_Project__c, Type__c from Project__c where Parent_Project__c='a0PG000000AtiE5' and Name='Account_PreDefined_Mapping'];
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-			}
-		} catch (ConnectionException ce) {
-			ce.printStackTrace();
-		} 
-		System.out.println("\nQuery execution completed.");
-		return mappingData;
-		//return connData;
-		//Project__c p = [Select Id, Name, Parent_Project__c, Type__c from Project__c where Parent_Project__c='a0PG000000AtiE5' and Name='Account_PreDefined_Mapping'];
-	}
 
 
 	public  String getsubprojects(String siebelTableName){
@@ -1055,6 +1023,41 @@ public void getMappingRecords(String projectId){
 			System.out.println("\nQuery execution completed.");
 			
 		}
+
+	
+	public void saveChildDataDB(List<ChildObjectBO> data, HttpServletRequest request) throws ConnectionException{
+	 HttpSession session = request.getSession(true);
+	
+	//String [] dataArray = data.toArray(new String[data.size()]);
+	 login();
+    SObject[] contacts = new SObject[data.size()];
+    int counter=0;
+	//data.get(0).getMigrate();
+    System.out.println("in WSDL save child method");
+    int i=1;
+    for(ChildObjectBO childObj : data)
+    {
+   	 System.out.println("in saving for loop"+i);
+   	 SObject contact = new SObject();
+	     contact.setType("Child_Base__c");
+	     contact.setField("Primary_Table__c", childObj.getBaseObjName());
+	     contact.setField("Project__c", ((String)session.getAttribute("projectId")));
+	     contact.setField("Child_Table__c", childObj.getChildObjName());	
+	     contact.setField("Join_Condition__c", childObj.getJoinCondition());
+	     
+	     contacts[counter] = contact;
+	     counter++;
+	     i++;
+    }
+	     SaveResult[] saveResults = getPartnerConnection().create(contacts);
+	     System.out.println("save results length is"+saveResults.length);
+	     for(int j=0;j<saveResults.length;j++){
+   			System.out.println(saveResults[j].isSuccess());
+   			//System.out.println(results[i].getErrors()[i].getMessage());
+   		}
+    }
+
+
 	void commentedCode()
 	{
 		/*public List<String > addObjectToTable(List<SiebelObject> listOfObjects,
