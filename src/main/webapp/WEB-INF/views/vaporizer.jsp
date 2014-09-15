@@ -334,7 +334,7 @@ function callMapping(rowNum){
 				    <th class="table_header_details" style="float: center;">Migrate?</th>
 				    <th class="table_header_details" style="float: center;">Sequence</th>
 				    <th class="table_header_details" style="float: center;">Siebel Object</th>
-				    <th class="table_header_details" style="float: center;">Prim Base Table</th>
+				    <th class="table_header_details" style="float: center;">Prim. Base Table</th>
 				    <th class="table_header_details" style="float: center;">Threshold</th>
 				    <th class="table_header_details" style="float: center;">Child Base Tables</th>
 				    <th class="table_header_details" style="float: center;">SFDC Object</th>
@@ -390,8 +390,8 @@ function callMapping(rowNum){
 					<tr>
 						<td colspan="2"
 							style="float: right; width: 350px; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
-							<input class="btn btn-block btn-inverse" type="button"
-							name="Extract" value="Extract All" />
+							<!-- <input class="btn btn-block btn-inverse" type="button"
+							name="Extract" value="Extract All" /> -->
 						</td>
 					</tr>
 					<tr>
@@ -401,21 +401,22 @@ function callMapping(rowNum){
 						</td>
 						<td
 							style="float: right; padding: 50px;width:350px !Important; padding-top: 10px; padding-bottom: 10px;">
-							<input class="btn btn-block btn-inverse" type="button" name="Location" value="CSV File location"   />
+							<input class="btn btn-block btn-inverse" type="button"
+							name="Extract" value="Migrate To SFDC" id="dataloadtoSFDC" onclick='initiateDataLoad()'/> 
 						</td>
 					</tr>
 					<tr>
 						<td colspan="2"
 							style="float: right; width:350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
-							<input class="btn btn-block btn-inverse" type="button"
-							name="Extract" value="Create CSV File" />
+							<!-- <input class="btn btn-block btn-inverse" type="button"
+							name="Extract" value="Create CSV File" /> -->
 						</td>
 					</tr>
 					<tr>
 						<td colspan="2"
 							style="float: right; width: 350px; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
-							<input class="btn btn-block btn-inverse" type="button"
-							name="Extract" value="Migrate To SFDC" id="dataloadtoSFDC" onclick='initiateDataLoad()'/> 
+							<!-- <input class="btn btn-block btn-inverse" type="button"
+							name="Extract" value="Migrate To SFDC" id="dataloadtoSFDC" onclick='initiateDataLoad()'/>  -->
 						</td>
 					</tr>	
 
