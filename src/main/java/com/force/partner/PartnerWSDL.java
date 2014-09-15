@@ -874,7 +874,7 @@ mapping.setMappingSeq(mappingSeq);
 			              
 			              if(ProjectId==null)
 			            	  ProjectId="a0PG000000Atg1U";
-			              String mappingFileURL=getFile(file, "testFile1.csv", "application/vnd.ms-excel", ProjectId, null);
+			             String mappingFileURL=getFile(file, "testFile1.csv", "application/vnd.ms-excel", ProjectId, null);
 			             String SDlFileURl= getFile(mappingFile, "testFile1.csv", "application/vnd.ms-excel", ProjectId, mappingFileURL);
 
 		}
