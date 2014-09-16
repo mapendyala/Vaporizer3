@@ -371,7 +371,7 @@ public class PartnerWSDL {
 	          }
 	          rd.close();
 	          System.out.println("......"+response.toString());
-	         return response.toString();
+	         return (response.toString().replaceAll("\"", "")!=null?response.toString().replaceAll("\"", ""):response.toString());
 
 	        } catch (Exception e) {
 
@@ -842,7 +842,7 @@ public class PartnerWSDL {
 			              
 			              if(ProjectId==null)
 			            	  ProjectId="a0PG000000Atg1U";
-			             String mappingFileURL=getFile(file, "testFile1.csv", "application/vnd.ms-excel", ProjectId, null);
+			              String mappingFileURL=getFile(file, "testFile1.csv", "application/vnd.ms-excel", ProjectId, null);
 			             String SDlFileURl= getFile(mappingFile, "testFile1.csv", "application/vnd.ms-excel", ProjectId, mappingFileURL);
 
 		}

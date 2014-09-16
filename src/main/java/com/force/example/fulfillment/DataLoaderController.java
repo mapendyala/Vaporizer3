@@ -261,12 +261,14 @@ public class DataLoaderController {
            targetURL = "https://na11.salesforce.com/services/apexrest/GetUploadFile/"+fileId+"_1";
         else
         	targetURL = "https://na11.salesforce.com/services/apexrest/GetUploadFile/"+fileId;
+        targetURL=targetURL.replaceAll("\\s+","");
         System.out.println("URL..."+targetURL);
 		//Create connection
+        targetURL=targetURL.replaceAll("\"", "");
           URL url = new URL(targetURL);
           
           connection = (HttpURLConnection)url.openConnection();
-          connection.setRequestMethod("GET");
+          connection.setRequestMethod("POST");
           /*connection.setRequestProperty("Content-Type", 
         		  contentType);
           connection.setRequestProperty("filename", 
@@ -279,7 +281,7 @@ public class DataLoaderController {
           DataOutputStream wr = new DataOutputStream (
                   connection.getOutputStream ());
   
-System.out.println( connection.getResponseMessage());
+System.out.println(">>>>"+ connection.getResponseMessage());
       //Get Response	
       InputStream is = connection.getInputStream();
       BufferedReader rd = new BufferedReader(new InputStreamReader(is));
@@ -525,6 +527,8 @@ System.out.println( connection.getResponseMessage());
         	if(strList.length==2){
         	System.out.println(line+">>>>>>"+strList[1]);
         	//actName[i]=strList[1];
+        	strList[0]=strList[0].replaceAll("\\s+","")!=null ?strList[0].replaceAll("\\s+",""):strList[0];
+        	strList[1]=strList[1].replaceAll("\\s+","")!=null ?strList[1].replaceAll("\\s+",""):strList[1];
         	mapA.put(strList[0],strList[1]);
         	i++;
         	}
@@ -540,11 +544,14 @@ System.out.println( connection.getResponseMessage());
         System.out.println(mapA.keySet()+"..........Map...."+mapA.values());
         String doc2 = new String(headerBytes, "UTF-8");
         System.out.println(".ui..."+doc2);
+        doc2=doc2.replaceAll("\\s+", "");
         String arr[]=doc2.split(",");
        String headerString="";
         for(int j=0;j<arr.length;j++){
         	System.out.println(arr[j]+"..........hhhhin....");
-        	arr[j]=(String)mapA.get(arr[j].replaceAll("\\s+$", ""));
+        	//if((String)mapA.get(arr[j].replaceAll("\\s+$", ""))!=null)
+        	arr[j]=(String)mapA.get(arr[j]);
+        	arr[j]=arr[j].replaceAll("\\s+","")!=null ?arr[j].replaceAll("\\s+",""):arr[j];
         	System.out.println(arr[j]+"..........hhhhout....");
         	if(j+1!=arr.length)
         	headerString+=arr[j]+",";
