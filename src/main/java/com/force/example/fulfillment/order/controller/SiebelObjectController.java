@@ -147,8 +147,6 @@ objList.add(siObj);
 				System.out.println("in child contoller method");
 				 List<Object> myList=new ArrayList<Object>();
 				 HttpSession session = request.getSession(true);
-				/* String userValue = request.getParameter("baseObjectName");
-				 System.out.println("child uservalues in bean is"+userValue);*/
 				 System.out.println("SIEBL OBJ PARAM IS"+siebelObjName);
 				 String userValue=siebelObjName;
 				 int tvalue=0;
