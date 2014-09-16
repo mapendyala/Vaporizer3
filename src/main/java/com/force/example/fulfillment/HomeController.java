@@ -98,33 +98,33 @@ public class HomeController {
 		return new ModelAndView("vaporizer", "data", data);
 	}
 
-	 /*Added by Subhojitcg*/
-	 
-	 @RequestMapping(value="/initiateDataloader", method=RequestMethod.GET,produces="text/plain")
-	 @ResponseBody
+	/*Added by Subhojitcg*/
+
+	@RequestMapping(value="/initiateDataloader", method=RequestMethod.GET,produces="text/plain")
+	@ResponseBody
 	public String initiateDataLoader(Locale locale,Model model,HttpServletRequest request,@RequestParam("datafileUrl")String datafileUrl) throws IOException, AsyncApiException, ConnectionException
-		{
-		// System.out.println("This methos is nt getting called"+siebelObject);
-		 PartnerWSDL partnerWSDL= new PartnerWSDL(); 	  
-		  
-			partnerWSDL.login();
-			 HttpSession session = request.getSession(true);
-			JSONObject connData=partnerWSDL.getTargetOrgDetails((String) session.getAttribute("projectId"));
-			String password=(String)connData.get("password");
-			String token=(String)connData.get("token");
-			String username=(String)connData.get("username");
-			String[] strList=datafileUrl.split("-");
-			datafileUrl="https://"+strList[0]+".salesforce.com/"+strList[1];
-			com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
-		    String objectName="Account";
-		   
-			return dt.dataUploadController(datafileUrl,username,password+token,objectName);
-		
-			// TODO Auto-generated catch block
-			
+	{
+
+		PartnerWSDL partnerWSDL= new PartnerWSDL(); 	  
+
+		partnerWSDL.login();
+		HttpSession session = request.getSession(true);
+		JSONObject connData=partnerWSDL.getTargetOrgDetails((String) session.getAttribute("projectId"));
+		String password=(String)connData.get("password");
+		String token=(String)connData.get("token");
+		String username=(String)connData.get("username");
+		String[] strList=datafileUrl.split("-");
+		datafileUrl="https://"+strList[0]+".salesforce.com/"+strList[1];
+		com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
+		String objectName="Account";
+
+		return dt.dataUploadController(datafileUrl,username,password+token,objectName);
+
+		// TODO Auto-generated catch block
+
 
 	}
-	
+
 	/**
 	 * @author piymishra
 	 * @param locale
@@ -133,19 +133,19 @@ public class HomeController {
 	 * @param siebelObject
 	 * @return
 	 */
-	 @RequestMapping(value="/getSFDCOBject", method=RequestMethod.GET,produces="text/plain")
-	 @ResponseBody
+	@RequestMapping(value="/getSFDCOBject", method=RequestMethod.GET,produces="text/plain")
+	@ResponseBody
 	public String getSFDCObject(Locale locale,Model model,HttpServletRequest request,@RequestParam("siebelObject")String siebelObject)
-		{
-		
-		    HttpSession session = request.getSession(true);
-		    String projectId=(String) session.getAttribute("projectId");
-	    	PartnerWSDL partnerWSDL= new PartnerWSDL();	    	
+	{
 
-			String SFDCObjectName=partnerWSDL.getSFDCObjectName(projectId,siebelObject);	  
-			System.out.println(SFDCObjectName);
-			return SFDCObjectName;
-	
+		HttpSession session = request.getSession(true);
+		String projectId=(String) session.getAttribute("projectId");
+		PartnerWSDL partnerWSDL= new PartnerWSDL();	    	
+
+		String SFDCObjectName=partnerWSDL.getSFDCObjectName(projectId,siebelObject);	  
+		System.out.println(SFDCObjectName);
+		return SFDCObjectName;
+
 
 	}
 	/**
@@ -153,18 +153,18 @@ public class HomeController {
 	 * @param request
 	 * @return
 	 */
-	 @RequestMapping(value="/SFDCObjectList", method=RequestMethod.GET)
-	 @ResponseBody public List<SfdcObjectBO> fetchSFDCObjects(HttpServletRequest request)
-	 {
+	@RequestMapping(value="/SFDCObjectList", method=RequestMethod.GET)
+	@ResponseBody public List<SfdcObjectBO> fetchSFDCObjects(HttpServletRequest request)
+	{
 
-		 List<SfdcObjectBO> objList=new ArrayList<SfdcObjectBO>(); 
-		 HttpSession session = request.getSession(true);
-		 String userValue = request.getParameter("objectName");
-		 System.out.println("uservalues in bean is"+userValue);
-		 PartnerWSDL partnerWSDL= new PartnerWSDL();	
-		 return partnerWSDL.getSFDCOjectListforPopup(userValue);
+		List<SfdcObjectBO> objList=new ArrayList<SfdcObjectBO>(); 
+		HttpSession session = request.getSession(true);
+		String userValue = request.getParameter("objectName");
+		System.out.println("uservalues in bean is"+userValue);
+		PartnerWSDL partnerWSDL= new PartnerWSDL();	
+		return partnerWSDL.getSFDCOjectListforPopup(userValue);
 
-	 } 
+	} 
 
 
 
@@ -233,7 +233,7 @@ public class HomeController {
 		// System.out.println(dataForm.getData());
 		System.out.println("doneeeeeeee-------------");
 		//System.out.println(data.get(0).getSiebelObject());
-		
+
 		List<ChildObjectBO> childDataList = new ArrayList<ChildObjectBO>();
 		String totalRowCount= request.getParameter("rowCount");
 		System.out.println("total row count is"+totalRowCount);
@@ -241,12 +241,12 @@ public class HomeController {
 			//mainPage[i] =  new MainPage();
 			System.out.println("my i value is "+i);
 			ChildObjectBO childObj = new ChildObjectBO();
-			
+
 			String sequenceNumber = "sequenceNum"+i;
 			String siebelBaseObjName = "baseObjName"+i;
 			String siebelChildObjName = "childObjName"+i;
 			String siebelJoinCondition= "joinCondition"+i;
-			
+
 			childObj.setSeqNum(Integer.parseInt(request.getParameter(sequenceNumber)));
 			childObj.setBaseObjName(request.getParameter(siebelBaseObjName));
 			childObj.setChildObjName(request.getParameter(siebelChildObjName));
@@ -258,11 +258,11 @@ public class HomeController {
 		}
 		System.out.println("child data save list is"+childDataList);
 		partnerWSDL.saveChildDataDB(childDataList,request);
-		
+
 		return new ModelAndView("vaporizer" , "data", data);
 	}
 
-	
+
 
 	@RequestMapping(value="/getextractData", method = RequestMethod.GET)
 	public void createExtractQuery(HttpServletRequest request){
@@ -272,8 +272,8 @@ public class HomeController {
 		partnerWSDL.login();
 		partnerWSDL.getMappingRecords((String)session.getAttribute("projectId"));
 	}
-	
-	
+
+
 	@RequestMapping(value="saveData",method = RequestMethod.POST)
 	public ModelAndView getSiebelFielddata(HttpServletRequest request, Map<String, Object> model, Model modelChild) throws ConnectionException {
 		HttpSession session = request.getSession(true);
@@ -339,14 +339,14 @@ public class HomeController {
 
 
 			return new ModelAndView("ChildBase" , "data", data);
-			}
+		}
 		else{
-logger.info("Welcome to mapping ");
-			
+			logger.info("Welcome to mapping ");
+
 			System.out.println("---------------"+thresholdValue+" "+primBaseValue);
 			//ThresholdController tc= new ThresholdController();
 			//List<SiebelObjectBO> listSiebelObject = tc.fetchSiebelObjects(request);
-			
+
 			SiebelObjectController siObj=new SiebelObjectController();
 			//ArrayList<String> myList=new ArrayList<String>();
 			List<Object> myChildList=siObj.fetchColumns(request, primBaseValue,thresholdValue);
@@ -356,15 +356,15 @@ logger.info("Welcome to mapping ");
 
 			String subprojectId=partnerWSDL.getsubprojects(siebelTableNameValue);
 			if(null != subprojectId){
-			JSONObject tableName=partnerWSDL.getRelatedSiebelTable(subprojectId);
-			List<MappingModel> mappingData=partnerWSDL.getFieldMapping(tableName,myChildList);
-			ArrayList<String> field=new ArrayList<String>();
-			for(int count=0;count<mappingData.size();count++){
-				field.add(mappingData.get(count).getSfdcFieldTable());
-			}
-			modelChild.addAttribute("sfdcObj",mappingData.get(0).getSfdcObjectName());
-			modelChild.addAttribute("mappingField",field);
-			modelChild.addAttribute("mappingData",mappingData);}
+				JSONObject tableName=partnerWSDL.getRelatedSiebelTable(subprojectId);
+				List<MappingModel> mappingData=partnerWSDL.getFieldMapping(tableName,myChildList);
+				ArrayList<String> field=new ArrayList<String>();
+				for(int count=0;count<mappingData.size();count++){
+					field.add(mappingData.get(count).getSfdcFieldTable());
+				}
+				modelChild.addAttribute("sfdcObj",mappingData.get(0).getSfdcObjectName());
+				modelChild.addAttribute("mappingField",field);
+				modelChild.addAttribute("mappingData",mappingData);}
 			return new ModelAndView("mapping", "data", data);
 		}
 	}
