@@ -31,18 +31,10 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 
-
-
-
-
-
-
-
-
-
 import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.MappingModel;
 import com.force.utility.ChildObjectBO;
+import com.force.utility.SfdcObjectBO;
 import com.force.utility.UtilityClass;
 import com.google.gson.JsonArray;
 import com.sforce.soap.partner.DescribeGlobalResult;
@@ -56,6 +48,8 @@ import com.sforce.soap.partner.SaveResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
+import com.sforce.ws.wsdl.Schema;
+
 
 public class PartnerWSDL {
 
@@ -756,7 +750,9 @@ public class PartnerWSDL {
 					public int compare(MainPage  mainPage1, MainPage  mainPage2)
 					{
 
+						if(mainPage1.getSequence()!=null && mainPage2.getSequence()!=null)
 						return  mainPage1.getSequence().compareTo(mainPage2.getSequence());
+						return 0;
 					}
 				});
 
@@ -802,7 +798,7 @@ public class PartnerWSDL {
 			            	  
 			                   if(query==null)
 			                   {
-			                      query="SELECT ACC.NAME AS \"Name = Name\", ACC.LOC AS \"Location = Location\", ADDR.ADDR AS \"Address1 = Street1\""
+			                      query="SELECT ACC.NAME AS \"Name = Name\", ACC.LOC AS \"Location = BillingCity\", ADDR.ADDR AS \"Address1 = BillingStreet\""
 			         					+" FROM SIEBEL.S_ORG_EXT ACC"
 			        					+" INNER JOIN SIEBEL.S_ADDR_PER ADDR ON ADDR.ROW_ID = ACC.PR_ADDR_ID";
 			                   }
@@ -844,6 +840,7 @@ public class PartnerWSDL {
 			            	  ProjectId="a0PG000000Atg1U";
 			             String mappingFileURL=getFile(file, "testFile1.csv", "application/vnd.ms-excel", ProjectId, null);
 			             String SDlFileURl= getFile(mappingFile, "testFile1.csv", "application/vnd.ms-excel", ProjectId, mappingFileURL);
+			             System.out.println("filr path : " +mappingFileURL);
 
 		}
 		catch(Exception e)
@@ -947,6 +944,32 @@ public class PartnerWSDL {
 		
 	
 }
+	
+/**
+ * @author piymishra
+ * @return
+ */
+	
+	public  DescribeGlobalSObjectResult[] getNames() {
+		DescribeGlobalSObjectResult[] sobjectResults = null;
+        try {
+               // Make the describeGlobal() call
+               DescribeGlobalResult describeGlobalResult = partnerConnection
+                            .describeGlobal();
+
+               // Get the sObjects from the describe global result
+                sobjectResults = describeGlobalResult
+                            .getSobjects();
+
+               // Write the name of each sObject to the console
+               for (int i = 0; i < sobjectResults.length; i++) {
+                     System.out.println(sobjectResults[i].getName());
+               }
+        } catch (ConnectionException ce) {
+               ce.printStackTrace();
+        }
+		return sobjectResults;
+ }
 
 public void getMappingRecords(String projectId){
 			String selectTables = "";
@@ -1056,7 +1079,39 @@ public void getMappingRecords(String projectId){
    			//System.out.println(results[i].getErrors()[i].getMessage());
    		}
     }
-
+	
+	/**
+	 * @author piymishra
+	 * @param ObjectName
+	 * @return
+	 */
+	public List<SfdcObjectBO> getSFDCOjectListforPopup( String ObjectName)
+	{
+		 List<SfdcObjectBO> objList=new ArrayList<SfdcObjectBO>();
+		
+		 try {
+				login();
+				DescribeGlobalSObjectResult[] sobjectResults = getNames();
+				 for (int i = 0; i < sobjectResults.length; i++) {
+					 SfdcObjectBO Sob=new SfdcObjectBO();
+					 if(sobjectResults[i].getName().contains(ObjectName))
+					 {
+						 Sob.setObjName(sobjectResults[i].getName()); 
+						 objList.add(Sob);
+					 }
+					 
+					
+					 
+                   
+               }
+				
+			
+			} catch (Exception ce) {
+				ce.printStackTrace();
+			}
+			System.out.println("\nQuery execution completed.");
+		return objList;
+	}
 
 	void commentedCode()
 	{

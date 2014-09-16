@@ -49,6 +49,7 @@ var primBaseTable;
 		 
 		var objName = "objectName"+(rowNum);
 		var srchObj = "searchObject"+(rowNum);
+		var srchSFDCObj = "searchFDCObject"+(rowNum);
 		var primTable = "prim"+(rowNum);
 		var thresholdId = "thresh"+(rowNum);
 		var SFDCObjName = "SFDCObjName"+(rowNum);
@@ -65,7 +66,7 @@ var primBaseTable;
 								+ "<td><input name="+primTable+" id="+primTable+" readonly style='margin-left:35px;'/></td>"
 								+ "<td><input type='text' id ="+thresholdId+" name="+thresholdId+" onchange='makeReadonly("+rowNum+")' style='margin-left:15px;'></td>"
 								+ "<td><a href='#' onclick='submitForm("+rowNum+")' style='margin-left:15px;'>Select</a></td>" 
-								+ "<td><input id="+SFDCObjName+" name="+SFDCObjName+" readonly style='margin-left:35px;'/><button type='button' style='display: inline;'><span class='glyphicon glyphicon-search'></span></button></td>"
+								+ "<td><input id="+SFDCObjName+" name="+SFDCObjName+" readonly='true' style='margin-left:35px;'/><button type='button'id="+srchSFDCObj+" style='display: inline;' onclick='getSFDCPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
 								+ "<td><a href='#' onclick='submit("+rowNum+")' style='margin-left:15px;'>Select</a></td>"
 								+ "<td><c:out value='Selected'/></td>"
 								+ "<td>"
@@ -170,13 +171,14 @@ function callMapping(rowNum){
 		 		},
 			contentType : 'application/text',
 			success : function(response) {
-				if(response!='No data')
+				if(/* response!='No data' */ false)
 				$("#"+SFDCObjectId).val(response);
 				else
 					{
 					
 					$("#"+SFDCObjectId).val('');
-					alert("No SFDC mapping available.");
+					alert("No sfdc mapping available.To select sfdc object, please click on search.");
+					//$("#indicator").css({'display':'block'});
 					}
 					
 			}
@@ -184,7 +186,7 @@ function callMapping(rowNum){
 	 }
 
 	  function getPopup(rowNum){
-
+		
 		var id="objectName"+(rowNum);	
 		var primId = "prim"+(rowNum);
 		 var SFDCObjectId="SFDCObjName"+(rowNum);
@@ -193,6 +195,7 @@ function callMapping(rowNum){
 			height: 500,
 			buttons: {
 				"OK": function () {
+					
 					populateObjectName(id, primId);
 					var siebelObject =$('input[name=selectedObject]:radio:checked').val();
 					var value = siebelObject.split("+");
@@ -220,7 +223,48 @@ function callMapping(rowNum){
 			},
 			});
 		} 
-	  
+	  function getSFDCPopup(rowNum){
+		  //$("#indicator").css({'display':'none'});
+			var SFDCObjectId="SFDCObjName"+(rowNum);
+			$("#objSFDC").dialog({title: "Select an SFDC Object",
+				width: 500,
+				height: 500,
+				buttons: {
+					"OK": function () {
+						var SFDCObject =$('input[name=selectedObject]:radio:checked').val();
+						if(SFDCObject!=null)
+							{
+							$("#"+SFDCObjectId).val(SFDCObject);
+							if(document.getElementById("dyncTblCntntSFDC")){
+								var noOfChilds = $("#dyncTblCntntSFDC").children().length;
+								if(noOfChilds > 1){
+									$("#dyncTblCntntSFDC").children().remove();
+								}
+							}
+							$("#SFDCObjName").val("");
+
+							$(this).dialog("close");
+							}
+							else
+								{
+								alert("Please select a value from list");
+								}
+						
+						
+				
+					},"Close": function(){
+						if(document.getElementById("dyncTblCntntSFDC")){
+							var noOfChilds = $("#dyncTblCntntSFDC").children().length;
+							if(noOfChilds > 1){
+								$("#dyncTblCntntSFDC").children().remove();
+							}
+						}
+						$("#SFDCObjName").val("");
+						$(this).dialog("close");
+					}
+				},
+				});
+			} 
 	  
 	  function submitForm(rowNum)
 	  
@@ -253,6 +297,66 @@ function callMapping(rowNum){
 				}  
 			});   
 	}
+	function getSFDCObjectName()
+	{
+		var objName = $("#SFDCObjName").val();
+		if(document.getElementById("dyncTblCntntSFDC"))
+			{
+			var noOfChilds = $("#dyncTblCntntSFDC").children().length;
+		if(noOfChilds > 1){
+			$("#dyncTblCntntSFDC").children().remove();
+		}
+			}
+		$("#objSFDC").append("<div id='dyncLoaderSFDC' style='text-align:center;margin-top:70px;'><img src='resources/images/ajax-loader.gif'/></div>");
+		  $.ajax({
+			type : "GET",
+			url : "SFDCObjectList",
+			data : {objectName:objName},
+		 	success : function(data){
+		 	
+					displaySFDCObjTable(data);
+				}  
+			});   
+	}
+	
+	function displaySFDCObjTable(data)
+	{
+		$("#dyncLoaderSFDC").remove();
+		if(data.length!=0)
+			{
+			
+			if(document.getElementById("dyncTblCntntSFDC"))
+			{
+				var noOfChilds = $("#dyncTblCntntSFDC").children().length;
+				if(noOfChilds > 1){
+					$("#dyncTblCntntSFDC").children().remove();
+				}
+					for(var i=0 ; i<data.length ;i++ ){
+						var tblName = data[i];						
+						$("#dyncTblCntntSFDC").append("<input type='radio' name='selectedObject' value='"+tblName.objName+"'><span>"+tblName.objName+"</span><br/>");
+											
+					}
+				
+				}
+			
+			else{
+				$("#objSFDC").append("<br/>");
+				$("#objSFDC").append("<div id='dyncTblCntntSFDC'>");
+				for(var i=0 ; i<data.length ;i++ ){
+					var tblName = data[i];					
+					$("#dyncTblCntntSFDC").append("<input type='radio' name='selectedObject' value='"+tblName.objName+"'><span>"+tblName.objName+"</span><br/>");
+				}
+				$("#objSFDC").append("</div>");
+			}
+			}
+		else
+			{
+			alert("No Object Found");
+			}
+		
+		
+	}
+	
 	
 	function displaySblObjTable(data){
 		if(document.getElementById("dyncTblCntnt")){
@@ -426,6 +530,10 @@ function callMapping(rowNum){
 
 <div id=obj hidden="true">
  <input type="text" id = "objName" placeholder="Enter Object Name"><button type='button' style='display: inline;' id="search" onclick='getObjectName()'><span class='glyphicon glyphicon-search'></span></button>
+ </div>
+ 
+ <div id=objSFDC hidden="true">
+ <input type="text" id = "SFDCObjName" placeholder="Enter Object Name"><button type='button' style='display: inline;' id="search" onclick='getSFDCObjectName()'><span class='glyphicon glyphicon-search'></span></button>
  </div>
 	</div>
 	

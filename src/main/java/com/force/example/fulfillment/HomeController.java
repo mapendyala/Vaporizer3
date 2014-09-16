@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,7 +40,9 @@ import com.force.example.fulfillment.order.model.MappingModel;
 import com.force.partner.PartnerWSDL;
 import com.force.partner.TargetPartner;
 import com.force.utility.ChildObjectBO;
+import com.force.utility.SfdcObjectBO;
 import com.force.utility.SiebelObjectBO;
+import com.force.utility.UtilityClass;
 import com.sforce.async.AsyncApiException;
 import com.sforce.ws.ConnectionException;
 
@@ -121,12 +125,19 @@ public class HomeController {
 
 	}
 	
-	
+	/**
+	 * @author piymishra
+	 * @param locale
+	 * @param model
+	 * @param request
+	 * @param siebelObject
+	 * @return
+	 */
 	 @RequestMapping(value="/getSFDCOBject", method=RequestMethod.GET,produces="text/plain")
 	 @ResponseBody
 	public String getSFDCObject(Locale locale,Model model,HttpServletRequest request,@RequestParam("siebelObject")String siebelObject)
 		{
-		// System.out.println("This methos is nt getting called"+siebelObject);
+		
 		    HttpSession session = request.getSession(true);
 		    String projectId=(String) session.getAttribute("projectId");
 	    	PartnerWSDL partnerWSDL= new PartnerWSDL();	    	
@@ -137,8 +148,23 @@ public class HomeController {
 	
 
 	}
-	
-	 
+	/**
+	 * @author piymishra
+	 * @param request
+	 * @return
+	 */
+	 @RequestMapping(value="/SFDCObjectList", method=RequestMethod.GET)
+	 @ResponseBody public List<SfdcObjectBO> fetchSFDCObjects(HttpServletRequest request)
+	 {
+
+		 List<SfdcObjectBO> objList=new ArrayList<SfdcObjectBO>(); 
+		 HttpSession session = request.getSession(true);
+		 String userValue = request.getParameter("objectName");
+		 System.out.println("uservalues in bean is"+userValue);
+		 PartnerWSDL partnerWSDL= new PartnerWSDL();	
+		 return partnerWSDL.getSFDCOjectListforPopup(userValue);
+
+	 } 
 
 
 
@@ -236,25 +262,7 @@ public class HomeController {
 		return new ModelAndView("vaporizer" , "data", data);
 	}
 
-	/*@RequestMapping(value = "/Done", method = RequestMethod.GET)
-	public String home3(Locale locale, Model model) {
-		// TODO!!!
-		logger.info("Welcome home! the client locale is "+ locale.toString());
-		System.out.println("inside demo");
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-
-		String formattedDate = dateFormat.format(date);
-		ArrayList<String> siebelList=new ArrayList<String>();
-		siebelList.add("Account");
-		siebelList.add("Contact");
-		siebelList.add("Order");
-		siebelList.add("Vaporizer");
-		model.addAttribute("serverTime", formattedDate );
-		model.addAttribute("siebelList",siebelList);
-
-		return "Copy of vaporizer";
-	}*/
+	
 
 	@RequestMapping(value="/getextractData", method = RequestMethod.GET)
 	public void createExtractQuery(HttpServletRequest request){
