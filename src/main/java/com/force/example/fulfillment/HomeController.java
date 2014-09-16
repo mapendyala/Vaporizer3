@@ -59,6 +59,8 @@ public class HomeController {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	public static String rowCount;
 	public List<MainPage> data = new ArrayList<MainPage>();
+	public List<MappingModel> mappingData = new ArrayList<MappingModel>();
+
 
 	/**
 	 * Simply selects the home view to render by returning its name.
@@ -100,12 +102,16 @@ public class HomeController {
 
 	/*Added by Subhojitcg*/
 
+
+
 	@RequestMapping(value="/initiateDataloader", method=RequestMethod.GET,produces="text/plain")
 	@ResponseBody
 	public String initiateDataLoader(Locale locale,Model model,HttpServletRequest request,@RequestParam("datafileUrl")String datafileUrl) throws IOException, AsyncApiException, ConnectionException
 	{
 
+
 		PartnerWSDL partnerWSDL= new PartnerWSDL(); 	  
+
 
 		partnerWSDL.login();
 		HttpSession session = request.getSession(true);
@@ -118,9 +124,12 @@ public class HomeController {
 		com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
 		String objectName="Account";
 
+
 		return dt.dataUploadController(datafileUrl,username,password+token,objectName);
 
+
 		// TODO Auto-generated catch block
+
 
 
 	}
@@ -133,10 +142,13 @@ public class HomeController {
 	 * @param siebelObject
 	 * @return
 	 */
+
+
 	@RequestMapping(value="/getSFDCOBject", method=RequestMethod.GET,produces="text/plain")
 	@ResponseBody
 	public String getSFDCObject(Locale locale,Model model,HttpServletRequest request,@RequestParam("siebelObject")String siebelObject)
 	{
+
 
 		HttpSession session = request.getSession(true);
 		String projectId=(String) session.getAttribute("projectId");
@@ -145,6 +157,10 @@ public class HomeController {
 		String SFDCObjectName=partnerWSDL.getSFDCObjectName(projectId,siebelObject);	  
 		System.out.println(SFDCObjectName);
 		return SFDCObjectName;
+
+
+
+
 
 
 	}
@@ -165,6 +181,8 @@ public class HomeController {
 		return partnerWSDL.getSFDCOjectListforPopup(userValue);
 
 	} 
+
+
 
 
 
@@ -213,14 +231,171 @@ public class HomeController {
 		return "ChildBase";
 	}
 
+	@RequestMapping(value = "mappingSave", method = RequestMethod.POST)
+	//public ModelAndView save1(@ModelAttribute("data") List<MainPage> data, Locale locale, Model model) {
+
+		public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> model) throws ConnectionException {	
+		HttpSession session = request.getSession(true);
+		System.out.println("In main controller");
+		PartnerWSDL partnerWSDL= new PartnerWSDL(); 
+
+	//	logger.info("Welcome home! the client locale is "+ locale.toString());
+		System.out.println("inside demo");
+		System.out.println("In main controller");
+		//System.out.println(request.getParameter("rowNum"));
+		mappingData.clear();
+		rowCount= request.getParameter("rowCount");
+		String rowNo = request.getParameter("rowNum");
+		String page = request.getParameter("pageName");
+		String siebleBaseTable=request.getParameter("siebleBaseTable"+"1");
+		String sfdcObjectName=request.getParameter("sfdcObjectName"+rowNo);
+		String drop=request.getParameter("dropdown"+rowNo);
+		
+		for(int i=1;i<=Integer.parseInt(rowCount);i++){
+		String a=Integer.toString(i);
+			MappingModel mappingModel = new MappingModel();
+		String siebleBaseTable1 = request.getParameter("siebleBaseTable"+i);
+		 String siebleBaseTableColumn = "siebleBaseTableColumn"+a;
+		String sfdcObjectName1 = "sfdcObjectName"+a;
+			 String sfdcFieldTable = "sfdcFieldTable"+a;
+			 
+		 String mappingSeq = "mappingSeq"+a;
+		 mappingModel.setSfdcFieldTable(request.getParameter("dropdown"+i));
+		 mappingModel.setSfdcObjectName(request.getParameter("sfdcObjectName"+i));
+		 mappingModel.setSiebleBaseTable(request.getParameter("siebleBaseTable"+i));
+		 mappingModel.setSiebleBaseTableColumn(request.getParameter("siebleBaseTableColumn"+i));
+		 mappingModel.setForeignFieldMapping(request.getParameter("foreignFieldMapping"+i));
+	     System.out.println("Inside Drop value is"+request.getParameter("dropdown"+i));
+	     if(request.getParameter("mappingSfdcId")==null){
+	    	 mappingModel.setMappingSfdcId("");
+			}else{
+				 mappingModel.setMappingSfdcId(request.getParameter("mappingSfdcId"));
+			}
+		/*	String migrate = "migrate"+i;
+			String seq = "seq"+i;
+			String objName = "objectName"+i;
+			String primTable = "prim"+i;
+			String thresholdId = "thresh"+i;
+			String SFDCObjName = "SFDCObjName"+i;
+
+			mainPage.setMigrate(request.getParameter(migrate));
+			mainPage.setSequence(request.getParameter(seq));
+			mainPage.setSiebelObject(request.getParameter(objName));
+			mainPage.setPrimBaseTable(request.getParameter(primTable));
+			mainPage.setThreshold(request.getParameter(thresholdId));*/
+		 mappingData.add(mappingModel);}
+		partnerWSDL.saveMappingDataIntoDB(mappingData, request, (String)session.getAttribute("projectId"));
+		Date date = new Date();
+
+
+
+		//DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+
+		//String formattedDate = dateFormat.format(date);
+		ArrayList<String> siebelList=new ArrayList<String>();
+		siebelList.add("Account");
+		siebelList.add("Contact");
+		siebelList.add("Order");
+		siebelList.add("Vaporizer");
+
+
+		//model.addAttribute("serverTime", formattedDate );
+	//	model.addAttribute("siebelList",siebelList);
+		System.out.println("----------doneeeeeeee");
+		//System.out.println(dataForm);
+		// System.out.println(dataForm.getData());
+		System.out.println("doneeeeeeee-------------");
+		//System.out.println(data.get(0).getSiebelObject());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		return new ModelAndView("vaporizer" , "data", data);
+		
+	}
 	@RequestMapping(value = "childSave", method = RequestMethod.POST)
 	public ModelAndView save1(@ModelAttribute("data") List<MainPage> data, Locale locale, Model model,HttpServletRequest request) throws ConnectionException{
 		logger.info("Welcome home! the client locale is "+ locale.toString());
+
+
+
+
+
+
 		System.out.println("inside demo");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
 		PartnerWSDL partnerWSDL= new PartnerWSDL();
 		String formattedDate = dateFormat.format(date);
+
+
+
 		ArrayList<String> siebelList=new ArrayList<String>();
 		siebelList.add("Account");
 		siebelList.add("Contact");
@@ -228,6 +403,8 @@ public class HomeController {
 		siebelList.add("Vaporizer");
 		model.addAttribute("serverTime", formattedDate );
 		model.addAttribute("siebelList",siebelList);
+
+
 		System.out.println("----------doneeeeeeee");
 		//System.out.println(dataForm);
 		// System.out.println(dataForm.getData());
@@ -260,7 +437,25 @@ public class HomeController {
 		partnerWSDL.saveChildDataDB(childDataList,request);
 
 		return new ModelAndView("vaporizer" , "data", data);
+
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -272,6 +467,8 @@ public class HomeController {
 		partnerWSDL.login();
 		partnerWSDL.getMappingRecords((String)session.getAttribute("projectId"));
 	}
+
+
 
 
 	@RequestMapping(value="saveData",method = RequestMethod.POST)
@@ -340,31 +537,35 @@ public class HomeController {
 
 			return new ModelAndView("ChildBase" , "data", data);
 		}
-		else{
-			logger.info("Welcome to mapping ");
 
+		else{
+			//Else go to mapping page
+logger.info("Welcome to mapping ");
+			
 			System.out.println("---------------"+thresholdValue+" "+primBaseValue);
 			//ThresholdController tc= new ThresholdController();
 			//List<SiebelObjectBO> listSiebelObject = tc.fetchSiebelObjects(request);
-
-			SiebelObjectController siObj=new SiebelObjectController();
-			//ArrayList<String> myList=new ArrayList<String>();
-			List<Object> myChildList=siObj.fetchColumns(request, primBaseValue,thresholdValue);
-			//PartnerWSDL partnerWSDL= new PartnerWSDL();
-			partnerWSDL.login();
-			//HttpSession session=request.getSession();
-
 			String subprojectId=partnerWSDL.getsubprojects(siebelTableNameValue);
 			if(null != subprojectId){
-				JSONObject tableName=partnerWSDL.getRelatedSiebelTable(subprojectId);
-				List<MappingModel> mappingData=partnerWSDL.getFieldMapping(tableName,myChildList);
-				ArrayList<String> field=new ArrayList<String>();
-				for(int count=0;count<mappingData.size();count++){
-					field.add(mappingData.get(count).getSfdcFieldTable());
-				}
-				modelChild.addAttribute("sfdcObj",mappingData.get(0).getSfdcObjectName());
-				modelChild.addAttribute("mappingField",field);
-				modelChild.addAttribute("mappingData",mappingData);}
+			JSONObject tableName=partnerWSDL.getRelatedSiebelTable(subprojectId);
+			String id=partnerWSDL.getMappingId((String)session.getAttribute("projectId"),mappingData,tableName);
+			List<MappingModel> mappingData1=partnerWSDL.getSavedMappingDBData((String)session.getAttribute("projectId"),mappingData,tableName);
+			
+			SiebelObjectController siObj=new SiebelObjectController();
+			List<Object> myChildList=siObj.fetchColumns(request, primBaseValue,thresholdValue);
+			partnerWSDL.login();
+			
+			//System.out.println(mappingData1.get(0));
+			List<MappingModel> mappingData=partnerWSDL.getFieldMapping(tableName,myChildList);
+			ArrayList<String> field=new ArrayList<String>();
+			for(int count=0;count<mappingData.size();count++){
+				field.add(mappingData.get(count).getSfdcFieldTable());
+			}
+			modelChild.addAttribute("sfdcObj",mappingData.get(0).getSfdcObjectName());
+			modelChild.addAttribute("mappingField",field);
+			modelChild.addAttribute("mappingData",mappingData);
+			modelChild.addAttribute("MappingId",id);
+			}
 			return new ModelAndView("mapping", "data", data);
 		}
 	}
