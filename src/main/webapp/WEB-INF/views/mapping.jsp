@@ -44,7 +44,8 @@ var primBaseTable;
 		} 
 		
 		$("#rowCount").val(rowNum);
-		 
+		alert( document.getElementById("siebleBaseTable1").value);
+	
 		var objName = document.getElementById("siebleBaseTable1").value;
 		var srchObj = "Account";
 		var primTable = "prim"+(rowNum);
@@ -53,7 +54,15 @@ var primBaseTable;
 		var migrateId = "migrate"+(rowNum);
 		var seqId = 12;
 		var colour='';
-		
+		var j;
+	 for(j =0;j<=rowNum;j++){
+		 var drop="dropdown";
+		 drop=drop+j;
+			alert(drop);
+			alert("dropdown....."+document.getElementById(drop).options[document.getElementById(drop).selectedIndex].text);
+			//	request.setAttribute(drop,"abc");
+			alert('1');
+		} 
 		alert('siebleBaseTable'+rowNum);
 		alert(document.getElementById("siebleBaseTable1").value);
 		
@@ -80,10 +89,8 @@ var primBaseTable;
 				                + "</tr>");
 		
 	}
-	function hello(){
-
-		window.alert("hello");
-		} 
+	
+	
 	</script>
 <title>Vaporizer</title>
 </head>
@@ -122,6 +129,7 @@ var primBaseTable;
 					</div>
 				</div>
 		<button class="btn btn-primary" id="addRow" onclick="addRow()">[+]</button>	
+		<form:form method="post" action="mappingSave" modelAttribute="data">
 			<div class="mappingContainer" style="width:100%;">
 				<table id = "masterTable" style="width:100%;"><br/><br/>
 				<thread>
@@ -164,26 +172,25 @@ var primBaseTable;
 							
 					<td><input value="${mapping.siebleBaseTableColumn}" id="siebleBaseTableColumn${mapping.mappingSeq}" name="siebleBaseTableColumn${mapping.mappingSeq}" readonly style='margin-left:35px;'/></td>
 		
-				<td><input value="${mapping.siebleBaseTable}" id="siebleBaseTable${mapping.mappingSeq}" name="siebleBaseTable${mapping.mappingSeq}" readonly style='margin-left:35px;'/></td>
+				<td><input value="${mapping.foreignFieldMapping}" id="foreignFieldMapping${mapping.mappingSeq}" name="foreignFieldMapping${mapping.mappingSeq}" readonly style='margin-left:35px;'/></td>
 			
 						  
 								<td><input value="${mapping.sfdcObjectName}" id="sfdcObjectName${mapping.mappingSeq}" name="sfdcObjectName${mapping.mappingSeq}" readonly style='margin-left:35px;'/></td>
 							  <td>
 							   
-							   <select name="colour" id="dropdown" >
-							    <option value="dropdown">${mapping.sfdcFieldTable}</option>
+							   <select name="dropdown${mapping.mappingSeq}" id="dropdown${mapping.mappingSeq}" >
+							    <option value="${mapping.sfdcFieldTable}">${mapping.sfdcFieldTable}</option>
 							   <c:if test="${not empty mappingField}"> 
 				<c:forEach items="${mappingField}" var="field" varStatus="status">
         <%--- <option  value="dropdown">${mappingData.field}</option>--%> 
        
-               <option value="dropdown">${field}</option>
+               <option value="${field}">${field}</option>
               
                   </c:forEach> 
 					  </c:if>
             </select>
           				
- <input type="hidden" name="dropdown" id="dropdown" >
- 
+
     <!--  <input type="submit" value="click" name="btn_dropdown">-->
     </td>	  
 				
@@ -203,16 +210,17 @@ var primBaseTable;
 					  </c:if> 
 				</table>
 				<div id="row"><input id="rowCount" name='rowCount' type="hidden" value="${mappingData.size()}"></div>
+				 <input id="mappingSfdcId" name='mappingSfdcId' type="hidden" value="${MappingId}">
 			</div>
 			<div class="buttonContainer">
-			<form:form method="post" action="childSave" modelAttribute="data">
+			
 				<table style="border: 0">
 				
 					<tr>
 						<td colspan="2"
 							style="float: right; width:350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
 							<input class="btn btn-block btn-inverse" type="submit"
-							name="Extract" value="Done"  />
+							name="Extract" value="Done" onclick="getDropdown()"  />
 							
 							<!-- <button id="cancel" type="button" style="float: right;"
 						class="btn btn-block btn-inverse">Done</button> -->
@@ -224,13 +232,13 @@ var primBaseTable;
 					
 
 				</table>
-				</form:form>	
+				
 			</div>
 		</div>
 
 
 
-
+</form:form>	
 	</div>
 </body>
 <script type="text/javascript">
