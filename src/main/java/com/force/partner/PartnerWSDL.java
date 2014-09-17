@@ -1452,7 +1452,7 @@ public void saveChildDataDB(List<ChildObjectBO> data, HttpServletRequest request
 	     System.out.println("save results length is"+saveResults.length);
 	     for(int j=0;j<saveResults.length;j++){
    			System.out.println(saveResults[j].isSuccess());
-   			System.out.println(saveResults[j].getErrors()[j].getMessage());
+   		//	System.out.println(saveResults[j].getErrors()[j].getMessage());
    		}
     }
     
