@@ -158,16 +158,20 @@ var primBaseTable;
 					
 					 <c:if test="${not empty mappingData}"> 
 				<c:forEach items="${mappingData}" var="mapping" varStatus="status">
-					  <td>
-								<c:choose>
-								<c:when test="${mainPage.select == 'on'}">
-								<input name="select${mapping.mappingSeq}" type='checkbox' checked="checked">
-								</c:when>
-								<c:otherwise>
-								<input name="select${mapping.mappingSeq}" type='checkbox'>
-								</c:otherwise>
-								</c:choose>
-								</td>
+					<td>
+                                                       <c:choose>
+                                                       <c:when test="${mapping.checkFlag == 'true'}">
+                                                       <input name="checkFlag${mapping.mappingSeq}" id="checkFlag${mapping.mappingSeq}"  type='checkbox' checked="checked">
+                                                       </c:when>
+                                                       <c:otherwise>
+                                                       <input name="checkFlag${mapping.mappingSeq}" id="checkFlag${mapping.mappingSeq}"  type='checkbox'>
+                                                       </c:otherwise>
+                                                       </c:choose>
+                                                       </td>
+                                                       
+       <%-- <td><input type="checkbox" name="checkFlag${childItem.seqNum}" id="checkFlag${childItem.seqNum}" value="${childItem.checkFlag}"/></td> --%>
+       
+
 				<td><input value="${mapping.siebleBaseTable}" id="siebleBaseTable${mapping.mappingSeq}" name="siebleBaseTable${mapping.mappingSeq}" readonly style='margin-left:45px;'/></td>
 							
 					<td><input value="${mapping.siebleBaseTableColumn}" id="siebleBaseTableColumn${mapping.mappingSeq}" name="siebleBaseTableColumn${mapping.mappingSeq}" readonly style='margin-left:35px;'/></td>
