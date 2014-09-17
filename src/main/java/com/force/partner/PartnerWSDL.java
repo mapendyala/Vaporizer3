@@ -165,6 +165,8 @@ public class PartnerWSDL {
 			if(projectId==null)
 				projectId="a0PG000000B23yKMAR";
 
+
+
 			// SOQL query to use
 			String soqlQuery = " Select Name, Parent_Project__c, Type__c from Project__c where id= '"+ projectId + "'";
 			// Make the query call and get the query results
@@ -205,6 +207,7 @@ public class PartnerWSDL {
 			partnerConnection.setQueryOptions(250);
 			if(projectId==null)
 				projectId="a0PG000000B23yKMAR";
+
 
 			// SOQL query to use
 			String soqlQuery = " Select Salesforce_Password__c, Salesforce_Token__c, Salesforce_Username__c from Project__c where id= '"+ projectId + "'";
@@ -379,6 +382,7 @@ public class PartnerWSDL {
 	         return (response.toString().replaceAll("\"", "")!=null?response.toString().replaceAll("\"", ""):response.toString());
 
 
+
 	        } catch (Exception e) {
 
 	          e.printStackTrace();
@@ -393,6 +397,7 @@ public class PartnerWSDL {
 	        }
 	      }
 //Amrita:Getting field Mapping
+
 
 public  List<MappingModel> getFieldMapping(JSONObject tableData,List<Object> myChildList){
 		List<MappingModel> mappingData= new LinkedList<MappingModel>();
@@ -458,10 +463,17 @@ public  List<MappingModel> getFieldMapping(JSONObject tableData,List<Object> myC
 
 		}
 		String s = sfdcTablename	+ "_PreDefined_Mapping";
+
+
+
+
+
 		partnerConnection.setQueryOptions(250);
 	String soqlQuery1 = " Select  Object_API_Name__c,Id, Project__r.Name, Table_Name__c, Type__c from Table__c where  Project__r.Name='"+ s+"'";
 	System.out.println(soqlQuery1);
 		
+
+
 		QueryResult qr1 = partnerConnection.query(soqlQuery1);
 		boolean done1 = false;
 
@@ -490,6 +502,12 @@ public  List<MappingModel> getFieldMapping(JSONObject tableData,List<Object> myC
 			StringBuilder sb1 = new StringBuilder("Select Source_Field__c, Field_Target__c, Source_Base_Table__c,Table_API_Name__c  from Field_Mapping_Data_Migration__c where Source_Base_Table__c ='"+id+"' and Source_Field__c  in (");
 		// Make the query call and get the query results
 		
+
+
+
+
+
+
 		boolean added = false;
 		for(Object s2 : myChildList){
 		    if (added){
@@ -602,6 +620,7 @@ public  List<MappingModel> getFieldMapping(JSONObject tableData,List<Object> myC
 	//Amrita:Save Mapping Data Into Db
 
 public void saveMappingDataIntoDB(List<MappingModel> data,HttpServletRequest request, String attribute)throws ConnectionException{ 
+
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession(true);
 
@@ -636,6 +655,7 @@ public void saveMappingDataIntoDB(List<MappingModel> data,HttpServletRequest req
 				//	System.out.println(saveResults[j].getErrors()[j].getMessage());
 				}
 				
+
 
 		}
 	}
@@ -841,6 +861,7 @@ public void saveMappingDataIntoDB(List<MappingModel> data,HttpServletRequest req
 	}
 
 
+
 	//Amrita
 	public String getMappingId(String projectId, List<MappingModel> mappingData, JSONObject tableData){
 		//List<MappingModel> mappingData= new LinkedList<MappingModel>();
@@ -884,11 +905,12 @@ public void saveMappingDataIntoDB(List<MappingModel> data,HttpServletRequest req
 		}
 		
 		return id;}
-	public List<MappingModel> getSavedMappingDBData(String projectId, List<MappingModel> mappingData, JSONObject tableData){
+		public List<MappingModel> getSavedMappingDBData(String projectId, List<MappingModel> mappingData, JSONObject tableData){
 		//List<MappingModel> mappingData= new LinkedList<MappingModel>();
 		String siebelTableName=tableData.getString("siebelTableName");
 		String sfdcTablename=tableData.getString("sfdcTableName");
 		MappingModel mappingModel = new MappingModel();
+		String id="0";
 		try {
 			partnerConnection.setQueryOptions(250);
 			// SOQL query to use
@@ -899,6 +921,7 @@ public void saveMappingDataIntoDB(List<MappingModel> data,HttpServletRequest req
 			QueryResult qr = partnerConnection.query(soqlQuery);
 			boolean done = false;
 
+			
 			int loopCount = 0;
 			// Loop through the batches of returned results
 			mappingData.clear();
@@ -909,11 +932,13 @@ public void saveMappingDataIntoDB(List<MappingModel> data,HttpServletRequest req
 				for (int i = 0; i < records.length; i++) {
 					
 					SObject contact = records[i];
-					String id = (String) contact
+				
+					id = (String) contact
 							.getField("Id");
-					mappingModel.setMappingSfdcId(id);
-					mappingData.add(mappingModel);
-					//mappingData.add(mappingModel);
+
+
+
+				
 				}
 				
 
@@ -934,7 +959,7 @@ public void saveMappingDataIntoDB(List<MappingModel> data,HttpServletRequest req
 			partnerConnection.setQueryOptions(250);
 			// SOQL query to use
 			//String subprojectId="a0PG000000AtiEAMAZ";
-			String soqlQuery1 = "Select Field_Target__c, Source_Field__c, Table_Name__c from Field_Mapping_Data_Migration__c where Mapping_Staging_Table__c ='"+mappingModel.getMappingSfdcId()+"'";
+			String soqlQuery1 = "Select Field_Target__c, Source_Field__c, Table_Name__c from Field_Mapping_Data_Migration__c where Mapping_Staging_Table__c ='"+id+"'";
 	// Make the query call and get the query results
 			QueryResult qr1 = partnerConnection.query(soqlQuery1);
 			boolean done1 = false;
@@ -949,11 +974,23 @@ public void saveMappingDataIntoDB(List<MappingModel> data,HttpServletRequest req
 				for (int i = 0; i < records1.length; i++) {
 					MappingModel mappingModel1 = new MappingModel();
 					SObject contact = records1[i];
-					String id = (String) contact
-							.getField("Id");
-				///\	mappingModel1.setMappingSfdcId(id);
-					
-					//mappingData.add(mappingModel1);
+				
+					String siebelTableColumn= (String) contact
+							.getField("Source_Field__c");
+					String sfdcTableColumn = (String) contact
+							.getField("Field_Target__c");
+					String fieldMapping1= (String) contact.getField("Table_Name__c");
+					// Project__c, Siebel_Object__c, SFDC_Object__c, Prim_Base_Table__c
+					mappingModel1.setMappingSfdcId(id);
+
+					mappingModel1.setSfdcFieldTable(sfdcTableColumn);
+					mappingModel1.setSfdcObjectName(sfdcTablename);
+					mappingModel1.setSiebleBaseTable(siebelTableName);
+					mappingModel1.setSiebleBaseTableColumn(siebelTableColumn);
+					//mappingModel.setMappingSeq(mappingSeq1);
+					mappingModel1.setForeignFieldMapping(fieldMapping1);
+					mappingData.add(mappingModel1);
+					//mappingData.add(mappingModel);
 				}
 				
 
@@ -971,7 +1008,6 @@ public void saveMappingDataIntoDB(List<MappingModel> data,HttpServletRequest req
 		System.out.println("\nQuery execution completed.");
 		return mappingData;
 	}
-
 
 
 
@@ -1575,6 +1611,44 @@ public List<ChildObjectBO> getSavedChildDBData(String projectId,String primTable
 		return objList;
 	}
 
+	//Amrita:Fetch selected siebel child
+			public List<String> getSavedChild(String projectId,JSONObject tableData){
+				//List<MappingModel> mappingData= new LinkedList<MappingModel>();
+				String siebelTableName=tableData.getString("siebelTableName");
+				ArrayList<String> child=new ArrayList<String>();
+				try {
+				
+					partnerConnection.setQueryOptions(250);
+					// SOQL query to use
+					//String subprojectId="a0PG000000AtiEAMAZ";
+					String soqlQuery = "Select   Child_Table__c  from Child_Base__c where Project__c='"+projectId+"' and Primary_Table__c='"+siebelTableName+"'";
+			// Make the query call and get the query results
+					QueryResult qr = partnerConnection.query(soqlQuery);
+					boolean done = false;
+					// Loop through the batches of returned results
+					while (!done) {
+						
+						SObject[] records = qr.getRecords();
+						// Process the query results
+						for (int i = 0; i < records.length; i++) {
+							SObject contact = records[i];
+						
+							child.add((String) contact.getField("Source_Field__c"));
+							}
+						
+						if (qr.isDone()) {
+							done = true;
+						} else {
+							qr = partnerConnection.queryMore(qr.getQueryLocator());
+						}
+					
+					}
+				} catch (ConnectionException ce) {
+					ce.printStackTrace();
+					}
+				return child;
+				}
+
 	void commentedCode()
 	{
 		/*public List<String > addObjectToTable(List<SiebelObject> listOfObjects,
@@ -2171,5 +2245,9 @@ public List<ChildObjectBO> getSavedChildDBData(String projectId,String primTable
 		String authEndPoint = configProp
 				.getProperty("salesforce_authEndPoint");*/
 	}
+
+
+
+
 
 }
