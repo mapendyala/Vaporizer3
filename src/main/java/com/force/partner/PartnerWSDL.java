@@ -1378,7 +1378,7 @@ public void getMappingRecords(String projectId){
 			
 		}
 
-	
+	/*
 	public void saveChildDataDB(List<ChildObjectBO> data, HttpServletRequest request) throws ConnectionException{
 	 HttpSession session = request.getSession(true);
 	
@@ -1409,7 +1409,138 @@ public void getMappingRecords(String projectId){
    			System.out.println(saveResults[j].isSuccess());
    			//System.out.println(results[i].getErrors()[i].getMessage());
    		}
+    }*/
+	
+//*author Nidhi
+
+public void saveChildDataDB(List<ChildObjectBO> data, HttpServletRequest request) throws ConnectionException{
+	 HttpSession session = request.getSession(true);
+	
+	//String [] dataArray = data.toArray(new String[data.size()]);
+	 login();
+    SObject[] contacts = new SObject[data.size()];
+    int counter=0;
+	//data.get(0).getMigrate();
+    System.out.println("in WSDL save child method");
+    int i=1;
+    for(ChildObjectBO childObj : data)
+    {
+   	
+   	 if(childObj.isCheckFlag())
+   	 {
+   		 System.out.println("in saving for loop"+i);
+   		 SObject contact = new SObject();
+		     contact.setType("Child_Base__c");
+		     contact.setField("Primary_Table__c", childObj.getBaseObjName());
+		     contact.setField("Project__c", ((String)session.getAttribute("projectId")));
+		     contact.setField("Child_Table__c", childObj.getChildObjName());	
+		     contact.setField("Join_Condition__c", childObj.getJoinCondition());
+		     contact.setField("Saved__c ",childObj.isCheckFlag());
+		     
+		    // System.out.println("child Saved value is"+ contact.getField("Child_Table__c"));
+		     contacts[counter] = contact;
+		     counter++;  
+   	 }
+   	 else
+   	 {
+   		 System.out.println("in not save false block"+i);
+   	 }
+   	 i++;
+   	
     }
+	     SaveResult[] saveResults = getPartnerConnection().create(contacts);
+	     System.out.println("save results length is"+saveResults.length);
+	     for(int j=0;j<saveResults.length;j++){
+   			System.out.println(saveResults[j].isSuccess());
+   			System.out.println(saveResults[j].getErrors()[j].getMessage());
+   		}
+    }
+    
+	
+
+
+public List<ChildObjectBO> getSavedChildDBData(String projectId,String primTable){
+	List<ChildObjectBO> childData=new ArrayList<ChildObjectBO>();
+	try {
+		System.out.println("in getSave Child Data proj is"+projectId+"and prim is"+primTable);
+		partnerConnection.setQueryOptions(250);
+		
+		//String subprojectId="a0PG000000AtiEAMAZ";
+	//	String soqlQuery = "Select Id, Migrate__c, Sequence__c, Prim_Base_Table__c, Project__c, SFDC_Object__c, Siebel_Object__c, Threshold__c from Mapping_Staging_Table__c where Project__c ='"+projectId+"'";
+		
+		String soqlQuery = "Select Id, Saved__c , Primary_Table__c, Child_Table__c, Join_Condition__c, Project__c" +
+				" from Child_Base__c where Project__c ='"+projectId+"' and Primary_Table__c = '"+primTable+"' ";
+		
+		// Make the query call and get the query results
+		QueryResult qryResult = partnerConnection.query(soqlQuery);
+		boolean done = false;
+
+		int loopCount = 0;
+		
+		// Loop through the batches of returned results
+		childData.clear();
+		int counter=1;
+		while(!done){
+			SObject[] records = qryResult.getRecords();
+			System.out.println("records len from DB is"+records.length);
+			
+			// Process the query results
+			for (int i = 0; i < records.length; i++) {
+				
+				ChildObjectBO childPageObj = new ChildObjectBO();
+				SObject contact = records[i];
+				/*String id = (String) contact
+						.getField("Id");
+				mainPage.setSfdcId(id);*/
+				
+				boolean checkFlag=Boolean.parseBoolean((String)contact.getField("Saved__c"));
+				childPageObj.setCheckFlag(checkFlag);
+				
+				
+				String siebelBaseTable = (String) contact.getField("Primary_Table__c");
+				childPageObj.setBaseObjName(siebelBaseTable);
+				
+				
+				String siebelChildTable = (String) contact.getField("Child_Table__c");
+				childPageObj.setChildObjName(siebelChildTable);
+				
+				String joinCondtn = (String) contact.getField("Join_Condition__c");
+				childPageObj.setJoinCondition(joinCondtn);
+				
+				childPageObj.setSeqNum(counter);
+				
+				/*String projId = (String) contact.getField("Project__c");
+				mainPage.setProjId(projId);*/
+				
+				childData.add(childPageObj);
+				counter++;
+			}
+			/*Collections.sort(childData, new Comparator<ChildObjectBO>(){
+				@Override
+		        public int compare(MainPage  mainPage1, MainPage  mainPage2)
+		        {
+
+		            return  mainPage1.getSequence().compareTo(mainPage2.getSequence());
+		        }
+		    });*/
+			
+			if (qryResult.isDone()) {
+				done = true;
+			} else {
+				qryResult = partnerConnection.queryMore(qryResult.getQueryLocator());
+			}
+
+		} // end of while
+
+	} catch (ConnectionException ce) {
+		System.out.println("in catch block");
+		ce.printStackTrace();
+	} 
+	System.out.println("\n Child Saved Data Query execution completed.");
+	return childData;
+	}
+
+	
 	
 	/**
 	 * @author piymishra
