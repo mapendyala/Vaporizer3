@@ -171,7 +171,7 @@ function callMapping(rowNum){
 		 		},
 			contentType : 'application/text',
 			success : function(response) {
-				if(/* response!='No data' */ false)
+				if( response!='No data')
 				$("#"+SFDCObjectId).val(response);
 				else
 					{
