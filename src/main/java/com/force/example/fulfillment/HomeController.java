@@ -85,17 +85,12 @@ public class HomeController {
 		PartnerWSDL partnerWSDL= new PartnerWSDL(); 	  
 		//  System.out.println(projectName); 	  
 		partnerWSDL.login();
+		System.out.println("here");
 		HttpSession session = request.getSession(true);
-		String projectId="a0PG000000B23yKMAR";
+		String projectId="a0PG000000B2wmDMAR";
 		session.setAttribute("projectId", projectId);
-		partnerWSDL.login();
-		JSONObject connData=partnerWSDL.getTargetOrgDetails("a0PG000000B248h");
-		String password=(String)connData.get("password");
-		String token=(String)connData.get("token");
-		String username=(String)connData.get("username");
-		TargetPartner targetPartner= new TargetPartner(username, password+token);
 		data = partnerWSDL.getSavedDBData(projectId, data);
-		System.out.println(targetPartner.login());
+		System.out.println("data "+data);
 		System.out.println("In home page");
 		return new ModelAndView("vaporizer", "data", data);
 	}
@@ -336,54 +331,6 @@ public class HomeController {
 			// }
 		}
 		partnerWSDL.saveMappingDataIntoDB(mappingData, request, (String)session.getAttribute("projectId"));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		return new ModelAndView("vaporizer" , "data", data);
 
 	}
@@ -487,27 +434,6 @@ public class HomeController {
 
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	@RequestMapping(value="/getextractData", method = RequestMethod.GET)
 	public void createExtractQuery(HttpServletRequest request){
 		System.out.println("In controller");
@@ -522,7 +448,7 @@ public class HomeController {
 
 
 
-	@RequestMapping(value="saveData",method = RequestMethod.POST)
+	@RequestMapping(value = "saveData",method = RequestMethod.POST)
 	public ModelAndView getSiebelFielddata(HttpServletRequest request, Map<String, Object> model, Model modelChild) throws ConnectionException {
 		HttpSession session = request.getSession(true);
 		System.out.println("In main controller");
