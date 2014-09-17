@@ -80,7 +80,7 @@ public class HomeController {
 		//  System.out.println(projectName); 	  
 		partnerWSDL.login();
 		HttpSession session = request.getSession(true);
-		String projectId="a0PG000000B23yKMAR";
+		String projectId="a0PG000000B2wmDMAR";
 		session.setAttribute("projectId", projectId);
 		partnerWSDL.login();
 		JSONObject connData=partnerWSDL.getTargetOrgDetails("a0PG000000B248h");
@@ -203,10 +203,7 @@ public class HomeController {
 		model.addAttribute("serverTime", formattedDate );
 		model.addAttribute("siebelList",siebelList);
 		System.out.println("----------doneeeeeeee");
-		//System.out.println(dataForm);
-		// System.out.println(dataForm.getData());
 		System.out.println("doneeeeeeee-------------");
-		//System.out.println(data.get(0).getSiebelObject());
 		return new ModelAndView("vaporizer" , "data", data);
 	}
 
@@ -232,11 +229,24 @@ public class HomeController {
 
 	@RequestMapping(value="/getextractData", method = RequestMethod.GET)
 	public void createExtractQuery(HttpServletRequest request){
-		System.out.println("In controller");
+		System.out.println("In Home controller get extract data method");
 		HttpSession session = request.getSession(true);
+		String projId  = (String)session.getAttribute("projectId");
 		PartnerWSDL partnerWSDL= new PartnerWSDL();
 		partnerWSDL.login();
-		partnerWSDL.getMappingRecords((String)session.getAttribute("projectId"));
+		String sfdcId=request.getParameter("sfdcId");
+		String siebelTableNameValue = request.getParameter("siebelObjName");
+		String subprojectId=partnerWSDL.getsubprojects(siebelTableNameValue);
+		if(sfdcId  != null){
+			
+			partnerWSDL.getextractionData(projId, sfdcId, subprojectId);
+			
+		}else{
+		
+			System.out.println("Child Base and Mapping pages have not been selected");
+
+		}
+		
 	}
 	
 	
@@ -251,9 +261,6 @@ public class HomeController {
 		rowCount= request.getParameter("rowCount");
 		String rowNo = request.getParameter("rowNo");
 		String page = request.getParameter("pageName");
-		/*		String threshold ="thresh"+rowNo;
-		String primBase = "prim"+rowNo;
-		String siebelTableName = "objectName"+rowNo;*/
 		String thresholdValue=request.getParameter("thresh"+rowNo);
 		String primBaseValue=request.getParameter("prim"+rowNo);
 		System.out.println("in MY getSiebl meth"+primBaseValue);
@@ -261,7 +268,6 @@ public class HomeController {
 		System.out.println("in MY getSiebl Siebel Table"+siebelTableNameValue);
 		System.out.println("RowCount is: " +rowCount);
 		for(int i=1;i<=Integer.parseInt(rowCount);i++){
-			//mainPage[i] =  new MainPage();
 			MainPage mainPage = new MainPage();
 			String migrate = "migrate"+i;
 			String seq = "seq"+i;

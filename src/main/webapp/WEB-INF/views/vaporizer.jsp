@@ -69,21 +69,14 @@ var primBaseTable;
 								+ "<td><a href='#' onclick='submit("+rowNum+")' style='margin-left:15px;'>Select</a></td>"
 								+ "<td><c:out value='Selected'/></td>"
 								+ "<td>"
-								+ "<input class='btn btn-inverse' type='button' name='Extract' value='E' />"
+								+ "<input class='btn btn-inverse' type='button' name='Extract' value='E' onclick='extract("+rowNum+")'/>"
 								+ "<input class='btn btn-inverse' type='button' name='transform' value='T' style='margin-left:10px;'/>"
 				                + "<input class='btn btn-inverse' type='button' name='delete' value='-' style='margin-left:10px;'/>"
 				                + "</td>"
 				                + "</tr>");
 		
 	}
-function callMapping(rowNum){
 	
-	var threshold=$("#"+ "thresh"+(rowNum)).val();
-	var primBase=$("#"+ "prim"+(rowNum)).val();
-	var siebelTableName = $("#objectName"+(rowNum)).val();
-	window.location.href="/mapping?threshold="+threshold+"&primBaseName="+primBase+"&siebelTableName="+siebelTableName;
-	
-}
 	function populateObjectName(id, primId){
 	var s =$('input[name=selectedObject]:radio:checked').val();
 	var value = s.split("+");
@@ -135,9 +128,6 @@ function callMapping(rowNum){
 	 }
 	
 	
-	
-	
-		
 	 function makeReadonly(rowNum){
 		 var thresholdId = "thresh"+(rowNum);
 		var threshold = $("#"+thresholdId).val();
@@ -150,9 +140,6 @@ function callMapping(rowNum){
 			});
 		$("#"+thresholdId).attr('readonly',true);
 	}
-	
-
-	
 	
 	
 	 //function to get SFDC object mapping from siebel object as input
@@ -287,11 +274,14 @@ function callMapping(rowNum){
 		
 	}
 	
-	function extract(){
+	function extract(rowNum){
 		alert("inside extract");
+		var sfdcId = $("#SfdcId"+(rowNum)).val();
+		var siebelObjName = $("#objectName" +(rowNum)).val();
 		 $.ajax({
 				type : "GET",
-				url : "getextractData"
+				url : "getextractData",
+				data : {sfdcId:sfdcId, siebelObjName:siebelObjName}
 				});   
 	}
 		
@@ -341,7 +331,7 @@ function callMapping(rowNum){
 				    <th class="table_header_details" style="float: center;">Mapping</th>
 				    <th class="table_header_details" style="float: center;">Status</th>
 				    <th class="table_header_details" style="float: center;">Add Ons</th>
-				     <th hidden="true" class="table_header_details" style="float: center;">ID</th>
+				    <th hidden="true" class="table_header_details" style="float: center;">ID</th>
 				  </tr>
 				 </thead> 
 				<tbody>
@@ -365,15 +355,15 @@ function callMapping(rowNum){
 								<td><input value="${mainPage.primBaseTable}" id="prim${mainPage.sequence}" name="prim${mainPage.sequence}" readonly style='margin-left:35px;'/></td>
 								<td><input type='text' id="thresh${mainPage.sequence}" name="thresh${mainPage.sequence}" value="${mainPage.threshold}" onchange='makeReadonly(${mainPage.sequence})' style='margin-left:15px;'></td>
 								<td><a href="#" onclick='submitForm(${mainPage.sequence})' style='margin-left:15px;'>Select</a></td>
-								<td><input  readonly style='margin-left:35px;'/><button type='button' style='display: inline;'><span class='glyphicon glyphicon-search'></span></button></td>
+								<td><input name="SFDCObjName${mainPage.sequence}" id="SFDCObjName${mainPage.sequence}" value="${mainPage.sfdcObject}" readonly style='margin-left:35px;'/><button type='button' style='display: inline;'><span class='glyphicon glyphicon-search'></span></button></td>
 								<td><a href='#' onclick='submit(${mainPage.sequence})' style='margin-left:15px;'>Select</a></td>
 								<td><c:out value='Selected'/></td>
 								<td>
-								<input class='btn btn-inverse' type='button' name='Extract' value='E' onclick="extract()" />
+								<input class='btn btn-inverse' type='button' name='Extract' value='E' onclick="extract(${mainPage.sequence})" />
 								<input class='btn btn-inverse' type='button' name='transform' value='T' style='margin-left:5px;'/>
 				                <input class='btn btn-inverse' type='button' name='delete' value='-' style='margin-left:5px;'/>
 				                </td>
-				                <td><input id="SfdcId" name='SfdcId${mainPage.sequence}' type="hidden" value="${mainPage.sfdcId}">
+				                <td><input id="SfdcId${mainPage.sequence}" name='SfdcId${mainPage.sequence}' type="hidden" value="${mainPage.sfdcId}"></td>
 				                </tr>
 				               
 				               </c:forEach> 
