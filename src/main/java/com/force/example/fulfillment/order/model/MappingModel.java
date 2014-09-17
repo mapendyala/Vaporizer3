@@ -8,6 +8,13 @@ public class MappingModel {
 	public String foreignFieldMapping;
 	public String sfdcFieldTable;
 	public int mappingSeq;
+	public boolean checkFlag ;
+	public boolean isCheckFlag() {
+		return checkFlag;
+	}
+	public void setCheckFlag(boolean checkFlag) {
+		this.checkFlag = checkFlag;
+	}
 	public int getMappingSeq() {
 		return mappingSeq;
 	}
