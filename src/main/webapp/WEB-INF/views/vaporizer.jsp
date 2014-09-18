@@ -49,6 +49,7 @@ var primBaseTable;
 		 
 		var objName = "objectName"+(rowNum);
 		var srchObj = "searchObject"+(rowNum);
+		var srchSFDCObj = "searchFDCObject"+(rowNum);
 		var primTable = "prim"+(rowNum);
 		var thresholdId = "thresh"+(rowNum);
 		var SFDCObjName = "SFDCObjName"+(rowNum);
@@ -65,7 +66,7 @@ var primBaseTable;
 								+ "<td><input name="+primTable+" id="+primTable+" readonly style='margin-left:35px;'/></td>"
 								+ "<td><input type='text' id ="+thresholdId+" name="+thresholdId+" onchange='makeReadonly("+rowNum+")' style='margin-left:15px;'></td>"
 								+ "<td><a href='#' onclick='submitForm("+rowNum+")' style='margin-left:15px;'>Select</a></td>" 
-								+ "<td><input id="+SFDCObjName+" name="+SFDCObjName+" readonly style='margin-left:35px;'/><button type='button' style='display: inline;'><span class='glyphicon glyphicon-search'></span></button></td>"
+								+ "<td><input id="+SFDCObjName+" name="+SFDCObjName+" readonly='true' style='margin-left:35px;'/><button type='button'id="+srchSFDCObj+" style='display: inline;' onclick='getSFDCPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
 								+ "<td><a href='#' onclick='submit("+rowNum+")' style='margin-left:15px;'>Select</a></td>"
 								+ "<td><c:out value='Selected'/></td>"
 								+ "<td>"
@@ -128,6 +129,9 @@ var primBaseTable;
 	 }
 	
 	
+	
+	
+		
 	 function makeReadonly(rowNum){
 		 var thresholdId = "thresh"+(rowNum);
 		var threshold = $("#"+thresholdId).val();
@@ -140,6 +144,9 @@ var primBaseTable;
 			});
 		$("#"+thresholdId).attr('readonly',true);
 	}
+	
+
+	
 	
 	
 	 //function to get SFDC object mapping from siebel object as input
@@ -157,13 +164,14 @@ var primBaseTable;
 		 		},
 			contentType : 'application/text',
 			success : function(response) {
-				if(response!='No data')
+				if( response!='No data')
 				$("#"+SFDCObjectId).val(response);
 				else
 					{
 					
 					$("#"+SFDCObjectId).val('');
-					alert("No SFDC mapping available.");
+					alert("No sfdc mapping available.To select sfdc object, please click on search.");
+					//$("#indicator").css({'display':'block'});
 					}
 					
 			}
@@ -171,7 +179,7 @@ var primBaseTable;
 	 }
 
 	  function getPopup(rowNum){
-
+		
 		var id="objectName"+(rowNum);	
 		var primId = "prim"+(rowNum);
 		 var SFDCObjectId="SFDCObjName"+(rowNum);
@@ -180,6 +188,7 @@ var primBaseTable;
 			height: 500,
 			buttons: {
 				"OK": function () {
+					
 					populateObjectName(id, primId);
 					var siebelObject =$('input[name=selectedObject]:radio:checked').val();
 					var value = siebelObject.split("+");
@@ -207,7 +216,48 @@ var primBaseTable;
 			},
 			});
 		} 
-	  
+	  function getSFDCPopup(rowNum){
+		  //$("#indicator").css({'display':'none'});
+			var SFDCObjectId="SFDCObjName"+(rowNum);
+			$("#objSFDC").dialog({title: "Select an SFDC Object",
+				width: 500,
+				height: 500,
+				buttons: {
+					"OK": function () {
+						var SFDCObject =$('input[name=selectedObject]:radio:checked').val();
+						if(SFDCObject!=null)
+							{
+							$("#"+SFDCObjectId).val(SFDCObject);
+							if(document.getElementById("dyncTblCntntSFDC")){
+								var noOfChilds = $("#dyncTblCntntSFDC").children().length;
+								if(noOfChilds > 1){
+									$("#dyncTblCntntSFDC").children().remove();
+								}
+							}
+							$("#SFDCObjName").val("");
+
+							$(this).dialog("close");
+							}
+							else
+								{
+								alert("Please select a value from list");
+								}
+						
+						
+				
+					},"Close": function(){
+						if(document.getElementById("dyncTblCntntSFDC")){
+							var noOfChilds = $("#dyncTblCntntSFDC").children().length;
+							if(noOfChilds > 1){
+								$("#dyncTblCntntSFDC").children().remove();
+							}
+						}
+						$("#SFDCObjName").val("");
+						$(this).dialog("close");
+					}
+				},
+				});
+			} 
 	  
 	  function submitForm(rowNum)
 	  
@@ -240,6 +290,126 @@ var primBaseTable;
 				}  
 			});   
 	}
+	function getSFDCObjectName()
+	{
+		var objName = $("#SFDCObjName").val();
+		if(document.getElementById("dyncTblCntntSFDC"))
+			{
+			var noOfChilds = $("#dyncTblCntntSFDC").children().length;
+		if(noOfChilds > 1){
+			$("#dyncTblCntntSFDC").children().remove();
+		}
+			}
+		$("#objSFDC").append("<div id='dyncLoaderSFDC' style='text-align:center;margin-top:70px;'><img src='resources/images/ajax-loader.gif'/></div>");
+		  $.ajax({
+			type : "GET",
+			url : "SFDCObjectList",
+			data : {objectName:objName},
+		 	success : function(data){
+		 	
+					displaySFDCObjTable(data);
+				}  
+			});   
+	}
+	
+	function displaySFDCObjTable(data)
+	{
+		$("#dyncLoaderSFDC").remove();
+		if(data.length!=0)
+			{
+			
+			if(document.getElementById("dyncTblCntntSFDC"))
+			{
+				var noOfChilds = $("#dyncTblCntntSFDC").children().length;
+				if(noOfChilds > 1){
+					$("#dyncTblCntntSFDC").children().remove();
+				}
+					for(var i=0 ; i<data.length ;i++ ){
+						var tblName = data[i];						
+						$("#dyncTblCntntSFDC").append("<input type='radio' name='selectedObject' value='"+tblName.objName+"'><span>"+tblName.objName+"</span><br/>");
+											
+					}
+				
+				}
+			
+			else{
+				$("#objSFDC").append("<br/>");
+				$("#objSFDC").append("<div id='dyncTblCntntSFDC'>");
+				for(var i=0 ; i<data.length ;i++ ){
+					var tblName = data[i];					
+					$("#dyncTblCntntSFDC").append("<input type='radio' name='selectedObject' value='"+tblName.objName+"'><span>"+tblName.objName+"</span><br/>");
+				}
+				$("#objSFDC").append("</div>");
+			}
+			}
+		else
+			{
+			alert("No Object Found");
+			}
+		
+		
+	}
+	
+	function getSFDCObjectName()
+	{
+		var objName = $("#SFDCObjName").val();
+		if(document.getElementById("dyncTblCntntSFDC"))
+			{
+			var noOfChilds = $("#dyncTblCntntSFDC").children().length;
+		if(noOfChilds > 1){
+			$("#dyncTblCntntSFDC").children().remove();
+		}
+			}
+		$("#objSFDC").append("<div id='dyncLoaderSFDC' style='text-align:center;margin-top:70px;'><img src='resources/images/ajax-loader.gif'/></div>");
+		  $.ajax({
+			type : "GET",
+			url : "SFDCObjectList",
+			data : {objectName:objName},
+		 	success : function(data){
+		 	
+					displaySFDCObjTable(data);
+				}  
+			});   
+	}
+	
+	function displaySFDCObjTable(data)
+	{
+		$("#dyncLoaderSFDC").remove();
+		if(data.length!=0)
+			{
+			
+			if(document.getElementById("dyncTblCntntSFDC"))
+			{
+				var noOfChilds = $("#dyncTblCntntSFDC").children().length;
+				if(noOfChilds > 1){
+					$("#dyncTblCntntSFDC").children().remove();
+				}
+					for(var i=0 ; i<data.length ;i++ ){
+						var tblName = data[i];						
+						$("#dyncTblCntntSFDC").append("<input type='radio' name='selectedObject' value='"+tblName.objName+"'><span>"+tblName.objName+"</span><br/>");
+											
+					}
+				
+				}
+			
+			else{
+				$("#objSFDC").append("<br/>");
+				$("#objSFDC").append("<div id='dyncTblCntntSFDC'>");
+				for(var i=0 ; i<data.length ;i++ ){
+					var tblName = data[i];					
+					$("#dyncTblCntntSFDC").append("<input type='radio' name='selectedObject' value='"+tblName.objName+"'><span>"+tblName.objName+"</span><br/>");
+				}
+				$("#objSFDC").append("</div>");
+			}
+			}
+		else
+			{
+			alert("No Object Found");
+			}
+		
+		
+	}
+	
 	
 	function displaySblObjTable(data){
 		if(document.getElementById("dyncTblCntnt")){
@@ -324,7 +494,7 @@ var primBaseTable;
 				    <th class="table_header_details" style="float: center;">Migrate?</th>
 				    <th class="table_header_details" style="float: center;">Sequence</th>
 				    <th class="table_header_details" style="float: center;">Siebel Object</th>
-				    <th class="table_header_details" style="float: center;">Prim Base Table</th>
+				    <th class="table_header_details" style="float: center;">Prim. Base Table</th>
 				    <th class="table_header_details" style="float: center;">Threshold</th>
 				    <th class="table_header_details" style="float: center;">Child Base Tables</th>
 				    <th class="table_header_details" style="float: center;">SFDC Object</th>
@@ -363,7 +533,7 @@ var primBaseTable;
 								<input class='btn btn-inverse' type='button' name='transform' value='T' style='margin-left:5px;'/>
 				                <input class='btn btn-inverse' type='button' name='delete' value='-' style='margin-left:5px;'/>
 				                </td>
-				                <td><input id="SfdcId${mainPage.sequence}" name='SfdcId${mainPage.sequence}' type="hidden" value="${mainPage.sfdcId}"></td>
+				                <td><input id="SfdcId" name='SfdcId${mainPage.sequence}' type="hidden" value="${mainPage.sfdcId}">
 				                </tr>
 				               
 				               </c:forEach> 
@@ -380,8 +550,8 @@ var primBaseTable;
 					<tr>
 						<td colspan="2"
 							style="float: right; width: 350px; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
-							<input class="btn btn-block btn-inverse" type="button"
-							name="Extract" value="Extract All" />
+							<!-- <input class="btn btn-block btn-inverse" type="button"
+							name="Extract" value="Extract All" /> -->
 						</td>
 					</tr>
 					<tr>
@@ -391,21 +561,22 @@ var primBaseTable;
 						</td>
 						<td
 							style="float: right; padding: 50px;width:350px !Important; padding-top: 10px; padding-bottom: 10px;">
-							<input class="btn btn-block btn-inverse" type="button" name="Location" value="CSV File location"   />
+							<input class="btn btn-block btn-inverse" type="button"
+							name="Extract" value="Migrate To SFDC" id="dataloadtoSFDC" onclick='initiateDataLoad()'/> 
 						</td>
 					</tr>
 					<tr>
 						<td colspan="2"
 							style="float: right; width:350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
-							<input class="btn btn-block btn-inverse" type="button"
-							name="Extract" value="Create CSV File" />
+							<!-- <input class="btn btn-block btn-inverse" type="button"
+							name="Extract" value="Create CSV File" /> -->
 						</td>
 					</tr>
 					<tr>
 						<td colspan="2"
 							style="float: right; width: 350px; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
-							<input class="btn btn-block btn-inverse" type="button"
-							name="Extract" value="Migrate To SFDC" id="dataloadtoSFDC" onclick='initiateDataLoad()'/> 
+							<!-- <input class="btn btn-block btn-inverse" type="button"
+							name="Extract" value="Migrate To SFDC" id="dataloadtoSFDC" onclick='initiateDataLoad()'/>  -->
 						</td>
 					</tr>	
 
@@ -415,6 +586,10 @@ var primBaseTable;
 
 <div id=obj hidden="true">
  <input type="text" id = "objName" placeholder="Enter Object Name"><button type='button' style='display: inline;' id="search" onclick='getObjectName()'><span class='glyphicon glyphicon-search'></span></button>
+ </div>
+ 
+ <div id=objSFDC hidden="true">
+ <input type="text" id = "SFDCObjName" placeholder="Enter Object Name"><button type='button' style='display: inline;' id="search" onclick='getSFDCObjectName()'><span class='glyphicon glyphicon-search'></span></button>
  </div>
 	</div>
 	
