@@ -257,40 +257,14 @@ public class HomeController {
 		//System.out.println(request.getParameter("rowNum"));
 		mappingData.clear();
 		rowCount= request.getParameter("rowCount");
-
-
-
-
-
-
-		for(int i=1;i<=Integer.parseInt(rowCount);i++){
-
+		for(int i=0;i<Integer.parseInt(rowCount);i++){
 			String siebelCheckFlag="checkFlag"+i;
 			MappingModel mappingModel = new MappingModel();
-			/*	  String checkedFlagStr=request.getParameter(siebelCheckFlag);
-
-
-
-
-
-
-             // if(checkedFlagStr != "" && checkedFlagStr !=null)
-			  if(null!=checkedFlagStr && !"".equalsIgnoreCase(checkedFlagStr))
-              {
-                    if(checkedFlagStr.equals("on"))
-                    {
-                           System.out.println("in true block"+i);
-                           mappingModel.setCheckFlag(true);
-                    }
-              }
-              else
-              {
-                    System.out.println("in false block");
-                    mappingModel.setCheckFlag(false);
-              }
-              if(mappingModel.isCheckFlag())
-			{
-			 */
+			if(request.getParameter("sfdcId"+i)!=null){
+				mappingModel.setId(request.getParameter("sfdcId"+i));}
+			else
+				mappingModel.setId("");
+			
 			if(request.getParameter("dropdown"+i)!=null){
 				mappingModel.setSfdcFieldTable(request.getParameter("dropdown"+i));}
 			else
@@ -308,25 +282,11 @@ public class HomeController {
 			else
 				mappingModel.setSiebleBaseTableColumn("");
 			mappingModel.setForeignFieldMapping(request.getParameter("foreignFieldMapping"+i));
-			System.out.println("Inside Drop value is"+request.getParameter("dropdown"+i));
 			if(request.getParameter("mappingSfdcId")==null){
 				mappingModel.setMappingSfdcId("");
 			}else{
 				mappingModel.setMappingSfdcId(request.getParameter("mappingSfdcId"));
 			}
-
-
-
-
-
-
-
-
-
-
-
-
-
 			mappingData.add(mappingModel);
 			// }
 		}
@@ -512,7 +472,6 @@ public class HomeController {
 
 
 		if(page.equals("child")){
-			System.out.println("in MY child bliok");
 			SiebelObjectController siObj=new SiebelObjectController();
 			//ArrayList<String> myList=new ArrayList<String>();
 			List<ChildObjectBO> myChildList=siObj.fetchChildObjects(request, primBaseValue);

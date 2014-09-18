@@ -168,9 +168,6 @@ public class PartnerWSDL {
 					projectName = (String) records[i].getField("Name");
 
 				}
-				System.out
-						.println("==========================================================="
-								+ projectName);
 				if (qr.isDone()) {
 					done = true;
 				} else {
@@ -187,7 +184,6 @@ public class PartnerWSDL {
 	}
 
 	public JSONObject getTargetOrgDetails(String projectId) {
-
 		JSONObject connData = new JSONObject();
 
 		try {
@@ -214,7 +210,6 @@ public class PartnerWSDL {
 							.getField("Salesforce_Password__c");
 					String token = (String) records[i]
 							.getField("Salesforce_Token__c");
-					System.out.println("token " + token);
 					String username = (String) records[i]
 							.getField("Salesforce_Username__c");
 					connData.put("password", password);
@@ -223,7 +218,6 @@ public class PartnerWSDL {
 					}
 					connData.put("token", token);
 					connData.put("username", username);
-					System.out.println("connData " + connData);
 				}
 
 				if (qr.isDone()) {
@@ -262,7 +256,6 @@ public class PartnerWSDL {
 					+ "  Project__r.Name='"
 					+ s
 					+ "' and Parent_Table__c = null and Type__c ='Salesforce'";
-			System.out.println(soqlQuery);
 			// String soqlQuery
 			// ="Select id, Object_API_Name__c, Table_Name__c, Type__c from Table__c where Project__c ='"+projectId+"' and Parent_Table__c = null and Type__c ='Salesforce' and Object_API_Name__c='"+seibelBaseTable+"'";
 			// Make the query call and get the query results
@@ -273,17 +266,11 @@ public class PartnerWSDL {
 			while (!done) {
 
 				SObject[] records = qr.getRecords();
-				System.out
-						.println("========================================================="
-								+ records.length);
 				// Process the query results
 				for (int i = 0; i < records.length; i++) {
 					SFDCObjectName = (String) records[i]
 							.getField("Table_Name__c");
 				}
-				System.out
-						.println("========================================================="
-								+ SFDCObjectName);
 				if (qr.isDone()) {
 					done = true;
 				} else {
@@ -316,7 +303,6 @@ public class PartnerWSDL {
 			login();
 			String sessionId = partnerConnection.getSessionHeader()
 					.getSessionId();
-			System.out.println("SessionId is :: " + sessionId);
 			String targetURL = "";
 			if (dataFileUrl == null)
 				targetURL = "https://na11.salesforce.com/services/apexrest/uploadFile/"
@@ -350,13 +336,11 @@ public class PartnerWSDL {
 			byte[] headerBytes1 = (rdr.readLine() + "\n").getBytes("UTF-8");
 			doc2 = new String(headerBytes1, "UTF-8");
 			wr.writeBytes(doc2);
-			System.out.println(">>>out>>>" + doc2);
 			while ((doc2 = rdr.readLine()) != null) {
 				// byte[] headerBytes=null;
 
 				// headerBytes = (rdr.readLine()).getBytes("UTF-8");
 				// doc2 = new String(headerBytes, "UTF-8");
-				System.out.println(">>>>>>" + doc2);
 
 				wr.writeBytes(doc2 + "\n");
 
@@ -364,7 +348,6 @@ public class PartnerWSDL {
 
 			wr.flush();
 			wr.close();
-			System.out.println(connection.getResponseMessage());
 			// Get Response
 			InputStream is = connection.getInputStream();
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is));
@@ -375,7 +358,6 @@ public class PartnerWSDL {
 				response.append('\r');
 			}
 			rd.close();
-			System.out.println("......" + response.toString());
 			return (response.toString().replaceAll("\"", "") != null ? response
 					.toString().replaceAll("\"", "") : response.toString());
 
@@ -447,8 +429,6 @@ public class PartnerWSDL {
 					mapping.setSiebleBaseTable(siebelTableName);
 					mapping.setSiebleBaseTableColumn(siebelTableColumn);
 					mapping.setForeignFieldMapping(siebelTableName);
-					System.out.println("mappingsss " + siebelTableColumn + " "
-							+ sfdcTableColumn);
 					mappingSeq++;
 					loopCount++;
 					mappingData.add(mapping);
@@ -466,14 +446,12 @@ public class PartnerWSDL {
 			partnerConnection.setQueryOptions(250);
 			String soqlQuery1 = " Select  Object_API_Name__c,Id, Project__r.Name, Table_Name__c, Type__c from Table__c where  Project__r.Name='"
 					+ s + "'";
-			System.out.println(soqlQuery1);
 
 			QueryResult qr1 = partnerConnection.query(soqlQuery1);
 			boolean done1 = false;
 
 			int mappingSeq1 = loopCount;
 			while (!done1) {
-				System.out.println("11111");
 				SObject[] records1 = qr1.getRecords();
 				for (int i = 0; i < records1.length; i++) {
 
@@ -482,16 +460,10 @@ public class PartnerWSDL {
 						fieldId.add((String) records1[i].getField("Id"));
 					}
 
-					System.out.println("Object_API_Name__c==============="
-							+ (String) records1[i]
-									.getField("Object_API_Name__c"));
 				}
-				// System.out.println("==="+ SFDCObjectName);
 				if (qr1.isDone()) {
-					System.out.println("33333333");
 					done1 = true;
 				} else {
-					System.out.println("44444");
 					qr1 = partnerConnection.queryMore(qr.getQueryLocator());
 				}
 			}
@@ -630,35 +602,74 @@ public class PartnerWSDL {
 
 		// String [] dataArray = data.toArray(new String[data.size()]);
 		login();
-		SObject[] contacts = new SObject[data.size()];
-		int counter = 0;
+		List<SObject> lstContactUpdate= new ArrayList<SObject>();
+		List<SObject> lstContactInsert= new ArrayList<SObject>();
+		SObject[] contactUpdate = new SObject[data.size()];
+		SObject[] contactInsert = new SObject[data.size()];
 		// data.get(0).getMigrate();
 		for (Iterator<MappingModel> iterator = data.iterator(); iterator
 				.hasNext();) {
 			MappingModel mappingModel = (MappingModel) iterator.next();
-			// if(!(null!=mappingModel.getMappingSfdcId())){
-			SObject contact = new SObject();
-			contact.setType("Field_Mapping_Data_Migration__c");
-			contact.setField("Table_Name__c",
-					mappingModel.getForeignFieldMapping());
-			contact.setField("Field_Target__c",
-					mappingModel.getSfdcFieldTable());
-			contact.setField("Source_Field__c",
-					mappingModel.getSiebleBaseTableColumn());
-			// contact.setField("Project__c",
-			// ((String)session.getAttribute("projectId")));
-			contact.setField("Mapping_Staging_Table__c",
-					mappingModel.getMappingSfdcId());
-
-			contacts[counter] = contact;
-			counter++;
-			// Add this sObject to an array
+			
+			if( mappingModel.getId()==null || mappingModel.getId().equalsIgnoreCase("")){
+				SObject contact = new SObject();
+				contact.setType("Field_Mapping_Data_Migration__c");
+				contact.setField("Table_Name__c",
+						mappingModel.getForeignFieldMapping());
+				contact.setField("Field_Target__c",
+						mappingModel.getSfdcFieldTable());
+				contact.setField("Source_Field__c",
+						mappingModel.getSiebleBaseTableColumn());
+				// contact.setField("Project__c",
+				// ((String)session.getAttribute("projectId")));
+				contact.setField("Mapping_Staging_Table__c",
+						mappingModel.getMappingSfdcId());
+	
+				lstContactInsert.add(contact);
+				// Add this sObject to an array
+			}else{
+				SObject contact = new SObject();
+				contact.setType("Field_Mapping_Data_Migration__c");
+				contact.setField("Id",
+						mappingModel.getId());
+				
+				contact.setField("Table_Name__c",
+						mappingModel.getForeignFieldMapping());
+				contact.setField("Field_Target__c",
+						mappingModel.getSfdcFieldTable());
+				contact.setField("Source_Field__c",
+						mappingModel.getSiebleBaseTableColumn());
+				// contact.setField("Project__c",
+				// ((String)session.getAttribute("projectId")));
+				contact.setField("Mapping_Staging_Table__c",
+						mappingModel.getMappingSfdcId());
+	
+				lstContactUpdate.add(contact);
+	
+			}
 		}
-		SaveResult[] saveResults = getPartnerConnection().create(contacts);
+		
+		if(lstContactInsert.size()>0){
+			contactInsert=lstContactInsert.toArray(new SObject[lstContactInsert.size()]);
+			SaveResult[] saveResults = getPartnerConnection().create(contactInsert);
+			for (int j = 0; j < saveResults.length; j++) {
+				System.out.println(saveResults[j].isSuccess());
+				// System.out.println(saveResults[j].getErrors()[j].getMessage());
+			}
+		}
+		if(lstContactUpdate.size()>0){
+			contactUpdate=lstContactUpdate.toArray(new SObject[lstContactUpdate.size()]);
+			SaveResult[] saveResults = getPartnerConnection().update(contactUpdate);
+			for (int j = 0; j < saveResults.length; j++) {
+				System.out.println(saveResults[j].isSuccess());
+				// System.out.println(saveResults[j].getErrors()[j].getMessage());
+			}
+		}
+		/*SaveResult[] saveResults = getPartnerConnection().create(contacts);
 		for (int j = 0; j < saveResults.length; j++) {
 			System.out.println(saveResults[j].isSuccess());
 			// System.out.println(saveResults[j].getErrors()[j].getMessage());
-		}
+		}*/
 	}
 
 	public JSONObject getRelatedSiebelTable(String subprojectId) {
@@ -940,7 +951,7 @@ public class PartnerWSDL {
 			partnerConnection.setQueryOptions(250);
 			// SOQL query to use
 			// String subprojectId="a0PG000000AtiEAMAZ";
-			String soqlQuery1 = "Select Field_Target__c, Source_Field__c, Table_Name__c from Field_Mapping_Data_Migration__c where Mapping_Staging_Table__c ='"
+			String soqlQuery1 = "Select Id, Field_Target__c, Source_Field__c, Table_Name__c from Field_Mapping_Data_Migration__c where Mapping_Staging_Table__c ='"
 					+ id + "'";
 			// Make the query call and get the query results
 			QueryResult qr1 = partnerConnection.query(soqlQuery1);
@@ -966,11 +977,12 @@ public class PartnerWSDL {
 					// Project__c, Siebel_Object__c, SFDC_Object__c,
 					// Prim_Base_Table__c
 					mappingModel1.setMappingSfdcId(id);
-
+					mappingModel1.setId( (String)contact.getField("Id"));
 					mappingModel1.setSfdcFieldTable(sfdcTableColumn);
 					mappingModel1.setSfdcObjectName(sfdcTablename);
 					mappingModel1.setSiebleBaseTable(siebelTableName);
 					mappingModel1.setSiebleBaseTableColumn(siebelTableColumn);
+					mappingModel1.setMappingSeq(i);
 					// mappingModel.setMappingSeq(mappingSeq1);
 					mappingModel1.setForeignFieldMapping(fieldMapping1);
 					mappingData.add(mappingModel1);
