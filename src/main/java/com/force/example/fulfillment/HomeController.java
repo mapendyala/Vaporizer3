@@ -350,7 +350,7 @@ public class HomeController {
 
 
 
-		
+
 		ArrayList<String> siebelList=new ArrayList<String>();
 		siebelList.add("Account");
 		siebelList.add("Contact");
@@ -436,25 +436,11 @@ public class HomeController {
 
 	@RequestMapping(value="/getextractData", method = RequestMethod.GET)
 	public void createExtractQuery(HttpServletRequest request){
-		System.out.println("In Home controller get extract data method");
+		System.out.println("In controller");
 		HttpSession session = request.getSession(true);
-		String projId  = (String)session.getAttribute("projectId");
 		PartnerWSDL partnerWSDL= new PartnerWSDL();
 		partnerWSDL.login();
-		String sfdcId=request.getParameter("sfdcId");
-		String siebelTableNameValue = request.getParameter("siebelObjName");
-		String subprojectId=partnerWSDL.getsubprojects(siebelTableNameValue);
-		if(sfdcId  != null){
-			
-			partnerWSDL.getextractionData(projId, sfdcId, subprojectId);
-			
-		}else{
-		
-			System.out.println("Child Base and Mapping pages have not been selected");
-
-			//partnerWSDL.getpreDefineMappingRecords(subprojectId, projId);
-		}
-		
+		partnerWSDL.getMappingRecords((String)session.getAttribute("projectId"));
 	}
 
 

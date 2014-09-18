@@ -70,14 +70,21 @@ var primBaseTable;
 								+ "<td><a href='#' onclick='submit("+rowNum+")' style='margin-left:15px;'>Select</a></td>"
 								+ "<td><c:out value='Selected'/></td>"
 								+ "<td>"
-								+ "<input class='btn btn-inverse' type='button' name='Extract' value='E' onclick='extract("+rowNum+")'/>"
+								+ "<input class='btn btn-inverse' type='button' name='Extract' value='E' />"
 								+ "<input class='btn btn-inverse' type='button' name='transform' value='T' style='margin-left:10px;'/>"
 				                + "<input class='btn btn-inverse' type='button' name='delete' value='-' style='margin-left:10px;'/>"
 				                + "</td>"
 				                + "</tr>");
 		
 	}
+function callMapping(rowNum){
 	
+	var threshold=$("#"+ "thresh"+(rowNum)).val();
+	var primBase=$("#"+ "prim"+(rowNum)).val();
+	var siebelTableName = $("#objectName"+(rowNum)).val();
+	window.location.href="/mapping?threshold="+threshold+"&primBaseName="+primBase+"&siebelTableName="+siebelTableName;
+	
+}
 	function populateObjectName(id, primId){
 	var s =$('input[name=selectedObject]:radio:checked').val();
 	var value = s.split("+");
@@ -350,66 +357,6 @@ var primBaseTable;
 		
 	}
 	
-	function getSFDCObjectName()
-	{
-		var objName = $("#SFDCObjName").val();
-		if(document.getElementById("dyncTblCntntSFDC"))
-			{
-			var noOfChilds = $("#dyncTblCntntSFDC").children().length;
-		if(noOfChilds > 1){
-			$("#dyncTblCntntSFDC").children().remove();
-		}
-			}
-		$("#objSFDC").append("<div id='dyncLoaderSFDC' style='text-align:center;margin-top:70px;'><img src='resources/images/ajax-loader.gif'/></div>");
-		  $.ajax({
-			type : "GET",
-			url : "SFDCObjectList",
-			data : {objectName:objName},
-		 	success : function(data){
-		 	
-					displaySFDCObjTable(data);
-				}  
-			});   
-	}
-	
-	function displaySFDCObjTable(data)
-	{
-		$("#dyncLoaderSFDC").remove();
-		if(data.length!=0)
-			{
-			
-			if(document.getElementById("dyncTblCntntSFDC"))
-			{
-				var noOfChilds = $("#dyncTblCntntSFDC").children().length;
-				if(noOfChilds > 1){
-					$("#dyncTblCntntSFDC").children().remove();
-				}
-					for(var i=0 ; i<data.length ;i++ ){
-						var tblName = data[i];						
-						$("#dyncTblCntntSFDC").append("<input type='radio' name='selectedObject' value='"+tblName.objName+"'><span>"+tblName.objName+"</span><br/>");
-											
-					}
-				
-				}
-			
-			else{
-				$("#objSFDC").append("<br/>");
-				$("#objSFDC").append("<div id='dyncTblCntntSFDC'>");
-				for(var i=0 ; i<data.length ;i++ ){
-					var tblName = data[i];					
-					$("#dyncTblCntntSFDC").append("<input type='radio' name='selectedObject' value='"+tblName.objName+"'><span>"+tblName.objName+"</span><br/>");
-				}
-				$("#objSFDC").append("</div>");
-			}
-			}
-		else
-			{
-			alert("No Object Found");
-			}
-		
-		
-	}
-	
 	
 	function displaySblObjTable(data){
 		if(document.getElementById("dyncTblCntnt")){
@@ -444,14 +391,11 @@ var primBaseTable;
 		
 	}
 	
-	function extract(rowNum){
+	function extract(){
 		alert("inside extract");
-		var sfdcId = $("#SfdcId"+(rowNum)).val();
-		var siebelObjName = $("#objectName" +(rowNum)).val();
 		 $.ajax({
 				type : "GET",
-				url : "getextractData",
-				data : {sfdcId:sfdcId, siebelObjName:siebelObjName}
+				url : "getextractData"
 				});   
 	}
 		
@@ -501,7 +445,7 @@ var primBaseTable;
 				    <th class="table_header_details" style="float: center;">Mapping</th>
 				    <th class="table_header_details" style="float: center;">Status</th>
 				    <th class="table_header_details" style="float: center;">Add Ons</th>
-				    <th hidden="true" class="table_header_details" style="float: center;">ID</th>
+				     <th hidden="true" class="table_header_details" style="float: center;">ID</th>
 				  </tr>
 				 </thead> 
 				<tbody>
@@ -525,11 +469,11 @@ var primBaseTable;
 								<td><input value="${mainPage.primBaseTable}" id="prim${mainPage.sequence}" name="prim${mainPage.sequence}" readonly style='margin-left:35px;'/></td>
 								<td><input type='text' id="thresh${mainPage.sequence}" name="thresh${mainPage.sequence}" value="${mainPage.threshold}" onchange='makeReadonly(${mainPage.sequence})' style='margin-left:15px;'></td>
 								<td><a href="#" onclick='submitForm(${mainPage.sequence})' style='margin-left:15px;'>Select</a></td>
-								<td><input name="SFDCObjName${mainPage.sequence}" id="SFDCObjName${mainPage.sequence}" value="${mainPage.sfdcObject}" readonly style='margin-left:35px;'/><button type='button' style='display: inline;'><span class='glyphicon glyphicon-search'></span></button></td>
+								<td><input  readonly style='margin-left:35px;'/><button type='button' style='display: inline;'><span class='glyphicon glyphicon-search'></span></button></td>
 								<td><a href='#' onclick='submit(${mainPage.sequence})' style='margin-left:15px;'>Select</a></td>
 								<td><c:out value='Selected'/></td>
 								<td>
-								<input class='btn btn-inverse' type='button' name='Extract' value='E' onclick="extract(${mainPage.sequence})" />
+								<input class='btn btn-inverse' type='button' name='Extract' value='E' onclick="extract()" />
 								<input class='btn btn-inverse' type='button' name='transform' value='T' style='margin-left:5px;'/>
 				                <input class='btn btn-inverse' type='button' name='delete' value='-' style='margin-left:5px;'/>
 				                </td>
