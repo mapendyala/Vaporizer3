@@ -3,11 +3,13 @@
  */
 package com.force.example.fulfillment.order.model;
 
+import java.util.Comparator;
+
 /**
  * @author mapendyala
  *
  */
-public class MainPage {
+public class MainPage implements Comparable<MainPage> {
 
 	private String migrate;
 	private String sequence;
@@ -94,6 +96,25 @@ public class MainPage {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public static final Comparator<MainPage> SequenceComparator= new Comparator<MainPage>() {
+		@Override
+		public int compare(MainPage  mainPage1, MainPage  mainPage2)
+		{
+			
+			if(mainPage1.getSequence()!=null && mainPage2.getSequence()!=null){
+				return  mainPage1.compareTo(mainPage2);
+			}
+			
+			
+			return 0;
+		}
+	};
+
+	@Override
+	public int compareTo(MainPage o) {
+		// TODO Auto-generated method stub
+		return Integer.valueOf(this.sequence)-Integer.valueOf(o.sequence);
 	}
 	
 }

@@ -31,11 +31,24 @@
 <!-- Latest compiled and minified JavaScript -->
 <script
 	src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+
+						$("#cancel").click(function() {
+							
+							window.location.href = "Done";
+						});
+					
+					
+</script>
+
 <title>Vaporizer</title>
 </head>
 <body>
+<form:form method="post" action="childSave" modelAttribute="data">
 	<div class="container">
 		
+		<%-- <form:form method="post" action="childSave" modelAttribute="data"> --%>
 		<div class="mainContent">
 			<div class="credential_container">
 				<div>
@@ -55,8 +68,6 @@
 									<td class="oddTd">Primary Table</td>
 									<td>S_ORG_EXT</td>
 								</tr>
-								
-
 							</table>
 						</div>
 					</div>
@@ -64,7 +75,7 @@
 				</div>
 			</div> <!-- //end of credential -->
 			
-			<form:form method="post" action="childSave" modelAttribute="data">
+			
 			<div class="mappingContainer" style="height: 500px;width:100%;">
 				<table class="table" style="margin:0px !important;">
 					<tr>
@@ -94,7 +105,19 @@
 
 <c:forEach items="${myChildList}" var="childItem">
 	<tr>
-	<td><input type="checkbox" name="checkFlag${childItem.seqNum}" id="checkFlag${childItem.seqNum}"/></td>
+	
+	 <td>
+								<c:choose>
+								<c:when test="${childItem.checkFlag == 'true'}">
+								<input name="checkFlag${childItem.seqNum}" id="checkFlag${childItem.seqNum}"  type='checkbox' checked="checked">
+								</c:when>
+								<c:otherwise>
+								<input name="checkFlag${childItem.seqNum}" id="checkFlag${childItem.seqNum}"  type='checkbox'>
+								</c:otherwise>
+								</c:choose>
+								</td>
+								
+	<%-- <td><input type="checkbox" name="checkFlag${childItem.seqNum}" id="checkFlag${childItem.seqNum}" value="${childItem.checkFlag}"/></td> --%>
 	
 	<td><input value="${childItem.seqNum}" id="sequenceNum${childItem.seqNum}" name="sequenceNum${childItem.seqNum}" readonly style='margin-left:45px;'/></td>	
 	
@@ -114,39 +137,38 @@
 				<div></div>
 				<div></div>
 				
-				<div class="buttonContainer">
+				
+			
+		</div> <!-- //end of main content -->
+		
+		</div>
+		<div class="buttonContainer">
 				<table style="border: 0">
 				
 					<tr>
 						<td colspan="2"
 							style="float: right; width:350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
 							
+							<input class="btn btn-block btn-inverse" type="submit" id="cancel"
+							name="Done" value="Done"  />
+						<!-- 	
 							<button id="cancel" type="submit" style="float: right;"
-						class="btn btn-block btn-inverse">Done</button>
+						class="btn btn-block btn-inverse">Done</button> -->
 							
 						</td>
 					</tr>
 					
+					<!-- <tr>
+						<td colspan="2"
+							style="float: right; width:350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
+							<input class="btn btn-block btn-inverse" type="submit"
+							name="Extract" value="Done"  /> -->
 				</table>
 			
 			</div> <!-- //end of button containr -->
-			</form:form>
-		</div>
-			</div>
-			
+		</form:form>
 		
-
-
-
-	<script type="text/javascript">
-
-						$("#cancel").click(function() {
-							
-							window.location.href = "Done";
-						});
-					
-					
-</script>
-	
+			<!-- </div> -->
+			
 </body>
 </html>

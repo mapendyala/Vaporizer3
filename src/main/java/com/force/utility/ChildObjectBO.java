@@ -8,6 +8,15 @@ public class ChildObjectBO {
 	private String joinCondition;
 	
 	
+private boolean  checkFlag;
+	
+	public boolean isCheckFlag() {
+		return checkFlag;
+	}
+	public void setCheckFlag(boolean checkFlag) {
+		this.checkFlag = checkFlag;
+	}
+	
 	
 	
 	/**

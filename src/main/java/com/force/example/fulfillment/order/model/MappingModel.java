@@ -4,14 +4,30 @@ public class MappingModel {
 	public String siebleBaseTable;
 	public String siebleBaseTableColumn;
 	public String sfdcObjectName;
+	public String mappingSfdcId;
+	public String foreignFieldMapping;
+	public String sfdcFieldTable;
+	public int mappingSeq;
+	public boolean checkFlag ;
+	public boolean isCheckFlag() {
+		return checkFlag;
+	}
+	public void setCheckFlag(boolean checkFlag) {
+		this.checkFlag = checkFlag;
+	}
 	public int getMappingSeq() {
 		return mappingSeq;
 	}
 	public void setMappingSeq(int mappingSeq) {
 		this.mappingSeq = mappingSeq;
 	}
-	public String sfdcFieldTable;
-	public int mappingSeq;
+	public String getForeignFieldMapping() {
+		return foreignFieldMapping;
+	}
+	public void setForeignFieldMapping(String foreignFieldMapping) {
+		this.foreignFieldMapping = foreignFieldMapping;
+	}
+	
 	public String getSiebleBaseTable() {
 		return siebleBaseTable;
 	}
@@ -35,6 +51,12 @@ public class MappingModel {
 	}
 	public void setSfdcFieldTable(String sfdcFieldTable) {
 		this.sfdcFieldTable = sfdcFieldTable;
+	}
+	public String getMappingSfdcId() {
+		return mappingSfdcId;
+	}
+	public void setMappingSfdcId(String mappingSfdcId) {
+		this.mappingSfdcId = mappingSfdcId;
 	}
 
 }
