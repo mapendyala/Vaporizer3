@@ -1,7 +1,7 @@
 .body
 {
 	font-family:verdana;
-	overflow: hidden !important;
+	overflow-y: hidden !important;
 }
 /* created by piyush */
 .table {
