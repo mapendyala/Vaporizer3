@@ -1326,8 +1326,7 @@ public class PartnerWSDL {
 		System.out.println("in WSDL save child method");
 		int i = 1;
 		for (ChildObjectBO childObj : data) {
-
-			if (childObj.isCheckFlag()) {
+			/*if (childObj.isCheckFlag()) {
 				System.out.println("in saving for loop" + i);
 				SObject contact = new SObject();
 				contact.setType("Child_Base__c");
@@ -1346,14 +1345,57 @@ public class PartnerWSDL {
 			} else {
 				System.out.println("in not save false block" + i);
 			}
-			i++;
+			i++;*/
+			
+			
+				System.out.println("in saving for loop" + i);
+				SObject contact = new SObject();
+				contact.setType("Child_Base__c");
+				contact.setField("Primary_Table__c", childObj.getBaseObjName());
+				contact.setField("Project__c",
+						((String) session.getAttribute("projectId")));
+				contact.setField("Child_Table__c", childObj.getChildObjName());
+				contact.setField("Join_Condition__c",
+						childObj.getJoinCondition());
+				contact.setField("Saved__c ", childObj.isCheckFlag());
 
-		}
-		SaveResult[] saveResults = getPartnerConnection().create(contacts);
-		System.out.println("save results length is" + saveResults.length);
-		for (int j = 0; j < saveResults.length; j++) {
-			System.out.println(saveResults[j].isSuccess());
-			// System.out.println(saveResults[j].getErrors()[j].getMessage());
+				// System.out.println("child Saved value is"+
+				// contact.getField("Child_Table__c"));
+				contacts[counter] = contact;
+				counter++;
+			
+
+		} //end of for loop
+//here I save it
+		if(contacts.length >= 199)
+		{
+			System.out.println("more dan 199 TRANSACTION");
+			  List<SObject>  tmpList=new ArrayList();
+	          for(int k=0;k<contacts.length;k++){
+	        	 System.out.println("in contact block");
+	             tmpList.add(contacts[k]);
+	               		if(k==199){	
+	               			System.out.println("in save block DML");
+			SaveResult[] saveResults = getPartnerConnection().create(tmpList.toArray(new SObject[tmpList.size()]));
+			
+			for (int j = 0; j < saveResults.length; j++) {
+				System.out.println(saveResults[j].isSuccess());
+				// System.out.println(saveResults[j].getErrors()[j].getMessage());
+			}
+	        tmpList=new ArrayList();
+
+	               		}
+	} //end of for
+
+		} //end of IF
+		else
+		{
+			System.out.println("Less Transaction block");
+			SaveResult[] saveResults = getPartnerConnection().create(contacts);
+			for (int j = 0; j < saveResults.length; j++) {
+				System.out.println(saveResults[j].isSuccess());
+				// System.out.println(saveResults[j].getErrors()[j].getMessage());
+			}
 		}
 	}
 
@@ -1447,7 +1489,7 @@ public class PartnerWSDL {
 			System.out.println("in catch block");
 			ce.printStackTrace();
 		}
-		System.out.println("\n Child Saved Data Query execution completed.");
+		/*System.out.println("\n Child Saved Data Query execution completed.");*/
 		return childData;
 	}
 

@@ -473,16 +473,29 @@ public class HomeController {
 
 		if(page.equals("child")){
 			SiebelObjectController siObj=new SiebelObjectController();
-			//ArrayList<String> myList=new ArrayList<String>();
+			
 			List<ChildObjectBO> myChildList=siObj.fetchChildObjects(request, primBaseValue);
-			if(myChildList!=null)
+			/*if(myChildList!=null)
 			{
 				System.out.println("mychild list is"+myChildList.size());
 			}
-			modelChild.addAttribute("myChildList",myChildList);
-
-
-			return new ModelAndView("ChildBase" , "data", data);
+			modelChild.addAttribute("myChildList",myChildList);*/
+			List<ChildObjectBO> childSavedList=new ArrayList<ChildObjectBO>();
+			childSavedList=	partnerWSDL.getSavedChildDBData((String)session.getAttribute("projectId"), primBaseValue);
+			
+			if(childSavedList!=null && childSavedList.size()!=0)
+			{
+				System.out.println("CHild Saved  list size is"+childSavedList.size());
+				modelChild.addAttribute("myChildList",childSavedList);
+			}
+			else if(myChildList!=null && myChildList.size()!=0)
+			{
+				System.out.println("Siebel BLOCK child list is"+myChildList.size());
+				modelChild.addAttribute("myChildList",myChildList);
+				
+			}
+	
+				return new ModelAndView("ChildBase" , "data", data);
 		}
 
 
