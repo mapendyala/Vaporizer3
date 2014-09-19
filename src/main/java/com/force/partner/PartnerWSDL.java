@@ -1419,9 +1419,7 @@ public class PartnerWSDL {
 			// Make the query call and get the query results
 			QueryResult qryResult = partnerConnection.query(soqlQuery);
 			boolean done = false;
-
 			int loopCount = 0;
-
 			// Loop through the batches of returned results
 			childData.clear();
 			int counter = 1;
@@ -1534,7 +1532,7 @@ public class PartnerWSDL {
 					+ projectId
 					+ "' and Primary_Table__c='"
 					+ siebelTableName
-					+ "'";
+					+ "' and Saved__c='true'";
 			// Make the query call and get the query results
 			QueryResult qr = partnerConnection.query(soqlQuery);
 			boolean done = false;
