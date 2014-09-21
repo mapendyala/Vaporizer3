@@ -497,7 +497,7 @@ public class PartnerWSDL {
 					// Process the query results
 					for (int i = 0; i < records2.length; i++) {
 
-						mappingSeq1++;
+						
 						System.out.println("inside for loop ---------   " + i);
 						MappingModel mapping = new MappingModel();
 						SObject contact = records2[i];
@@ -517,16 +517,19 @@ public class PartnerWSDL {
 										+ sfdcTableColumn
 										+ "-----------Source_Base_Table__r.Object_API_Name__c "
 										+ fieldMapping1);
-						mapping.setSfdcFieldTable(sfdcTableColumn);
-						mapping.setSfdcObjectName(sfdcTablename);
-						mapping.setSiebleBaseTable(fieldMapping1);
-						mapping.setSiebleBaseTableColumn(siebelTableColumn);
-
-						mapping.setMappingSeq(mappingSeq1);
-						mapping.setForeignFieldMapping(fieldMapping1);
-						System.out.println("mappingsss " + siebelTableColumn
-								+ " " + sfdcTableColumn);
-						mappingData.add(mapping);
+						if(siebelTableName.equalsIgnoreCase(fieldMapping1)){
+							mapping.setSfdcFieldTable(sfdcTableColumn);
+							mapping.setSfdcObjectName(sfdcTablename);
+							mapping.setSiebleBaseTable(fieldMapping1);
+							mapping.setSiebleBaseTableColumn(siebelTableColumn);
+	
+							mapping.setMappingSeq(mappingSeq1);
+							mapping.setForeignFieldMapping(fieldMapping1);
+							System.out.println("mappingsss " + siebelTableColumn
+									+ " " + sfdcTableColumn);
+							mappingSeq1++;
+							mappingData.add(mapping);
+						}
 					}
 					if (qr2.isDone()) {
 						done2 = true;
@@ -1378,10 +1381,7 @@ public class PartnerWSDL {
 	               			System.out.println("in save block DML");
 			SaveResult[] saveResults = getPartnerConnection().create(tmpList.toArray(new SObject[tmpList.size()]));
 			
-			for (int j = 0; j < saveResults.length; j++) {
-				System.out.println(saveResults[j].isSuccess());
-				// System.out.println(saveResults[j].getErrors()[j].getMessage());
-			}
+			
 	        tmpList=new ArrayList();
 
 	               		}
@@ -1532,7 +1532,7 @@ public class PartnerWSDL {
 					+ projectId
 					+ "' and Primary_Table__c='"
 					+ siebelTableName
-					+ "' and Saved__c='true'";
+					+ "' and Saved__c=true";
 			// Make the query call and get the query results
 			QueryResult qr = partnerConnection.query(soqlQuery);
 			boolean done = false;
@@ -1544,7 +1544,7 @@ public class PartnerWSDL {
 				for (int i = 0; i < records.length; i++) {
 					SObject contact = records[i];
 
-					child.add((String) contact.getField("Source_Field__c"));
+					child.add((String) contact.getField("Child_Table__c"));
 				}
 
 				if (qr.isDone()) {

@@ -1,27 +1,19 @@
 package com.force.example.fulfillment;
 
-import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,21 +24,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.force.api.http.HttpRequest;
 import com.force.example.fulfillment.order.controller.SiebelObjectController;
-import com.force.example.fulfillment.order.controller.ThresholdController;
 import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.MappingModel;
 import com.force.partner.PartnerWSDL;
-import com.force.partner.TargetPartner;
 import com.force.utility.ChildObjectBO;
 import com.force.utility.SfdcObjectBO;
-import com.force.utility.SiebelObjectBO;
-import com.force.utility.UtilityClass;
 import com.sforce.async.AsyncApiException;
 import com.sforce.ws.ConnectionException;
-
-import javax.servlet.http.HttpSession;
 
 
 /**
@@ -87,7 +72,9 @@ public class HomeController {
 		partnerWSDL.login();
 		System.out.println("here");
 		HttpSession session = request.getSession(true);
-		String projectId="a0PG000000B2wmDMAR";
+		//String projectId="a0PG000000B2wmDMAR";
+		String projectId="a0PG000000B3Q7R";
+		//String projectId="a0PG000000B3OFn";
 		session.setAttribute("projectId", projectId);
 		data = partnerWSDL.getSavedDBData(projectId, data);
 		System.out.println("data "+data);
@@ -105,15 +92,8 @@ public class HomeController {
 	@ResponseBody
 	public String initiateDataLoader(Locale locale,Model model,HttpServletRequest request,@RequestParam("datafileUrl")String datafileUrl) throws IOException, AsyncApiException, ConnectionException
 	{
-
-
-
 		PartnerWSDL partnerWSDL= new PartnerWSDL(); 	  
-
-
 		partnerWSDL.login();
-
-
 		HttpSession session = request.getSession(true);
 		JSONObject connData=partnerWSDL.getTargetOrgDetails((String) session.getAttribute("projectId"));
 		String password=(String)connData.get("password");
@@ -123,18 +103,8 @@ public class HomeController {
 		datafileUrl="https://"+strList[0]+".salesforce.com/"+strList[1];
 		com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
 		String objectName="Account";
-
-
-
 		return dt.dataUploadController(datafileUrl,username,password+token,objectName);
-
-
-
 		// TODO Auto-generated catch block
-
-
-
-
 	}
 
 	/**
