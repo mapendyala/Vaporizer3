@@ -997,7 +997,7 @@ public class PartnerWSDL {
 	 * @param ProjectId
 	 */
 
-	public void ExtractDataFromSiebel(String query, String ProjectId) {
+	public void ExtractDataFromSiebel(String query,Map sfdcMapping,Map siebelNames, String ProjectId) {
 
 		File file = null;
 		File mappingFile = null;
@@ -1035,7 +1035,7 @@ public class PartnerWSDL {
 				while (mySet.next()) {
 
 					ResultSetMetaData rsmd = mySet.getMetaData();
-					createCSV(mySet, rsmd, file, mappingFile);
+					createCSV(mySet,sfdcMapping, siebelNames,rsmd, file, mappingFile);
 
 				}
 
@@ -1045,11 +1045,11 @@ public class PartnerWSDL {
 
 			if (ProjectId == null)
 				ProjectId = "a0PG000000Atg1U";
-			String mappingFileURL = getFile(file, "testFile1.csv",
-					"application/vnd.ms-excel", ProjectId, null);
-			String SDlFileURl = getFile(mappingFile, "testFile1.csv",
-					"application/vnd.ms-excel", ProjectId, mappingFileURL);
-			System.out.println("filr path : " + mappingFileURL);
+            String mappingFileURL=  new PartnerWSDL().getFile(file, "15SepDemoFile.csv", "application/vnd.ms-excel", ProjectId, null);
+            String SDlFileURl= new PartnerWSDL().getFile(mappingFile, "15SepDemoMappingFile.sdl", "application/vnd.ms-excel", ProjectId, mappingFileURL);
+	        System.out.println("filr path : " +mappingFileURL+":::::::"+SDlFileURl);
+	        com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
+	        dt.dataUploadController(mappingFileURL,"subhchakraborty@deloitte.com.vaporizer","Sep@2013","Account");
 
 		} catch (Exception e) {
 			System.out.println(e);
@@ -1087,26 +1087,32 @@ public class PartnerWSDL {
 	/**
 	 * @author piymishra
 	 * @param mySet
+	 * @param siebelNames 
+	 * @param sfdcMapping 
 	 * @param rsmd
 	 * @param file
 	 * @param mappingFile
 	 * @return
 	 */
-	public static File createCSV(ResultSet mySet, ResultSetMetaData rsmd,
+	public static File createCSV(ResultSet mySet, Map<String,String> sfdcMapping, Map<String,String> siebelNames, ResultSetMetaData rsmd,
 			File file, File mappingFile) {
 		try {
 
 			FileWriter writer = new FileWriter(file);
 			FileWriter writerMapping = new FileWriter(mappingFile);
-			for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-
-				writerMapping.append(rsmd.getColumnName(i));
-				writer.append(rsmd.getColumnName(i).split("=")[0]);
-				if (i >= 1 && i != rsmd.getColumnCount()) {
+			for (int i = 1; i <= sfdcMapping.size(); i++) {
+				
+				//siebelFieldMap.put("siebelFieldKey"+i, siebelField);
+				//sfdcFieldMap.put("sfdcFieldKey"+i, salesForceField);
+				
+				
+				writerMapping.append(siebelNames.get("siebelFieldKey"+i)+" = "+"sfdcFieldKey"+i);
+				writer.append((CharSequence) siebelNames.get("siebelFieldKey"+i));
+				if (i >= 1 && i != sfdcMapping.size()) {
 					writerMapping.append("\n");
 					writer.append(",");
 				}
-				if (i == rsmd.getColumnCount()) {
+				if (i == sfdcMapping.size()) {
 					writerMapping.append('\n');
 					writer.append('\n');
 				}
@@ -1263,7 +1269,7 @@ public class PartnerWSDL {
 								System.out.println(query);
 						}
 					
-
+					ExtractDataFromSiebel(query, sfdcFieldMap, siebelFieldMap, projectId);
 					
 					}
 				 catch (ConnectionException ce) {
