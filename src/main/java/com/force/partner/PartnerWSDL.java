@@ -1012,66 +1012,67 @@ public class PartnerWSDL {
 	 * @param ProjectId
 	 */
 
-	public void ExtractDataFromSiebel(String query, String ProjectId) {
+	public void ExtractDataFromSiebel(String query,Map sfdcMapping,Map siebelNames, String ProjectId) {
 
-		File file = null;
-		File mappingFile = null;
-		Connection connection = null;
-		;
-		try {
-			connection = UtilityClass.getSiebelConnection();
-		} catch (SQLException e1) {
+        File file = null;
+        File mappingFile = null;
+        Connection connection = null;
+        ;
+        try {
+             connection = UtilityClass.getSiebelConnection();
+        } catch (SQLException e1) {
 
-			e1.printStackTrace();
-		}
-		try {
+             e1.printStackTrace();
+        }
+        try {
 
-			if (connection != null) {
+             if (connection != null) {
 
-				if (query == null) {
-					query = "SELECT ACC.NAME AS \"Name = Name\", ACC.LOC AS \"Location = BillingCity\", ADDR.ADDR AS \"Address1 = BillingStreet\""
-							+ " FROM SIEBEL.S_ORG_EXT ACC"
-							+ " INNER JOIN SIEBEL.S_ADDR_PER ADDR ON ADDR.ROW_ID = ACC.PR_ADDR_ID";
-				}
-				System.out.println(query);
-				List<Object> myList = new ArrayList<Object>();
-				Statement st = connection.createStatement();
-				ResultSet mySet = st.executeQuery(query);
-				String sFileName = "tryAndTest";
-				if (mySet.next()) {
+                  if (query == null) {
+                        query = "SELECT ACC.NAME AS \"Name = Name\", ACC.LOC AS \"Location = BillingCity\", ADDR.ADDR AS \"Address1 = BillingStreet\""
+                                  + " FROM SIEBEL.S_ORG_EXT ACC"
+                                  + " INNER JOIN SIEBEL.S_ADDR_PER ADDR ON ADDR.ROW_ID = ACC.PR_ADDR_ID";
+                  }
+                  System.out.println(query);
+                  List<Object> myList = new ArrayList<Object>();
+                  Statement st = connection.createStatement();
+                  ResultSet mySet = st.executeQuery(query);
+                  String sFileName = "tryAndTest";
+                  if (mySet.next()) {
 
-					file = new File(sFileName + ".csv");
-					mappingFile = new File(sFileName + ".sdl");
+                        file = new File(sFileName + ".csv");
+                        mappingFile = new File(sFileName + ".sdl");
 
-					createFile(file);
-					createFile(mappingFile);
-				}
+                        createFile(file);
+                        createFile(mappingFile);
+                  }
 
-				while (mySet.next()) {
+                  while (mySet.next()) {
 
-					ResultSetMetaData rsmd = mySet.getMetaData();
-					createCSV(mySet, rsmd, file, mappingFile);
+                        ResultSetMetaData rsmd = mySet.getMetaData();
+                        createCSV(mySet,sfdcMapping, siebelNames,rsmd, file, mappingFile);
 
-				}
+                  }
 
-			} else {
-				System.out.println("Failed to make connection!");
-			}
+             } else {
+                  System.out.println("Failed to make connection!");
+             }
 
-			if (ProjectId == null)
-				ProjectId = "a0PG000000Atg1U";
-			String mappingFileURL = getFile(file, "testFile1.csv",
-					"application/vnd.ms-excel", ProjectId, null);
-			String SDlFileURl = getFile(mappingFile, "testFile1.csv",
-					"application/vnd.ms-excel", ProjectId, mappingFileURL);
-			System.out.println("filr path : " + mappingFileURL);
+             if (ProjectId == null)
+                  ProjectId = "a0PG000000Atg1U";
+         String mappingFileURL=  new PartnerWSDL().getFile(file, "19SepDemoFile.csv", "application/vnd.ms-excel", ProjectId, null);
+         String SDlFileURl= new PartnerWSDL().getFile(mappingFile, "195SepDemoMappingFile.sdl", "application/vnd.ms-excel", ProjectId, mappingFileURL);
+          System.out.println("filr path : " +mappingFileURL+":::::::"+SDlFileURl);
+          com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
+          dt.dataUploadController(mappingFileURL,"subhchakraborty@deloitte.com.vaporizer","Sep@2013","Account");
 
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		// return file;
+        } catch (Exception e) {
+             System.out.println(e);
+        }
+        // return file;
 
-	}
+  }
+
 
 	/**
 	 * @author piymishra
@@ -1107,54 +1108,65 @@ public class PartnerWSDL {
 	 * @param mappingFile
 	 * @return
 	 */
-	public static File createCSV(ResultSet mySet, ResultSetMetaData rsmd,
-			File file, File mappingFile) {
-		try {
+	public static File createCSV(ResultSet mySet, Map<String,String> sfdcMapping, Map<String,String> siebelNames, ResultSetMetaData rsmd,
+            File file, File mappingFile) {
+       try {
 
-			FileWriter writer = new FileWriter(file);
-			FileWriter writerMapping = new FileWriter(mappingFile);
-			for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+            FileWriter writer = new FileWriter(file);
+            FileWriter writerMapping = new FileWriter(mappingFile);
+            for (int i = 1; i <= sfdcMapping.size(); i++) {
+                 
+                 
+                 
+                 
+                 writerMapping.append(siebelNames.get("siebelFieldKey"+i)+" = "+"sfdcFieldKey"+i);
+                 writer.append((CharSequence) siebelNames.get("siebelFieldKey"+i));
+                 if (i >= 1 && i != sfdcMapping.size()) {
+                       writerMapping.append("\n");
+                       writer.append(",");
+                 }
+                 if (i == sfdcMapping.size()) {
+                       writerMapping.append('\n');
+                       writer.append('\n');
+                 }
+            }
 
-				writerMapping.append(rsmd.getColumnName(i));
-				writer.append(rsmd.getColumnName(i).split("=")[0]);
-				if (i >= 1 && i != rsmd.getColumnCount()) {
-					writerMapping.append("\n");
-					writer.append(",");
-				}
-				if (i == rsmd.getColumnCount()) {
-					writerMapping.append('\n');
-					writer.append('\n');
-				}
-			}
+            for (int i = 1; i <= rsmd.getColumnCount(); i++) {
 
-			for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                 int type = rsmd.getColumnType(i);
+                 System.out.println(type + "Types -"+ (type == Types.DATE) + Types.DOUBLE);
+                 if (type == Types.VARCHAR || type == Types.CHAR) {
+                       writer.append(mySet.getString(i));
+                 } else if(type == Types.TIMESTAMP){
+                	 writer.append(mySet.getTimestamp(i).toString());
+                 }else if(type == Types.DATE){
+                	 writer.append(mySet.getDate(i).toString());
+                 }else{
+                       writer.append((char) mySet.getDouble(i));
+                	// writer.append((char) mySet.getInt(i));
+                	// writer.append((String) mySet.getString(i));
+                 }
+                 if (i >= 1 && i != rsmd.getColumnCount()) {
+                       writer.append(",");
+                 }
 
-				int type = rsmd.getColumnType(i);
-				if (type == Types.VARCHAR || type == Types.CHAR) {
-					writer.append(mySet.getString(i));
-				} else {
-					writer.append((char) mySet.getLong(i));
-				}
-				if (i >= 1 && i != rsmd.getColumnCount()) {
-					writer.append(",");
-				}
+                 if (i == rsmd.getColumnCount())
+                       writer.append('\n');
 
-				if (i == rsmd.getColumnCount())
-					writer.append('\n');
+            }
+            writerMapping.flush();
+            writerMapping.close();
 
-			}
-			writerMapping.flush();
-			writerMapping.close();
+            writer.flush();
+            writer.close();
+            return file;
+       } catch (Exception e) {
+            e.printStackTrace();
+       }
+       return file;
 
-			writer.flush();
-			writer.close();
-			return file;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return file;
+ }
 
-	}
 
 	/**
 	 * @author piymishra
@@ -1257,7 +1269,7 @@ public class PartnerWSDL {
 											siebelFieldMap.put("siebelFieldKey"+i, siebelField);
 											sfdcFieldMap.put("sfdcFieldKey"+i, salesForceField);
 											//selectTables = selectTables+" "+ siebelBaseTable+"."+siebelField +" "+"as"+ " "+"\""+	siebelField+"="+salesForceField+"\""+",";									
-											selectTables = selectTables+" "+ "mainTableAlias"+"."+siebelField+",";
+											selectTables = selectTables+" "+ "childTableAlias"+childTableCounter+"."+siebelField+",";
 										}
 										childTableCounter++;
 										
@@ -1285,7 +1297,7 @@ public class PartnerWSDL {
 					ce.printStackTrace();
 				} 
 				System.out.println("\nQuery execution completed.");
-			//	ExtractDataFromSiebel(query, projectId);
+				ExtractDataFromSiebel(query, sfdcFieldMap, siebelFieldMap, projectId);
 		}
 		
 
