@@ -363,7 +363,8 @@ public class HomeController {
 		return new ModelAndView("vaporizer" , "data", data);
 
 	}
-
+	
+	
 	@RequestMapping(value="/getextractData", method = RequestMethod.GET)
 	public void createExtractQuery(HttpServletRequest request){
 		System.out.println("In Home controller get extract data method");
