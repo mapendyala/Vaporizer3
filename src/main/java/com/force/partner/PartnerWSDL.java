@@ -799,7 +799,6 @@ public class PartnerWSDL {
 
 	public List<MainPage> getSavedDBData(String projectId, List<MainPage> data) {
 		try {
-			partnerConnection.setQueryOptions(250);
 			// SOQL query to use
 			String soqlQuery = "Select Id, Migrate__c, Sequence__c, Prim_Base_Table__c, Project__c, SFDC_Object__c, Siebel_Object__c, Threshold__c from Mapping_Staging_Table__c where Project__c ='"
 					+ projectId + "'";

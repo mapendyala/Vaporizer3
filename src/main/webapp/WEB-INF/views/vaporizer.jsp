@@ -71,8 +71,8 @@ var primBaseTable;
 								+ "<td><c:out value='Selected'/></td>"
 								+ "<td>"
 								+ "<input class='btn btn-inverse' type='button' name='Extract' value='E' onclick='extract("+rowNum+")'/>"
-								+ "<input class='btn btn-inverse' type='button' name='transform' value='T' style='margin-left:10px;'/>"
-				                + "<input class='btn btn-inverse' type='button' name='delete' value='-' style='margin-left:10px;'/>"
+								/* + "<input class='btn btn-inverse' type='button' name='transform' value='T' hidden = 'true' style='margin-left:10px;'/>"
+				                + "<input class='btn btn-inverse' type='button' name='delete' value='-' hidden = 'true' style='margin-left:10px;'/>" */
 				                + "</td>"
 				                + "</tr>");
 		
@@ -391,8 +391,13 @@ var primBaseTable;
 		 $.ajax({
 				type : "GET",
 				url : "getextractData",
-				data : {sfdcId:sfdcId, siebelObjName:siebelObjName}
-				});   
+				data : {sfdcId:sfdcId, siebelObjName:siebelObjName},
+				contentType : 'application/text',
+				success : function(response) {
+					$("#datafileUrl").val(data);
+				}
+				});  
+		 alert(data);
 	}
 		
 	</script>
@@ -470,8 +475,8 @@ var primBaseTable;
 								<td><c:out value='Selected'/></td>
 								<td>
 								<input class='btn btn-inverse' type='button' name='Extract' value='E' onclick="extract(${mainPage.sequence})" />
-								<input class='btn btn-inverse' type='button' name='transform' value='T' style='margin-left:5px;'/>
-				                <input class='btn btn-inverse' type='button' name='delete' value='-' style='margin-left:5px;'/>
+								<!-- <input class='btn btn-inverse' type='button' name='transform' value='T' hidden="true" style='margin-left:5px;'/>
+				                <input class='btn btn-inverse' type='button' name='delete' value='-' hidden="true" style='margin-left:5px;'/> -->
 				                </td>
 				                <td><input id="SfdcId${mainPage.sequence}" name='SfdcId${mainPage.sequence}' type="hidden" value="${mainPage.sfdcId}"></td>
 				                </tr>

@@ -73,7 +73,7 @@ public class HomeController {
 		System.out.println("here");
 		HttpSession session = request.getSession(true);
 		//String projectId="a0PG000000B2wmDMAR";
-		String projectId="a0PG000000B3Q7R";
+		String projectId="a0PG000000B3RgvMAF";
 		//String projectId="a0PG000000B3OFn";
 		session.setAttribute("projectId", projectId);
 		data = partnerWSDL.getSavedDBData(projectId, data);
@@ -276,9 +276,10 @@ public class HomeController {
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
 		PartnerWSDL partnerWSDL= new PartnerWSDL();
+		partnerWSDL.login();
 		String formattedDate = dateFormat.format(date);
 
-
+		HttpSession session=request.getSession();
 
 
 		ArrayList<String> siebelList=new ArrayList<String>();
@@ -295,6 +296,9 @@ public class HomeController {
 		// System.out.println(dataForm.getData());
 		System.out.println("doneeeeeeee-------------");
 		//System.out.println(data.get(0).getSiebelObject());
+		
+		data = partnerWSDL.getSavedDBData((String)session.getAttribute("projectId"), data);
+
 
 		List<ChildObjectBO> childDataList = new ArrayList<ChildObjectBO>();
 		String totalRowCount= request.getParameter("rowCount");
@@ -366,7 +370,7 @@ public class HomeController {
 	
 	
 	@RequestMapping(value="/getextractData", method = RequestMethod.GET)
-	public void createExtractQuery(HttpServletRequest request){
+	@ResponseBody public String createExtractQuery(HttpServletRequest request){
 		System.out.println("In Home controller get extract data method");
 		HttpSession session = request.getSession(true);
 		String projId  = (String)session.getAttribute("projectId");
@@ -384,6 +388,7 @@ public class HomeController {
 			System.out.println("Child Base and Mapping pages have not been selected");
 			//partnerWSDL.getpreDefineMappingRecords(subprojectId, projId);
 		}
+		return mappingUrl;
 	}
 
 
