@@ -8,6 +8,14 @@ public class MappingModel {
 	public String foreignFieldMapping;
 	public String sfdcFieldTable;
 	public int mappingSeq;
+	public String id;
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public boolean checkFlag ;
 	public boolean isCheckFlag() {
 		return checkFlag;
@@ -27,7 +35,6 @@ public class MappingModel {
 	public void setForeignFieldMapping(String foreignFieldMapping) {
 		this.foreignFieldMapping = foreignFieldMapping;
 	}
-	
 	public String getSiebleBaseTable() {
 		return siebleBaseTable;
 	}

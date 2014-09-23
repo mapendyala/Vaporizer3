@@ -168,9 +168,6 @@ public class PartnerWSDL {
 					projectName = (String) records[i].getField("Name");
 
 				}
-				System.out
-						.println("==========================================================="
-								+ projectName);
 				if (qr.isDone()) {
 					done = true;
 				} else {
@@ -187,7 +184,6 @@ public class PartnerWSDL {
 	}
 
 	public JSONObject getTargetOrgDetails(String projectId) {
-
 		JSONObject connData = new JSONObject();
 
 		try {
@@ -214,7 +210,6 @@ public class PartnerWSDL {
 							.getField("Salesforce_Password__c");
 					String token = (String) records[i]
 							.getField("Salesforce_Token__c");
-					System.out.println("token " + token);
 					String username = (String) records[i]
 							.getField("Salesforce_Username__c");
 					connData.put("password", password);
@@ -223,7 +218,6 @@ public class PartnerWSDL {
 					}
 					connData.put("token", token);
 					connData.put("username", username);
-					System.out.println("connData " + connData);
 				}
 
 				if (qr.isDone()) {
@@ -262,7 +256,6 @@ public class PartnerWSDL {
 					+ "  Project__r.Name='"
 					+ s
 					+ "' and Parent_Table__c = null and Type__c ='Salesforce'";
-			System.out.println(soqlQuery);
 			// String soqlQuery
 			// ="Select id, Object_API_Name__c, Table_Name__c, Type__c from Table__c where Project__c ='"+projectId+"' and Parent_Table__c = null and Type__c ='Salesforce' and Object_API_Name__c='"+seibelBaseTable+"'";
 			// Make the query call and get the query results
@@ -273,17 +266,11 @@ public class PartnerWSDL {
 			while (!done) {
 
 				SObject[] records = qr.getRecords();
-				System.out
-						.println("========================================================="
-								+ records.length);
 				// Process the query results
 				for (int i = 0; i < records.length; i++) {
 					SFDCObjectName = (String) records[i]
 							.getField("Table_Name__c");
 				}
-				System.out
-						.println("========================================================="
-								+ SFDCObjectName);
 				if (qr.isDone()) {
 					done = true;
 				} else {
@@ -316,7 +303,6 @@ public class PartnerWSDL {
 			login();
 			String sessionId = partnerConnection.getSessionHeader()
 					.getSessionId();
-			System.out.println("SessionId is :: " + sessionId);
 			String targetURL = "";
 			if (dataFileUrl == null)
 				targetURL = "https://na11.salesforce.com/services/apexrest/uploadFile/"
@@ -350,13 +336,11 @@ public class PartnerWSDL {
 			byte[] headerBytes1 = (rdr.readLine() + "\n").getBytes("UTF-8");
 			doc2 = new String(headerBytes1, "UTF-8");
 			wr.writeBytes(doc2);
-			System.out.println(">>>out>>>" + doc2);
 			while ((doc2 = rdr.readLine()) != null) {
 				// byte[] headerBytes=null;
 
 				// headerBytes = (rdr.readLine()).getBytes("UTF-8");
 				// doc2 = new String(headerBytes, "UTF-8");
-				System.out.println(">>>>>>" + doc2);
 
 				wr.writeBytes(doc2 + "\n");
 
@@ -364,7 +348,6 @@ public class PartnerWSDL {
 
 			wr.flush();
 			wr.close();
-			System.out.println(connection.getResponseMessage());
 			// Get Response
 			InputStream is = connection.getInputStream();
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is));
@@ -375,7 +358,6 @@ public class PartnerWSDL {
 				response.append('\r');
 			}
 			rd.close();
-			System.out.println("......" + response.toString());
 			return (response.toString().replaceAll("\"", "") != null ? response
 					.toString().replaceAll("\"", "") : response.toString());
 
@@ -447,8 +429,6 @@ public class PartnerWSDL {
 					mapping.setSiebleBaseTable(siebelTableName);
 					mapping.setSiebleBaseTableColumn(siebelTableColumn);
 					mapping.setForeignFieldMapping(siebelTableName);
-					System.out.println("mappingsss " + siebelTableColumn + " "
-							+ sfdcTableColumn);
 					mappingSeq++;
 					loopCount++;
 					mappingData.add(mapping);
@@ -466,14 +446,12 @@ public class PartnerWSDL {
 			partnerConnection.setQueryOptions(250);
 			String soqlQuery1 = " Select  Object_API_Name__c,Id, Project__r.Name, Table_Name__c, Type__c from Table__c where  Project__r.Name='"
 					+ s + "'";
-			System.out.println(soqlQuery1);
 
 			QueryResult qr1 = partnerConnection.query(soqlQuery1);
 			boolean done1 = false;
 
 			int mappingSeq1 = loopCount;
 			while (!done1) {
-				System.out.println("11111");
 				SObject[] records1 = qr1.getRecords();
 				for (int i = 0; i < records1.length; i++) {
 
@@ -482,16 +460,10 @@ public class PartnerWSDL {
 						fieldId.add((String) records1[i].getField("Id"));
 					}
 
-					System.out.println("Object_API_Name__c==============="
-							+ (String) records1[i]
-									.getField("Object_API_Name__c"));
 				}
-				// System.out.println("==="+ SFDCObjectName);
 				if (qr1.isDone()) {
-					System.out.println("33333333");
 					done1 = true;
 				} else {
-					System.out.println("44444");
 					qr1 = partnerConnection.queryMore(qr.getQueryLocator());
 				}
 			}
@@ -525,7 +497,7 @@ public class PartnerWSDL {
 					// Process the query results
 					for (int i = 0; i < records2.length; i++) {
 
-						mappingSeq1++;
+						
 						System.out.println("inside for loop ---------   " + i);
 						MappingModel mapping = new MappingModel();
 						SObject contact = records2[i];
@@ -545,16 +517,19 @@ public class PartnerWSDL {
 										+ sfdcTableColumn
 										+ "-----------Source_Base_Table__r.Object_API_Name__c "
 										+ fieldMapping1);
-						mapping.setSfdcFieldTable(sfdcTableColumn);
-						mapping.setSfdcObjectName(sfdcTablename);
-						mapping.setSiebleBaseTable(fieldMapping1);
-						mapping.setSiebleBaseTableColumn(siebelTableColumn);
-
-						mapping.setMappingSeq(mappingSeq1);
-						mapping.setForeignFieldMapping(fieldMapping1);
-						System.out.println("mappingsss " + siebelTableColumn
-								+ " " + sfdcTableColumn);
-						mappingData.add(mapping);
+						if(siebelTableName.equalsIgnoreCase(fieldMapping1)){
+							mapping.setSfdcFieldTable(sfdcTableColumn);
+							mapping.setSfdcObjectName(sfdcTablename);
+							mapping.setSiebleBaseTable(fieldMapping1);
+							mapping.setSiebleBaseTableColumn(siebelTableColumn);
+	
+							mapping.setMappingSeq(mappingSeq1);
+							mapping.setForeignFieldMapping(fieldMapping1);
+							System.out.println("mappingsss " + siebelTableColumn
+									+ " " + sfdcTableColumn);
+							mappingSeq1++;
+							mappingData.add(mapping);
+						}
 					}
 					if (qr2.isDone()) {
 						done2 = true;
@@ -630,35 +605,74 @@ public class PartnerWSDL {
 
 		// String [] dataArray = data.toArray(new String[data.size()]);
 		login();
-		SObject[] contacts = new SObject[data.size()];
-		int counter = 0;
+		List<SObject> lstContactUpdate= new ArrayList<SObject>();
+		List<SObject> lstContactInsert= new ArrayList<SObject>();
+		SObject[] contactUpdate = new SObject[data.size()];
+		SObject[] contactInsert = new SObject[data.size()];
 		// data.get(0).getMigrate();
 		for (Iterator<MappingModel> iterator = data.iterator(); iterator
 				.hasNext();) {
 			MappingModel mappingModel = (MappingModel) iterator.next();
-			// if(!(null!=mappingModel.getMappingSfdcId())){
-			SObject contact = new SObject();
-			contact.setType("Field_Mapping_Data_Migration__c");
-			contact.setField("Table_Name__c",
-					mappingModel.getForeignFieldMapping());
-			contact.setField("Field_Target__c",
-					mappingModel.getSfdcFieldTable());
-			contact.setField("Source_Field__c",
-					mappingModel.getSiebleBaseTableColumn());
-			// contact.setField("Project__c",
-			// ((String)session.getAttribute("projectId")));
-			contact.setField("Mapping_Staging_Table__c",
-					mappingModel.getMappingSfdcId());
-
-			contacts[counter] = contact;
-			counter++;
-			// Add this sObject to an array
+			
+			if( mappingModel.getId()==null || mappingModel.getId().equalsIgnoreCase("")){
+				SObject contact = new SObject();
+				contact.setType("Field_Mapping_Data_Migration__c");
+				contact.setField("Table_Name__c",
+						mappingModel.getForeignFieldMapping());
+				contact.setField("Field_Target__c",
+						mappingModel.getSfdcFieldTable());
+				contact.setField("Source_Field__c",
+						mappingModel.getSiebleBaseTableColumn());
+				// contact.setField("Project__c",
+				// ((String)session.getAttribute("projectId")));
+				contact.setField("Mapping_Staging_Table__c",
+						mappingModel.getMappingSfdcId());
+	
+				lstContactInsert.add(contact);
+				// Add this sObject to an array
+			}else{
+				SObject contact = new SObject();
+				contact.setType("Field_Mapping_Data_Migration__c");
+				contact.setField("Id",
+						mappingModel.getId());
+				
+				contact.setField("Table_Name__c",
+						mappingModel.getForeignFieldMapping());
+				contact.setField("Field_Target__c",
+						mappingModel.getSfdcFieldTable());
+				contact.setField("Source_Field__c",
+						mappingModel.getSiebleBaseTableColumn());
+				// contact.setField("Project__c",
+				// ((String)session.getAttribute("projectId")));
+				contact.setField("Mapping_Staging_Table__c",
+						mappingModel.getMappingSfdcId());
+	
+				lstContactUpdate.add(contact);
+	
+			}
 		}
-		SaveResult[] saveResults = getPartnerConnection().create(contacts);
+		
+		if(lstContactInsert.size()>0){
+			contactInsert=lstContactInsert.toArray(new SObject[lstContactInsert.size()]);
+			SaveResult[] saveResults = getPartnerConnection().create(contactInsert);
+			for (int j = 0; j < saveResults.length; j++) {
+				System.out.println(saveResults[j].isSuccess());
+				// System.out.println(saveResults[j].getErrors()[j].getMessage());
+			}
+		}
+		if(lstContactUpdate.size()>0){
+			contactUpdate=lstContactUpdate.toArray(new SObject[lstContactUpdate.size()]);
+			SaveResult[] saveResults = getPartnerConnection().update(contactUpdate);
+			for (int j = 0; j < saveResults.length; j++) {
+				System.out.println(saveResults[j].isSuccess());
+				// System.out.println(saveResults[j].getErrors()[j].getMessage());
+			}
+		}
+		/*SaveResult[] saveResults = getPartnerConnection().create(contacts);
 		for (int j = 0; j < saveResults.length; j++) {
 			System.out.println(saveResults[j].isSuccess());
 			// System.out.println(saveResults[j].getErrors()[j].getMessage());
-		}
+		}*/
 	}
 
 	public JSONObject getRelatedSiebelTable(String subprojectId) {
@@ -940,7 +954,7 @@ public class PartnerWSDL {
 			partnerConnection.setQueryOptions(250);
 			// SOQL query to use
 			// String subprojectId="a0PG000000AtiEAMAZ";
-			String soqlQuery1 = "Select Field_Target__c, Source_Field__c, Table_Name__c from Field_Mapping_Data_Migration__c where Mapping_Staging_Table__c ='"
+			String soqlQuery1 = "Select Id, Field_Target__c, Source_Field__c, Table_Name__c from Field_Mapping_Data_Migration__c where Mapping_Staging_Table__c ='"
 					+ id + "'";
 			// Make the query call and get the query results
 			QueryResult qr1 = partnerConnection.query(soqlQuery1);
@@ -966,11 +980,12 @@ public class PartnerWSDL {
 					// Project__c, Siebel_Object__c, SFDC_Object__c,
 					// Prim_Base_Table__c
 					mappingModel1.setMappingSfdcId(id);
-
+					mappingModel1.setId( (String)contact.getField("Id"));
 					mappingModel1.setSfdcFieldTable(sfdcTableColumn);
 					mappingModel1.setSfdcObjectName(sfdcTablename);
 					mappingModel1.setSiebleBaseTable(siebelTableName);
 					mappingModel1.setSiebleBaseTableColumn(siebelTableColumn);
+					mappingModel1.setMappingSeq(i);
 					// mappingModel.setMappingSeq(mappingSeq1);
 					mappingModel1.setForeignFieldMapping(fieldMapping1);
 					mappingData.add(mappingModel1);
@@ -997,66 +1012,76 @@ public class PartnerWSDL {
 	 * @param ProjectId
 	 */
 
-	public void ExtractDataFromSiebel(String query,Map sfdcMapping,Map siebelNames, String ProjectId) {
+	@SuppressWarnings("unchecked")
+	public String ExtractDataFromSiebel(String query,Map sfdcMapping,Map siebelNames, String ProjectId) {
 
-		File file = null;
-		File mappingFile = null;
-		Connection connection = null;
-		;
-		try {
-			connection = UtilityClass.getSiebelConnection();
-		} catch (SQLException e1) {
+        File file = null;
+        File mappingFile = null;
+        Connection connection = null;
+        String mappingFileURL="";
+        ;
+        try {
+             connection = UtilityClass.getSiebelConnection();
+        } catch (SQLException e1) {
 
-			e1.printStackTrace();
-		}
-		try {
+             e1.printStackTrace();
+        }
+        try {
 
-			if (connection != null) {
+             if (connection != null) {
 
-				if (query == null) {
-					query = "SELECT ACC.NAME AS \"Name = Name\", ACC.LOC AS \"Location = BillingCity\", ADDR.ADDR AS \"Address1 = BillingStreet\""
-							+ " FROM SIEBEL.S_ORG_EXT ACC"
-							+ " INNER JOIN SIEBEL.S_ADDR_PER ADDR ON ADDR.ROW_ID = ACC.PR_ADDR_ID";
-				}
-				System.out.println(query);
-				List<Object> myList = new ArrayList<Object>();
-				Statement st = connection.createStatement();
-				ResultSet mySet = st.executeQuery(query);
-				String sFileName = "tryAndTest";
-				if (mySet.next()) {
+                  if (query == null) {
+                        query = "SELECT ACC.NAME AS \"Name = Name\", ACC.LOC AS \"Location = BillingCity\", ADDR.ADDR AS \"Address1 = BillingStreet\""
+                                  + " FROM SIEBEL.S_ORG_EXT ACC"
+                                  + " INNER JOIN SIEBEL.S_ADDR_PER ADDR ON ADDR.ROW_ID = ACC.PR_ADDR_ID";
+                  }
+                  System.out.println(query);
+                  List<Object> myList = new ArrayList<Object>();
+                  Statement st = connection.createStatement();
+                  ResultSet mySet = st.executeQuery(query);
+                  String sFileName = "tryAndTest";
+                  if (mySet.next()) {
 
-					file = new File(sFileName + ".csv");
-					mappingFile = new File(sFileName + ".sdl");
+                        file = new File(sFileName + ".csv");
+                        mappingFile = new File(sFileName + ".sdl");
+                        createFile(file);
+                        createFile(mappingFile);
+                        ResultSetMetaData rsmd = mySet.getMetaData();
+                        createCSV(mySet,sfdcMapping, siebelNames,rsmd, file, mappingFile);
+                  }
 
-					createFile(file);
-					createFile(mappingFile);
-				}
+                  while (mySet.next()) {
+                	 /* System.out.println("=================== in myset");
+                        ResultSetMetaData rsmd = mySet.getMetaData();
+                        createCSV(mySet,sfdcMapping, siebelNames,rsmd, file, mappingFile);
+*/
 
-				while (mySet.next()) {
+                  }
 
-					ResultSetMetaData rsmd = mySet.getMetaData();
-					createCSV(mySet,sfdcMapping, siebelNames,rsmd, file, mappingFile);
+             } else {
+                  System.out.println("Failed to make connection!");
+             }
 
-				}
 
-			} else {
-				System.out.println("Failed to make connection!");
-			}
+             if (ProjectId == null)
+                  ProjectId = "a0PG000000Atg1U";
+          mappingFileURL=  new PartnerWSDL().getFile(file, "19SepDemoFile.csv", "application/vnd.ms-excel", ProjectId, null);
+          String SDlFileURl= new PartnerWSDL().getFile(mappingFile, "195SepDemoMappingFile.sdl", "application/vnd.ms-excel", ProjectId, mappingFileURL);
+          System.out.println("filr path : " +mappingFileURL+":::::::"+SDlFileURl);
+          com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
+          dt.dataUploadController(mappingFileURL,"subhchakraborty@deloitte.com.vaporizer","Sep@2013","Account");
 
-			if (ProjectId == null)
-				ProjectId = "a0PG000000Atg1U";
-            String mappingFileURL=  new PartnerWSDL().getFile(file, "15SepDemoFile.csv", "application/vnd.ms-excel", ProjectId, null);
-            String SDlFileURl= new PartnerWSDL().getFile(mappingFile, "15SepDemoMappingFile.sdl", "application/vnd.ms-excel", ProjectId, mappingFileURL);
-	        System.out.println("filr path : " +mappingFileURL+":::::::"+SDlFileURl);
-	        com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
-	        dt.dataUploadController(mappingFileURL,"subhchakraborty@deloitte.com.vaporizer","Sep@2013","Account");
+        } catch (Exception e) {
+            // System.out.println(e);
+             
+             e.printStackTrace();
+        }
+        // return file;
 
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		// return file;
+        return mappingFileURL;
 
-	}
+  }
+
 
 	/**
 	 * @author piymishra
@@ -1095,57 +1120,69 @@ public class PartnerWSDL {
 	 * @return
 	 */
 	public static File createCSV(ResultSet mySet, Map<String,String> sfdcMapping, Map<String,String> siebelNames, ResultSetMetaData rsmd,
-			File file, File mappingFile) {
-		try {
 
-			FileWriter writer = new FileWriter(file);
-			FileWriter writerMapping = new FileWriter(mappingFile);
-			for (int i = 1; i <= sfdcMapping.size(); i++) {
-				
-				//siebelFieldMap.put("siebelFieldKey"+i, siebelField);
-				//sfdcFieldMap.put("sfdcFieldKey"+i, salesForceField);
-				
-				
-				writerMapping.append(siebelNames.get("siebelFieldKey"+i)+" = "+"sfdcFieldKey"+i);
-				writer.append((CharSequence) siebelNames.get("siebelFieldKey"+i));
-				if (i >= 1 && i != sfdcMapping.size()) {
-					writerMapping.append("\n");
-					writer.append(",");
-				}
-				if (i == sfdcMapping.size()) {
-					writerMapping.append('\n');
-					writer.append('\n');
-				}
-			}
+            File file, File mappingFile) {
+       try {
 
-			for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+            FileWriter writer = new FileWriter(file);
+            FileWriter writerMapping = new FileWriter(mappingFile);
+            for (int i = 1; i <= sfdcMapping.size(); i++) {               
+                 writerMapping.append(siebelNames.get("siebelFieldKey"+i)+" = "+"sfdcFieldKey"+i);
+                 writer.append((CharSequence) siebelNames.get("siebelFieldKey"+i));
+                 if (i >= 1 && i != sfdcMapping.size()) {
+                       writerMapping.append("\n");
+                       writer.append(",");
+                 }
+                 if (i == sfdcMapping.size()) {
+                       writerMapping.append('\n');
+                       writer.append('\n');
+                 }
+            }
+           for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+               
+                System.out.println(rsmd.getColumnName(i)+" ==== "+mySet.getString(i));
+            }
+           while(mySet.next())
+           {
+        	   for (int i = 1; i <= sfdcMapping.size(); i++) {
 
-				int type = rsmd.getColumnType(i);
-				if (type == Types.VARCHAR || type == Types.CHAR) {
-					writer.append(mySet.getString(i));
-				} else {
-					writer.append((char) mySet.getLong(i));
-				}
-				if (i >= 1 && i != rsmd.getColumnCount()) {
-					writer.append(",");
-				}
+                   int type = rsmd.getColumnType(i);
+                   System.out.println(mySet.getString(i));
+                   System.out.println(type + "Types -"+ (type == Types.DATE) + Types.DOUBLE);
+                   if (type == Types.VARCHAR || type == Types.CHAR) {
+                         writer.append(mySet.getString(i));
+                   } else if(type == Types.TIMESTAMP){
+                  	 writer.append(mySet.getTimestamp(i).toString());
+                   }else if(type == Types.DATE){
+                  	 writer.append(mySet.getDate(i).toString());
+                   }else{
+                         writer.append( mySet.getString(i));
+                  	
+                   }
+                   if (i >= 1 && i != sfdcMapping.size()) {
+                         writer.append(",");
+                   }
 
-				if (i == rsmd.getColumnCount())
-					writer.append('\n');
+                   if (i ==sfdcMapping.size())
+                         writer.append('\n');
 
-			}
-			writerMapping.flush();
-			writerMapping.close();
+              } 
+           }
+            
+            writerMapping.flush();
+            writerMapping.close();
 
-			writer.flush();
-			writer.close();
-			return file;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return file;
+            writer.flush();
+            writer.close();
+            System.out.println("============file creation done==================");
+            return file;
+       } catch (Exception e) {
+            e.printStackTrace();
+       }
+       return file;
 
-	}
+ }
+
 
 	/**
 	 * @author piymishra
@@ -1172,7 +1209,7 @@ public class PartnerWSDL {
 		return sobjectResults;
 	}
 
-	public  void getextractionData(String projectId, String sfdcId, String subProjectId) 
+	public  String getextractionData(String projectId, String sfdcId, String subProjectId) 
 	{
 		String selectTables = "";
 		String fromTables = "";
@@ -1248,7 +1285,7 @@ public class PartnerWSDL {
 											siebelFieldMap.put("siebelFieldKey"+i, siebelField);
 											sfdcFieldMap.put("sfdcFieldKey"+i, salesForceField);
 											//selectTables = selectTables+" "+ siebelBaseTable+"."+siebelField +" "+"as"+ " "+"\""+	siebelField+"="+salesForceField+"\""+",";									
-											selectTables = selectTables+" "+ "mainTableAlias"+"."+siebelField+",";
+											selectTables = selectTables+" "+ "childTableAlias"+childTableCounter+"."+siebelField+",";
 										}
 										childTableCounter++;
 										
@@ -1269,14 +1306,16 @@ public class PartnerWSDL {
 								System.out.println(query);
 						}
 					
-					ExtractDataFromSiebel(query, sfdcFieldMap, siebelFieldMap, projectId);
+					//String mappingFileUR=	ExtractDataFromSiebel(query, sfdcFieldMap, siebelFieldMap, projectId);
 					
 					}
 				 catch (ConnectionException ce) {
 					ce.printStackTrace();
 				} 
 				System.out.println("\nQuery execution completed.");
-			//	ExtractDataFromSiebel(query, projectId);
+
+				String mappingFileURL=ExtractDataFromSiebel(query, sfdcFieldMap, siebelFieldMap, projectId);
+				return mappingFileURL;
 		}
 		
 
@@ -1320,8 +1359,7 @@ public class PartnerWSDL {
 		System.out.println("in WSDL save child method");
 		int i = 1;
 		for (ChildObjectBO childObj : data) {
-
-			if (childObj.isCheckFlag()) {
+			/*if (childObj.isCheckFlag()) {
 				System.out.println("in saving for loop" + i);
 				SObject contact = new SObject();
 				contact.setType("Child_Base__c");
@@ -1340,14 +1378,54 @@ public class PartnerWSDL {
 			} else {
 				System.out.println("in not save false block" + i);
 			}
-			i++;
+			i++;*/
+			
+			
+				System.out.println("in saving for loop" + i);
+				SObject contact = new SObject();
+				contact.setType("Child_Base__c");
+				contact.setField("Primary_Table__c", childObj.getBaseObjName());
+				contact.setField("Project__c",
+						((String) session.getAttribute("projectId")));
+				contact.setField("Child_Table__c", childObj.getChildObjName());
+				contact.setField("Join_Condition__c",
+						childObj.getJoinCondition());
+				contact.setField("Saved__c ", childObj.isCheckFlag());
 
-		}
-		SaveResult[] saveResults = getPartnerConnection().create(contacts);
-		System.out.println("save results length is" + saveResults.length);
-		for (int j = 0; j < saveResults.length; j++) {
-			System.out.println(saveResults[j].isSuccess());
-			// System.out.println(saveResults[j].getErrors()[j].getMessage());
+				// System.out.println("child Saved value is"+
+				// contact.getField("Child_Table__c"));
+				contacts[counter] = contact;
+				counter++;
+			
+
+		} //end of for loop
+//here I save it
+		if(contacts.length >= 199)
+		{
+			System.out.println("more dan 199 TRANSACTION");
+			  List<SObject>  tmpList=new ArrayList();
+	          for(int k=0;k<contacts.length;k++){
+	        	 System.out.println("in contact block");
+	             tmpList.add(contacts[k]);
+	               		if(k==199){	
+	               			System.out.println("in save block DML");
+			SaveResult[] saveResults = getPartnerConnection().create(tmpList.toArray(new SObject[tmpList.size()]));
+			
+			
+	        tmpList=new ArrayList();
+
+	               		}
+	} //end of for
+
+		} //end of IF
+		else
+		{
+			System.out.println("Less Transaction block");
+			SaveResult[] saveResults = getPartnerConnection().create(contacts);
+			for (int j = 0; j < saveResults.length; j++) {
+				System.out.println(saveResults[j].isSuccess());
+				// System.out.println(saveResults[j].getErrors()[j].getMessage());
+			}
 		}
 	}
 
@@ -1371,9 +1449,7 @@ public class PartnerWSDL {
 			// Make the query call and get the query results
 			QueryResult qryResult = partnerConnection.query(soqlQuery);
 			boolean done = false;
-
 			int loopCount = 0;
-
 			// Loop through the batches of returned results
 			childData.clear();
 			int counter = 1;
@@ -1441,7 +1517,7 @@ public class PartnerWSDL {
 			System.out.println("in catch block");
 			ce.printStackTrace();
 		}
-		System.out.println("\n Child Saved Data Query execution completed.");
+		/*System.out.println("\n Child Saved Data Query execution completed.");*/
 		return childData;
 	}
 
@@ -1486,7 +1562,7 @@ public class PartnerWSDL {
 					+ projectId
 					+ "' and Primary_Table__c='"
 					+ siebelTableName
-					+ "'";
+					+ "' and Saved__c=true";
 			// Make the query call and get the query results
 			QueryResult qr = partnerConnection.query(soqlQuery);
 			boolean done = false;
@@ -1498,7 +1574,7 @@ public class PartnerWSDL {
 				for (int i = 0; i < records.length; i++) {
 					SObject contact = records[i];
 
-					child.add((String) contact.getField("Source_Field__c"));
+					child.add((String) contact.getField("Child_Table__c"));
 				}
 
 				if (qr.isDone()) {

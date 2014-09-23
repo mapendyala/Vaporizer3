@@ -122,12 +122,9 @@ public class SiebelObjectController {
 					objList.add(siObj);
 				}
 
-				System.out.println("list size is"+objList.size());
 				if(objList!=null && objList.size()!=0)
 				{
 					SiebelObjectBO	myObj=objList.get(0);
-					System.out.println("list objname is"+ myObj.getObjName());
-					System.out.println("list prim is"+myObj.getPrimName());
 				}
 
 			}
@@ -194,8 +191,6 @@ public class SiebelObjectController {
 
 				while(mySet.next())
 				{
-					System.out.println("myset is"+mySet.getString(1));
-
 					myList.add(mySet.getString(1));
 
 				}
@@ -229,8 +224,6 @@ public class SiebelObjectController {
 
 						while(mySet1.next())
 						{
-							System.out.println("myset is"+mySet1.getString(1));
-
 							myList.add(mySet1.getString(1));
 
 						}

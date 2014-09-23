@@ -1,27 +1,19 @@
 package com.force.example.fulfillment;
 
-import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,21 +24,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.force.api.http.HttpRequest;
 import com.force.example.fulfillment.order.controller.SiebelObjectController;
-import com.force.example.fulfillment.order.controller.ThresholdController;
 import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.MappingModel;
 import com.force.partner.PartnerWSDL;
-import com.force.partner.TargetPartner;
 import com.force.utility.ChildObjectBO;
 import com.force.utility.SfdcObjectBO;
-import com.force.utility.SiebelObjectBO;
-import com.force.utility.UtilityClass;
 import com.sforce.async.AsyncApiException;
 import com.sforce.ws.ConnectionException;
-
-import javax.servlet.http.HttpSession;
 
 
 /**
@@ -87,7 +72,9 @@ public class HomeController {
 		partnerWSDL.login();
 		System.out.println("here");
 		HttpSession session = request.getSession(true);
-		String projectId="a0PG000000B2wmDMAR";
+		//String projectId="a0PG000000B2wmDMAR";
+		String projectId="a0PG000000B3Q7R";
+		//String projectId="a0PG000000B3OFn";
 		session.setAttribute("projectId", projectId);
 		data = partnerWSDL.getSavedDBData(projectId, data);
 		System.out.println("data "+data);
@@ -105,15 +92,8 @@ public class HomeController {
 	@ResponseBody
 	public String initiateDataLoader(Locale locale,Model model,HttpServletRequest request,@RequestParam("datafileUrl")String datafileUrl) throws IOException, AsyncApiException, ConnectionException
 	{
-
-
-
 		PartnerWSDL partnerWSDL= new PartnerWSDL(); 	  
-
-
 		partnerWSDL.login();
-
-
 		HttpSession session = request.getSession(true);
 		JSONObject connData=partnerWSDL.getTargetOrgDetails((String) session.getAttribute("projectId"));
 		String password=(String)connData.get("password");
@@ -123,18 +103,8 @@ public class HomeController {
 		datafileUrl="https://"+strList[0]+".salesforce.com/"+strList[1];
 		com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
 		String objectName="Account";
-
-
-
 		return dt.dataUploadController(datafileUrl,username,password+token,objectName);
-
-
-
 		// TODO Auto-generated catch block
-
-
-
-
 	}
 
 	/**
@@ -257,40 +227,14 @@ public class HomeController {
 		//System.out.println(request.getParameter("rowNum"));
 		mappingData.clear();
 		rowCount= request.getParameter("rowCount");
-
-
-
-
-
-
-		for(int i=1;i<=Integer.parseInt(rowCount);i++){
-
+		for(int i=0;i<Integer.parseInt(rowCount);i++){
 			String siebelCheckFlag="checkFlag"+i;
 			MappingModel mappingModel = new MappingModel();
-			/*	  String checkedFlagStr=request.getParameter(siebelCheckFlag);
-
-
-
-
-
-
-             // if(checkedFlagStr != "" && checkedFlagStr !=null)
-			  if(null!=checkedFlagStr && !"".equalsIgnoreCase(checkedFlagStr))
-              {
-                    if(checkedFlagStr.equals("on"))
-                    {
-                           System.out.println("in true block"+i);
-                           mappingModel.setCheckFlag(true);
-                    }
-              }
-              else
-              {
-                    System.out.println("in false block");
-                    mappingModel.setCheckFlag(false);
-              }
-              if(mappingModel.isCheckFlag())
-			{
-			 */
+			if(request.getParameter("sfdcId"+i)!=null){
+				mappingModel.setId(request.getParameter("sfdcId"+i));}
+			else
+				mappingModel.setId("");
+			
 			if(request.getParameter("dropdown"+i)!=null){
 				mappingModel.setSfdcFieldTable(request.getParameter("dropdown"+i));}
 			else
@@ -308,25 +252,11 @@ public class HomeController {
 			else
 				mappingModel.setSiebleBaseTableColumn("");
 			mappingModel.setForeignFieldMapping(request.getParameter("foreignFieldMapping"+i));
-			System.out.println("Inside Drop value is"+request.getParameter("dropdown"+i));
 			if(request.getParameter("mappingSfdcId")==null){
 				mappingModel.setMappingSfdcId("");
 			}else{
 				mappingModel.setMappingSfdcId(request.getParameter("mappingSfdcId"));
 			}
-
-
-
-
-
-
-
-
-
-
-
-
-
 			mappingData.add(mappingModel);
 			// }
 		}
@@ -444,9 +374,10 @@ public class HomeController {
 		String sfdcId=request.getParameter("sfdcId");
 		String siebelTableNameValue = request.getParameter("siebelObjName");
 		String subprojectId=partnerWSDL.getsubprojects(siebelTableNameValue);
+		String mappingUrl="";
 		if(sfdcId  != null){
 			
-			partnerWSDL.getextractionData(projId, sfdcId, subprojectId);
+			mappingUrl=partnerWSDL.getextractionData(projId, sfdcId, subprojectId);
 		}else{
 		
 			System.out.println("Child Base and Mapping pages have not been selected");
@@ -512,18 +443,30 @@ public class HomeController {
 
 
 		if(page.equals("child")){
-			System.out.println("in MY child bliok");
 			SiebelObjectController siObj=new SiebelObjectController();
-			//ArrayList<String> myList=new ArrayList<String>();
+			
 			List<ChildObjectBO> myChildList=siObj.fetchChildObjects(request, primBaseValue);
-			if(myChildList!=null)
+			/*if(myChildList!=null)
 			{
 				System.out.println("mychild list is"+myChildList.size());
 			}
-			modelChild.addAttribute("myChildList",myChildList);
-
-
-			return new ModelAndView("ChildBase" , "data", data);
+			modelChild.addAttribute("myChildList",myChildList);*/
+			List<ChildObjectBO> childSavedList=new ArrayList<ChildObjectBO>();
+			childSavedList=	partnerWSDL.getSavedChildDBData((String)session.getAttribute("projectId"), primBaseValue);
+			
+			if(childSavedList!=null && childSavedList.size()!=0)
+			{
+				System.out.println("CHild Saved  list size is"+childSavedList.size());
+				modelChild.addAttribute("myChildList",childSavedList);
+			}
+			else if(myChildList!=null && myChildList.size()!=0)
+			{
+				System.out.println("Siebel BLOCK child list is"+myChildList.size());
+				modelChild.addAttribute("myChildList",myChildList);
+				
+			}
+	
+				return new ModelAndView("ChildBase" , "data", data);
 		}
 
 

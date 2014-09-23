@@ -87,7 +87,6 @@ public class ThresholdController {
       
        while(mySet.next())
        {
-       	System.out.println("myset is"+mySet.getString(1));
        
 
 
