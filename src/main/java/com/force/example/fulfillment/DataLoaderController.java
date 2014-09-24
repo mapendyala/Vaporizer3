@@ -549,6 +549,7 @@ System.out.println(">>>>"+ connection.getResponseMessage());
         String arr[]=doc2.split(",");
        String headerString="";
         for(int j=0;j<arr.length;j++){
+        	if((String)mapA.get(arr[j])!=null){
         	System.out.println(arr[j]+"..........hhhhin....");
         	//if((String)mapA.get(arr[j].replaceAll("\\s+$", ""))!=null)
         	arr[j]=(String)mapA.get(arr[j]);
@@ -558,7 +559,16 @@ System.out.println(">>>>"+ connection.getResponseMessage());
         	headerString+=arr[j]+",";
         	else
         		headerString+=arr[j];
+        	}
         }
+       if (null != headerString && headerString.length() > 0 )
+        {
+            int endIndex = headerString.lastIndexOf(",");
+            if ((endIndex != -1) &&(endIndex==headerString.length()-1)) 
+            {
+                 headerString = headerString.substring(0, endIndex); // not forgot to put check if(endIndex != -1)
+            }
+        }  
         System.out.println(new String(headerBytes)+"..........hhhh...."+headerString);
         headerBytes=(headerString+"\n").getBytes("UTF-8");
         int headerBytesLength = headerBytes.length;
