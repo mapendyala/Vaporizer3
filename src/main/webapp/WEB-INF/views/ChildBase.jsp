@@ -126,6 +126,8 @@
 		<td><input value="${childItem.childObjName}" id="childObjName${childItem.seqNum}" name="childObjName${childItem.seqNum}" readonly style='margin-left:45px;'/></td>
 		
 			<td ><input value="${childItem.joinCondition}" id="joinCondition${childItem.seqNum}" name="joinCondition${childItem.seqNum}" readonly style='margin-left:45px;width:130%'/></td>
+			
+			<td><input type="hidden" value="${childItem.childSfdcId}" id="sfdcId${childItem.seqNum}" name="sfdcId${childItem.seqNum}"></td>
 </tr>
 </c:forEach> 
 

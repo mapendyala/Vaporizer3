@@ -335,10 +335,16 @@ public class HomeController {
 			String siebelChildObjName = "childObjName"+i;
 			String siebelJoinCondition= "joinCondition"+i;
 			String siebelCheckFlag="checkFlag"+i;
+			String childSfdcId="sfdcId"+i;
+			
+			
+			
 			childObj.setSeqNum(Integer.parseInt(request.getParameter(sequenceNumber)));
 			childObj.setBaseObjName(request.getParameter(siebelBaseObjName));
 			childObj.setChildObjName(request.getParameter(siebelChildObjName));
 			childObj.setJoinCondition(request.getParameter(siebelJoinCondition));
+			System.out.println("sfdc id is"+request.getParameter(childSfdcId));
+			childObj.setChildSfdcId(request.getParameter(childSfdcId));
 			String checkedFlagStr=request.getParameter(siebelCheckFlag);
 
 			if(checkedFlagStr != "" && checkedFlagStr !=null)
@@ -357,11 +363,11 @@ public class HomeController {
 
 
 			System.out.println("checkbox value is"+request.getParameter(siebelCheckFlag));
-			System.out.println("values are"+ childObj.getSeqNum() + "and" + childObj.getBaseObjName());
-			System.out.println("rest values are"+ childObj.getChildObjName() + "and" + childObj.getJoinCondition());
+			/*System.out.println("values are"+ childObj.getSeqNum() + "and" + childObj.getBaseObjName());
+			System.out.println("rest values are"+ childObj.getChildObjName() + "and" + childObj.getJoinCondition());*/
 			childDataList.add(childObj);
 		}
-		System.out.println("child data save list is"+childDataList);
+		//System.out.println("child data save list is"+childDataList);
 		partnerWSDL.saveChildDataDB(childDataList,request);
 
 		return new ModelAndView("vaporizer" , "data", data);
