@@ -1433,25 +1433,7 @@ public class PartnerWSDL {
         int childTableCounter = 1;
         String sTab="";
         
-                /*String soqlQuery = "Select id, Object_API_Name__c, Project__c,Join_Condition__c, Table_Name__c, Type__c from Table__c where Project__c= '"+projectId+"' "
-                        + "and Mapping_Staging_Table__c='"+sfdcId+"'";
-                
-                String soqlQueryA = "Select c1.ID,  c1.Project__c, c1.Siebel_Object__c, c1.SFDC_Object__c, c1.Prim_Base_Table__c,"
-                        + "c2.Field_Target__c, c2.Source_Field__c, c2.Table_Name__c "
-                        + "c3.Child_Table__c, c3.Join_Condition__c,c3.Primary_Table__c"
-                        + "FROM Mapping_Staging_Table__c c1"
-                        + "RIGHT OUTER JOIN Field_Mapping_Data_Migration__c ON (c1.project__C = c2.project__C)"
-                        + "LEFT OUTER JOIN Child_Base__c  ON (c1.project__C = c2.project__C)" 
-                        + "WHERE c1.Project__c=’ProjectID’ and Siebel_Object__c=’SiebelObject Name’";*/
-                
-                //String soqlQuery="Select ID,  Project__c, Siebel_Object__c, SFDC_Object__c, Prim_Base_Table__c  from Mapping_Staging_Table__c where Project__c=’ProjectID’ and Siebel_Object__c=’SiebelObject Name’;"
-                /*"SELECT * "+
-                        "FROM (Product " +
-                        "INNER JOIN Orders ON (Product.ItemID=Orders.ItemID)) " +
-                        "LEFT OUTER JOIN SupplierProduct ON (Orders.ItemID=SupplierProduct.ItemID) "+
-                        "WHERE Product.Reciever = 'Fred' " +
-                        "ORDER BY Product.ItemName"; */
-                //String soqlQuery  = "Select ID,  Project__c, Siebel_Object__c, SFDC_Object__c, Prim_Base_Table__c  from Mapping_Staging_Table__c where Project__c= ' +ProjectID and Siebel_Object__c=’SiebelObject Name’;"
+               
                 String soqlQuery2 = "Select Field_Target__c, Source_Field__c, Table_Name__c from Field_Mapping_Data_Migration__c  where Mapping_Staging_Table__c ='"+sfdcId+"'";
                 System.out.println(">>>>"+sfdcId);
                 try{
