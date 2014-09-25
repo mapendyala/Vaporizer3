@@ -107,7 +107,7 @@ public class HomeController {
 		{
 			objectName="Account";
 		}
-		return dt.dataUploadController(datafileUrl,username,password+token,objectName);
+		return dt.dataUploadController(datafileUrl,"subhchakraborty@deloitte.com.vaporizer","Sep@2013",objectName);
 		// TODO Auto-generated catch block
 	}
 
