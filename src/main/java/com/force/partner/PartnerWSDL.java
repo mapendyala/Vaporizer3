@@ -1068,11 +1068,11 @@ public class PartnerWSDL {
           mappingFileURL=  new PartnerWSDL().getFile(file, "19SepDemoFile.csv", "application/vnd.ms-excel", ProjectId, null);
           String SDlFileURl= new PartnerWSDL().getFile(mappingFile, "195SepDemoMappingFile.sdl", "application/vnd.ms-excel", ProjectId, mappingFileURL);
           System.out.println("filr path : " +mappingFileURL+":::::::"+SDlFileURl);
-          com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
+         /* com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
           if(siebelTableNameValue==null||siebelTableNameValue=="")
         	  siebelTableNameValue="Account";
           dt.dataUploadController(mappingFileURL,"subhchakraborty@deloitte.com.vaporizer","Sep@2013",siebelTableNameValue);
-
+*/
         } catch (Exception e) {
             // System.out.println(e);
              

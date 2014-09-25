@@ -38,6 +38,7 @@
 
 var rowNum = 1;
 var primBaseTable;
+var sfdcObjectForExtarction="";
 
 	function addRow() {
 		
@@ -88,7 +89,7 @@ var primBaseTable;
 	//Added by Subhojit
 	 function initiateDataLoad()
 	 {
-		// alert('hiii'); 
+		 
 		 var dataFileUrlVar= $("[id$='datafileUrl']").val();
 		  var str = dataFileUrlVar;
 		    var res = str.split(".salesforce.com/");
@@ -106,12 +107,12 @@ var primBaseTable;
 			url : "initiateDataloader",
 		 	data :
 		 		{
-		 		datafileUrl:finUrl	 		
+		 		datafileUrl:finUrl	 ,
+		 		objectName:sfdcObjectForExtarction
 		 		},
 			contentType : 'application/text',
 			success : function(response) {
 				var str=response;
-				//alert(response);
 				
 				var strList=str.split("_");
 				var total=+strList[0] + +strList[1];
@@ -386,6 +387,8 @@ var primBaseTable;
 	}
 	
 	function extract(rowNum){
+		var SFDCObjectId="SFDCObjName"+(rowNum);
+		sfdcObjectForExtarction=$("#"+SFDCObjectId).val();
 		var sfdcId = $("#"+"SfdcId"+(rowNum)).val();
 		var siebelObjName = $("#objectName" +(rowNum)).val();
 		 $.ajax({

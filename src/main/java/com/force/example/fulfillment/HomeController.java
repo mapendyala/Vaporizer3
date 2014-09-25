@@ -90,7 +90,7 @@ public class HomeController {
 
 	@RequestMapping(value="/initiateDataloader", method=RequestMethod.GET,produces="text/plain")
 	@ResponseBody
-	public String initiateDataLoader(Locale locale,Model model,HttpServletRequest request,@RequestParam("datafileUrl")String datafileUrl) throws IOException, AsyncApiException, ConnectionException
+	public String initiateDataLoader(Locale locale,Model model,HttpServletRequest request,@RequestParam("datafileUrl")String datafileUrl,@RequestParam("objectName")String objectName) throws IOException, AsyncApiException, ConnectionException
 	{
 		PartnerWSDL partnerWSDL= new PartnerWSDL(); 	  
 		partnerWSDL.login();
@@ -102,7 +102,11 @@ public class HomeController {
 		String[] strList=datafileUrl.split("-");
 		datafileUrl="https://"+strList[0]+".salesforce.com/"+strList[1];
 		com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
-		String objectName="Account";
+		 
+		if(objectName==null || objectName=="")
+		{
+			objectName="Account";
+		}
 		return dt.dataUploadController(datafileUrl,username,password+token,objectName);
 		// TODO Auto-generated catch block
 	}
