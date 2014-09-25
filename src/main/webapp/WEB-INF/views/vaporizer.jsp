@@ -392,9 +392,14 @@ var primBaseTable;
 				type : "GET",
 				url : "getextractData",
 				data : {sfdcId:sfdcId, siebelObjName:siebelObjName},
-				success : function(data){
-				 	
-					alert(data);
+				success : function(response){
+					if(response!="")
+				 	$("#datafileUrl").val(response);
+					else
+						{
+						alert("No location generated");
+						}
+			
 				}  
 				});   
 	}
