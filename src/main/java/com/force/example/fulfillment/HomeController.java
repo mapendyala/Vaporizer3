@@ -391,7 +391,7 @@ public class HomeController {
 		String subprojectId=partnerWSDL.getsubprojects(siebelTableNameValue);
 		String mappingUrl="";
 		if(sfdcId  != null){			
-			mappingUrl=partnerWSDL.getextractionData(projId, sfdcId, subprojectId,siebelTableNameValue);
+			mappingUrl=partnerWSDL.getextractionData(projId, sfdcId, subprojectId);
 		}else{
 			System.out.println("Child Base and Mapping pages have not been selected");
 			 
