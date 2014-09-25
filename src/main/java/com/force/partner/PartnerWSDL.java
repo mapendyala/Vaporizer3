@@ -1010,10 +1010,11 @@ public class PartnerWSDL {
 	 * @author piymishra
 	 * @param query
 	 * @param ProjectId
+	 * @param siebelTableNameValue 
 	 */
 
 	@SuppressWarnings("unchecked")
-	public String ExtractDataFromSiebel(String query,Map sfdcMapping,Map siebelNames, String ProjectId) {
+	public String ExtractDataFromSiebel(String query,Map sfdcMapping,Map siebelNames, String ProjectId, String siebelTableNameValue) {
 
         File file = null;
         File mappingFile = null;
@@ -1069,7 +1070,9 @@ public class PartnerWSDL {
           String SDlFileURl= new PartnerWSDL().getFile(mappingFile, "195SepDemoMappingFile.sdl", "application/vnd.ms-excel", ProjectId, mappingFileURL);
           System.out.println("filr path : " +mappingFileURL+":::::::"+SDlFileURl);
           com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
-          dt.dataUploadController(mappingFileURL,"subhchakraborty@deloitte.com.vaporizer","Sep@2013","Account");
+          if(siebelTableNameValue==null||siebelTableNameValue=="")
+        	  siebelTableNameValue="Account";
+          dt.dataUploadController(mappingFileURL,"subhchakraborty@deloitte.com.vaporizer","Sep@2013",siebelTableNameValue);
 
         } catch (Exception e) {
             // System.out.println(e);
@@ -1127,7 +1130,7 @@ public class PartnerWSDL {
             FileWriter writer = new FileWriter(file);
             FileWriter writerMapping = new FileWriter(mappingFile);
             for (int i = 1; i <= sfdcMapping.size(); i++) {               
-                 writerMapping.append(siebelNames.get("siebelFieldKey"+i)+" = "+"sfdcFieldKey"+i);
+                 writerMapping.append(siebelNames.get("siebelFieldKey"+i)+" = "+sfdcMapping.get("sfdcFieldKey"+i));
                  writer.append((CharSequence) siebelNames.get("siebelFieldKey"+i));
                  if (i >= 1 && i != sfdcMapping.size()) {
                        writerMapping.append("\n");
@@ -1209,7 +1212,7 @@ public class PartnerWSDL {
 		return sobjectResults;
 	}
 
-	public  String getextractionData(String projectId, String sfdcId, String subProjectId) 
+	public  String getextractionData(String projectId, String sfdcId, String subProjectId, String siebelTableNameValue) 
 	{
 		
 		String selectTables = "";
@@ -1315,7 +1318,7 @@ public class PartnerWSDL {
 				} 
 				System.out.println("\nQuery execution completed.");
 
-				String mappingFileURL=ExtractDataFromSiebel(query, sfdcFieldMap, siebelFieldMap, projectId);
+				String mappingFileURL=ExtractDataFromSiebel(query, sfdcFieldMap, siebelFieldMap, projectId,siebelTableNameValue);
 				return mappingFileURL;
 		}
 		

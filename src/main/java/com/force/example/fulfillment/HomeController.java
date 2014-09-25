@@ -366,7 +366,7 @@ public class HomeController {
 	
 	
 	@RequestMapping(value="/getextractData", method = RequestMethod.GET)
-	public void createExtractQuery(HttpServletRequest request){
+	@ResponseBody public void createExtractQuery(HttpServletRequest request){
 		System.out.println("In Home controller get extract data method");
 		HttpSession session = request.getSession(true);
 		String projId  = (String)session.getAttribute("projectId");
@@ -378,7 +378,7 @@ public class HomeController {
 		String mappingUrl="";
 		if(sfdcId  != null){
 			
-			mappingUrl=partnerWSDL.getextractionData(projId, sfdcId, subprojectId);
+			mappingUrl=partnerWSDL.getextractionData(projId, sfdcId, subprojectId,siebelTableNameValue);
 		}else{
 		
 			System.out.println("Child Base and Mapping pages have not been selected");

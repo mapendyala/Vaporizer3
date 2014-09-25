@@ -391,7 +391,11 @@ var primBaseTable;
 		 $.ajax({
 				type : "GET",
 				url : "getextractData",
-				data : {sfdcId:sfdcId, siebelObjName:siebelObjName}
+				data : {sfdcId:sfdcId, siebelObjName:siebelObjName},
+				success : function(data){
+				 	
+					alert(data);
+				}  
 				});   
 	}
 		
