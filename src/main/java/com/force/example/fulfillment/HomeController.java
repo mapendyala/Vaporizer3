@@ -390,7 +390,7 @@ public class HomeController {
 			mappingUrl=partnerWSDL.getextractionData(projId, sfdcId, subprojectId,siebelTableNameValue);
 		}else{
 			System.out.println("Child Base and Mapping pages have not been selected");
-			
+			 
 		}
 		return mappingUrl;
 	}
