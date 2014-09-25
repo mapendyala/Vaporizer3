@@ -1220,32 +1220,8 @@ public class PartnerWSDL {
 
 	
 	/*
-	 * public void saveChildDataDB(List<ChildObjectBO> data, HttpServletRequest
-	 * request) throws ConnectionException{ HttpSession session =
-	 * request.getSession(true);
-	 * 
-	 * //String [] dataArray = data.toArray(new String[data.size()]); login();
-	 * SObject[] contacts = new SObject[data.size()]; int counter=0;
-	 * //data.get(0).getMigrate();
-	 * System.out.println("in WSDL save child method"); int i=1;
-	 * for(ChildObjectBO childObj : data) {
-	 * System.out.println("in saving for loop"+i); SObject contact = new
-	 * SObject(); contact.setType("Child_Base__c");
-	 * contact.setField("Primary_Table__c", childObj.getBaseObjName());
-	 * contact.setField("Project__c",
-	 * ((String)session.getAttribute("projectId")));
-	 * contact.setField("Child_Table__c", childObj.getChildObjName());
-	 * contact.setField("Join_Condition__c", childObj.getJoinCondition());
-	 * 
-	 * contacts[counter] = contact; counter++; i++; } SaveResult[] saveResults =
-	 * getPartnerConnection().create(contacts);
-	 * System.out.println("save results length is"+saveResults.length); for(int
-	 * j=0;j<saveResults.length;j++){
-	 * System.out.println(saveResults[j].isSuccess());
-	 * //System.out.println(results[i].getErrors()[i].getMessage()); } }
+	 * Author Nidhi
 	 */
-
-	// *author Nidhi
 
 	public void saveChildDataDB(List<ChildObjectBO> data,
 			HttpServletRequest request) throws ConnectionException {
@@ -1258,8 +1234,16 @@ public class PartnerWSDL {
 		// data.get(0).getMigrate();
 		System.out.println("in WSDL save child method");
 		int i = 1;
+		
+		List<SObject> lstContactUpdate= new ArrayList<SObject>();
+		List<SObject> lstContactInsert= new ArrayList<SObject>();
+		SObject[] contactUpdate = new SObject[data.size()];
+		SObject[] contactInsert = new SObject[data.size()];
+		
 		for (ChildObjectBO childObj : data) {
-			/*if (childObj.isCheckFlag()) {
+			
+			if( childObj.getChildSfdcId()==null || childObj.getChildSfdcId().equalsIgnoreCase("")){
+			
 				System.out.println("in saving for loop" + i);
 				SObject contact = new SObject();
 				contact.setType("Child_Base__c");
@@ -1270,20 +1254,21 @@ public class PartnerWSDL {
 				contact.setField("Join_Condition__c",
 						childObj.getJoinCondition());
 				contact.setField("Saved__c ", childObj.isCheckFlag());
-
+				
+				lstContactInsert.add(contact);
 				// System.out.println("child Saved value is"+
 				// contact.getField("Child_Table__c"));
-				contacts[counter] = contact;
+				/*contacts[counter] = contact;*/
 				counter++;
-			} else {
-				System.out.println("in not save false block" + i);
+			
+				
 			}
-			i++;*/
-			
-			
-				System.out.println("in saving for loop" + i);
+			else
+			{
+				System.out.println("in UPDATING for loop" + i);
 				SObject contact = new SObject();
 				contact.setType("Child_Base__c");
+				contact.setField("Id",childObj.getChildSfdcId());
 				contact.setField("Primary_Table__c", childObj.getBaseObjName());
 				contact.setField("Project__c",
 						((String) session.getAttribute("projectId")));
@@ -1294,13 +1279,38 @@ public class PartnerWSDL {
 
 				// System.out.println("child Saved value is"+
 				// contact.getField("Child_Table__c"));
-				contacts[counter] = contact;
+				/*contacts[counter] = contact;*/
+				lstContactUpdate.add(contact);
 				counter++;
+				
+			}
 			
-
 		} //end of for loop
 //here I save it
-		if(contacts.length >= 199)
+		
+		if(lstContactInsert.size()>0){
+			System.out.println("in insert save loop");
+			contactInsert=lstContactInsert.toArray(new SObject[lstContactInsert.size()]);
+			SaveResult[] saveResults = getPartnerConnection().create(contactInsert);
+			for (int j = 0; j < saveResults.length; j++) {
+				System.out.println("save"+saveResults[j].isSuccess());
+				// System.out.println(saveResults[j].getErrors()[j].getMessage());
+			}
+		}
+		if(lstContactUpdate.size()>0){
+			System.out.println("in update save loop");
+			contactUpdate=lstContactUpdate.toArray(new SObject[lstContactUpdate.size()]);
+			SaveResult[] saveResults = getPartnerConnection().update(contactUpdate);
+			for (int j = 0; j < saveResults.length; j++) {
+				System.out.println("update"+saveResults[j].isSuccess());
+				// System.out.println(saveResults[j].getErrors()[j].getMessage());
+			}
+		}
+		
+		
+		//end here
+		
+	/*	if(contacts.length >= 199)
 		{
 			System.out.println("more dan 199 TRANSACTION");
 			  List<SObject>  tmpList=new ArrayList();
@@ -1326,7 +1336,7 @@ public class PartnerWSDL {
 				System.out.println(saveResults[j].isSuccess());
 				// System.out.println(saveResults[j].getErrors()[j].getMessage());
 			}
-		}
+		}*/
 	}
 
 	public List<ChildObjectBO> getSavedChildDBData(String projectId,
@@ -1384,6 +1394,10 @@ public class PartnerWSDL {
 					childPageObj.setJoinCondition(joinCondtn);
 
 					childPageObj.setSeqNum(counter);
+					
+					String childSfdcId=(String)contact.getField("Id");
+					System.out.println("childSfdc id in get method is"+childSfdcId);
+					childPageObj.setChildSfdcId(childSfdcId);
 
 					/*
 					 * String projId = (String) contact.getField("Project__c");
