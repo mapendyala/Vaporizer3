@@ -73,7 +73,7 @@ public class HomeController {
 		System.out.println("here");
 		HttpSession session = request.getSession(true);
 		//String projectId="a0PG000000B2wmDMAR";
-		String projectId="a0PG000000B3Q7R";
+		String projectId="a0PG000000B3RgvMAF";
 		//String projectId="a0PG000000B3OFn";
 		session.setAttribute("projectId", projectId);
 		data = partnerWSDL.getSavedDBData(projectId, data);
@@ -276,9 +276,10 @@ public class HomeController {
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
 		PartnerWSDL partnerWSDL= new PartnerWSDL();
+		partnerWSDL.login();
 		String formattedDate = dateFormat.format(date);
 
-
+		HttpSession session=request.getSession();
 
 
 		ArrayList<String> siebelList=new ArrayList<String>();
@@ -295,6 +296,9 @@ public class HomeController {
 		// System.out.println(dataForm.getData());
 		System.out.println("doneeeeeeee-------------");
 		//System.out.println(data.get(0).getSiebelObject());
+		
+		data = partnerWSDL.getSavedDBData((String)session.getAttribute("projectId"), data);
+
 
 		List<ChildObjectBO> childDataList = new ArrayList<ChildObjectBO>();
 		String totalRowCount= request.getParameter("rowCount");
@@ -331,10 +335,16 @@ public class HomeController {
 			String siebelChildObjName = "childObjName"+i;
 			String siebelJoinCondition= "joinCondition"+i;
 			String siebelCheckFlag="checkFlag"+i;
+			String childSfdcId="sfdcId"+i;
+			
+			
+			
 			childObj.setSeqNum(Integer.parseInt(request.getParameter(sequenceNumber)));
 			childObj.setBaseObjName(request.getParameter(siebelBaseObjName));
 			childObj.setChildObjName(request.getParameter(siebelChildObjName));
 			childObj.setJoinCondition(request.getParameter(siebelJoinCondition));
+			System.out.println("sfdc id is"+request.getParameter(childSfdcId));
+			childObj.setChildSfdcId(request.getParameter(childSfdcId));
 			String checkedFlagStr=request.getParameter(siebelCheckFlag);
 
 			if(checkedFlagStr != "" && checkedFlagStr !=null)
@@ -353,11 +363,11 @@ public class HomeController {
 
 
 			System.out.println("checkbox value is"+request.getParameter(siebelCheckFlag));
-			System.out.println("values are"+ childObj.getSeqNum() + "and" + childObj.getBaseObjName());
-			System.out.println("rest values are"+ childObj.getChildObjName() + "and" + childObj.getJoinCondition());
+			/*System.out.println("values are"+ childObj.getSeqNum() + "and" + childObj.getBaseObjName());
+			System.out.println("rest values are"+ childObj.getChildObjName() + "and" + childObj.getJoinCondition());*/
 			childDataList.add(childObj);
 		}
-		System.out.println("child data save list is"+childDataList);
+		//System.out.println("child data save list is"+childDataList);
 		partnerWSDL.saveChildDataDB(childDataList,request);
 
 		return new ModelAndView("vaporizer" , "data", data);
@@ -366,7 +376,7 @@ public class HomeController {
 	
 	
 	@RequestMapping(value="/getextractData", method = RequestMethod.GET)
-	@ResponseBody public void createExtractQuery(HttpServletRequest request){
+	@ResponseBody public String createExtractQuery(HttpServletRequest request){
 		System.out.println("In Home controller get extract data method");
 		HttpSession session = request.getSession(true);
 		String projId  = (String)session.getAttribute("projectId");
@@ -376,14 +386,13 @@ public class HomeController {
 		String siebelTableNameValue = request.getParameter("siebelObjName");
 		String subprojectId=partnerWSDL.getsubprojects(siebelTableNameValue);
 		String mappingUrl="";
-		if(sfdcId  != null){
-			
+		if(sfdcId  != null){			
 			mappingUrl=partnerWSDL.getextractionData(projId, sfdcId, subprojectId,siebelTableNameValue);
 		}else{
-		
 			System.out.println("Child Base and Mapping pages have not been selected");
-			//partnerWSDL.getpreDefineMappingRecords(subprojectId, projId);
+			
 		}
+		return mappingUrl;
 	}
 
 
