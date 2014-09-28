@@ -507,11 +507,12 @@ public class HomeController {
 				//System.out.println(mappingData1.get(0));
 
 				List<MappingModel> mappingData=partnerWSDL.getFieldMapping(tableName,myChildList);
-				ArrayList<String> field=new ArrayList<String>();
-				for(int count=0;count<mappingData.size();count++){
+				ArrayList<String> field= new ArrayList<String>();
+						field=partnerWSDL.getFieldTarget(tableName);
+				/*for(int count=0;count<mappingData.size();count++){
 					field.add(mappingData.get(count).getSfdcFieldTable());
 
-				}
+				}*/
 				modelChild.addAttribute("sfdcObj",mappingData.get(0).getSfdcObjectName());
 				modelChild.addAttribute("mappingField",field);
 				if(mappingData1.isEmpty()){
