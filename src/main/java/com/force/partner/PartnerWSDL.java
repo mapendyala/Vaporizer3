@@ -375,7 +375,50 @@ public class PartnerWSDL {
 	}
 
 	// Amrita:Getting field Mapping
+//Select Source_Field__c, Field_Target__c, Source_Base_Table__c from Field_Mapping_Data_Migration__c where Source_Base_Table__c ='"+ tableData.getString("id")
+	
+	public ArrayList<String> getFieldTarget(JSONObject tableData){
+		
+		String siebelTableName = tableData.getString("siebelTableName");
+		String sfdcTablename = tableData.getString("sfdcTableName");
+		String SFDTargetName = "No data";
+		ArrayList<String> field=new ArrayList<String>();
+		try {
+			partnerConnection.setQueryOptions(250);
+			
+			// SOQL query to use
+			// String sourceBaseTableId="a0QG000000BGG0VMAX";
+			String soqlQuery = "Select  Field_Target__c from Field_Mapping_Data_Migration__c where Source_Base_Table__c ='"+ tableData.getString("id")+"'";
+		
+			
+				QueryResult qr = partnerConnection.query(soqlQuery);
+				boolean done = false;
+				int loopCount = 0;
+				// Loop through the batches of returned results
+				while (!done) {
 
+					SObject[] records = qr.getRecords();
+					// Process the query results
+					for (int i = 0; i < records.length; i++) {
+						SFDTargetName = (String) records[i]
+								.getField("Field_Target__c");
+						field.add(SFDTargetName);
+					}
+					if (qr.isDone()) {
+						done = true;
+					} else {
+						qr = partnerConnection.queryMore(qr.getQueryLocator());
+					}
+
+				}
+			} catch (ConnectionException ce) {
+				ce.printStackTrace();
+			}
+			System.out.println("\nQuery execution completed.");
+
+			return field;
+		
+		}
 	public List<MappingModel> getFieldMapping(JSONObject tableData,
 			List<Object> myChildList) {
 		List<MappingModel> mappingData = new LinkedList<MappingModel>();
@@ -485,7 +528,7 @@ public class PartnerWSDL {
 				}
 				sb1.append(")");
 				String soqlQuery2 = sb1.toString();
-				System.out.println("amritaaaaaaaa" + soqlQuery2);
+				System.out.println("Mapping" + soqlQuery2);
 				QueryResult qr2 = partnerConnection.query(soqlQuery2);
 				boolean done2 = false;
 
