@@ -60,15 +60,15 @@ var sfdcObjectForExtarction="";
 		 $("#masterTable tbody")
 				.append(
 						
-						"<tr style='height:45px; width:45px;'>"
+						"<tr style='height:10%; width:10%;'>"
 								+ "<td><input name="+migrateId+" type='checkbox'></td>"
 								+ "<td><input name= "+seqId+" hidden value="+rowNum+">"+rowNum+"</td>"
-								+ "<td><input size='20' name="+objName+" id = "+objName+" placeholder='Click on Search' readonly style='margin-left:35px;'/><button type='button'id="+srchObj+" style='display: inline;' onclick='getPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
-								+ "<td><input name="+primTable+" id="+primTable+" readonly style='margin-left:35px;'/></td>"
-								+ "<td><input type='text' id ="+thresholdId+" name="+thresholdId+" onchange='makeReadonly("+rowNum+")' style='margin-left:15px;'></td>"
-								+ "<td><a href='#' onclick='submitForm("+rowNum+")' style='margin-left:15px;'>Select</a></td>" 
-								+ "<td><input id="+SFDCObjName+" name="+SFDCObjName+" readonly='true' style='margin-left:35px;'/><button type='button'id="+srchSFDCObj+" style='display: inline;' onclick='getSFDCPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
-								+ "<td><a href='#' onclick='submit("+rowNum+")' style='margin-left:15px;'>Select</a></td>"
+								+ "<td><input size='20' name="+objName+" id = "+objName+" placeholder='Click on Search' readonly style='margin-left:5%;'/><button type='button'id="+srchObj+" style='display: inline;' onclick='getPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
+								+ "<td><input name="+primTable+" id="+primTable+" readonly style='margin-left:5%;'/></td>"
+								+ "<td><input type='text' id ="+thresholdId+" name="+thresholdId+" onchange='makeReadonly("+rowNum+")' style='margin-left:5%;'></td>"
+								+ "<td><a href='#' onclick='submitForm("+rowNum+")' style='margin-left:5%;'>Select</a></td>" 
+								+ "<td><input id="+SFDCObjName+" name="+SFDCObjName+" readonly='true' style='margin-left:5%;'/><button type='button'id="+srchSFDCObj+" style='display: inline;' onclick='getSFDCPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
+								+ "<td><a href='#' onclick='submit("+rowNum+")' style='margin-left:5%;'>Select</a></td>"
 								+ "<td><c:out value='Selected'/></td>"
 								+ "<td>"
 								+ "<input class='btn btn-inverse' type='button' name='Extract' value='E' onclick='extract("+rowNum+")'/>"
@@ -461,7 +461,7 @@ var sfdcObjectForExtarction="";
 				  <c:if test="${not empty data}"> 
 				   <c:forEach items="${data}" var="mainPage"> 
 				    
-				<tr style="height: 45px; width: 45px;" >
+				<tr style="height: 10%; width: 10%;" >
 								<td>
 								<c:choose>
 								<c:when test="${mainPage.migrate == true}">
@@ -473,12 +473,12 @@ var sfdcObjectForExtarction="";
 								</c:choose>
 								</td>
 								<td><input type="hidden" name="seq${mainPage.sequence}" value="${mainPage.sequence}">${mainPage.sequence}</td>
-								<td><input name="objectName${mainPage.sequence}" id="objectName${mainPage.sequence}" value="${mainPage.siebelObject}" size='20' placeholder='Click on Search' readonly style='margin-left:35px;'/><button type='button' style='display: inline;' onclick="getPopup(${mainPage.sequence})"><span class='glyphicon glyphicon-search'></span></button></td>
-								<td><input value="${mainPage.primBaseTable}" id="prim${mainPage.sequence}" name="prim${mainPage.sequence}" readonly style='margin-left:35px;'/></td>
-								<td><input type='text' id="thresh${mainPage.sequence}" name="thresh${mainPage.sequence}" value="${mainPage.threshold}" onchange='makeReadonly(${mainPage.sequence})' style='margin-left:15px;'></td>
-								<td><a href="#" onclick='submitForm(${mainPage.sequence})' style='margin-left:15px;'>Select</a></td>
+								<td><input name="objectName${mainPage.sequence}" id="objectName${mainPage.sequence}" value="${mainPage.siebelObject}" size='20' placeholder='Click on Search' readonly style='margin-left:5%;'/><button type='button' style='display: inline;' onclick="getPopup(${mainPage.sequence})"><span class='glyphicon glyphicon-search'></span></button></td>
+								<td><input value="${mainPage.primBaseTable}" id="prim${mainPage.sequence}" name="prim${mainPage.sequence}" readonly style='margin-left:5%;'/></td>
+								<td><input type='text' id="thresh${mainPage.sequence}" name="thresh${mainPage.sequence}" value="${mainPage.threshold}" onchange='makeReadonly(${mainPage.sequence})' style='margin-left:5%;'></td>
+								<td><a href="#" onclick='submitForm(${mainPage.sequence})' style='margin-left:5%;'>Select</a></td>
 								<td><input name="SFDCObjName${mainPage.sequence}" id="SFDCObjName${mainPage.sequence}" value="${mainPage.sfdcObject}" readonly style='margin-left:35px;'/><button type='button' style='display: inline;'><span class='glyphicon glyphicon-search'></span></button></td>
-								<td><a href='#' onclick='submit(${mainPage.sequence})' style='margin-left:15px;'>Select</a></td>
+								<td><a href='#' onclick='submit(${mainPage.sequence})' style='margin-left:5%;'>Select</a></td>
 								<td><c:out value='Selected'/></td>
 								<td>
 								<input class='btn btn-inverse' type='button' name='Extract' value='E' onclick="extract(${mainPage.sequence})" />
@@ -501,32 +501,32 @@ var sfdcObjectForExtarction="";
 				<table style="border: 0">
 					<tr>
 						<td colspan="2"
-							style="float: right; width: 350px; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
+							style="float: right; width: 40%; padding: 10%; padding-top: 5%; padding-bottom: 5%;">
 							<!-- <input class="btn btn-block btn-inverse" type="button"
 							name="Extract" value="Extract All" /> -->
 						</td>
 					</tr>
 					<tr>
 						<td
-							style="float: left;  padding: 50px; width: 450px !Important; padding-top: 10px; padding-bottom: 10px;">
+							style="float: left;  padding: 10%; width: 50% !Important; padding-top: 5%; padding-bottom: 5%;">
 							<input type="text" style="width:100%;" placeholder="CSV Location" id="datafileUrl" />
 						</td>
 						<td
-							style="float: right; padding: 50px;width:350px !Important; padding-top: 10px; padding-bottom: 10px;">
+							style="float: right; padding: 10%;width:40% !Important; padding-top: 5%; padding-bottom: 5%;">
 							<input class="btn btn-block btn-inverse" type="button"
 							name="Extract" value="Migrate To SFDC" id="dataloadtoSFDC" onclick='initiateDataLoad()'/> 
 						</td>
 					</tr>
 					<tr>
 						<td colspan="2"
-							style="float: right; width:350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
+							style="float: right; width:40% !Important; padding: 10%; padding-top: 5%; padding-bottom: 5%;">
 							<!-- <input class="btn btn-block btn-inverse" type="button"
 							name="Extract" value="Create CSV File" /> -->
 						</td>
 					</tr>
 					<tr>
 						<td colspan="2"
-							style="float: right; width: 350px; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
+							style="float: right; width:40% !Important; padding: 10%; padding-top: 5%; padding-bottom: 5%;">
 							<!-- <input class="btn btn-block btn-inverse" type="button"
 							name="Extract" value="Migrate To SFDC" id="dataloadtoSFDC" onclick='initiateDataLoad()'/>  -->
 						</td>
