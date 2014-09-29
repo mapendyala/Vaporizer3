@@ -374,7 +374,7 @@ public class PartnerWSDL {
 		}
 	}
 
-	// Amrita:Getting field Mapping
+	// Amrita:Getting field value for dropdown
 //Select Source_Field__c, Field_Target__c, Source_Base_Table__c from Field_Mapping_Data_Migration__c where Source_Base_Table__c ='"+ tableData.getString("id")
 	
 	public ArrayList<String> getFieldTarget(JSONObject tableData){
@@ -383,12 +383,19 @@ public class PartnerWSDL {
 		String sfdcTablename = tableData.getString("sfdcTableName");
 		String SFDTargetName = "No data";
 		ArrayList<String> field=new ArrayList<String>();
+		ArrayList<String> fieldId = new ArrayList<String>();
+		String s = sfdcTablename + "_PreDefined_Mapping";
+
+		
+		
 		try {
 			partnerConnection.setQueryOptions(250);
 			
 			// SOQL query to use
 			// String sourceBaseTableId="a0QG000000BGG0VMAX";
-			String soqlQuery = "Select  Field_Target__c from Field_Mapping_Data_Migration__c where Source_Base_Table__c ='"+ tableData.getString("id")+"'";
+			String soqlQuery = " Select  Object_API_Name__c,Id, Project__r.Name, Table_Name__c, Type__c from Table__c where  Project__r.Name='"
+					+ s + "'";
+			//String soqlQuery = "Select Field_Target__c from Field_Mapping_Data_Migration__c where Source_Base_Table__r.Table_Name__c ='"+sfdcTablename+"'";
 		
 			
 				QueryResult qr = partnerConnection.query(soqlQuery);
@@ -396,21 +403,69 @@ public class PartnerWSDL {
 				int loopCount = 0;
 				// Loop through the batches of returned results
 				while (!done) {
+					SObject[] records1 = qr.getRecords();
+					for (int i = 0; i < records1.length; i++) {
 
-					SObject[] records = qr.getRecords();
-					// Process the query results
-					for (int i = 0; i < records.length; i++) {
-						SFDTargetName = (String) records[i]
-								.getField("Field_Target__c");
-						field.add(SFDTargetName);
+						if (((String) records1[i].getField("Type__c"))
+								.equals("Siebel Child")) {
+							fieldId.add((String) records1[i].getField("Id"));
+						}
+
 					}
 					if (qr.isDone()) {
 						done = true;
 					} else {
 						qr = partnerConnection.queryMore(qr.getQueryLocator());
 					}
+				}
+				//String soqlQuery1 = "Select Field_Target__c from Field_Mapping_Data_Migration__c where Source_Base_Table__r.Table_Name__c ='"+sfdcTablename+"'";
+				String soqlQuery1 = "Select  Field_Target__c from Field_Mapping_Data_Migration__c where Source_Base_Table__c ='"+ tableData.getString("id")+"'";
+				QueryResult qr1 = partnerConnection.query(soqlQuery1);
+				boolean done1 = false;
+				//int loopCount = 0;
+			while (!done1) {
+
+					SObject[] records1 = qr1.getRecords();
+					// Process the query results
+					for (int i = 0; i < records1.length; i++) {
+						SFDTargetName = (String) records1[i]
+								.getField("Field_Target__c");
+						field.add(SFDTargetName);
+					}
+					if (qr1.isDone()) {
+						done1 = true;
+					} else {
+						qr1 = partnerConnection.queryMore(qr.getQueryLocator());
+					}
 
 				}
+			for (int j = 0; j < fieldId.size(); j++) {
+				String id = fieldId.get(j);
+				String soqlQuery2 ="Select  Field_Target__c  from Field_Mapping_Data_Migration__c where Source_Base_Table__c ='"
+								+ id + "'";
+				// Make the query call and get the query results
+				QueryResult qr2 = partnerConnection.query(soqlQuery2);
+				boolean done2 = false;
+
+				// int loopCount = 0;
+				// Loop through the batches of returned results
+				while (!done2) {
+
+					SObject[] records2 = qr2.getRecords();
+					// Process the query results
+					for (int i = 0; i < records2.length; i++) {
+						SFDTargetName = (String) records2[i]
+							.getField("Field_Target__c");
+					field.add(SFDTargetName);}
+					if (qr2.isDone()) {
+						done2 = true;
+					} else {
+						qr2 = partnerConnection
+								.queryMore(qr2.getQueryLocator());
+					}
+
+				}
+			}
 			} catch (ConnectionException ce) {
 				ce.printStackTrace();
 			}
