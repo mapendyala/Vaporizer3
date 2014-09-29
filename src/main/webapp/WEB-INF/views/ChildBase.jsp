@@ -126,12 +126,43 @@
 		<td><input value="${childItem.childObjName}" id="childObjName${childItem.seqNum}" name="childObjName${childItem.seqNum}" readonly style='margin-left:45px;'/></td>
 		
 			<td ><input value="${childItem.joinCondition}" id="joinCondition${childItem.seqNum}" name="joinCondition${childItem.seqNum}" readonly style='margin-left:45px;width:130%'/></td>
+			
+			<td><input type="hidden" value="${childItem.childSfdcId}" id="sfdcId${childItem.seqNum}" name="sfdcId${childItem.seqNum}"></td>
 </tr>
 </c:forEach> 
 
 
 				</table>
 				<div id="row"><input id="rowCount" name='rowCount' type="hidden" value="${myChildList.size()}"></div>
+				
+					<div class="buttonContainer">
+                           <table style="border: 0">
+                           
+                                  <tr>
+                                         <td colspan="2"
+                                                style="float: right; width:350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
+                                                
+                                                <input class="btn btn-block btn-inverse" type="submit" id="cancel"
+                                                name="Done" value="Done"  />
+                                         <!--   
+                                                <button id="cancel" type="submit" style="float: right;"
+                                         class="btn btn-block btn-inverse">Done</button> -->
+                                                
+                                         </td>
+                                  </tr>
+                                  
+                                  <!-- <tr>
+                                         <td colspan="2"
+                                                style="float: right; width:350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
+                                                <input class="btn btn-block btn-inverse" type="submit"
+                                                name="Extract" value="Done"  /> -->
+                           </table>
+                     
+                     </div> <!-- //end of button containr -->
+
+
+				
+				
 				</div> <!-- //end of mapping container -->
 				
 				<div></div>
@@ -142,7 +173,7 @@
 		</div> <!-- //end of main content -->
 		
 		</div>
-		<div class="buttonContainer">
+		<!-- <div class="buttonContainer">
 				<table style="border: 0">
 				
 					<tr>
@@ -151,21 +182,21 @@
 							
 							<input class="btn btn-block btn-inverse" type="submit" id="cancel"
 							name="Done" value="Done"  />
-						<!-- 	
+							
 							<button id="cancel" type="submit" style="float: right;"
-						class="btn btn-block btn-inverse">Done</button> -->
+						class="btn btn-block btn-inverse">Done</button>
 							
 						</td>
 					</tr>
 					
-					<!-- <tr>
+					<tr>
 						<td colspan="2"
 							style="float: right; width:350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
 							<input class="btn btn-block btn-inverse" type="submit"
-							name="Extract" value="Done"  /> -->
+							name="Extract" value="Done"  />
 				</table>
 			
-			</div> <!-- //end of button containr -->
+			</div>  --><!-- //end of button containr -->
 		</form:form>
 		
 			<!-- </div> -->

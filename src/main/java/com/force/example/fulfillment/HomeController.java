@@ -90,7 +90,7 @@ public class HomeController {
 
 	@RequestMapping(value="/initiateDataloader", method=RequestMethod.GET,produces="text/plain")
 	@ResponseBody
-	public String initiateDataLoader(Locale locale,Model model,HttpServletRequest request,@RequestParam("datafileUrl")String datafileUrl) throws IOException, AsyncApiException, ConnectionException
+	public String initiateDataLoader(Locale locale,Model model,HttpServletRequest request,@RequestParam("datafileUrl")String datafileUrl,@RequestParam("objectName")String objectName) throws IOException, AsyncApiException, ConnectionException
 	{
 		PartnerWSDL partnerWSDL= new PartnerWSDL(); 	  
 		partnerWSDL.login();
@@ -102,8 +102,12 @@ public class HomeController {
 		String[] strList=datafileUrl.split("-");
 		datafileUrl="https://"+strList[0]+".salesforce.com/"+strList[1];
 		com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
-		String objectName="Account";
-		return dt.dataUploadController(datafileUrl,username,password+token,objectName);
+		 
+		if(objectName==null || objectName=="")
+		{
+			objectName="Account";
+		}
+		return dt.dataUploadController(datafileUrl,"subhchakraborty@deloitte.com.vaporizer","Sep@2013",objectName);
 		// TODO Auto-generated catch block
 	}
 
@@ -335,10 +339,16 @@ public class HomeController {
 			String siebelChildObjName = "childObjName"+i;
 			String siebelJoinCondition= "joinCondition"+i;
 			String siebelCheckFlag="checkFlag"+i;
+			String childSfdcId="sfdcId"+i;
+			
+			
+			
 			childObj.setSeqNum(Integer.parseInt(request.getParameter(sequenceNumber)));
 			childObj.setBaseObjName(request.getParameter(siebelBaseObjName));
 			childObj.setChildObjName(request.getParameter(siebelChildObjName));
 			childObj.setJoinCondition(request.getParameter(siebelJoinCondition));
+			System.out.println("sfdc id is"+request.getParameter(childSfdcId));
+			childObj.setChildSfdcId(request.getParameter(childSfdcId));
 			String checkedFlagStr=request.getParameter(siebelCheckFlag);
 
 			if(checkedFlagStr != "" && checkedFlagStr !=null)
@@ -357,11 +367,11 @@ public class HomeController {
 
 
 			System.out.println("checkbox value is"+request.getParameter(siebelCheckFlag));
-			System.out.println("values are"+ childObj.getSeqNum() + "and" + childObj.getBaseObjName());
-			System.out.println("rest values are"+ childObj.getChildObjName() + "and" + childObj.getJoinCondition());
+			/*System.out.println("values are"+ childObj.getSeqNum() + "and" + childObj.getBaseObjName());
+			System.out.println("rest values are"+ childObj.getChildObjName() + "and" + childObj.getJoinCondition());*/
 			childDataList.add(childObj);
 		}
-		System.out.println("child data save list is"+childDataList);
+		//System.out.println("child data save list is"+childDataList);
 		partnerWSDL.saveChildDataDB(childDataList,request);
 
 		return new ModelAndView("vaporizer" , "data", data);
@@ -380,13 +390,11 @@ public class HomeController {
 		String siebelTableNameValue = request.getParameter("siebelObjName");
 		String subprojectId=partnerWSDL.getsubprojects(siebelTableNameValue);
 		String mappingUrl="";
-		if(sfdcId  != null){
-			
+		if(sfdcId  != null){			
 			mappingUrl=partnerWSDL.getextractionData(projId, sfdcId, subprojectId);
 		}else{
-		
 			System.out.println("Child Base and Mapping pages have not been selected");
-			//partnerWSDL.getpreDefineMappingRecords(subprojectId, projId);
+			 
 		}
 		return mappingUrl;
 	}
@@ -499,11 +507,12 @@ public class HomeController {
 				//System.out.println(mappingData1.get(0));
 
 				List<MappingModel> mappingData=partnerWSDL.getFieldMapping(tableName,myChildList);
-				ArrayList<String> field=new ArrayList<String>();
-				for(int count=0;count<mappingData.size();count++){
+				ArrayList<String> field= new ArrayList<String>();
+						field=partnerWSDL.getFieldTarget(tableName);
+				/*for(int count=0;count<mappingData.size();count++){
 					field.add(mappingData.get(count).getSfdcFieldTable());
 
-				}
+				}*/
 				modelChild.addAttribute("sfdcObj",mappingData.get(0).getSfdcObjectName());
 				modelChild.addAttribute("mappingField",field);
 				if(mappingData1.isEmpty()){

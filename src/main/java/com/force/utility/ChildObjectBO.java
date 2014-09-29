@@ -7,9 +7,18 @@ public class ChildObjectBO {
 	private String childObjName;
 	private String joinCondition;
 	
+	private boolean  checkFlag;
 	
-private boolean  checkFlag;
+	private String childSfdcId;
 	
+	
+	
+	public String getChildSfdcId() {
+		return childSfdcId;
+	}
+	public void setChildSfdcId(String childSfdcId) {
+		this.childSfdcId = childSfdcId;
+	}
 	public boolean isCheckFlag() {
 		return checkFlag;
 	}
