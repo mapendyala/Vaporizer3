@@ -473,11 +473,11 @@ var sfdcObjectForExtarction="";
 								</c:choose>
 								</td>
 								<td><input type="hidden" name="seq${mainPage.sequence}" value="${mainPage.sequence}">${mainPage.sequence}</td>
-								<td><input name="objectName${mainPage.sequence}" id="objectName${mainPage.sequence}" value="${mainPage.siebelObject}" size='20' placeholder='Click on Search' readonly style=''/><button type='button' style='display: inline;' onclick="getPopup(${mainPage.sequence})"><span class='glyphicon glyphicon-search'></span></button></td>
+								<td style='width:100%;'><input name="objectName${mainPage.sequence}" id="objectName${mainPage.sequence}" value="${mainPage.siebelObject}" size='20' placeholder='Click on Search' readonly style=''/><button type='button' style='display: inline;' onclick="getPopup(${mainPage.sequence})"><span class='glyphicon glyphicon-search'></span></button></td>
 								<td><input value="${mainPage.primBaseTable}" id="prim${mainPage.sequence}" name="prim${mainPage.sequence}" readonly style='margin-left:35px;'/></td>
 								<td><input type='text' id="thresh${mainPage.sequence}" name="thresh${mainPage.sequence}" value="${mainPage.threshold}" onchange='makeReadonly(${mainPage.sequence})' style='margin-left:15px;'></td>
 								<td><a href="#" onclick='submitForm(${mainPage.sequence})' style='margin-left:15px;'>Select</a></td>
-								<td><input name="SFDCObjName${mainPage.sequence}" id="SFDCObjName${mainPage.sequence}" value="${mainPage.sfdcObject}" readonly style=''/><button type='button' style='display: inline;'><span class='glyphicon glyphicon-search'></span></button></td>
+								<td style='width:100%;'><input name="SFDCObjName${mainPage.sequence}" id="SFDCObjName${mainPage.sequence}" value="${mainPage.sfdcObject}" readonly style=''/><button type='button' style='display: inline;'><span class='glyphicon glyphicon-search'></span></button></td>
 								<td><a href='#' onclick='submit(${mainPage.sequence})' style='margin-left:15px;'>Select</a></td>
 								<td><c:out value='Selected'/></td>
 								<td>
