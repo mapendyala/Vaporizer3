@@ -439,7 +439,7 @@ var sfdcObjectForExtarction="";
 		<button class="btn btn-primary" id="addRow" onclick="addRow()">[+]</button>			
 		<br><br>
 			<form:form action = "saveData" method = "post" id="mainForm" name="master" commandName="data">
-				<table id = "masterTable" style="width:100%;">
+				<table id = "masterTable" style="width:1350px;">
 				
 			<thead>
 				  <tr>
