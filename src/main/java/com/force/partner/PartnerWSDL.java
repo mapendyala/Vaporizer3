@@ -64,7 +64,7 @@ public class PartnerWSDL {
 	}
 
 	String username = "subhchakraborty@deloitte.com.vaporizer";
-	String password = "Sep@2013";
+	String password = "Nov@2013";
 	String authEndPoint = "https://login.salesforce.com/services/Soap/u/24.0/";
 
 	public boolean login() {
