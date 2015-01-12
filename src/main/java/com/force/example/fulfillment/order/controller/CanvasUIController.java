@@ -82,7 +82,7 @@ public class CanvasUIController {
         cc = cr.getContext();
         CanvasEnvironmentContext ce = cc.getEnvironmentContext();
         Map<String, Object> params = ce.getParameters();
-        System.out.println('params  '+params );
+        System.out.println("params  "+params );
         JSONObject parameters=json.getJSONObject("context").getJSONObject("environment").getJSONObject("parameters");
         String projectId=parameters.getString("projectId");   
         System.out.println("================="+projectId);
