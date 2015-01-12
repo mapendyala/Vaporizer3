@@ -74,6 +74,7 @@ public class CanvasUIController {
     @RequestMapping(method= RequestMethod.POST)
     public ModelAndView postSignedRequest(Model model,@RequestParam(value="signed_request")String signedRequest, HttpServletRequest request){
         String srJson = SignedRequest.verifyAndDecodeAsJson(signedRequest, getConsumerSecret());
+        System.out.println("srJson  "+srJson );
         JSONObject json= new JSONObject(srJson);
         CanvasRequest cr = SignedRequest.verifyAndDecode(signedRequest, getConsumerSecret());
         HttpSession session = request.getSession(true);
@@ -81,6 +82,7 @@ public class CanvasUIController {
         cc = cr.getContext();
         CanvasEnvironmentContext ce = cc.getEnvironmentContext();
         Map<String, Object> params = ce.getParameters();
+        System.out.println('params  '+params );
         JSONObject parameters=json.getJSONObject("context").getJSONObject("environment").getJSONObject("parameters");
         String projectId=parameters.getString("projectId");   
         System.out.println("================="+projectId);
