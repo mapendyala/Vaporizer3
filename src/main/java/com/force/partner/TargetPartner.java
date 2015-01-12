@@ -21,7 +21,9 @@ public class TargetPartner {
 	
 	public ForceApi getForceApi() {
 	    SecurityContext sc = ForceSecurityContextHolder.get();
+	    System.out.println("SecurityContext sc "+sc);
 	            ApiSession s = new ApiSession();
+	            System.out.println("ApiSession s "+s);
 	            s.setAccessToken(sc.getSessionId());
 	            s.setApiEndpoint(sc.getEndPointHost());
 	            return new ForceApi(s);
