@@ -38,6 +38,7 @@ import com.force.api.ApiException;
 import com.force.example.fulfillment.order.model.Invoice;
 import com.force.example.fulfillment.order.service.InvoiceService;
 import com.force.partner.PartnerWSDL;
+import com.force.partner.TargetPartner;
 import com.force.utility.UtilityClass;
 import com.sforce.ws.ConnectionException;
 
@@ -87,21 +88,21 @@ public class CanvasUIController {
         String projectId=parameters.getString("projectId");   
         System.out.println("================="+projectId);
         session.setAttribute("projectId", projectId);
- 	    PartnerWSDL partnerWSDL= new PartnerWSDL(); 	  
+ 	    TargetPartner targetPart= new TargetPartner(); 	  
  	 //  System.out.println(projectName); 	  
- 	    partnerWSDL.login();
- 	  data= partnerWSDL.getSavedDBData(projectId, data);
- 	    String projectName=partnerWSDL.getProjectName(projectId);
+ 	   // partnerWSDL.login();
+ 	 // data= getForceApi.getSavedDBData(projectId, data);
+ 	    String projectName=targetPart.getProjectName(projectId);
  	   session.setAttribute("projectName", projectName);/*added by piyush*/
- 	   JSONObject connectionData=partnerWSDL.getConnectionData(projectId);
+ 	   //JSONObject connectionData=partnerWSDL.getConnectionData(projectId);
  	   UtilityClass utilityClass= new UtilityClass();
- 	   try {
- 		   utilityClass.getConnection(connectionData);
+ 	   /*try {
+ 		//   utilityClass.getConnection(connectionData);
  		   
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			model.addAttribute("error", "Connection to Siebel database unsuccessful. Either username/password/DatabaseUrl is incorrect.");
-		}
+		}*/
  	 // return "vaporizer";
  	  return new ModelAndView("vaporizer", "data", data);
     }
