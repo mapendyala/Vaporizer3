@@ -20,7 +20,7 @@ public class TargetPartner {
 	
 	
 	public ForceApi getForceApi() {
-	    SecurityContext sc = ForceSecurityContextHolder.get();
+	    SecurityContext sc = ForceSecurityContextHolder.get(true);
 	    System.out.println("SecurityContext sc "+sc);
 	            ApiSession s = new ApiSession();
 	            System.out.println("ApiSession s "+s);
