@@ -4,6 +4,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
+import org.json.JSONObject;
+
 import com.force.api.ApiSession;
 import com.force.api.ForceApi;
 import com.force.api.QueryResult;
@@ -19,19 +23,21 @@ public class TargetPartner {
 	
 	
 	
-	public ForceApi getForceApi() {
-	    SecurityContext sc = ForceSecurityContextHolder.get(true);
-	    System.out.println("SecurityContext sc "+sc);
+	public ForceApi getForceApi(HttpSession session) {
+		JSONObject authParams=(JSONObject) session.getAttribute("authParams");
 	            ApiSession s = new ApiSession();
 	            System.out.println("ApiSession s "+s);
-	            s.setAccessToken(sc.getSessionId());
-	            s.setApiEndpoint(sc.getEndPointHost());
+	            s.setAccessToken(authParams.getString("oAuthToken"));
+	            		//sc.getSessionId());
+	            s.setApiEndpoint(authParams.getString("instanceUrl"));
+	            		//sc.getEndPointHost());
+	            System.out.println("ApiSession s "+s.getAccessToken()+"  6666 "+s.getApiEndpoint());
 	            return new ForceApi(s);
 	}
 	
 	
 	
-	public String getProjectName(String projectId) {
+	public String getProjectName(String projectId,HttpSession session) {
 
 		String projectName = null;
 		try {
@@ -43,7 +49,7 @@ public class TargetPartner {
 			String soqlQuery = " Select Name, Parent_Project__c, Type__c from Project__c where id= '"
 					+ projectId + "'";
 			// Make the query call and get the query results
-			QueryResult<Map> qr = getForceApi().query(soqlQuery);
+			QueryResult<Map> qr = getForceApi(session).query(soqlQuery);
 			boolean done = false;
 
 			int loopCount = 0;
@@ -72,15 +78,19 @@ public class TargetPartner {
 
 	}
 
-
+/*public static void main(String args[]){
+	TargetPartner tp= new TargetPartner();
+	tp.getProjectName("a0PG000000B5e2yMAB");
 	
-	public List<MainPage> getSavedDBData(String projectId, List<MainPage> data) {
+}*/
+	
+	/*public List<MainPage> getSavedDBData(String projectId, List<MainPage> data) {
 		try {
 			// SOQL query to use
 			String soqlQuery = "Select Id, Migrate__c, Sequence__c, Prim_Base_Table__c, Project__c, SFDC_Object__c, Siebel_Object__c, Threshold__c from Mapping_Staging_Table__c where Project__c ='"
 					+ projectId + "'";
 			// Make the query call and get the query results
-			 QueryResult<Map> qr = getForceApi().query(soqlQuery);
+			 QueryResult<Map> qr = getForceApi(session).query(soqlQuery);
 			//QueryResult qr = partnerConnection.query(soqlQuery);
 			boolean done = false;
 
@@ -134,7 +144,7 @@ public class TargetPartner {
 		return data;
 	}
 
-
+*/
 
 
 }

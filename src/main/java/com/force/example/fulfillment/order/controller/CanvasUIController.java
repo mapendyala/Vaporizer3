@@ -85,6 +85,13 @@ public class CanvasUIController {
         Map<String, Object> params = ce.getParameters();
         System.out.println("params  "+params );
         JSONObject parameters=json.getJSONObject("context").getJSONObject("environment").getJSONObject("parameters");
+        String oAuthToken=json.getJSONObject("client").getString("oauthToken");
+        String instanceUrl=json.getJSONObject("client").getString("instanceUrl");
+        JSONObject authParams= new JSONObject();
+        authParams.put("oAuthToken", oAuthToken);
+        authParams.put("instanceUrl", instanceUrl);
+        session.setAttribute("authParams", authParams);
+        
         String projectId=parameters.getString("projectId");   
         System.out.println("================="+projectId);
         session.setAttribute("projectId", projectId);
@@ -92,7 +99,7 @@ public class CanvasUIController {
  	 //  System.out.println(projectName); 	  
  	   // partnerWSDL.login();
  	 // data= getForceApi.getSavedDBData(projectId, data);
- 	    String projectName=targetPart.getProjectName(projectId);
+ 	    String projectName=targetPart.getProjectName(projectId,session);
  	   session.setAttribute("projectName", projectName);/*added by piyush*/
  	   //JSONObject connectionData=partnerWSDL.getConnectionData(projectId);
  	   UtilityClass utilityClass= new UtilityClass();
