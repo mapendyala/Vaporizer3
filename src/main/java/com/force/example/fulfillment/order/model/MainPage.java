@@ -11,9 +11,15 @@ import java.util.Comparator;
  */
 public class MainPage implements Comparable<MainPage> {
 
-	private String migrate;
+	private Boolean migrate;
 	private String sequence;
 	private String siebelObject;
+	public Boolean getMigrate() {
+		return migrate;
+	}
+	public void setMigrate(Boolean migrate) {
+		this.migrate = migrate;
+	}
 	private String primBaseTable;
 	private String threshold;
 	private String sfdcObject;
@@ -55,12 +61,7 @@ public class MainPage implements Comparable<MainPage> {
 	public void setRowCount(String rowCount) {
 		this.rowCount = rowCount;
 	}
-	public String getMigrate() {
-		return migrate;
-	}
-	public void setMigrate(String migrate) {
-		this.migrate = migrate;
-	}
+	
 	public String getSequence() {
 		return sequence;
 	}

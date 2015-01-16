@@ -833,7 +833,7 @@ public class PartnerWSDL {
 				SObject contact = new SObject();
 				contact.setType("Mapping_Staging_Table__c");
 				contact.setField("Migrate__c",
-						Boolean.parseBoolean(mainPage.getMigrate()));
+						mainPage.getMigrate());
 
 				contact.setField("Sequence__c", mainPage.getSequence());
 				contact.setField("Prim_Base_Table__c",
@@ -862,7 +862,7 @@ public class PartnerWSDL {
 					updateContact.setType("Mapping_Staging_Table__c");
 					updateContact.setId(mainPage.getSfdcId());
 					updateContact.setField("Migrate__c",
-							Boolean.parseBoolean(mainPage.getMigrate()));
+							mainPage.getMigrate());
 					updateContact.setField("Prim_Base_Table__c",
 							mainPage.getPrimBaseTable());
 					updateContact.setField("Project__c",
@@ -918,7 +918,7 @@ public class PartnerWSDL {
 					String sfdcTableName = (String) contact
 							.getField("SFDC_Object__c");
 					mainPage.setSfdcObject(sfdcTableName);
-					String migrate = (String) contact.getField("Migrate__c");
+					Boolean migrate = (Boolean) contact.getField("Migrate__c");
 					mainPage.setMigrate(migrate);
 					String seq = (String) contact.getField("Sequence__c");
 					mainPage.setSequence(seq);

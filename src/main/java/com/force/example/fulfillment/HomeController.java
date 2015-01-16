@@ -11,6 +11,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,9 +77,8 @@ public class HomeController {
 		System.out.println("here");
 		HttpSession session = request.getSession(true);
 		
-		JSONObject authParams = new JSONObject();
-		authParams.put("oAuthToken", "");
-		authParams.put("instanceUrl", "");
+		JSONObject authParams = getOAuthToken();
+		
 		session.setAttribute("authParams", authParams);
 		//String projectId="a0PG000000B2wmDMAR";
 		String projectId="a0PG000000B5e3fMAB";
@@ -442,9 +445,9 @@ public class HomeController {
 			String sfdcId = "SfdcId"+i;
 
 			if(request.getParameter(migrate)==null){
-				mainPage.setMigrate("false");
+				mainPage.setMigrate(false);
 			}else{
-				mainPage.setMigrate("true");
+				mainPage.setMigrate(true);
 			}
 			mainPage.setSequence(request.getParameter(seq));
 			mainPage.setSiebelObject(request.getParameter(objName));
@@ -530,6 +533,46 @@ public class HomeController {
 			}
 			return new ModelAndView("mapping", "data", data);
 		}
+	}
+	public JSONObject getOAuthToken(){
+		HttpClient httpClient= new HttpClient();
+		JSONObject authParams= new JSONObject();
+		PostMethod post = new PostMethod("https://login.salesforce.com/services/oauth2/token");
+        //post.addParameter("code", code);
+        post.addParameter("grant_type", "password");
+        post.addParameter("client_id", "3MVG98XJQQAccJQftNctCshPH7OHgKw4QQrOUSQbbp.dJK7pBXpbwdKGtE2u3U_mCSIWrd9RbAafS6PpwaveH");
+        post.addParameter("client_secret", "5595747085030222154");
+        post.addParameter("username","rachitjain@deloitte.com.vaporizer");
+        post.addParameter("password","deloitte@1");
+ 
+                try {
+                 httpClient.executeMethod(post);
+                    try {
+	                        JSONObject authResponse = new JSONObject(
+	                                        post.getResponseBodyAsString());
+	                        System.out.println("Auth response: "
+	                                + authResponse.toString());
+	 
+	                       String accessToken = authResponse.getString("access_token");
+	                       String instanceUrl = authResponse.getString("instance_url");
+	                      
+	               		authParams.put("oAuthToken", accessToken);
+	               		authParams.put("instanceUrl", instanceUrl);
+	                        System.out.println("Got access token: " + accessToken);
+	                    } catch (JSONException e) {
+	                        e.printStackTrace();
+	                        
+	                    }
+	                } catch (HttpException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} finally {
+	                    post.releaseConnection();
+	                }
+                return authParams;
 	}
 
 }

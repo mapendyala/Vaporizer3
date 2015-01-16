@@ -3,6 +3,7 @@ package com.force.partner;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -17,10 +18,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import com.force.api.ApiSession;
 import com.force.api.DescribeGlobal;
@@ -66,17 +76,89 @@ public class TargetPartner {
 		ApiSession s = new ApiSession();
         s.setAccessToken("00DG0000000lkuS!AQIAQGXdGMVcKYy8UhbLgaGBJ2gICdccHilAmvZROc0vcPecmw160VePf1qIbeglo2Pk2fxUN0KCwEFGVa7achJ6Z3pZSbX8");
         s.setApiEndpoint("https://na11.salesforce.com");
-        
-		Map sMap= new HashMap();
-		//sMap.put("Name", "test1");
-		sMap.put("Roll__c", 1224);
-		ForceApi fa= new ForceApi(s);
-		System.out.println("hello");
+        HttpClient httpclient = new HttpClient();
+       // GetMethod get = new GetMethod("https://na11.salesforce.com/services/data/v20.0/query");
+        JSONObject account = new JSONObject();
+        try {
+            account.put("Roll__c", 65766);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            
+        }
+       // https://login.salesforce.com/services/oauth2/token?grant_type=password&client_id=3MVG98XJQQAccJQftNctCshPH7OHgKw4QQrOUSQbbp.dJK7pBXpbwdKGtE2u3U_mCSIWrd9RbAafS6PpwaveH&client_secret=5595747085030222154&username=rachitjain@deloitte.com.vaporizer&password=deloitte@1
+        	
+    	
+        PostMethod post = new PostMethod("https://login.salesforce.com/services/oauth2/token");
+        //post.addParameter("code", code);
+        post.addParameter("grant_type", "password");
+        post.addParameter("client_id", "3MVG98XJQQAccJQftNctCshPH7OHgKw4QQrOUSQbbp.dJK7pBXpbwdKGtE2u3U_mCSIWrd9RbAafS6PpwaveH");
+        post.addParameter("client_secret", "5595747085030222154");
+        post.addParameter("username","rachitjain@deloitte.com.vaporizer");
+        post.addParameter("password","deloitte@1");
+ 
+                try {
+                  System.out.println(httpclient.executeMethod(post));  
+                    try {
+	                        JSONObject authResponse = new JSONObject(
+	                                        post.getResponseBodyAsString());
+	                        System.out.println("Auth response: "
+	                                + authResponse.toString());
+	 
+	                       String accessToken = authResponse.getString("access_token");
+	                       String instanceUrl = authResponse.getString("instance_url");
+	 
+	                        System.out.println("Got access token: " + accessToken);
+	                    } catch (JSONException e) {
+	                        e.printStackTrace();
+	                        
+	                    }
+	                } catch (HttpException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} finally {
+	                    post.releaseConnection();
+	                }
+
+       /* PostMethod post = new PostMethod("https://na11.salesforce.com/services/data/v20.0/sobjects/Test_Object__c/");
+        		        post.setRequestHeader("Authorization", "OAuth 00DG0000000lkuS!AQIAQGXdGMVcKYy8UhbLgaGBJ2gICdccHilAmvZROc0vcPecmw160VePf1qIbeglo2Pk2fxUN0KCwEFGVa7achJ6Z3pZSbX8");
+        		        try {
+							post.setRequestEntity(new StringRequestEntity(account.toString(),
+							        "application/json", null));
+						
+        		        httpclient.executeMethod(post);
+        		        if (post.getStatusCode() == HttpStatus.SC_CREATED) {
+        		        	                try {
+        		        	                    JSONObject response = new JSONObject(
+        		        	                                    post.getResponseBody());
+        		        	                    System.out.println("Create response: "
+        		        	                            + response.toString(2));
+        		        	                    if (response.getBoolean("success")) {
+        		        	                    String    accountId = response.getString("id");
+        		        	                        System.out
+															.println("New record id " + accountId + "\n\n");
+        		        	                    }
+        		        	                } catch (JSONException e) {
+        		        	                    e.printStackTrace();
+        		        	                    //throw new ServletException(e);
+        		        	                }
+        		        	            }
+        		        } catch (UnsupportedEncodingException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (HttpException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+        		 
 		
-		JSONObject js= new JSONObject();
-		js.put("Roll__C", 1234);
 		//fa.UpdateSObject("Test_Object__c", "Name",js);
-		
+		*/
 		System.out.println("bye");
 		
 	}
@@ -203,7 +285,7 @@ public class TargetPartner {
 					String sfdcTableName = (String) contact
 							.get("SFDC_Object__c");
 					mainPage.setSfdcObject(sfdcTableName);
-					String migrate = (String) contact.get("Migrate__c");
+					Boolean migrate = (Boolean) contact.get("Migrate__c");
 					mainPage.setMigrate(migrate);
 					String seq = (String) contact.get("Sequence__c");
 					mainPage.setSequence(seq);
@@ -1098,7 +1180,7 @@ public class TargetPartner {
 				SObject contact = new SObject();
 				contact.setType("Mapping_Staging_Table__c");
 				contact.setField("Migrate__c",
-						Boolean.parseBoolean(mainPage.getMigrate()));
+						mainPage.getMigrate());
 
 				contact.setField("Sequence__c", mainPage.getSequence());
 				contact.setField("Prim_Base_Table__c",
@@ -1127,7 +1209,7 @@ public class TargetPartner {
 					//updateContact.setType("Mapping_Staging_Table__c");
 					//updateContact.setId(mainPage.getSfdcId());
 					updateContact.put("Migrate__c",
-							Boolean.parseBoolean(mainPage.getMigrate()));
+							mainPage.getMigrate());
 					updateContact.put("Prim_Base_Table__c",
 							mainPage.getPrimBaseTable());
 					updateContact.put("Project__c",
