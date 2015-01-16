@@ -27,7 +27,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.force.example.fulfillment.order.controller.SiebelObjectController;
 import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.MappingModel;
-import com.force.partner.PartnerWSDL;
+
+import com.force.partner.TargetPartner;
 import com.force.utility.ChildObjectBO;
 import com.force.utility.SfdcObjectBO;
 import com.sforce.async.AsyncApiException;
@@ -67,16 +68,21 @@ public class HomeController {
 		model.addAttribute("serverTime", formattedDate );
 		model.addAttribute("siebelList",siebelList);
 
-		PartnerWSDL partnerWSDL= new PartnerWSDL(); 	  
-		//  System.out.println(projectName); 	  
-		partnerWSDL.login();
+		
+		
 		System.out.println("here");
 		HttpSession session = request.getSession(true);
+		
+		JSONObject authParams = new JSONObject();
+		authParams.put("oAuthToken", "");
+		authParams.put("instanceUrl", "");
+		session.setAttribute("authParams", authParams);
 		//String projectId="a0PG000000B2wmDMAR";
-		String projectId="a0PG000000B3RgvMAF";
+		String projectId="a0PG000000B5e3fMAB";
 		//String projectId="a0PG000000B3OFn";
 		session.setAttribute("projectId", projectId);
-		data = partnerWSDL.getSavedDBData(projectId, data);
+		TargetPartner tp= new TargetPartner(session);
+		data = tp.getSavedDBData(projectId, data);
 		System.out.println("data "+data);
 		System.out.println("In home page");
 		return new ModelAndView("vaporizer", "data", data);
@@ -92,10 +98,10 @@ public class HomeController {
 	@ResponseBody
 	public String initiateDataLoader(Locale locale,Model model,HttpServletRequest request,@RequestParam("datafileUrl")String datafileUrl,@RequestParam("objectName")String objectName) throws IOException, AsyncApiException, ConnectionException
 	{
-		PartnerWSDL partnerWSDL= new PartnerWSDL(); 	  
-		partnerWSDL.login();
+		TargetPartner tpWSDL= new TargetPartner(request.getSession()); 	  
+		
 		HttpSession session = request.getSession(true);
-		JSONObject connData=partnerWSDL.getTargetOrgDetails((String) session.getAttribute("projectId"));
+		JSONObject connData=tpWSDL.getTargetOrgDetails((String) session.getAttribute("projectId"));
 		String password=(String)connData.get("password");
 		String token=(String)connData.get("token");
 		String username=(String)connData.get("username");
@@ -132,9 +138,9 @@ public class HomeController {
 
 		HttpSession session = request.getSession(true);
 		String projectId=(String) session.getAttribute("projectId");
-		PartnerWSDL partnerWSDL= new PartnerWSDL();	    	
+		TargetPartner targetPartner= new TargetPartner(request.getSession());	    	
 
-		String SFDCObjectName=partnerWSDL.getSFDCObjectName(projectId,siebelObject);	  
+		String SFDCObjectName=targetPartner.getSFDCObjectName(projectId,siebelObject);	  
 		System.out.println(SFDCObjectName);
 		return SFDCObjectName;
 
@@ -161,8 +167,8 @@ public class HomeController {
 		HttpSession session = request.getSession(true);
 		String userValue = request.getParameter("objectName");
 		System.out.println("uservalues in bean is"+userValue);
-		PartnerWSDL partnerWSDL= new PartnerWSDL();	
-		return partnerWSDL.getSFDCOjectListforPopup(userValue);
+		TargetPartner targetPartner= new TargetPartner(request.getSession());	
+		return targetPartner.getSFDCOjectListforPopup(userValue);
 
 	} 
 
@@ -182,12 +188,12 @@ public class HomeController {
 		System.out.println("---------------"+threshold+" "+primBase);
 		//ThresholdController tc= new ThresholdController();
 		//List<SiebelObjectBO> listSiebelObject = tc.fetchSiebelObjects(request);
-		PartnerWSDL partnerWSDL= new PartnerWSDL();
-		partnerWSDL.login();
+		TargetPartner targetPartner= new TargetPartner(request.getSession());
+		
 		HttpSession session=request.getSession();
 
-		String subprojectId=partnerWSDL.getsubprojects(siebelTableName);
-		JSONObject tableName=partnerWSDL.getRelatedSiebelTable(subprojectId);
+		String subprojectId=targetPartner.getsubprojects(siebelTableName);
+		JSONObject tableName=targetPartner.getRelatedSiebelTable(subprojectId);
 		//List<MappingModel> mappingData=partnerWSDL.getFieldMapping(tableName);
 		//model.addAttribute("mappingData",mappingData);
 
@@ -223,7 +229,7 @@ public class HomeController {
 	public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> model) throws ConnectionException {	
 		HttpSession session = request.getSession(true);
 		System.out.println("In main controller");
-		PartnerWSDL partnerWSDL= new PartnerWSDL(); 
+		TargetPartner targetPartner= new TargetPartner(request.getSession()); 
 
 		//	logger.info("Welcome home! the client locale is "+ locale.toString());
 		System.out.println("inside demo");
@@ -264,7 +270,7 @@ public class HomeController {
 			mappingData.add(mappingModel);
 			// }
 		}
-		partnerWSDL.saveMappingDataIntoDB(mappingData, request, (String)session.getAttribute("projectId"));
+		targetPartner.saveMappingDataIntoDB(mappingData, request, (String)session.getAttribute("projectId"));
 		return new ModelAndView("vaporizer" , "data", data);
 
 	}
@@ -279,8 +285,8 @@ public class HomeController {
 
 		Date date = new Date();
 		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-		PartnerWSDL partnerWSDL= new PartnerWSDL();
-		partnerWSDL.login();
+		TargetPartner tg= new TargetPartner(request.getSession());
+		//partnerWSDL.login();
 		String formattedDate = dateFormat.format(date);
 
 		HttpSession session=request.getSession();
@@ -301,7 +307,7 @@ public class HomeController {
 		System.out.println("doneeeeeeee-------------");
 		//System.out.println(data.get(0).getSiebelObject());
 		
-		data = partnerWSDL.getSavedDBData((String)session.getAttribute("projectId"), data);
+		data = tg.getSavedDBData((String)session.getAttribute("projectId"), data);
 
 
 		List<ChildObjectBO> childDataList = new ArrayList<ChildObjectBO>();
@@ -372,7 +378,7 @@ public class HomeController {
 			childDataList.add(childObj);
 		}
 		//System.out.println("child data save list is"+childDataList);
-		partnerWSDL.saveChildDataDB(childDataList,request);
+		tg.saveChildDataDB(childDataList,request);
 
 		return new ModelAndView("vaporizer" , "data", data);
 
@@ -384,14 +390,14 @@ public class HomeController {
 		System.out.println("In Home controller get extract data method");
 		HttpSession session = request.getSession(true);
 		String projId  = (String)session.getAttribute("projectId");
-		PartnerWSDL partnerWSDL= new PartnerWSDL();
-		partnerWSDL.login();
+		TargetPartner tg= new TargetPartner(request.getSession());
+		
 		String sfdcId=request.getParameter("sfdcId");
 		String siebelTableNameValue = request.getParameter("siebelObjName");
-		String subprojectId=partnerWSDL.getsubprojects(siebelTableNameValue);
+		String subprojectId=tg.getsubprojects(siebelTableNameValue);
 		String mappingUrl="";
 		if(sfdcId  != null){			
-			mappingUrl=partnerWSDL.getextractionData(projId, sfdcId, subprojectId);
+			mappingUrl=tg.getextractionData(projId, sfdcId, subprojectId);
 		}else{
 			System.out.println("Child Base and Mapping pages have not been selected");
 			 
@@ -408,7 +414,7 @@ public class HomeController {
 	public ModelAndView getSiebelFielddata(HttpServletRequest request, Map<String, Object> model, Model modelChild) throws ConnectionException {
 		HttpSession session = request.getSession(true);
 		System.out.println("In main controller");
-		PartnerWSDL partnerWSDL= new PartnerWSDL(); 
+		TargetPartner tg= new TargetPartner(request.getSession()); 
 
 
 		data.clear();
@@ -453,7 +459,7 @@ public class HomeController {
 			data.add(mainPage);
 		}
 
-		partnerWSDL.saveDataDB(data, request, (String)session.getAttribute("projectId"));
+		tg.saveDataDB(data, request, (String)session.getAttribute("projectId"));
 
 
 		if(page.equals("child")){
@@ -466,7 +472,7 @@ public class HomeController {
 			}
 			modelChild.addAttribute("myChildList",myChildList);*/
 			List<ChildObjectBO> childSavedList=new ArrayList<ChildObjectBO>();
-			childSavedList=	partnerWSDL.getSavedChildDBData((String)session.getAttribute("projectId"), primBaseValue);
+			childSavedList=	tg.getSavedChildDBData((String)session.getAttribute("projectId"), primBaseValue);
 			
 			if(childSavedList!=null && childSavedList.size()!=0)
 			{
@@ -490,25 +496,25 @@ public class HomeController {
             System.out.println("---------------"+thresholdValue+" "+primBaseValue);
 			//ThresholdController tc= new ThresholdController();
 			//List<SiebelObjectBO> listSiebelObject = tc.fetchSiebelObjects(request);
-			String subprojectId=partnerWSDL.getsubprojects(siebelTableNameValue);
+			String subprojectId=tg.getsubprojects(siebelTableNameValue);
 			if(null != subprojectId){
-				JSONObject tableName=partnerWSDL.getRelatedSiebelTable(subprojectId);
-				String id=partnerWSDL.getMappingId((String)session.getAttribute("projectId"),mappingData,tableName);
+				JSONObject tableName=tg.getRelatedSiebelTable(subprojectId);
+				String id=tg.getMappingId((String)session.getAttribute("projectId"),mappingData,tableName);
 
-				List<MappingModel> mappingData1=partnerWSDL.getSavedMappingDBData((String)session.getAttribute("projectId"),mappingData,tableName);
-				List<String>childTables=partnerWSDL.getSavedChild((String)session.getAttribute("projectId"),tableName);
+				List<MappingModel> mappingData1=tg.getSavedMappingDBData((String)session.getAttribute("projectId"),mappingData,tableName);
+				List<String>childTables=tg.getSavedChild((String)session.getAttribute("projectId"),tableName);
 
 				SiebelObjectController siObj=new SiebelObjectController();
 				List<Object> myChildList=siObj.fetchColumns(request, primBaseValue,thresholdValue,childTables);
 
 
-				partnerWSDL.login();
+			
 				//List<String>childTables=partnerWSDL.getSavedChild((String)session.getAttribute("projectId"),tableName);
 				//System.out.println(mappingData1.get(0));
 
-				List<MappingModel> mappingData=partnerWSDL.getFieldMapping(tableName,myChildList);
+				List<MappingModel> mappingData=tg.getFieldMapping(tableName,myChildList);
 				ArrayList<String> field= new ArrayList<String>();
-						field=partnerWSDL.getFieldTarget(tableName);
+						field=tg.getFieldTarget(tableName);
 				/*for(int count=0;count<mappingData.size();count++){
 					field.add(mappingData.get(count).getSfdcFieldTable());
 
