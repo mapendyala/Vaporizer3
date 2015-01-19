@@ -59,21 +59,6 @@ public class HomeController {
 	public ModelAndView home(Locale locale, Model model, HttpServletRequest request) {
 		// TODO!!!
 		logger.info("Welcome home! the client locale is "+ locale.toString());
-
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-
-		String formattedDate = dateFormat.format(date);
-		ArrayList<String> siebelList=new ArrayList<String>();
-		siebelList.add("Account");
-		siebelList.add("Contact");
-		siebelList.add("Order");
-		siebelList.add("Vaporizer");
-		model.addAttribute("serverTime", formattedDate );
-		model.addAttribute("siebelList",siebelList);
-
-		
-		
 		System.out.println("here");
 		HttpSession session = request.getSession(true);
 		
@@ -86,6 +71,9 @@ public class HomeController {
 		session.setAttribute("projectId", projectId);
 		TargetPartner tp= new TargetPartner(session);
 		data = tp.getSavedDBData(projectId, data);
+		JSONObject middleWareConn= tp.getMiddleWareData(projectId);
+		System.out.println("middleWareConn "+middleWareConn);
+		session.setAttribute("middleWareConn", middleWareConn);
 		System.out.println("data "+data);
 		System.out.println("In home page");
 		return new ModelAndView("vaporizer", "data", data);
@@ -208,21 +196,7 @@ public class HomeController {
 		// TODO!!!
 		logger.info("Welcome home! the client locale is "+ locale.toString());
 		System.out.println("In Child Base");
-		//MainController mc = new MainController();
-		//mc.setRowLength(request);
-		//mc.getSiebelFielddata(request, model, data);
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-
-		String formattedDate = dateFormat.format(date);
-		ArrayList<String> siebelList=new ArrayList<String>();
-		siebelList.add("Account");
-		siebelList.add("Contact");
-		siebelList.add("Order");
-		siebelList.add("Vaporizer");
-		model.addAttribute("serverTime", formattedDate );
-		model.addAttribute("siebelList",siebelList);
-
+		
 		return "ChildBase";
 	}
 
@@ -293,17 +267,6 @@ public class HomeController {
 		String formattedDate = dateFormat.format(date);
 
 		HttpSession session=request.getSession();
-
-
-		ArrayList<String> siebelList=new ArrayList<String>();
-		siebelList.add("Account");
-		siebelList.add("Contact");
-		siebelList.add("Order");
-		siebelList.add("Vaporizer");
-		model.addAttribute("serverTime", formattedDate );
-		model.addAttribute("siebelList",siebelList);
-
-
 		System.out.println("----------doneeeeeeee");
 		//System.out.println(dataForm);
 		// System.out.println(dataForm.getData());

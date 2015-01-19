@@ -1,0 +1,1513 @@
+WSC: Creating a new connection to https://na11.salesforce.com/services/Soap/u/32.0/ Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQGgyWEU9_qq6TpuyMwRJ.rWV5pmbgoBtKGhNyb0LsZbHuVbc39.HWFUHG7fhNh6zIDZYxAvil1RZHRcrp7ErRgTDRMu4</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString> Select Name, Parent_Project__c, Type__c from Project__c where id= 'a0PG000000B5e3fMAB'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 10:39:12 GMT]
+Content-Length=[400]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=2uSRCWFpQVWfopOMorLRdg;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 10:39:12 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Header>
+        <LimitInfoHeader>
+          <limitInfo>
+            <current>218</current>
+            <limit>25000</limit>
+            <type>API REQUESTS</type>
+        </limitInfo>
+      </LimitInfoHeader>
+    </soapenv:Header>
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Project__c</sf:type>
+                <sf:Id xsi:nil="true"/>
+                  <sf:Name>OSCDemo</sf:Name>
+                  <sf:Parent_Project__c xsi:nil="true"/>
+                    <sf:Type__c xsi:nil="true"/>
+                  </records>
+                    <size>1</size>
+                </result>
+              </queryResponse>
+            </soapenv:Body>
+          </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://na11.salesforce.com/services/Soap/u/32.0/ Proxy = DIRECT username null
+WSC: Creating a new connection to https://na11.salesforce.com/services/Soap/u/32.0/ Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQGgyWEU9_qq6TpuyMwRJ.rWV5pmbgoBtKGhNyb0LsZbHuVbc39.HWFUHG7fhNh6zIDZYxAvil1RZHRcrp7ErRgTDRMu4</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString> Select Name, Parent_Project__c, Type__c from Project__c where id= 'a0PG000000B5e3fMAB'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 10:40:48 GMT]
+Content-Length=[400]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=0FK0WQVrSWGZDCcThZrk_g;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 10:40:48 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Header>
+        <LimitInfoHeader>
+          <limitInfo>
+            <current>219</current>
+            <limit>25000</limit>
+            <type>API REQUESTS</type>
+        </limitInfo>
+      </LimitInfoHeader>
+    </soapenv:Header>
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Project__c</sf:type>
+                <sf:Id xsi:nil="true"/>
+                  <sf:Name>OSCDemo</sf:Name>
+                  <sf:Parent_Project__c xsi:nil="true"/>
+                    <sf:Type__c xsi:nil="true"/>
+                  </records>
+                    <size>1</size>
+                </result>
+              </queryResponse>
+            </soapenv:Body>
+          </soapenv:Envelope>
+------------ Response end   ----------
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQGgyWEU9_qq6TpuyMwRJ.rWV5pmbgoBtKGhNyb0LsZbHuVbc39.HWFUHG7fhNh6zIDZYxAvil1RZHRcrp7ErRgTDRMu4</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString> Select Name, Parent_Project__c, Type__c from Project__c where id= 'a0PG000000B5e3fMAB'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 10:40:49 GMT]
+Content-Length=[400]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=igiYu1MjRH2ELro_bHCMeA;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 10:40:49 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Header>
+        <LimitInfoHeader>
+          <limitInfo>
+            <current>219</current>
+            <limit>25000</limit>
+            <type>API REQUESTS</type>
+        </limitInfo>
+      </LimitInfoHeader>
+    </soapenv:Header>
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Project__c</sf:type>
+                <sf:Id xsi:nil="true"/>
+                  <sf:Name>OSCDemo</sf:Name>
+                  <sf:Parent_Project__c xsi:nil="true"/>
+                    <sf:Type__c xsi:nil="true"/>
+                  </records>
+                    <size>1</size>
+                </result>
+              </queryResponse>
+            </soapenv:Body>
+          </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://na11.salesforce.com/services/Soap/u/32.0/ Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQGgyWEU9_qq6TpuyMwRJ.rWV5pmbgoBtKGhNyb0LsZbHuVbc39.HWFUHG7fhNh6zIDZYxAvil1RZHRcrp7ErRgTDRMu4</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString> Select Name, Parent_Project__c, Type__c from Project__c where id= 'a0PG000000B5e3fMAB'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 10:41:54 GMT]
+Content-Length=[402]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=njR7DMuLRDaY_3lfO9peYg;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 10:41:54 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Header>
+        <LimitInfoHeader>
+          <limitInfo>
+            <current>221</current>
+            <limit>25000</limit>
+            <type>API REQUESTS</type>
+        </limitInfo>
+      </LimitInfoHeader>
+    </soapenv:Header>
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Project__c</sf:type>
+                <sf:Id xsi:nil="true"/>
+                  <sf:Name>OSCDemo</sf:Name>
+                  <sf:Parent_Project__c xsi:nil="true"/>
+                    <sf:Type__c xsi:nil="true"/>
+                  </records>
+                    <size>1</size>
+                </result>
+              </queryResponse>
+            </soapenv:Body>
+          </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://na11.salesforce.com/services/Soap/u/32.0/ Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQGgyWEU9_qq6TpuyMwRJ.rWV5pmbgoBtKGhNyb0LsZbHuVbc39.HWFUHG7fhNh6zIDZYxAvil1RZHRcrp7ErRgTDRMu4</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString> Select Name, Parent_Project__c, Type__c from Project__c where id= 'a0PG000000B5e3fMAB'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 10:44:12 GMT]
+Content-Length=[399]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=nDGI-ZB2T5KLk9TekgW_LA;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 10:44:12 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Header>
+        <LimitInfoHeader>
+          <limitInfo>
+            <current>222</current>
+            <limit>25000</limit>
+            <type>API REQUESTS</type>
+        </limitInfo>
+      </LimitInfoHeader>
+    </soapenv:Header>
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Project__c</sf:type>
+                <sf:Id xsi:nil="true"/>
+                  <sf:Name>OSCDemo</sf:Name>
+                  <sf:Parent_Project__c xsi:nil="true"/>
+                    <sf:Type__c xsi:nil="true"/>
+                  </records>
+                    <size>1</size>
+                </result>
+              </queryResponse>
+            </soapenv:Body>
+          </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://na11.salesforce.com/services/Soap/u/32.0/ Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQGgyWEU9_qq6TpuyMwRJ.rWV5pmbgoBtKGhNyb0LsZbHuVbc39.HWFUHG7fhNh6zIDZYxAvil1RZHRcrp7ErRgTDRMu4</sessionId>
+  </SessionHeader>
+ </env:Header>
+ <env:Body>
+  <m:getUserInfo xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com" />
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 10:45:16 GMT]
+Content-Length=[687]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=2Ik9QpR9TLSaqGI84Uq39A;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 10:45:16 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <soapenv:Header>
+        <LimitInfoHeader>
+          <limitInfo>
+            <current>223</current>
+            <limit>25000</limit>
+            <type>API REQUESTS</type>
+        </limitInfo>
+      </LimitInfoHeader>
+    </soapenv:Header>
+      <soapenv:Body>
+        <getUserInfoResponse>
+          <result>
+            <accessibilityMode>false</accessibilityMode>
+            <currencySymbol xsi:nil="true"/>
+              <orgAttachmentFileSizeLimit>5242880</orgAttachmentFileSizeLimit>
+              <orgDefaultCurrencyIsoCode xsi:nil="true"/>
+                <orgDisallowHtmlAttachments>false</orgDisallowHtmlAttachments>
+                <orgHasPersonAccounts>true</orgHasPersonAccounts>
+                <organizationId>00DG0000000lkuSMAQ</organizationId>
+                <organizationMultiCurrency>true</organizationMultiCurrency>
+                <organizationName>Deloitte Consulting (Strategic Alliance)</organizationName>
+                <profileId>00eG0000001GNY6IAO</profileId>
+                <roleId xsi:nil="true"/>
+                  <sessionSecondsValid>43200</sessionSecondsValid>
+                  <userDefaultCurrencyIsoCode>USD</userDefaultCurrencyIsoCode>
+                  <userEmail>rachitjain@deloitte.com</userEmail>
+                  <userFullName>Rachita Jain</userFullName>
+                  <userId>005G0000001Dku6IAC</userId>
+                  <userLanguage>en_US</userLanguage>
+                  <userLocale>en_US</userLocale>
+                  <userName>rachitjain@deloitte.com.vaporizer</userName>
+                  <userTimeZone>America/Los_Angeles</userTimeZone>
+                  <userType>Standard</userType>
+                  <userUiSkin>Theme3</userUiSkin>
+              </result>
+            </getUserInfoResponse>
+          </soapenv:Body>
+        </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://login.salesforce.com/services/Soap/u/32.0/ Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQGgyWEU9_qq6TpuyMwRJ.rWV5pmbgoBtKGhNyb0LsZbHuVbc39.HWFUHG7fhNh6zIDZYxAvil1RZHRcrp7ErRgTDRMu4</sessionId>
+  </SessionHeader>
+ </env:Header>
+ <env:Body>
+  <m:getUserInfo xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com" />
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 500 Server Error]
+Date=[Fri, 16 Jan 2015 10:46:56 GMT]
+Transfer-Encoding=[chunked]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Set-Cookie=[BrowserId=feugmRjUQ5S8Otd3VEENJw;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 10:46:56 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sf="urn:fault.partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <soapenv:Body>
+        <soapenv:Fault>
+          <faultcode>UNKNOWN_EXCEPTION</faultcode>
+          <faultstring>UNKNOWN_EXCEPTION: Destination URL not reset. The URL returned from login must be set in the SforceService</faultstring>
+          <detail>
+            <sf:UnexpectedErrorFault xsi:type="sf:UnexpectedErrorFault">
+              <sf:exceptionCode>UNKNOWN_EXCEPTION</sf:exceptionCode>
+              <sf:exceptionMessage>Destination URL not reset. The URL returned from login must be set in the SforceService</sf:exceptionMessage>
+          </sf:UnexpectedErrorFault>
+        </detail>
+      </soapenv:Fault>
+    </soapenv:Body>
+  </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://login.salesforce.com/services/Soap/u/32.0/ Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQGgyWEU9_qq6TpuyMwRJ.rWV5pmbgoBtKGhNyb0LsZbHuVbc39.HWFUHG7fhNh6zIDZYxAvil1RZHRcrp7ErRgTDRMu4</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString> Select Name, Parent_Project__c, Type__c from Project__c where id= 'a0PG000000B5e3fMAB'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 500 Server Error]
+Date=[Fri, 16 Jan 2015 10:46:59 GMT]
+Transfer-Encoding=[chunked]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Set-Cookie=[BrowserId=4t8pAjRKRk2y68RHPAtyEA;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 10:46:59 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sf="urn:fault.partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <soapenv:Body>
+        <soapenv:Fault>
+          <faultcode>UNKNOWN_EXCEPTION</faultcode>
+          <faultstring>UNKNOWN_EXCEPTION: Destination URL not reset. The URL returned from login must be set in the SforceService</faultstring>
+          <detail>
+            <sf:UnexpectedErrorFault xsi:type="sf:UnexpectedErrorFault">
+              <sf:exceptionCode>UNKNOWN_EXCEPTION</sf:exceptionCode>
+              <sf:exceptionMessage>Destination URL not reset. The URL returned from login must be set in the SforceService</sf:exceptionMessage>
+          </sf:UnexpectedErrorFault>
+        </detail>
+      </soapenv:Fault>
+    </soapenv:Body>
+  </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://login.salesforce.com/services/Soap/u/32.0/ Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQGgyWEU9_qq6TpuyMwRJ.rWV5pmbgoBtKGhNyb0LsZbHuVbc39.HWFUHG7fhNh6zIDZYxAvil1RZHRcrp7ErRgTDRMu4</sessionId>
+  </SessionHeader>
+ </env:Header>
+ <env:Body>
+  <m:getUserInfo xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com" />
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 500 Server Error]
+Date=[Fri, 16 Jan 2015 10:48:10 GMT]
+Transfer-Encoding=[chunked]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Set-Cookie=[BrowserId=IhUmadhZTYqDbcuCqXZkUw;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 10:48:10 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sf="urn:fault.partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <soapenv:Body>
+        <soapenv:Fault>
+          <faultcode>UNKNOWN_EXCEPTION</faultcode>
+          <faultstring>UNKNOWN_EXCEPTION: Destination URL not reset. The URL returned from login must be set in the SforceService</faultstring>
+          <detail>
+            <sf:UnexpectedErrorFault xsi:type="sf:UnexpectedErrorFault">
+              <sf:exceptionCode>UNKNOWN_EXCEPTION</sf:exceptionCode>
+              <sf:exceptionMessage>Destination URL not reset. The URL returned from login must be set in the SforceService</sf:exceptionMessage>
+          </sf:UnexpectedErrorFault>
+        </detail>
+      </soapenv:Fault>
+    </soapenv:Body>
+  </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://login.salesforce.com/services/Soap/u/32.0/ Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQGgyWEU9_qq6TpuyMwRJ.rWV5pmbgoBtKGhNyb0LsZbHuVbc39.HWFUHG7fhNh6zIDZYxAvil1RZHRcrp7ErRgTDRMu4</sessionId>
+  </SessionHeader>
+ </env:Header>
+ <env:Body>
+  <m:getUserInfo xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com" />
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 500 Server Error]
+Date=[Fri, 16 Jan 2015 10:58:41 GMT]
+Transfer-Encoding=[chunked]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Set-Cookie=[BrowserId=FVqK3M-iR9yCdISz51FPOQ;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 10:58:41 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sf="urn:fault.partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <soapenv:Body>
+        <soapenv:Fault>
+          <faultcode>UNKNOWN_EXCEPTION</faultcode>
+          <faultstring>UNKNOWN_EXCEPTION: Destination URL not reset. The URL returned from login must be set in the SforceService</faultstring>
+          <detail>
+            <sf:UnexpectedErrorFault xsi:type="sf:UnexpectedErrorFault">
+              <sf:exceptionCode>UNKNOWN_EXCEPTION</sf:exceptionCode>
+              <sf:exceptionMessage>Destination URL not reset. The URL returned from login must be set in the SforceService</sf:exceptionMessage>
+          </sf:UnexpectedErrorFault>
+        </detail>
+      </soapenv:Fault>
+    </soapenv:Body>
+  </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://login.salesforce.com/services/Soap/u/32.0/ Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQGgyWEU9_qq6TpuyMwRJ.rWV5pmbgoBtKGhNyb0LsZbHuVbc39.HWFUHG7fhNh6zIDZYxAvil1RZHRcrp7ErRgTDRMu4</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString> Select Name, Parent_Project__c, Type__c from Project__c where id= 'a0PG000000B5e3fMAB'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 500 Server Error]
+Date=[Fri, 16 Jan 2015 11:29:09 GMT]
+Transfer-Encoding=[chunked]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Set-Cookie=[BrowserId=q7q6VU-aQ2iBqN2BJCJFNA;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 11:29:09 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sf="urn:fault.partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <soapenv:Body>
+        <soapenv:Fault>
+          <faultcode>UNKNOWN_EXCEPTION</faultcode>
+          <faultstring>UNKNOWN_EXCEPTION: Destination URL not reset. The URL returned from login must be set in the SforceService</faultstring>
+          <detail>
+            <sf:UnexpectedErrorFault xsi:type="sf:UnexpectedErrorFault">
+              <sf:exceptionCode>UNKNOWN_EXCEPTION</sf:exceptionCode>
+              <sf:exceptionMessage>Destination URL not reset. The URL returned from login must be set in the SforceService</sf:exceptionMessage>
+          </sf:UnexpectedErrorFault>
+        </detail>
+      </soapenv:Fault>
+    </soapenv:Body>
+  </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://na11.salesforce.com/services/Soap/u/32.0/ Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQGgyWEU9_qq6TpuyMwRJ.rWV5pmbgoBtKGhNyb0LsZbHuVbc39.HWFUHG7fhNh6zIDZYxAvil1RZHRcrp7ErRgTDRMu4</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString> Select Name, Parent_Project__c, Type__c from Project__c where id= 'a0PG000000B5e3fMAB'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 11:35:26 GMT]
+Content-Length=[400]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=vb1RAd4uT1S3fIaDnyevXw;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 11:35:26 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Header>
+        <LimitInfoHeader>
+          <limitInfo>
+            <current>224</current>
+            <limit>25000</limit>
+            <type>API REQUESTS</type>
+        </limitInfo>
+      </LimitInfoHeader>
+    </soapenv:Header>
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Project__c</sf:type>
+                <sf:Id xsi:nil="true"/>
+                  <sf:Name>OSCDemo</sf:Name>
+                  <sf:Parent_Project__c xsi:nil="true"/>
+                    <sf:Type__c xsi:nil="true"/>
+                  </records>
+                    <size>1</size>
+                </result>
+              </queryResponse>
+            </soapenv:Body>
+          </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://na11.salesforce.com/services/Soap/u/32.0/ Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQGgyWEU9_qq6TpuyMwRJ.rWV5pmbgoBtKGhNyb0LsZbHuVbc39.HWFUHG7fhNh6zIDZYxAvil1RZHRcrp7ErRgTDRMu4</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString> Select Name, Parent_Project__c, Type__c from Project__c where id= 'a0PG000000B5e3fMAB'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 11:36:03 GMT]
+Content-Length=[400]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=cMETxipUQSGV9lr-7EVgxg;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 11:36:03 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Header>
+        <LimitInfoHeader>
+          <limitInfo>
+            <current>224</current>
+            <limit>25000</limit>
+            <type>API REQUESTS</type>
+        </limitInfo>
+      </LimitInfoHeader>
+    </soapenv:Header>
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Project__c</sf:type>
+                <sf:Id xsi:nil="true"/>
+                  <sf:Name>OSCDemo</sf:Name>
+                  <sf:Parent_Project__c xsi:nil="true"/>
+                    <sf:Type__c xsi:nil="true"/>
+                  </records>
+                    <size>1</size>
+                </result>
+              </queryResponse>
+            </soapenv:Body>
+          </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://na11.salesforce.com/services/Soap/u/32.0/ Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQGgyWEU9_qq6TpuyMwRJ.rWV5pmbgoBtKGhNyb0LsZbHuVbc39.HWFUHG7fhNh6zIDZYxAvil1RZHRcrp7ErRgTDRMu4</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString> Select Name, Parent_Project__c, Type__c from Project__c where id= 'a0PG000000B5e3fMAB'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 11:36:29 GMT]
+Content-Length=[400]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=ASGjqSkbShePp4cwcValBA;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 11:36:29 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Header>
+        <LimitInfoHeader>
+          <limitInfo>
+            <current>226</current>
+            <limit>25000</limit>
+            <type>API REQUESTS</type>
+        </limitInfo>
+      </LimitInfoHeader>
+    </soapenv:Header>
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Project__c</sf:type>
+                <sf:Id xsi:nil="true"/>
+                  <sf:Name>OSCDemo</sf:Name>
+                  <sf:Parent_Project__c xsi:nil="true"/>
+                    <sf:Type__c xsi:nil="true"/>
+                  </records>
+                    <size>1</size>
+                </result>
+              </queryResponse>
+            </soapenv:Body>
+          </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://na11.salesforce.com/services/Soap/u/32.0/ Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQGgyWEU9_qq6TpuyMwRJ.rWV5pmbgoBtKGhNyb0LsZbHuVbc39.HWFUHG7fhNh6zIDZYxAvil1RZHRcrp7ErRgTDRMu4</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString> Select Name, Parent_Project__c, Type__c from Project__c where id= 'a0PG000000B5e3fMAB'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 11:36:45 GMT]
+Content-Length=[400]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=uUDEgVX6QIayBahO9DaTGw;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 11:36:45 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Header>
+        <LimitInfoHeader>
+          <limitInfo>
+            <current>225</current>
+            <limit>25000</limit>
+            <type>API REQUESTS</type>
+        </limitInfo>
+      </LimitInfoHeader>
+    </soapenv:Header>
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Project__c</sf:type>
+                <sf:Id xsi:nil="true"/>
+                  <sf:Name>OSCDemo</sf:Name>
+                  <sf:Parent_Project__c xsi:nil="true"/>
+                    <sf:Type__c xsi:nil="true"/>
+                  </records>
+                    <size>1</size>
+                </result>
+              </queryResponse>
+            </soapenv:Body>
+          </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://na11.salesforce.com/services/Soap/u/32.0/ Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQGgyWEU9_qq6TpuyMwRJ.rWV5pmbgoBtKGhNyb0LsZbHuVbc39.HWFUHG7fhNh6zIDZYxAvil1RZHRcrp7ErRgTDRMu4</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString> Select Name, Parent_Project__c, Type__c from Project__c where id= 'a0PG000000B5e3fMAB'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 11:37:44 GMT]
+Content-Length=[400]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=CdxdLfbnRduaYfeeEsNQJg;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 11:37:44 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Header>
+        <LimitInfoHeader>
+          <limitInfo>
+            <current>228</current>
+            <limit>25000</limit>
+            <type>API REQUESTS</type>
+        </limitInfo>
+      </LimitInfoHeader>
+    </soapenv:Header>
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Project__c</sf:type>
+                <sf:Id xsi:nil="true"/>
+                  <sf:Name>OSCDemo</sf:Name>
+                  <sf:Parent_Project__c xsi:nil="true"/>
+                    <sf:Type__c xsi:nil="true"/>
+                  </records>
+                    <size>1</size>
+                </result>
+              </queryResponse>
+            </soapenv:Body>
+          </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://na11.salesforce.com/services/Soap/u/32.0/ Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Body>
+  <m:login xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:username>subhchakraborty@deloitte.com.vaporizer</m:username>
+   <m:password>Nov@2013</m:password>
+  </m:login>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 11:40:03 GMT]
+Content-Length=[819]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=o9c6v12IR3qeMG6nE1C4VA;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 11:40:03 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <soapenv:Body>
+        <loginResponse>
+          <result>
+            <metadataServerUrl>https://na11.salesforce.com/services/Soap/m/32.0/00DG0000000lkuS</metadataServerUrl>
+            <passwordExpired>false</passwordExpired>
+            <sandbox>false</sandbox>
+            <serverUrl>https://na11.salesforce.com/services/Soap/u/32.0/00DG0000000lkuS</serverUrl>
+            <sessionId>00DG0000000lkuS!AQIAQAKbpUmpHZ58CcYpP0tpX1Uc_1apPURVxQnUdx9Jz16IlKbOaQZGqKHmDTHJKisJkfNosVdPxAhwmKrQOcFCjhlQso.b</sessionId>
+            <userId>005G0000001DkuGIAS</userId>
+            <userInfo>
+              <accessibilityMode>false</accessibilityMode>
+              <currencySymbol xsi:nil="true"/>
+                <orgAttachmentFileSizeLimit>5242880</orgAttachmentFileSizeLimit>
+                <orgDefaultCurrencyIsoCode xsi:nil="true"/>
+                  <orgDisallowHtmlAttachments>false</orgDisallowHtmlAttachments>
+                  <orgHasPersonAccounts>true</orgHasPersonAccounts>
+                  <organizationId>00DG0000000lkuSMAQ</organizationId>
+                  <organizationMultiCurrency>true</organizationMultiCurrency>
+                  <organizationName>Deloitte Consulting (Strategic Alliance)</organizationName>
+                  <profileId>00eG0000001GNY6IAO</profileId>
+                  <roleId xsi:nil="true"/>
+                    <sessionSecondsValid>43200</sessionSecondsValid>
+                    <userDefaultCurrencyIsoCode>USD</userDefaultCurrencyIsoCode>
+                    <userEmail>subhchakraborty@deloitte.com</userEmail>
+                    <userFullName>Subhojit Chakraborty</userFullName>
+                    <userId>005G0000001DkuGIAS</userId>
+                    <userLanguage>en_US</userLanguage>
+                    <userLocale>en_US</userLocale>
+                    <userName>subhchakraborty@deloitte.com.vaporizer</userName>
+                    <userTimeZone>America/Los_Angeles</userTimeZone>
+                    <userType>Standard</userType>
+                    <userUiSkin>Theme3</userUiSkin>
+                </userInfo>
+              </result>
+            </loginResponse>
+          </soapenv:Body>
+        </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://na11.salesforce.com/services/Soap/u/32.0/ Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQGgyWEU9_qq6TpuyMwRJ.rWV5pmbgoBtKGhNyb0LsZbHuVbc39.HWFUHG7fhNh6zIDZYxAvil1RZHRcrp7ErRgTDRMu4</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString> Select Name, Parent_Project__c, Type__c from Project__c where id= 'a0PG000000B5e3fMAB'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 11:40:04 GMT]
+Content-Length=[400]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=n-ORV9TLT4uZyxqhGg-waQ;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 11:40:04 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Header>
+        <LimitInfoHeader>
+          <limitInfo>
+            <current>229</current>
+            <limit>25000</limit>
+            <type>API REQUESTS</type>
+        </limitInfo>
+      </LimitInfoHeader>
+    </soapenv:Header>
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Project__c</sf:type>
+                <sf:Id xsi:nil="true"/>
+                  <sf:Name>OSCDemo</sf:Name>
+                  <sf:Parent_Project__c xsi:nil="true"/>
+                    <sf:Type__c xsi:nil="true"/>
+                  </records>
+                    <size>1</size>
+                </result>
+              </queryResponse>
+            </soapenv:Body>
+          </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://na11.salesforce.com/services/Soap/u/32.0/00DG0000000lkuS Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQAKbpUmpHZ58CcYpP0tpX1Uc_1apPURVxQnUdx9Jz16IlKbOaQZGqKHmDTHJKisJkfNosVdPxAhwmKrQOcFCjhlQso.b</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString> Select Name, Parent_Project__c, Type__c from Project__c where id= 'a0PG000000B5e3fMAB'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 11:45:16 GMT]
+Content-Length=[402]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=jyS4ZceQQweMqnB7tBGaGQ;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 11:45:16 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Header>
+        <LimitInfoHeader>
+          <limitInfo>
+            <current>231</current>
+            <limit>25000</limit>
+            <type>API REQUESTS</type>
+        </limitInfo>
+      </LimitInfoHeader>
+    </soapenv:Header>
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Project__c</sf:type>
+                <sf:Id xsi:nil="true"/>
+                  <sf:Name>OSCDemo</sf:Name>
+                  <sf:Parent_Project__c xsi:nil="true"/>
+                    <sf:Type__c xsi:nil="true"/>
+                  </records>
+                    <size>1</size>
+                </result>
+              </queryResponse>
+            </soapenv:Body>
+          </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://na11.salesforce.com/services/Soap/u/32.0/00DG0000000lkuS Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQAKbpUmpHZ58CcYpP0tpX1Uc_1apPURVxQnUdx9Jz16IlKbOaQZGqKHmDTHJKisJkfNosVdPxAhwmKrQOcFCjhlQso.b</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString> Select Name, Parent_Project__c, Type__c from Project__c where id= 'a0PG000000B5e3fMAB'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 11:45:53 GMT]
+Content-Length=[400]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=OU6yYofDQkWkEc1KZfYJiw;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 11:45:53 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Header>
+        <LimitInfoHeader>
+          <limitInfo>
+            <current>232</current>
+            <limit>25000</limit>
+            <type>API REQUESTS</type>
+        </limitInfo>
+      </LimitInfoHeader>
+    </soapenv:Header>
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Project__c</sf:type>
+                <sf:Id xsi:nil="true"/>
+                  <sf:Name>OSCDemo</sf:Name>
+                  <sf:Parent_Project__c xsi:nil="true"/>
+                    <sf:Type__c xsi:nil="true"/>
+                  </records>
+                    <size>1</size>
+                </result>
+              </queryResponse>
+            </soapenv:Body>
+          </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://na11.salesforce.com/services/Soap/u/32.0/00DG0000000lkuS Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQAKbpUmpHZ58CcYpP0tpX1Uc_1apPURVxQnUdx9Jz16IlKbOaQZGqKHmDTHJKisJkfNosVdPxAhwmKrQOcFCjhlQso.b</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString> Select Name, Parent_Project__c, Type__c from Project__c where id= 'a0PG000000B5e3fMAB'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 11:48:38 GMT]
+Content-Length=[400]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=zbrY1sIdQ3mRAwaBjv35jg;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 11:48:38 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Header>
+        <LimitInfoHeader>
+          <limitInfo>
+            <current>233</current>
+            <limit>25000</limit>
+            <type>API REQUESTS</type>
+        </limitInfo>
+      </LimitInfoHeader>
+    </soapenv:Header>
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Project__c</sf:type>
+                <sf:Id xsi:nil="true"/>
+                  <sf:Name>OSCDemo</sf:Name>
+                  <sf:Parent_Project__c xsi:nil="true"/>
+                    <sf:Type__c xsi:nil="true"/>
+                  </records>
+                    <size>1</size>
+                </result>
+              </queryResponse>
+            </soapenv:Body>
+          </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://na11.salesforce.com/services/Soap/u/32.0/00DG0000000lkuS Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQAKbpUmpHZ58CcYpP0tpX1Uc_1apPURVxQnUdx9Jz16IlKbOaQZGqKHmDTHJKisJkfNosVdPxAhwmKrQOcFCjhlQso.b</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString> Select Name, Parent_Project__c, Type__c from Project__c where id= 'a0PG000000B5e3fMAB'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 11:50:41 GMT]
+Content-Length=[400]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=534BkHcUTRG4kfPR9ArUIA;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 11:50:41 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Header>
+        <LimitInfoHeader>
+          <limitInfo>
+            <current>234</current>
+            <limit>25000</limit>
+            <type>API REQUESTS</type>
+        </limitInfo>
+      </LimitInfoHeader>
+    </soapenv:Header>
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Project__c</sf:type>
+                <sf:Id xsi:nil="true"/>
+                  <sf:Name>OSCDemo</sf:Name>
+                  <sf:Parent_Project__c xsi:nil="true"/>
+                    <sf:Type__c xsi:nil="true"/>
+                  </records>
+                    <size>1</size>
+                </result>
+              </queryResponse>
+            </soapenv:Body>
+          </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://na11.salesforce.com/services/Soap/u/32.0/00DG0000000lkuS Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQAKbpUmpHZ58CcYpP0tpX1Uc_1apPURVxQnUdx9Jz16IlKbOaQZGqKHmDTHJKisJkfNosVdPxAhwmKrQOcFCjhlQso.b</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString> Select Name, Parent_Project__c, Type__c from Project__c where id= 'a0PG000000B5e3fMAB'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 11:51:20 GMT]
+Content-Length=[399]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=TrxBcMkWTA6-KUKK7R-YnA;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 11:51:20 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Header>
+        <LimitInfoHeader>
+          <limitInfo>
+            <current>235</current>
+            <limit>25000</limit>
+            <type>API REQUESTS</type>
+        </limitInfo>
+      </LimitInfoHeader>
+    </soapenv:Header>
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Project__c</sf:type>
+                <sf:Id xsi:nil="true"/>
+                  <sf:Name>OSCDemo</sf:Name>
+                  <sf:Parent_Project__c xsi:nil="true"/>
+                    <sf:Type__c xsi:nil="true"/>
+                  </records>
+                    <size>1</size>
+                </result>
+              </queryResponse>
+            </soapenv:Body>
+          </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://na11.salesforce.com/services/Soap/u/32.0/00DG0000000lkuS Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQAKbpUmpHZ58CcYpP0tpX1Uc_1apPURVxQnUdx9Jz16IlKbOaQZGqKHmDTHJKisJkfNosVdPxAhwmKrQOcFCjhlQso.b</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString> Select Name, Parent_Project__c, Type__c from Project__c where id= 'a0PG000000B5e3fMAB'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 12:11:27 GMT]
+Content-Length=[399]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=uyS8ck2KSDWYKL0MGUAwxA;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 12:11:27 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Header>
+        <LimitInfoHeader>
+          <limitInfo>
+            <current>220</current>
+            <limit>25000</limit>
+            <type>API REQUESTS</type>
+        </limitInfo>
+      </LimitInfoHeader>
+    </soapenv:Header>
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Project__c</sf:type>
+                <sf:Id xsi:nil="true"/>
+                  <sf:Name>OSCDemo</sf:Name>
+                  <sf:Parent_Project__c xsi:nil="true"/>
+                    <sf:Type__c xsi:nil="true"/>
+                  </records>
+                    <size>1</size>
+                </result>
+              </queryResponse>
+            </soapenv:Body>
+          </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://login.salesforce.com/services/Soap/u/24.0/ Proxy = DIRECT username null
+WSC: Creating a new connection to https://login.salesforce.com/services/Soap/u/24.0/ Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Body>
+  <m:login xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:username>subhchakraborty@deloitte.com.vaporizer</m:username>
+   <m:password>Nov@2013</m:password>
+  </m:login>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 12:14:46 GMT]
+Content-Length=[819]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=Tf0VVHGQR6KmPSsi2DRX2g;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 12:14:46 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <soapenv:Body>
+        <loginResponse>
+          <result>
+            <metadataServerUrl>https://na11.salesforce.com/services/Soap/m/24.0/00DG0000000lkuS</metadataServerUrl>
+            <passwordExpired>false</passwordExpired>
+            <sandbox>false</sandbox>
+            <serverUrl>https://na11.salesforce.com/services/Soap/u/24.0/00DG0000000lkuS</serverUrl>
+            <sessionId>00DG0000000lkuS!AQIAQAKbpUmpHZ58CcYpP0tpX1Uc_1apPURVxQnUdx9Jz16IlKbOaQZGqKHmDTHJKisJkfNosVdPxAhwmKrQOcFCjhlQso.b</sessionId>
+            <userId>005G0000001DkuGIAS</userId>
+            <userInfo>
+              <accessibilityMode>false</accessibilityMode>
+              <currencySymbol xsi:nil="true"/>
+                <orgAttachmentFileSizeLimit>5242880</orgAttachmentFileSizeLimit>
+                <orgDefaultCurrencyIsoCode xsi:nil="true"/>
+                  <orgDisallowHtmlAttachments>false</orgDisallowHtmlAttachments>
+                  <orgHasPersonAccounts>true</orgHasPersonAccounts>
+                  <organizationId>00DG0000000lkuSMAQ</organizationId>
+                  <organizationMultiCurrency>true</organizationMultiCurrency>
+                  <organizationName>Deloitte Consulting (Strategic Alliance)</organizationName>
+                  <profileId>00eG0000001GNY6IAO</profileId>
+                  <roleId xsi:nil="true"/>
+                    <sessionSecondsValid>43200</sessionSecondsValid>
+                    <userDefaultCurrencyIsoCode>USD</userDefaultCurrencyIsoCode>
+                    <userEmail>subhchakraborty@deloitte.com</userEmail>
+                    <userFullName>Subhojit Chakraborty</userFullName>
+                    <userId>005G0000001DkuGIAS</userId>
+                    <userLanguage>en_US</userLanguage>
+                    <userLocale>en_US</userLocale>
+                    <userName>subhchakraborty@deloitte.com.vaporizer</userName>
+                    <userTimeZone>America/Los_Angeles</userTimeZone>
+                    <userType>Standard</userType>
+                    <userUiSkin>Theme3</userUiSkin>
+                </userInfo>
+              </result>
+            </loginResponse>
+          </soapenv:Body>
+        </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://na11.salesforce.com/services/Soap/u/24.0/00DG0000000lkuS Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQAKbpUmpHZ58CcYpP0tpX1Uc_1apPURVxQnUdx9Jz16IlKbOaQZGqKHmDTHJKisJkfNosVdPxAhwmKrQOcFCjhlQso.b</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString> Select Name, Parent_Project__c, Type__c from Project__c where id= 'a0PG000000B5e3fMAB'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 12:14:48 GMT]
+Content-Length=[336]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=euf8jJMEQS2eImcCGxNxCg;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 12:14:48 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Project__c</sf:type>
+                <sf:Id xsi:nil="true"/>
+                  <sf:Name>OSCDemo</sf:Name>
+                  <sf:Parent_Project__c xsi:nil="true"/>
+                    <sf:Type__c xsi:nil="true"/>
+                  </records>
+                    <size>1</size>
+                </result>
+              </queryResponse>
+            </soapenv:Body>
+          </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://login.salesforce.com/services/Soap/u/24.0/ Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Body>
+  <m:login xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:username>subhchakraborty@deloitte.com.vaporizer</m:username>
+   <m:password>Nov@2013</m:password>
+  </m:login>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 12:15:24 GMT]
+Content-Length=[819]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=D-eneoUkTDacDWudfaj3QA;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 12:15:24 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <soapenv:Body>
+        <loginResponse>
+          <result>
+            <metadataServerUrl>https://na11.salesforce.com/services/Soap/m/24.0/00DG0000000lkuS</metadataServerUrl>
+            <passwordExpired>false</passwordExpired>
+            <sandbox>false</sandbox>
+            <serverUrl>https://na11.salesforce.com/services/Soap/u/24.0/00DG0000000lkuS</serverUrl>
+            <sessionId>00DG0000000lkuS!AQIAQAKbpUmpHZ58CcYpP0tpX1Uc_1apPURVxQnUdx9Jz16IlKbOaQZGqKHmDTHJKisJkfNosVdPxAhwmKrQOcFCjhlQso.b</sessionId>
+            <userId>005G0000001DkuGIAS</userId>
+            <userInfo>
+              <accessibilityMode>false</accessibilityMode>
+              <currencySymbol xsi:nil="true"/>
+                <orgAttachmentFileSizeLimit>5242880</orgAttachmentFileSizeLimit>
+                <orgDefaultCurrencyIsoCode xsi:nil="true"/>
+                  <orgDisallowHtmlAttachments>false</orgDisallowHtmlAttachments>
+                  <orgHasPersonAccounts>true</orgHasPersonAccounts>
+                  <organizationId>00DG0000000lkuSMAQ</organizationId>
+                  <organizationMultiCurrency>true</organizationMultiCurrency>
+                  <organizationName>Deloitte Consulting (Strategic Alliance)</organizationName>
+                  <profileId>00eG0000001GNY6IAO</profileId>
+                  <roleId xsi:nil="true"/>
+                    <sessionSecondsValid>43200</sessionSecondsValid>
+                    <userDefaultCurrencyIsoCode>USD</userDefaultCurrencyIsoCode>
+                    <userEmail>subhchakraborty@deloitte.com</userEmail>
+                    <userFullName>Subhojit Chakraborty</userFullName>
+                    <userId>005G0000001DkuGIAS</userId>
+                    <userLanguage>en_US</userLanguage>
+                    <userLocale>en_US</userLocale>
+                    <userName>subhchakraborty@deloitte.com.vaporizer</userName>
+                    <userTimeZone>America/Los_Angeles</userTimeZone>
+                    <userType>Standard</userType>
+                    <userUiSkin>Theme3</userUiSkin>
+                </userInfo>
+              </result>
+            </loginResponse>
+          </soapenv:Body>
+        </soapenv:Envelope>
+------------ Response end   ----------
+WSC: Creating a new connection to https://na11.salesforce.com/services/Soap/u/24.0/00DG0000000lkuS Proxy = DIRECT username null
+------------ Request start   ----------
+<?xml version="1.0" encoding="UTF-8"?><env:Envelope
+   xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <env:Header>
+  <SessionHeader xmlns="urn:partner.soap.sforce.com">
+   <sessionId>00DG0000000lkuS!AQIAQAKbpUmpHZ58CcYpP0tpX1Uc_1apPURVxQnUdx9Jz16IlKbOaQZGqKHmDTHJKisJkfNosVdPxAhwmKrQOcFCjhlQso.b</sessionId>
+  </SessionHeader>
+  <QueryOptions xmlns="urn:partner.soap.sforce.com">
+   <batchSize>250</batchSize>
+  </QueryOptions>
+ </env:Header>
+ <env:Body>
+  <m:query xmlns:m="urn:partner.soap.sforce.com" xmlns:sobj="urn:sobject.partner.soap.sforce.com">
+   <m:queryString> Select Name, Parent_Project__c, Type__c from Project__c where id= 'a0PG000000B5e3fMAB'</m:queryString>
+  </m:query>
+ </env:Body>
+</env:Envelope>
+------------ Request end   ----------
+null=[HTTP/1.1 200 OK]
+Date=[Fri, 16 Jan 2015 12:16:26 GMT]
+Content-Length=[336]
+Expires=[Thu, 01 Jan 1970 00:00:00 GMT]
+Content-Encoding=[gzip]
+Set-Cookie=[BrowserId=f0mbQht6RpKcjPuB09mlxw;Path=/;Domain=.salesforce.com;Expires=Tue, 17-Mar-2015 12:16:26 GMT]
+Content-Type=[text/xml;charset=UTF-8]
+------------ Response start ----------
+  <?xml version="1.0" encoding="UTF-8"?>
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com">
+      <soapenv:Body>
+        <queryResponse>
+          <result xsi:type="QueryResult">
+            <done>true</done>
+            <queryLocator xsi:nil="true"/>
+              <records xsi:type="sf:sObject">
+                <sf:type>Project__c</sf:type>
+                <sf:Id xsi:nil="true"/>
+                  <sf:Name>OSCDemo</sf:Name>
+                  <sf:Parent_Project__c xsi:nil="true"/>
+                    <sf:Type__c xsi:nil="true"/>
+                  </records>
+                    <size>1</size>
+                </result>
+              </queryResponse>
+            </soapenv:Body>
+          </soapenv:Envelope>
+------------ Response end   ----------

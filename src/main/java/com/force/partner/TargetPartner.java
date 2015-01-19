@@ -28,6 +28,7 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -42,6 +43,7 @@ import com.force.example.fulfillment.order.model.MappingModel;
 import com.force.utility.ChildObjectBO;
 import com.force.utility.SfdcObjectBO;
 import com.force.utility.UtilityClass;
+import com.google.gson.JsonArray;
 import com.sforce.soap.partner.SaveResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
@@ -72,23 +74,10 @@ public class TargetPartner {
 	}
 	
 	
-	public static void main(String args[]){
-		ApiSession s = new ApiSession();
-        s.setAccessToken("00DG0000000lkuS!AQIAQGXdGMVcKYy8UhbLgaGBJ2gICdccHilAmvZROc0vcPecmw160VePf1qIbeglo2Pk2fxUN0KCwEFGVa7achJ6Z3pZSbX8");
-        s.setApiEndpoint("https://na11.salesforce.com");
-        HttpClient httpclient = new HttpClient();
-       // GetMethod get = new GetMethod("https://na11.salesforce.com/services/data/v20.0/query");
-        JSONObject account = new JSONObject();
-        try {
-            account.put("Roll__c", 65766);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            
-        }
-       // https://login.salesforce.com/services/oauth2/token?grant_type=password&client_id=3MVG98XJQQAccJQftNctCshPH7OHgKw4QQrOUSQbbp.dJK7pBXpbwdKGtE2u3U_mCSIWrd9RbAafS6PpwaveH&client_secret=5595747085030222154&username=rachitjain@deloitte.com.vaporizer&password=deloitte@1
-        	
-    	
-        PostMethod post = new PostMethod("https://login.salesforce.com/services/oauth2/token");
+	/*public static void main(String args[]){
+		HttpClient httpClient= new HttpClient();
+		JSONObject authParams= new JSONObject();
+		PostMethod post = new PostMethod("https://login.salesforce.com/services/oauth2/token");
         //post.addParameter("code", code);
         post.addParameter("grant_type", "password");
         post.addParameter("client_id", "3MVG98XJQQAccJQftNctCshPH7OHgKw4QQrOUSQbbp.dJK7pBXpbwdKGtE2u3U_mCSIWrd9RbAafS6PpwaveH");
@@ -97,7 +86,7 @@ public class TargetPartner {
         post.addParameter("password","deloitte@1");
  
                 try {
-                  System.out.println(httpclient.executeMethod(post));  
+                 httpClient.executeMethod(post);
                     try {
 	                        JSONObject authResponse = new JSONObject(
 	                                        post.getResponseBodyAsString());
@@ -106,7 +95,9 @@ public class TargetPartner {
 	 
 	                       String accessToken = authResponse.getString("access_token");
 	                       String instanceUrl = authResponse.getString("instance_url");
-	 
+	                      
+	               		authParams.put("oAuthToken", accessToken);
+	               		authParams.put("instanceUrl", instanceUrl);
 	                        System.out.println("Got access token: " + accessToken);
 	                    } catch (JSONException e) {
 	                        e.printStackTrace();
@@ -121,18 +112,33 @@ public class TargetPartner {
 					} finally {
 	                    post.releaseConnection();
 	                }
-
-       /* PostMethod post = new PostMethod("https://na11.salesforce.com/services/data/v20.0/sobjects/Test_Object__c/");
-        		        post.setRequestHeader("Authorization", "OAuth 00DG0000000lkuS!AQIAQGXdGMVcKYy8UhbLgaGBJ2gICdccHilAmvZROc0vcPecmw160VePf1qIbeglo2Pk2fxUN0KCwEFGVa7achJ6Z3pZSbX8");
+                httpClient= new HttpClient();
+        PostMethod post1 = new PostMethod(authParams.getString("instanceUrl")+"/services/data/v20.0/sobjects/Test_Object__c/");
+        		        post1.setRequestHeader("Authorization", "OAuth "+authParams.getString("oAuthToken"));
         		        try {
-							post.setRequestEntity(new StringRequestEntity(account.toString(),
+        		        	JSONArray arr= new JSONArray();
+        		        	JSONObject account = new JSONObject();
+        		        	JSONObject account1 = new JSONObject();
+        		            try {
+        		            	account.put("Name", "hello1");
+        		                account.put("Roll__c", 65766);
+        		                account1.put("Name", "hello1");
+        		                account1.put("Roll__c", 12132);
+        		            } catch (JSONException e) {
+        		                e.printStackTrace();
+        		                
+        		            }
+        		            arr.put(account);
+        		            arr.put(account1);
+        		            
+							post1.setRequestEntity(new StringRequestEntity(arr.toString(),
 							        "application/json", null));
 						
-        		        httpclient.executeMethod(post);
-        		        if (post.getStatusCode() == HttpStatus.SC_CREATED) {
+        		        System.err.println("outputtt isss "+httpClient.executeMethod(post1));
+        		        if (post1.getStatusCode() == HttpStatus.SC_CREATED) {
         		        	                try {
         		        	                    JSONObject response = new JSONObject(
-        		        	                                    post.getResponseBody());
+        		        	                                    post1.getResponseBodyAsString());
         		        	                    System.out.println("Create response: "
         		        	                            + response.toString(2));
         		        	                    if (response.getBoolean("success")) {
@@ -158,10 +164,10 @@ public class TargetPartner {
         		 
 		
 		//fa.UpdateSObject("Test_Object__c", "Name",js);
-		*/
+		
 		System.out.println("bye");
 		
-	}
+	}*/
 	public String getProjectName(String projectId) {
 
 		String projectName = null;
@@ -210,6 +216,51 @@ public class TargetPartner {
 	
 }*/
 	
+	public JSONObject getMiddleWareData(String projectId) {
+
+		JSONObject connData = new JSONObject();
+		try {
+			//partnerConnection.setQueryOptions(250);
+			// SOQL query to use
+			String soqlQuery = "SELECT MiddleSalesforce_Username__c,MiddleSalesforce_Password__c, MiddleSalesforce_Token__c FROM Project__c  where id='"
+					+ projectId + "'";
+			// Make the query call and get the query results
+			QueryResult<Map> qr = getForceApi().query(soqlQuery);
+			boolean done = false;
+
+			int loopCount = 0;
+			// Loop through the batches of returned results
+			while (!done) {
+
+				List<Map> records = qr.getRecords();
+				// Process the query results
+				for (int i = 0; i < records.size(); i++) {
+					Map contact = records.get(i);
+					String username = (String) contact
+							.get("MiddleSalesforce_Username__c");
+					String password = (String) contact
+							.get("MiddleSalesforce_Password__c");
+					String databaseUrl = (String) contact
+							.get("MiddleSalesforce_Token__c");
+					connData.put("username", username);
+					connData.put("password", password);
+					connData.put("databaseUrl", databaseUrl);
+
+				}
+				if (qr.isDone()) {
+					done = true;
+				}/* else {
+					qr = partnerConnection.queryMore(qr.getQueryLocator());
+				}*/
+
+			}
+		} catch (Exception ce) {
+			ce.printStackTrace();
+		}
+		System.out.println("\nQuery execution completed.");
+		return connData;
+	}
+	
 	public JSONObject getConnectionData(String projectId) {
 
 		JSONObject connData = new JSONObject();
@@ -241,9 +292,9 @@ public class TargetPartner {
 					connData.put("databaseUrl", databaseUrl);
 
 				}
-				/*if (qr.isDone()) {
+				if (qr.isDone()) {
 					done = true;
-				} else {
+				} /*else {
 					qr = partnerConnection.queryMore(qr.getQueryLocator());
 				}*/
 
@@ -1056,8 +1107,8 @@ public class TargetPartner {
 
              if (ProjectId == null)
                   ProjectId = "a0PG000000Atg1U";
-          mappingFileURL=  new PartnerWSDL().getFile(file, "19SepDemoFile.csv", "application/vnd.ms-excel", ProjectId, null);
-          String SDlFileURl= new PartnerWSDL().getFile(mappingFile, "195SepDemoMappingFile.sdl", "application/vnd.ms-excel", ProjectId, mappingFileURL);
+          mappingFileURL=  new PartnerWSDL(session).getFile(file, "19SepDemoFile.csv", "application/vnd.ms-excel", ProjectId, null);
+          String SDlFileURl= new PartnerWSDL(session).getFile(mappingFile, "195SepDemoMappingFile.sdl", "application/vnd.ms-excel", ProjectId, mappingFileURL);
           System.out.println("filr path : " +mappingFileURL+":::::::"+SDlFileURl);
           com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
          // dt.dataUploadController(mappingFileURL,"subhchakraborty@deloitte.com.vaporizer","Sep@2013","Account");
@@ -1315,13 +1366,12 @@ public class TargetPartner {
 				 * mainPage1.getSequence().compareTo(mainPage2.getSequence()); }
 				 * });
 				 */
-
-				/********8if (qryResult.isDone()) {
+if (qryResult.isDone()) {
 					done = true;
 				} else {
-					qryResult = partnerConnection.queryMore(qryResult
-							.getQueryLocator());
-				}**********/
+					/*qryResult = partnerConnection.queryMore(qryResult
+							.getQueryLocator());*/
+				}
 
 			} // end of while
 
@@ -1362,9 +1412,9 @@ public class TargetPartner {
 					// mappingData.add(mappingModel);
 				}
 
-				/*if (qr.isDone()) {
+				if (qr.isDone()) {
 					done = true;
-				} else {
+				}/* else {
 					qr = partnerConnection.queryMore(qr.getQueryLocator());
 				}*/
 
@@ -1414,9 +1464,9 @@ public class TargetPartner {
 
 				}
 
-				/*if (qr.isDone()) {
+				if (qr.isDone()) {
 					done = true;
-				} else {
+				}/* else {
 					qr = partnerConnection.queryMore(qr.getQueryLocator());
 				}*/
 
@@ -1467,9 +1517,9 @@ public class TargetPartner {
 					// mappingData.add(mappingModel);
 				}
 
-				/*if (qr1.isDone()) {
+				if (qr1.isDone()) {
 					done1 = true;
-				} else {
+				}/* else {
 					qr1 = partnerConnection.queryMore(qr1.getQueryLocator());
 				}*/
 
@@ -1508,9 +1558,9 @@ public class TargetPartner {
 					child.add((String) contact.get("Child_Table__c"));
 				}
 
-				/**if (qr.isDone()) {
+				if (qr.isDone()) {
 					done = true;
-				} else {
+				}/** else {
 					qr = partnerConnection.queryMore(qr.getQueryLocator());
 				}**/
 
@@ -1579,9 +1629,9 @@ public class TargetPartner {
 					mappingData.add(mapping);
 
 				}
-				/*if (qr.isDone()) {
+				if (qr.isDone()) {
 					done = true;
-				} else {
+				} /*else {
 					qr = partnerConnection.queryMore(qr.getQueryLocator());
 				}*/
 
@@ -1606,9 +1656,9 @@ public class TargetPartner {
 					}
 
 				}
-				/*if (qr1.isDone()) {
+				if (qr1.isDone()) {
 					done1 = true;
-				} else {
+				} /*else {
 					qr1 = partnerConnection.queryMore(qr.getQueryLocator());
 				}*/
 			}
@@ -1676,9 +1726,9 @@ public class TargetPartner {
 							mappingData.add(mapping);
 						}
 					}
-					/*if (qr2.isDone()) {
+					if (qr2.isDone()) {
 						done2 = true;
-					} else {
+					}/* else {
 						qr2 = partnerConnection
 								.queryMore(qr2.getQueryLocator());
 					}*/
@@ -1731,9 +1781,9 @@ public ArrayList<String> getFieldTarget(JSONObject tableData){
 						}
 
 					}
-					/*if (qr.isDone()) {
+					if (qr.isDone()) {
 						done = true;
-					} else {
+					}/* else {
 						qr = partnerConnection.queryMore(qr.getQueryLocator());
 					}*/
 				}
@@ -1750,9 +1800,9 @@ public ArrayList<String> getFieldTarget(JSONObject tableData){
 						SFDTargetName = (String) records1.get(i).get("Field_Target__c");
 						field.add(SFDTargetName);
 					}
-					/*if (qr1.isDone()) {
+					if (qr1.isDone()) {
 						done1 = true;
-					} else {
+					}/* else {
 						qr1 = partnerConnection.queryMore(qr.getQueryLocator());
 					}*/
 
@@ -1774,9 +1824,9 @@ public ArrayList<String> getFieldTarget(JSONObject tableData){
 					for (int i = 0; i < records2.size(); i++) {
 						SFDTargetName = (String) records2.get(i).get("Field_Target__c");
 					field.add(SFDTargetName);}
-					/*if (qr2.isDone()) {
+					if (qr2.isDone()) {
 						done2 = true;
-					} else {
+					}/* else {
 						qr2 = partnerConnection
 								.queryMore(qr2.getQueryLocator());
 					}*/

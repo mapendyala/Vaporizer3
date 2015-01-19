@@ -49,7 +49,7 @@ public class ThresholdController {
 	 HttpSession session = request.getSession(true);
 	 
 	 try{
-		 PartnerWSDL partnerWSDL= new PartnerWSDL();
+		 PartnerWSDL partnerWSDL= new PartnerWSDL(session);
 		 String projectId = (String) session.getAttribute("projectId");
 		 System.out.println("project id+"+projectId);
 		 if(projectId==null){

@@ -80,13 +80,15 @@ public class CanvasUIController {
 		authParams.put("oAuthToken", oAuthToken);
 		authParams.put("instanceUrl", instanceUrl);
 		session.setAttribute("authParams", authParams);
-
+		
 		String projectId = parameters.getString("projectId");
 		System.out.println("=================" + projectId);
 		session.setAttribute("projectId", projectId);
 		TargetPartner targetPart = new TargetPartner(session);
 
 		data = targetPart.getSavedDBData(projectId, data);
+		JSONObject middleWareConn= targetPart.getMiddleWareData(projectId);
+		session.setAttribute("middleWareConn", middleWareConn);
 		String projectName = targetPart.getProjectName(projectId);
 		session.setAttribute("projectName", projectName);/* added by piyush */
 		JSONObject connectionData = targetPart.getConnectionData(projectId);
