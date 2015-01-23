@@ -343,6 +343,100 @@ public class SiebelObjectController {
 		}
 		return childObjList; 	 
 	} 	 
+	
+	public void makeConnection(){
+		try
+		{
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+		}
+		catch(ClassNotFoundException e)
+		{
+			System.out.println("Where is your Oracle JDBC Driver?");
+			e.printStackTrace();
 
+		}
+		System.out.println("Oracle JDBC Driver Registered!");
+		try
+		{
+			connection = DriverManager.getConnection("jdbc:oracle:thin:@167.219.18.231:443/SBLDB", "snetuser1","snetuser1");
+		}
+		catch (SQLException e)
+		{
+			System.out.println("Connection Failed! Check output console");
+			e.printStackTrace();
+
+		}
+	}
+	
+	 public List<String> fetchFieldNameList(HttpServletRequest request,String siebelObjName){
+			System.out.println("in child contoller method");
+			List<String> fieldNameList=new ArrayList<String>(); 
+			HttpSession session = request.getSession(true);
+			System.out.println("SIEBL OBJ PARAM IS"+siebelObjName);
+			makeConnection();
+
+			try{
+				if (connection != null){
+					System.out.println("You made it, take control your database now!");
+					String fieldNameQry = "SELECT BCFIELD.NAME FROM SIEBEL.S_FIELD BCFIELD INNER JOIN SIEBEL.S_BUSCOMP BUSCOMP ON BUSCOMP.ROW_ID = BCFIELD.BUSCOMP_ID "
+							+ "AND BUSCOMP.REPOSITORY_ID = BCFIELD.REPOSITORY_ID WHERE BCFIELD.REPOSITORY_ID = "
+							+ "(SELECT ROW_ID FROM SIEBEL.S_REPOSITORY WHERE NAME = 'Siebel Repository') AND BUSCOMP.NAME = '"+siebelObjName+"'";
+					List<Object> myList=new ArrayList<Object>();
+
+					Statement st=connection.createStatement();
+					System.out.println("fieldNameQry is"+fieldNameQry);
+					ResultSet mySet=st.executeQuery(fieldNameQry);
+					int i=0;
+					while(mySet.next()){
+						fieldNameList.add(mySet.getString(1));
+					}
+					System.out.println("list size is"+fieldNameList.size());
+				}
+			}
+			catch(SQLException e)
+			{
+				System.out.println("Connection Failed! Check output console");
+				e.printStackTrace();
+			}
+			return fieldNameList; 	 
+		} 	 
+	
+	 public List<String> fetchColumndAndFrgnKeyName(HttpServletRequest request,String siebelObjName, String sblFldValSlctd){
+			System.out.println("in child contoller method");
+			List<String> fieldNameList=null; 
+			System.out.println("SIEBL OBJ PARAM IS"+siebelObjName);
+			makeConnection();
+
+			try	{
+				if (connection != null){
+					System.out.println("You made it, take control your database now!");
+
+					String fieldNameQry = "SELECT BCFIELD.NAME, BCFIELD.JOIN_NAME, BCFIELD.COL_NAME FROM SIEBEL.S_FIELD BCFIELD INNER JOIN "
+								+ "SIEBEL.S_BUSCOMP BUSCOMP ON BUSCOMP.ROW_ID = BCFIELD.BUSCOMP_ID AND BUSCOMP.REPOSITORY_ID = BCFIELD.REPOSITORY_ID AND BUSCOMP.NAME = '"+siebelObjName+"'"
+								+ " WHERE BCFIELD.NAME = '"+sblFldValSlctd+"' AND BCFIELD.MULTI_VALUED = 'N' AND BCFIELD.CALCULATED = 'N' AND "
+								+ "BCFIELD.REPOSITORY_ID = (SELECT ROW_ID FROM SIEBEL.S_REPOSITORY WHERE NAME = 'Siebel Repository')";
+					Statement st=connection.createStatement();
+					System.out.println("fieldNameQry is"+fieldNameQry);
+					ResultSet resltSet=st.executeQuery(fieldNameQry);
+					while(resltSet.next()){
+						if(fieldNameList == null){
+							fieldNameList = new ArrayList<String>();
+						}
+						String fieldVal = resltSet.getString(1);
+						String colVal = resltSet.getString(2);
+						System.out.println("myset is"+ fieldVal);
+						System.out.println("myset is"+ colVal);
+						fieldNameList.add(fieldVal);
+						fieldNameList.add(colVal);
+					}
+					System.out.println("list size is"+fieldNameList.size());
+				}
+			}
+			catch(SQLException e){
+				System.out.println("Connection Failed! Check output console");
+				e.printStackTrace();
+			}
+			return fieldNameList; 	 
+		} 
 }
 

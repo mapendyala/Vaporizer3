@@ -135,15 +135,6 @@ public class HomeController {
 		System.out.println(SFDCObjectName);
 		return SFDCObjectName;
 
-
-
-
-
-
-
-
-
-
 	}
 	/**
 	 * @author piymishra
@@ -162,13 +153,6 @@ public class HomeController {
 		return targetPartner.getSFDCOjectListforPopup(userValue);
 
 	} 
-
-
-
-
-
-
-
 	@RequestMapping(value = "/mapping", method = RequestMethod.GET)
 	public String home1(Locale locale, Model model,HttpServletRequest request) {
 		// TODO!!!
@@ -372,10 +356,21 @@ public class HomeController {
 	}
 
 
+	@RequestMapping(value="/getFieldColumnVal", method = RequestMethod.GET)
+	@ResponseBody public List<String> retrieveColumnAndFieldVal(HttpServletRequest request, @RequestParam("sblFldValSlctd")String sblFldValSlctd) throws ConnectionException{
+		System.out.println("In retrieveColumnAndFieldVal method");
+		System.out.println("Selected Siebel Value : "+ sblFldValSlctd);
+		HttpSession session = request.getSession(true);
+		SiebelObjectController siObj=new SiebelObjectController();
+		// Toget the foreign key, column name thru ajax call.
+		List<String> clmNmLst = siObj.fetchColumndAndFrgnKeyName(request, (String)session.getValue("siebelTableNameValue"), sblFldValSlctd);
+
+		return clmNmLst;
+	}
 
 
 
-
+	
 	@RequestMapping(value = "saveData",method = RequestMethod.POST)
 	public ModelAndView getSiebelFielddata(HttpServletRequest request, Map<String, Object> model, Model modelChild) throws ConnectionException {
 		HttpSession session = request.getSession(true);
@@ -395,6 +390,7 @@ public class HomeController {
 		System.out.println("in MY getSiebl meth"+primBaseValue);
 		String siebelTableNameValue=request.getParameter("objectName"+rowNo);
 		System.out.println("in MY getSiebl Siebel Table"+siebelTableNameValue);
+		session.putValue("siebelTableNameValue", siebelTableNameValue);
 		System.out.println("RowCount is: " +rowCount);
 		for(int i=1;i<=Integer.parseInt(rowCount);i++){
 			//mainPage[i] =  new MainPage();
@@ -455,10 +451,58 @@ public class HomeController {
 				return new ModelAndView("ChildBase" , "data", data);
 		}
 
-
-		else{
+		// Displays Single Value Field Mapping Screen
+		else if(page.equals("map")){
 			//Else go to mapping page
 			logger.info("Welcome to mapping ");
+            System.out.println("---------------"+thresholdValue+" "+primBaseValue);
+			//ThresholdController tc= new ThresholdController();
+			//List<SiebelObjectBO> listSiebelObject = tc.fetchSiebelObjects(request);
+			String subprojectId=tg.getsubprojects(siebelTableNameValue);
+			if(null != subprojectId){
+				JSONObject tableName=tg.getRelatedSiebelTable(subprojectId);//gives siebel and sfdc table name
+				String id=tg.getMappingId((String)session.getAttribute("projectId"),mappingData,tableName);
+
+				List<MappingModel> mappingData1=tg.getSavedMappingDBData((String)session.getAttribute("projectId"),mappingData,tableName);
+				List<String>childTables=tg.getSavedChild((String)session.getAttribute("projectId"),tableName);
+
+				SiebelObjectController siObj=new SiebelObjectController();
+				List<Object> myChildList=siObj.fetchColumns(request, primBaseValue,thresholdValue,childTables);
+
+				//List<String>childTables=partnerWSDL.getSavedChild((String)session.getAttribute("projectId"),tableName);
+				//System.out.println(mappingData1.get(0));
+
+				List<MappingModel> mappingData=tg.getFieldMapping(tableName,myChildList);
+				ArrayList<String> field= new ArrayList<String>();
+						field=tg.getFieldTarget(tableName);
+						
+				// To get the list of siebel field names for a siebel entity.
+				List<String> sblFldList = new ArrayList<String>();
+				sblFldList = siObj.fetchFieldNameList(request, siebelTableNameValue);
+				
+				
+				/*for(int count=0;count<mappingData.size();count++){
+					field.add(mappingData.get(count).getSfdcFieldTable());
+
+				}*/
+				modelChild.addAttribute("sfdcObj",mappingData.get(0).getSfdcObjectName());
+				modelChild.addAttribute("mappingField",field);
+				modelChild.addAttribute("sbllFlddNmList",sblFldList);
+				modelChild.addAttribute("sblObjName",siebelTableNameValue);
+				if(mappingData1.isEmpty()){
+					modelChild.addAttribute("mappingData",mappingData);}
+				else
+					modelChild.addAttribute("mappingData",mappingData1);
+				modelChild.addAttribute("MappingId",id);
+
+			}
+			return new ModelAndView("mapping", "data", data);
+		} 
+		// Displays Multi Value Field Mapping Screen
+		else if(page.equals("multiMap")){
+
+			//Else go to mapping page
+			logger.info("Entering Multimapping ");
             System.out.println("---------------"+thresholdValue+" "+primBaseValue);
 			//ThresholdController tc= new ThresholdController();
 			//List<SiebelObjectBO> listSiebelObject = tc.fetchSiebelObjects(request);
@@ -494,7 +538,10 @@ public class HomeController {
 				modelChild.addAttribute("MappingId",id);
 
 			}
-			return new ModelAndView("mapping", "data", data);
+			return new ModelAndView("multiMapping", "data", data);
+		
+		}else{
+			return new ModelAndView("vaporizer");
 		}
 	}
 	public JSONObject getOAuthToken(){

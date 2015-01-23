@@ -30,6 +30,7 @@ import com.force.example.fulfillment.order.service.InvoiceService;
 import com.force.example.fulfillment.order.service.OrderService;
 import com.force.partner.TargetPartner;
 import com.force.utility.UtilityClass;
+import com.sforce.soap.partner.DescribeSObjectResult;
 //import com.deloitte.bean.Team;
 
 @Controller
@@ -85,7 +86,7 @@ public class CanvasUIController {
 		System.out.println("=================" + projectId);
 		session.setAttribute("projectId", projectId);
 		TargetPartner targetPart = new TargetPartner(session);
-
+		
 		data = targetPart.getSavedDBData(projectId, data);
 		JSONObject middleWareConn= targetPart.getMiddleWareData(projectId);
 		session.setAttribute("middleWareConn", middleWareConn);

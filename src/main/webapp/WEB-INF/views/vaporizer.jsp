@@ -280,7 +280,13 @@ var sfdcObjectForExtarction="";
 		  $("#mainForm").submit(); 
 				 
 	  }
-	
+function submitForm(rowNum, page){
+	alert(page);
+	  $("#rowNo").val(rowNum); 
+	  $("#pageName").val(page);
+	  $("#mainForm").submit();
+}	
+ 
 	function  getObjectName(){
 		var objName = $("#objName").val();
 		  $.ajax({
@@ -483,8 +489,8 @@ var sfdcObjectForExtarction="";
 								<td><a href="#" onclick='submitForm(${mainPage.sequence})' style='margin-left:15px;'>Select</a></td>
 								<td width="220px"><input name="SFDCObjName${mainPage.sequence}" id="SFDCObjName${mainPage.sequence}" value="${mainPage.sfdcObject}" readonly /><button type='button' style='display: inline;'><span class='glyphicon glyphicon-search'></span></button></td>
 								<td><a href='#' onclick='submit(${mainPage.sequence})' style='margin-left:15px;'>Select</a></td>
-								<td><a href='#' onclick='submit(${mainPage.sequence})' style='margin-left:15px;'>Select</a></td>
-								<td><a href='#' onclick='submit(${mainPage.sequence})' style='margin-left:15px;'>Select</a></td>
+								<td><a href='#' onclick='submitForm(${mainPage.sequence},"multiMap")' style='margin-left:15px;'>Select</a></td>
+								<td><a href='#' onclick='submit(${mainPage.sequence},"dependantEntity")' style='margin-left:15px;'>Select</a></td>
 								<td><c:out value='Selected'/></td>
 								<td>
 								<input class='btn btn-inverse' type='button' name='Extract' value='E' onclick="extract(${mainPage.sequence})" />

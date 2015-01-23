@@ -38,6 +38,7 @@ import com.force.utility.SfdcObjectBO;
 import com.force.utility.UtilityClass;
 import com.sforce.soap.partner.DescribeGlobalResult;
 import com.sforce.soap.partner.DescribeGlobalSObjectResult;
+import com.sforce.soap.partner.DescribeSObjectResult;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.QueryResult;
 import com.sforce.soap.partner.SaveResult;
@@ -1446,6 +1447,7 @@ System.out.println("records "+records);
 			String primTable) {
 		List<ChildObjectBO> childData = new ArrayList<ChildObjectBO>();
 		try {
+			
 			System.out.println("in getSave Child Data proj is" + projectId
 					+ "and prim is" + primTable);
 			partnerConnection.setQueryOptions(250);
