@@ -540,6 +540,51 @@ public class HomeController {
 			}
 			return new ModelAndView("multiMapping", "data", data);
 		
+		}else if(page.equals("dependantEntity")){
+			//Else go to mapping page
+			logger.info("Welcome to mapping ");
+            System.out.println("---------------"+thresholdValue+" "+primBaseValue);
+			//ThresholdController tc= new ThresholdController();
+			//List<SiebelObjectBO> listSiebelObject = tc.fetchSiebelObjects(request);
+			String subprojectId=tg.getsubprojects(siebelTableNameValue);
+			if(null != subprojectId){
+				JSONObject tableName=tg.getRelatedSiebelTable(subprojectId);//gives siebel and sfdc table name
+				String id=tg.getMappingId((String)session.getAttribute("projectId"),mappingData,tableName);
+
+				List<MappingModel> mappingData1=tg.getSavedMappingDBData((String)session.getAttribute("projectId"),mappingData,tableName);
+				List<String>childTables=tg.getSavedChild((String)session.getAttribute("projectId"),tableName);
+
+				SiebelObjectController siObj=new SiebelObjectController();
+				List<Object> myChildList=siObj.fetchColumns(request, primBaseValue,thresholdValue,childTables);
+
+				//List<String>childTables=partnerWSDL.getSavedChild((String)session.getAttribute("projectId"),tableName);
+				//System.out.println(mappingData1.get(0));
+
+				List<MappingModel> mappingData=tg.getFieldMapping(tableName,myChildList);
+				ArrayList<String> field= new ArrayList<String>();
+						field=tg.getFieldTarget(tableName);
+						
+				// To get the list of siebel field names for a siebel entity.
+				List<String> sblFldList = new ArrayList<String>();
+				sblFldList = siObj.fetchFieldNameList(request, siebelTableNameValue);
+				
+				
+				/*for(int count=0;count<mappingData.size();count++){
+					field.add(mappingData.get(count).getSfdcFieldTable());
+
+				}*/
+				modelChild.addAttribute("sfdcObj",mappingData.get(0).getSfdcObjectName());
+				modelChild.addAttribute("mappingField",field);
+				modelChild.addAttribute("sbllFlddNmList",sblFldList);
+				modelChild.addAttribute("sblObjName",siebelTableNameValue);
+				if(mappingData1.isEmpty()){
+					modelChild.addAttribute("mappingData",mappingData);}
+				else
+					modelChild.addAttribute("mappingData",mappingData1);
+				modelChild.addAttribute("MappingId",id);
+
+			}
+			return new ModelAndView("dependentMapping", "data", data);
 		}else{
 			return new ModelAndView("vaporizer");
 		}
