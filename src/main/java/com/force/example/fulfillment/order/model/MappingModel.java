@@ -9,6 +9,18 @@ public class MappingModel {
 	public String sfdcFieldTable;
 	public int mappingSeq;
 	public String id;
+	public String sblFieldNmdropdown;
+//	public String sbldscription;
+	public String joinNamerow;
+	public String frgnKeyrow;
+	public String clmnNmrow;
+	public String slfrcdropdown;
+//	public String slsfrcdscription;
+	public String joinCondition;
+	public String siebelEntity;
+	public Boolean checkFlag ;
+	public Boolean lookUpFlag;
+	public String lookUpObject;
 	
 	public String getId() {
 		return id;
@@ -16,11 +28,11 @@ public class MappingModel {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public boolean checkFlag ;
-	public boolean isCheckFlag() {
+	
+	public Boolean getCheckFlag() {
 		return checkFlag;
 	}
-	public void setCheckFlag(boolean checkFlag) {
+	public void setCheckFlag(Boolean checkFlag) {
 		this.checkFlag = checkFlag;
 	}
 	public int getMappingSeq() {
@@ -65,5 +77,70 @@ public class MappingModel {
 	public void setMappingSfdcId(String mappingSfdcId) {
 		this.mappingSfdcId = mappingSfdcId;
 	}
-
+	public String getSblFieldNmdropdown() {
+		return sblFieldNmdropdown;
+	}
+	public void setSblFieldNmdropdown(String sblFieldNmdropdown) {
+		this.sblFieldNmdropdown = sblFieldNmdropdown;
+	}
+	/*public String getSbldscription() {
+		return sbldscription;
+	}
+	public void setSbldscription(String sbldscription) {
+		this.sbldscription = sbldscription;
+	}*/
+	public String getFrgnKeyrow() {
+		return frgnKeyrow;
+	}
+	public void setFrgnKeyrow(String frgnKeyrow) {
+		this.frgnKeyrow = frgnKeyrow;
+	}
+	public String getClmnNmrow() {
+		return clmnNmrow;
+	}
+	public void setClmnNmrow(String clmnNmrow) {
+		this.clmnNmrow = clmnNmrow;
+	}
+	public String getSlfrcdropdown() {
+		return slfrcdropdown;
+	}
+	public void setSlfrcdropdown(String slfrcdropdown) {
+		this.slfrcdropdown = slfrcdropdown;
+	}
+	/*public String getSlsfrcdscription() {
+		return slsfrcdscription;
+	}
+	public void setSlsfrcdscription(String slsfrcdscription) {
+		this.slsfrcdscription = slsfrcdscription;
+	}*/
+	public String getJoinCondition() {
+		return joinCondition;
+	}
+	public void setJoinCondition(String joinCondition) {
+		this.joinCondition = joinCondition;
+	}
+	public String getSiebelEntity() {
+		return siebelEntity;
+	}
+	public void setSiebelEntity(String siebelEntity) {
+		this.siebelEntity = siebelEntity;
+	}
+	public Boolean getLookUpFlag() {
+		return lookUpFlag;
+	}
+	public void setLookUpFlag(Boolean lookUpFlag) {
+		this.lookUpFlag = lookUpFlag;
+	}
+	public String getLookUpObject() {
+		return lookUpObject;
+	}
+	public void setLookUpObject(String lookUpObject) {
+		this.lookUpObject = lookUpObject;
+	}
+	public String getJoinNamerow() {
+		return joinNamerow;
+	}
+	public void setJoinNamerow(String joinNamerow) {
+		this.joinNamerow = joinNamerow;
+	}
 }

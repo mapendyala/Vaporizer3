@@ -1,10 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
-
-
-
 <%@ page session="false"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
@@ -21,6 +16,9 @@
 <link rel="stylesheet"
 	href="<c:url value="/resources/css/vaporizer.css" />" type="text/css"
 	media="screen, projection">
+	
+<link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet"
 	href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
@@ -47,98 +45,93 @@
 	var rowNum = 1;
 	var primBaseTable;
 
-	
-	
 	$(document).ready(function() {
 		$('body').delegate('.sblFldColFrgnUpdate', 'change', function() {
 			var slctdSblFldOption = $(this).val();
 			var slctdSblFldId = $(this).attr('id');
 			var parentRow = $(this).parent().parent().attr("id");
+			var rowNum = $(this).closest('tr').index();
 			 $.ajax({
 					type : "GET",
 					url : "getFieldColumnVal",
 				 	data :
 				 		{
-				 		sblFldValSlctd:slctdSblFldOption
+				 		sblFldValSlctd:slctdSblFldOption ,
+				 		rowNum:rowNum
 				 		},
 				 		contentType : 'application/text',
 				 		success : function(response) {
 						var fieldColmnRsponse=response;
 							if(response != null && response.length != 0){
-							$("#"+parentRow+"frgnKey").val(fieldColmnRsponse[0]);
-							$("#"+parentRow+"clmnNm").val(fieldColmnRsponse[1]);
+							$("#joinName"+parentRow).val(fieldColmnRsponse[0]);
+							$("#clmnNm"+parentRow).val(fieldColmnRsponse[1]);
+							$("#joinCondition"+parentRow).val(fieldColmnRsponse[2]);
+							$("#frgnKey"+parentRow).val(fieldColmnRsponse[3]);
+							}else{
+								  $("#joinName"+parentRow).val("");
+								  $("#clmnNm"+parentRow).val("");
+								  $("#joinCondition"+parentRow).val("");
+								  $("#frgnKey"+parentRow).val("");
 							}
 						},
 				 		error: function(errorThrown){
 				 	        alert("No foreign key an column names for the selected siebel field.");
-				 	        $("#"+parentRow+"frgnKey").val("");
-							$("#"+parentRow+"clmnNm").val("");
+				 	        $("#joinName"+parentRow).val("");
+							$("#clmnNm"+parentRow).val("");
+							$("#joinCondition"+parentRow).val("");
+							$("#frgnKey"+parentRow).val("");
 				 	    } 
 			 });  
 		});
+		
+	
 	});
 	
+	
 	function addRow() {
+		
 		if ($("#rowCount").val() != '') {
 			rowNum = Number($("#rowCount").val());
+		}else{
+			rowNum = 0;
 		}
-
 		$("#rowCount").val(rowNum + 1);
-		var checkFlag = "checkFlag" + rowNum;
+		var checkFlag = "select" + rowNum;
 		var siebleBaseTable = "siebleBaseTable" + rowNum;
 		var siebleBaseTableColumn = "siebleBaseTableColumn" + rowNum;
 		var foreignFieldMapping = "foreignFieldMapping" + rowNum;
 		var sfdcObjectName = "sfdcObjectName" + rowNum;
 		var dropdown = "dropdown" + rowNum;
 		var sfdcId = "sfdcId" + rowNum;
-		/* $("#masterTable tbody")
-				.append(
-
-						"<tr>"
-								+ "<td><input name='"+checkFlag+"' id='"+checkFlag+"'  type='checkbox' checked='checked'></td>"
-								+ "<td><input value='${mappingData[0].siebleBaseTable}' id='"+siebleBaseTable+"' name='"+siebleBaseTable+"' style='margin-left: 45px;' /></td>"
-								+ "<td><input name='"+siebleBaseTableColumn+"' id='"+siebleBaseTableColumn+"'  style='margin-left:35px;'/></td>"
-								+ "<td><input value='${mappingData[0].foreignFieldMapping}' name='"+foreignFieldMapping+"' id='"+foreignFieldMapping+"'  style='margin-left:35px;'/></td>"
-								+ "<td><input value='${mappingData[0].sfdcObjectName}' name='"+sfdcObjectName+"' id='"+sfdcObjectName+"' style='margin-left:35px;'/></td>"
-								+ "<td><select name='"+dropdown+"' id='"+dropdown+"'>"
-								+ " <option value=''></option>"
-								+ " <c:if test="${not empty mappingField}"> "
-								+ "<c:forEach items="${mappingField}" var="field" varStatus="status">"
-								+ " <option value='${field}'>${field}</option>"
-								+ "    </c:forEach> "
-								+ "  </c:if>"
-								+ "</select></td>"
-								+ "</td><input type='hidden' id='"+sfdcId+"' name='"+sfdcId+"'></tr>"
-
-				);
- */
-		 $("#masterTable tbody")
-			.append(
+	
+		  $("#masterTable tbody").append(
 
 					"<tr id=row"+rowNum+">"
-							+ "<td><input name='"+checkFlag+"' id='"+checkFlag+"'  type='checkbox' checked='checked'></td>"
-							+ "<td><select name=sbldropdown"+rowNum+" id=sbldropdown"+rowNum+" class='sblFldColFrgnUpdate'>"
+							+ "<td><input name=select"+rowNum+" id=select"+rowNum+"  type='checkbox' checked='checked'></td>"
+							+ "<td><select name=sblFieldNmdropdown"+rowNum+" id=sblFieldNmdropdown"+rowNum+" class='sblFldColFrgnUpdate'>"
 							+ "<c:if test='${not empty sbllFlddNmList}'>"
 							+ "<c:forEach items="${sbllFlddNmList}" var="field" varStatus="status">"
 							+ "<option value='${field}'>${field}</option>"
 							+ "</c:forEach></c:if></select></td>"
-							+ "<td><input type='text' style='margin-left: 35px;' id=sbldscription"+rowNum+"></td>"
-							+ "<td><input type='text' style='margin-left: 35px;' id=row"+rowNum+"frgnKey name=row"+rowNum+"frgnKey /></td>"
-							+ "<td><input type='text' style='margin-left: 35px;' id=row"+rowNum+"clmnNm name=row"+rowNum+"clmnNm /></td>"
-							+ "<td><select name=slfrcdropdown"+rowNum+ " id=dropdown"+rowNum+ ">"
+							+ "<td><input type='text' style='margin-left: 35px;' id=joinNamerow"+rowNum+" name=joinNamerow"+rowNum+" /></td>"
+							+ "<td><input type='text' style='margin-left: 35px;' id=frgnKeyrow"+rowNum+" name=frgnKeyrow"+rowNum+" /></td>"
+							+ "<td><input type='text' style='margin-left: 35px;' id=clmnNmrow"+rowNum+" name=clmnNmrow"+rowNum+" /></td>"
+							+ "<td><textarea style='margin-left: 35px;' id=joinConditionrow"+rowNum+" name=joinConditionrow"+rowNum+" cols='40'></textarea></td>"
+							+ "<td style='padding:5px;'><select name=slfrcdropdown"+rowNum+ " id=slfrcdropdown"+rowNum+">"
 							+ " <c:if test="${not empty mappingField}"> "
-							+ "<c:forEach items="${mappingField}" var="field" varStatus="status">"
-							+ " <option value='${field}'>${field}</option>"
-							+ "    </c:forEach> "
+							+ " <c:forEach items="${mappingField}" var="field1" varStatus="status">"
+							+ " <option value='${field1}'>${field1}</option>"
+							+ " </c:forEach> "
 							+ "  </c:if>"
 							+ "</select></td>"
-							+ "<td><input type='text' style='margin-left: 35px;' id=slsfrcdscription"+rowNum+"></td>"
-							+ "<td><a  href='#;'/>View</td>"
-							+ "<input type='hidden' id='"+sfdcId+"' name='"+sfdcId+"'></tr>"
-
-			);
+							+ "<td style='margin-left: 35px; padding-left:25px;'><input name=lookUpField"+rowNum+" id=lookUpField"+rowNum+"  type='checkbox' checked='checked'></td>"
+							+ "<td style='margin-left: 35px;'><input type='text' style='margin-left: 35px;' name=lookUpObj"+rowNum+" id=lookUpObj"+rowNum+"></td>"
+							+ "<td style='margin-left: 35px;'><input type='text' style='margin-left: 35px;' name=lookUpRltnNme"+rowNum+" id=lookUpRltnNme"+rowNum+"></td>"
+							+ "<td style='margin-left: 35px;'><input type='text' style='margin-left: 35px;' name=lookUpExtrnl"+rowNum+" id=lookUpExtrnl"+rowNum+"></td>"
+							+ "<input type='hidden' id='"+sfdcId+"' name='"+sfdcId+"'></tr>"); 
  
 	}
+	
 </script>
 <title>Vaporizer</title>
 </head>
@@ -158,31 +151,30 @@
 						</tr>
 
 						<div class="sampleContainer" style="width: 250px;">
+						
 							<table class="table" style="margin: 2px;">
 								<tr>
 									<br />
-									<td style="width: 45px; text-align: left;" align="left">Siebel
+									<td style="width: 65px; text-align: left;" align="left">Siebel
 										Entity</td>
 
-									<td style="width: 45px; text-align: left;" align="left">${sblObjName}</td>
-
+									<td style="width: 45px; text-align: left;" align="left">${hdrValues[0]}</td>
+					
 
 								</tr>
 								<tr>
 									<br />
 									<td style="width: 45px; text-align: left;" align="left">Siebel Base table</td>
 
-									<td style="width: 45px; text-align: left;" align="left">${mappingData[0].siebleBaseTable
-										}</td>
+									<td style="width: 45px; text-align: left;" align="left">${hdrValues[1]}</td>
 
 
 								</tr>
 								<tr>
-									<td style="width: 45px; text-align: left;" align="left">SFDC
+									<td style="width: 65px; text-align: left;" align="left">SFDC
 										Entity</td>
 
-									<td style="width: 45px; text-align: left;" align="left">${mappingData[0].sfdcObjectName
-										}</td>
+									<td style="width: 45px; text-align: left;" align="left">${hdrValues[2]}</td>
 								</tr>
 
 
@@ -194,135 +186,108 @@
 				<button class="btn btn-primary" id="addRow" onclick="addRow()">[+]</button>
 				<form:form method="post" action="mappingSave" modelAttribute="data">
 					<div class="mappingContainer" style="width: 100%;">
+					<input type='hidden' id="siebelEntity" name="siebelEntity" value=${sblObjName} />
 						<table id="masterTable" style="width: 100%;">
 							<br />
 							<br />
 							<thread>
 							<tr>
-							<%-- 	<th class="table_header_details" style="float: center;">Select</th>
-								<th class="table_header_details" style="float: center;">Siebel Base Table</th>
-								<th class="table_header_details" style="float: center;">Siebel Base Table Column</th>
-								<th class="table_header_details" style="float: center;">Foreign	Key Table Field Name</th>
-								<th class="table_header_details" style="float: center;">SFDC Object Name</th>
-								<th class="table_header_details" style="float: center;">SFDC Field Name</th>
-							--%>
-						<%-- <th>Select</th>
-						<th>Siebel Base Table</th>
-						<th>Siebel Base Table Column</th>
-						<th>Siebel Field Description</th>
-						<th>Foreign Key Table Field Name</th>
-						<th>SFDC Object Name</th>
-						<th>SFDC Field Name</th>
-						<th>SFDC Field Description</th>
-						<th>Lov Mapping</th>--%>
 								<th class="table_header_details" style="float: center;">Select</th>
 								<th class="table_header_details" style="float: center;">Siebel Field Name</th>
-								<th class="table_header_details" style="float: center;">Siebel Field Description</th>
-								<th class="table_header_details" style="float: center;">Foreign Key Table</th>
-								<th class="table_header_details" style="float: center;">Column Name</th>
+								<th class="table_header_details" style="float: center;">Join Name</th>
+								<th class="table_header_details" style="float: center;">Foreign Key Table Name</th>
+								<th class="table_header_details" style="float: center;">Siebel Column</th>
+								<th class="table_header_details" style="float: center;">Join Condition</th>
 								<th class="table_header_details" style="float: center;">SFDC Field Name</th>
-								<th class="table_header_details" style="float: center;">SFDC Field Description</th>
-								<th class="table_header_details" style="float: center;">Lov Mapping2</th>
+								<th class="table_header_details" style="float: center;">Lookup Field</th>
+								<th class="table_header_details" style="float: center;">Lookup Object</th>
+								<th class="table_header_details" style="float: center;">Lookup Relationship Name</th>
+								<th class="table_header_details" style="float: center;">Lookup External Id Field</th>
 							</tr>
 							</thread>
 
-						<%-- 	<c:if test="${not empty mappingData}" var="mapping">
-								<c:forEach items="${mappingData}" var="mapping"
-									varStatus="status"> --%>
-									<%--  <tr>
-										<td><c:choose>
-												<c:when test="${mapping.checkFlag == 'true'}">
-													<input name="checkFlag${mapping.mappingSeq}"
-														id="checkFlag${mapping.mappingSeq}" type='checkbox'
-														checked="checked">
-												</c:when>
-												<c:otherwise>
-													<input name="checkFlag${mapping.mappingSeq}"
-														id="checkFlag${mapping.mappingSeq}" type='checkbox'>
-												</c:otherwise>
-											</c:choose></td>
+						 	<c:if test="${not empty mappingData}" var="mapping">
+								<c:forEach items="${mappingData}" var="mapping" varStatus="status"> 
+									 <tr id="row${mapping.mappingSeq}">
+										<td>
+										<c:choose>
+										<c:when test="${mapping.checkFlag}">
+										<input name="select${mapping.mappingSeq}" type='checkbox' checked="checked">
+										</c:when>
+										<c:otherwise>
+										<input name="select${mapping.mappingSeq}" type='checkbox'>
+										</c:otherwise>
+										</c:choose></td>
 										<!-- Siebel Field Name : Drop Down  --> 
-										<td><select name="sbldropdown${mapping.mappingSeq}"
-											id="sbldropdown${mapping.mappingSeq}">
+										<td><select name="sblFieldNmdropdown${mapping.mappingSeq}"
+											id="sblFieldNmdropdown${mapping.mappingSeq}" class='sblFldColFrgnUpdate'>
 												<c:if test="${not empty sbllFlddNmList}">
-													<c:forEach items="${sbllFlddNmList}" var="field"
-														varStatus="status">
-														<option value="${field}">${field}</option>
+													<c:forEach items="${sbllFlddNmList}" var="field" varStatus="status">
+														<c:set var="temp" value="${field}" />
+                                						<c:set var="temp1" value="${mapping.sblFieldNmdropdown}" />
+														temp: [<c:out value="${temp}" />]
+                                						temp1: [<c:out value="${temp1}" />]
+														<c:choose>
+															<c:when test="${temp == temp1}">
+												                <option value='${temp1}' selected>${temp1}</option>
+												            </c:when>
+												            <c:otherwise>
+												                <option value='${field}'>${field}</option>
+												            </c:otherwise>
+											            </c:choose>
 													</c:forEach>
 												</c:if>
 										</select></td>	
-										<!-- TODO : To be changed with Siebel Field Description -->
-										<td><input type="text" style='margin-left: 35px;'/></td>
-										<!-- TODO : To load the foreign key value dynamically -->
-										<td><input type="text" style='margin-left: 35px;'/></td>
+										<!-- Join name -->
+										<td><input type="text" style="margin-left: 35px;" id="joinNamerow${mapping.mappingSeq}" name="joinNamerow${mapping.mappingSeq}" value="${mapping.joinNamerow}" /></td>
+										<!-- Foreign Key Table -->
+										<td><input type="text" style="margin-left: 35px;" id="frgnKeyrow${mapping.mappingSeq}" name="frgnKeyrow${mapping.mappingSeq}" value="${mapping.frgnKeyrow}" /></td>
 										<!-- TODO : To load the column name value dynamically -->
-										<td><input type="text" style='margin-left: 35px;'/></td>
-										<td><select name="dropdown${mapping.mappingSeq}"
-											id="dropdown${mapping.mappingSeq}">
-												<option value="${mapping.sfdcFieldTable}">${mapping.sfdcFieldTable}</option>
+										<td><input type="text" style='margin-left: 35px;' id="clmnNmrow${mapping.mappingSeq}" name="clmnNmrow${mapping.mappingSeq}" value="${mapping.clmnNmrow}" /></td>
+										<td><textarea style='margin-left: 35px;' id="joinConditionrow${mapping.mappingSeq}" name="joinConditionrow${mapping.mappingSeq}" cols="40">${mapping.joinCondition}</textarea></td>
+										<td style="padding:5px;"><select name="slfrcdropdown${mapping.mappingSeq}" id="slfrcdropdown${mapping.mappingSeq}">
 												<c:if test="${not empty mappingField}">
-													<c:forEach items="${mappingField}" var="field"
-														varStatus="status">
-														<option value="${field}">${field}</option>
+													<c:forEach items="${mappingField}" var="field" varStatus="status">
+														<c:set var="tem2" value="${field}" />
+                                						<c:set var="temp3" value="${mapping.slfrcdropdown}" />
+														<c:choose>
+															<c:when test="${temp2} eq ${temp3}">
+												                <option value="${mapping.slfrcdropdown}" selected>${mapping.slfrcdropdown}</option>
+												            </c:when>
+												            <c:otherwise>
+												                <option value="${field}">${field}</option>
+												            </c:otherwise>
+											            </c:choose>
 													</c:forEach>
 												</c:if>
 										</select></td>
-										<!-- TODO : To be changed with SFDC Field Description -->
-										<td><input type="text" style='margin-left: 35px;'/></td>
-										<td><a  href="#;"/>View</td>
-									 </tr> --%>
-									<%-- <tr>
-										<td><c:choose>
-												<c:when test="${mapping.checkFlag == 'true'}">
-													<input name="checkFlag${mapping.mappingSeq}"
-														id="checkFlag${mapping.mappingSeq}" type='checkbox'
-														checked="checked">
-												</c:when>
-												<c:otherwise>
-													<input name="checkFlag${mapping.mappingSeq}"
-														id="checkFlag${mapping.mappingSeq}" type='checkbox'>
-												</c:otherwise>
-											</c:choose></td>
-										<td><input value="${mapping.siebleBaseTable}"
-											id="siebleBaseTable${mapping.mappingSeq}"
-											name="siebleBaseTable${mapping.mappingSeq}" readonly
-											style='margin-left: 45px;' /></td>
-
-										<td><input value="${mapping.siebleBaseTableColumn}"
-											id="siebleBaseTableColumn${mapping.mappingSeq}"
-											name="siebleBaseTableColumn${mapping.mappingSeq}" readonly
-											style='margin-left: 35px;' /></td>
-
-										<td><input value="${mapping.foreignFieldMapping}"
-											id="foreignFieldMapping${mapping.mappingSeq}"
-											name="foreignFieldMapping${mapping.mappingSeq}" readonly
-											style='margin-left: 35px;' /></td>
-
-
-										<td><input value="${mapping.sfdcObjectName}"
-											id="sfdcObjectName${mapping.mappingSeq}"
-											name="sfdcObjectName${mapping.mappingSeq}" readonly
-											style='margin-left: 35px;' /></td>
-										<td><select name="dropdown${mapping.mappingSeq}"
-											id="dropdown${mapping.mappingSeq}">
-												<option value="${mapping.sfdcFieldTable}">${mapping.sfdcFieldTable}</option>
-												<c:if test="${not empty mappingField}">
-													<c:forEach items="${mappingField}" var="field"
-														varStatus="status">
-														<option value="${field}">${field}</option>
-													</c:forEach>
-												</c:if>
-										</select></td>
-										<td><input type="hidden" value="${mapping.id}"
-											id="sfdcId${mapping.mappingSeq}"
-											name="sfdcId${mapping.mappingSeq}"></td>
-									</tr> --%>
-							<%-- 	</c:forEach>
-							</c:if> --%>
+										<!-- Look Up Field -->
+										<td style="margin-left: 35px;padding-left : 25px;">
+										<c:choose>
+										<c:when test="${mapping.checkFlag}">
+										<input name="lookUpField${mapping.mappingSeq}" type='checkbox' checked="checked">
+										</c:when>
+										<c:otherwise>
+										<input name="lookUpField${mapping.mappingSeq}" type='checkbox'>
+										</c:otherwise>
+										</c:choose></td>
+										<!-- Look Up Object -->
+										<td><input type="text" style="margin-left: 35px;" id="lookUpObj${mapping.mappingSeq}" name="lookUpObj${mapping.mappingSeq}" /></td>
+										<!-- Lookup Relationship Name -->
+										<td><input type="text" style="margin-left: 35px;" id="lookUpRltnNme${mapping.mappingSeq}" name="lookUpRltnNme${mapping.mappingSeq}" /></td>
+										<!-- Lookup External Id Field -->
+										<td><input type="text" style="margin-left: 35px;" id="lookUpExtrnl${mapping.mappingSeq}" name="lookUpExtrnl${mapping.mappingSeq}" /></td>
+										<input type='hidden' id="sfdcId${mapping.mappingSeq}" name="sfdcId${mapping.mappingSeq}" value="${mapping.id}" />
+									 </tr> 
+								</c:forEach>
+							</c:if> 
 						</table>
 						<div id="row">
-							<input id="rowCount" name='rowCount' type="hidden"
-								value="${mappingData.size()}">
+						<!-- TODO:  Understand the below usage -->
+							 <input id="rowCount" name='rowCount' type="hidden"
+								value="${mappingData.size()}"> 
+								<!-- <input id="rowCount" name='rowCount' type="hidden"
+								value=""> -->
 						</div>
 						<input id="mappingSfdcId" name='mappingSfdcId' type="hidden"
 							value="${MappingId}">

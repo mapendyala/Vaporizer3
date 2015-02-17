@@ -13,24 +13,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
-import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.force.example.fulfillment.order.model.Order;
-import com.force.partner.PartnerWSDL;
 import com.force.utility.ChildObjectBO;
 import com.force.utility.SiebelObjectBO;
-import com.force.utility.UtilityClass;
 
 /**
  * @author 
@@ -45,37 +36,16 @@ public class SiebelObjectController {
 	 * 
 	 */
 	private static Connection connection = null;
+	private static Map<String,String> joinNmCndtnMap = new HashMap<String,String>();
+	
 	@RequestMapping(value="/SiebelObject", method=RequestMethod.POST)
 
 	@ResponseBody public List<SiebelObjectBO> fetchSiebelObjects(HttpServletRequest request)
 	{
 		List<SiebelObjectBO> objList=new ArrayList<SiebelObjectBO>(); 
-		HttpSession session = request.getSession(true);
 		String userValue = request.getParameter("objectName");
 		System.out.println("uservalues in bean is"+userValue);
-		try
-		{
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-		}
-		catch(ClassNotFoundException e)
-		{
-			System.out.println("Where is your Oracle JDBC Driver?");
-			e.printStackTrace();
-
-		}
-		System.out.println("Oracle JDBC Driver Registered!");
-		try
-		{
-			connection = DriverManager.getConnection("jdbc:oracle:thin:@167.219.18.231:443/SBLDB", "snetuser1","snetuser1");
-		}
-		catch (SQLException e)
-		{
-			System.out.println("Connection Failed! Check output console");
-			e.printStackTrace();
-
-		}
-
-
+		makeConnection();
 		/* try{
     		 PartnerWSDL partnerWSDL= new PartnerWSDL();
     		 String projectId = (String) session.getAttribute("projectName");
@@ -143,7 +113,6 @@ public class SiebelObjectController {
 
 		System.out.println("in child contoller method");
 		List<Object> myList=new ArrayList<Object>();
-		HttpSession session = request.getSession(true);
 		/* String userValue = request.getParameter("baseObjectName");
 				 System.out.println("child uservalues in bean is"+userValue);*/
 		System.out.println("SIEBL OBJ PARAM IS"+siebelObjName);
@@ -152,30 +121,7 @@ public class SiebelObjectController {
 		if((null!=thresholdValue)&&(""!=thresholdValue)){
 			tvalue = Integer.parseInt(thresholdValue);
 		}
-
-		try
-		{
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-		}
-		catch(ClassNotFoundException e)
-		{
-			System.out.println("Where is your Oracle JDBC Driver?");
-			e.printStackTrace();
-
-		}
-		System.out.println("Oracle JDBC Driver Registered!");
-		try
-		{
-			connection = DriverManager.getConnection("jdbc:oracle:thin:@167.219.18.231:443/SBLDB", "snetuser1","snetuser1");
-		}
-		catch (SQLException e)
-		{
-			System.out.println("Connection Failed! Check output console");
-			e.printStackTrace();
-
-		}
-
-
+		makeConnection();
 		try
 		{
 			if (connection != null)
@@ -243,34 +189,11 @@ public class SiebelObjectController {
 	{
 		System.out.println("in child contoller method");
 		List<ChildObjectBO> childObjList=new ArrayList<ChildObjectBO>(); 
-		HttpSession session = request.getSession(true);
 		/* String userValue = request.getParameter("baseObjectName");
 			 System.out.println("child uservalues in bean is"+userValue);*/
 		System.out.println("SIEBL OBJ PARAM IS"+siebelObjName);
 		String userValue=siebelObjName;
-		try
-		{
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-		}
-		catch(ClassNotFoundException e)
-		{
-			System.out.println("Where is your Oracle JDBC Driver?");
-			e.printStackTrace();
-
-		}
-		System.out.println("Oracle JDBC Driver Registered!");
-		try
-		{
-			connection = DriverManager.getConnection("jdbc:oracle:thin:@167.219.18.231:443/SBLDB", "snetuser1","snetuser1");
-		}
-		catch (SQLException e)
-		{
-			System.out.println("Connection Failed! Check output console");
-			e.printStackTrace();
-
-		}
-
-
+		makeConnection();
 		/* try{
 	    		 PartnerWSDL partnerWSDL= new PartnerWSDL();
 	    		 String projectId = (String) session.getAttribute("projectName");
@@ -290,16 +213,11 @@ public class SiebelObjectController {
 			if (connection != null)
 			{
 				System.out.println("You made it, take control your database now!");
-
-
-
 				String query="SELECT CHILDTABLE.NAME, CHILDTABLE.NAME || '.' || CHILDTABLECOLUMN.NAME || ' = ' || BASETABLE.NAME || '.ROW_ID' FROM " +
 						" SIEBEL.S_COLUMN CHILDTABLECOLUMN INNER JOIN SIEBEL.S_TABLE CHILDTABLE ON CHILDTABLE.ROW_ID = CHILDTABLECOLUMN.TBL_ID AND " +
 						" CHILDTABLE.REPOSITORY_ID = CHILDTABLECOLUMN.REPOSITORY_ID INNER JOIN SIEBEL.S_TABLE BASETABLE ON " +
 						" BASETABLE.ROW_ID = CHILDTABLECOLUMN.FKEY_TBL_ID AND BASETABLE.REPOSITORY_ID = CHILDTABLECOLUMN.REPOSITORY_ID AND BASETABLE.NAME ='"+userValue+"'" +
 						" INNER JOIN SIEBEL.S_REPOSITORY REP ON REP.ROW_ID = CHILDTABLECOLUMN.REPOSITORY_ID " ;			                 
-				List<Object> myList=new ArrayList<Object>();
-
 				Statement st=connection.createStatement();
 				System.out.println("child query is"+query);
 				ResultSet mySet=st.executeQuery(query);
@@ -345,89 +263,42 @@ public class SiebelObjectController {
 	} 	 
 	
 	public void makeConnection(){
-		try
-		{
+		try{
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 		}
-		catch(ClassNotFoundException e)
-		{
+		catch(ClassNotFoundException e){
 			System.out.println("Where is your Oracle JDBC Driver?");
 			e.printStackTrace();
-
 		}
 		System.out.println("Oracle JDBC Driver Registered!");
-		try
-		{
+		try{
 			connection = DriverManager.getConnection("jdbc:oracle:thin:@167.219.18.231:443/SBLDB", "snetuser1","snetuser1");
 		}
-		catch (SQLException e)
-		{
+		catch (SQLException e){
 			System.out.println("Connection Failed! Check output console");
 			e.printStackTrace();
-
 		}
 	}
 	
 	 public List<String> fetchFieldNameList(HttpServletRequest request,String siebelObjName){
 			System.out.println("in child contoller method");
 			List<String> fieldNameList=new ArrayList<String>(); 
-			HttpSession session = request.getSession(true);
 			System.out.println("SIEBL OBJ PARAM IS"+siebelObjName);
 			makeConnection();
-
 			try{
 				if (connection != null){
 					System.out.println("You made it, take control your database now!");
-					String fieldNameQry = "SELECT BCFIELD.NAME FROM SIEBEL.S_FIELD BCFIELD INNER JOIN SIEBEL.S_BUSCOMP BUSCOMP ON BUSCOMP.ROW_ID = BCFIELD.BUSCOMP_ID "
-							+ "AND BUSCOMP.REPOSITORY_ID = BCFIELD.REPOSITORY_ID WHERE BCFIELD.REPOSITORY_ID = "
-							+ "(SELECT ROW_ID FROM SIEBEL.S_REPOSITORY WHERE NAME = 'Siebel Repository') AND BUSCOMP.NAME = '"+siebelObjName+"'";
-					List<Object> myList=new ArrayList<Object>();
-
+					
+					String fieldNameQry = "SELECT BCFIELD.NAME FROM SIEBEL.S_FIELD BCFIELD INNER JOIN SIEBEL.S_BUSCOMP BUSCOMP ON "
+							+ "BUSCOMP.ROW_ID = BCFIELD.BUSCOMP_ID AND BUSCOMP.REPOSITORY_ID = BCFIELD.REPOSITORY_ID WHERE BCFIELD.REPOSITORY_ID = "
+							+ "(SELECT ROW_ID FROM SIEBEL.S_REPOSITORY WHERE NAME = 'Siebel Repository') AND BCFIELD.CALCULATED = 'N' AND BCFIELD.MULTI_VALUED = 'N' "
+							+ "AND BUSCOMP.NAME = '"+siebelObjName+"'";
+					
 					Statement st=connection.createStatement();
 					System.out.println("fieldNameQry is"+fieldNameQry);
 					ResultSet mySet=st.executeQuery(fieldNameQry);
-					int i=0;
 					while(mySet.next()){
 						fieldNameList.add(mySet.getString(1));
-					}
-					System.out.println("list size is"+fieldNameList.size());
-				}
-			}
-			catch(SQLException e)
-			{
-				System.out.println("Connection Failed! Check output console");
-				e.printStackTrace();
-			}
-			return fieldNameList; 	 
-		} 	 
-	
-	 public List<String> fetchColumndAndFrgnKeyName(HttpServletRequest request,String siebelObjName, String sblFldValSlctd){
-			System.out.println("in child contoller method");
-			List<String> fieldNameList=null; 
-			System.out.println("SIEBL OBJ PARAM IS"+siebelObjName);
-			makeConnection();
-
-			try	{
-				if (connection != null){
-					System.out.println("You made it, take control your database now!");
-
-					String fieldNameQry = "SELECT BCFIELD.NAME, BCFIELD.JOIN_NAME, BCFIELD.COL_NAME FROM SIEBEL.S_FIELD BCFIELD INNER JOIN "
-								+ "SIEBEL.S_BUSCOMP BUSCOMP ON BUSCOMP.ROW_ID = BCFIELD.BUSCOMP_ID AND BUSCOMP.REPOSITORY_ID = BCFIELD.REPOSITORY_ID AND BUSCOMP.NAME = '"+siebelObjName+"'"
-								+ " WHERE BCFIELD.NAME = '"+sblFldValSlctd+"' AND BCFIELD.MULTI_VALUED = 'N' AND BCFIELD.CALCULATED = 'N' AND "
-								+ "BCFIELD.REPOSITORY_ID = (SELECT ROW_ID FROM SIEBEL.S_REPOSITORY WHERE NAME = 'Siebel Repository')";
-					Statement st=connection.createStatement();
-					System.out.println("fieldNameQry is"+fieldNameQry);
-					ResultSet resltSet=st.executeQuery(fieldNameQry);
-					while(resltSet.next()){
-						if(fieldNameList == null){
-							fieldNameList = new ArrayList<String>();
-						}
-						String fieldVal = resltSet.getString(1);
-						String colVal = resltSet.getString(2);
-						System.out.println("myset is"+ fieldVal);
-						System.out.println("myset is"+ colVal);
-						fieldNameList.add(fieldVal);
-						fieldNameList.add(colVal);
 					}
 					System.out.println("list size is"+fieldNameList.size());
 				}
@@ -437,6 +308,175 @@ public class SiebelObjectController {
 				e.printStackTrace();
 			}
 			return fieldNameList; 	 
+		} 	 
+	
+	 public List<String> fetchColumndAndFrgnKeyName(HttpServletRequest request,String siebelObjName, String sblFldValSlctd, String rowNum){
+			List<String> fieldNameList=new ArrayList<String>(); 
+			System.out.println("SIEBL OBJ PARAM IS"+siebelObjName + " Selected field : " + siebelObjName + "Row Number " + rowNum);
+			int rowNumber = Integer.parseInt(rowNum);
+			makeConnection();
+			try	{
+				if (connection != null){
+					System.out.println("You made it, take control your database now!");
+
+					String siebel = "SIEBEL.";
+					String destTableName = null,destCol = null,buscompTable = null
+							,joinName = null,colName = null,busCompId = null,repositoryId = null, joinNameUi=null , columnName = null, foreignKeyName = "";
+					String joinCondition = "";
+					int vTableCounter = 1;
+					
+					String compQry = "SELECT ROW_ID, TABLE_NAME FROM SIEBEL.S_BUSCOMP WHERE NAME = '"+siebelObjName+"'";
+					ResultSet resltSetCompQry = connection.createStatement().executeQuery(compQry);
+					while(resltSetCompQry.next()){
+						 busCompId = resltSetCompQry.getString(1);
+						 buscompTable = resltSetCompQry.getString(2);
+					}
+					
+					String rpstryQry = "SELECT ROW_ID FROM SIEBEL.S_REPOSITORY WHERE NAME = 'Siebel Repository'";
+					ResultSet resltSetRpstryQry = connection.createStatement().executeQuery(rpstryQry);
+					while(resltSetRpstryQry.next()){
+						repositoryId = resltSetRpstryQry.getString(1);
+					}
+					
+					// Join name, Column names :
+					String joinColNmQry = "SELECT BCFIELD.JOIN_NAME, BCFIELD.COL_NAME FROM SIEBEL.S_FIELD BCFIELD WHERE BCFIELD.NAME = '"+sblFldValSlctd+"' "
+							+ "AND BCFIELD.BUSCOMP_ID = '"+busCompId+"' AND BCFIELD.MULTI_VALUED = 'N' AND BCFIELD.CALCULATED = 'N' AND BCFIELD.REPOSITORY_ID = '"+repositoryId+"' ";
+					ResultSet resltSetJoinColNmQry = connection.createStatement().executeQuery(joinColNmQry);
+					while(resltSetJoinColNmQry.next()){
+						joinName = resltSetJoinColNmQry.getString(1);
+						colName = resltSetJoinColNmQry.getString(2);
+						joinNameUi = joinName;
+						columnName = colName;
+					}
+					
+					
+					while(joinName != null && !joinName.trim().equals("")){
+						
+						destTableName = "";						
+
+						String destNmQry = "SELECT BCJOIN.DEST_TBL_NAME FROM SIEBEL.S_JOIN BCJOIN WHERE BCJOIN.BUSCOMP_ID = '"+busCompId+"' "
+								+ "AND BCJOIN.REPOSITORY_ID = '"+repositoryId+"' AND BCJOIN.NAME = '"+joinName+"' ";
+						ResultSet resltSetDestNmQry = connection.createStatement().executeQuery(destNmQry);
+						while(resltSetDestNmQry.next()){
+							destTableName = resltSetDestNmQry.getString(1);
+							foreignKeyName = destTableName;
+						}
+
+						if(destTableName == null || destTableName.trim() == ""){
+								destTableName = joinName;
+								foreignKeyName = joinName;
+								colName = "ROW_ID";
+								String destColQry = "SELECT TBLCOL.NAME FROM SIEBEL.S_COLUMN TBLCOL INNER JOIN SIEBEL.S_TABLE "
+										+ "TBL ON TBL.ROW_ID = TBLCOL.TBL_ID AND TBL.NAME = '"+destTableName+"' AND TBL.REPOSITORY_ID = '"+repositoryId+"' "
+										+ "INNER JOIN SIEBEL.S_TABLE FKEYTBL ON FKEYTBL.ROW_ID = TBLCOL.FKEY_TBL_ID AND FKEYTBL.REPOSITORY_ID = '"+repositoryId+"' "
+										+ "AND FKEYTBL.NAME = '"+buscompTable+"' ";
+								ResultSet resltSetDestColQry = connection.createStatement().executeQuery(destColQry);
+								while(resltSetDestColQry.next()){
+									destCol = resltSetDestColQry.getString(1);
+								}
+								
+								if(joinCondition == null || joinCondition.trim().equals("")){
+									joinCondition = "LEFT OUTER JOIN "+ siebel + destTableName + " T" + vTableCounter+"_"+rowNumber+ " ON T" + vTableCounter+"_"+rowNumber +  "." +destCol +"="+ /*buscompTable*/"T0" + ".ROW_ID";
+									System.out.println("JOIN Condition : IF loop  : "+ joinCondition);
+								}else{
+									joinCondition = "LEFT OUTER JOIN "+ siebel + destTableName + " T" + vTableCounter+"_"+rowNumber+ " ON T" + vTableCounter+"_"+rowNumber +  "." +destCol +"="+ /*buscompTable*/"T0" + ".ROW_ID " + joinCondition;
+								}
+								
+								joinName = "";
+						}else {
+							/* Take the below query's result set into a Property Set, as there could be multiple rows returned by this query */ 
+							String srcFldQrys = "SELECT JOINSPEC.DEST_COL_NAME, JOINSPEC.SRC_FLD_NAME FROM SIEBEL.S_JOIN_SPEC "
+									+ "JOINSPEC INNER JOIN SIEBEL.S_JOIN SJOIN ON SJOIN.ROW_ID = JOINSPEC.JOIN_ID AND SJOIN.NAME = '"+joinName+"' "
+									+ "AND SJOIN.BUSCOMP_ID = '"+busCompId+"' AND SJOIN.REPOSITORY_ID = '"+repositoryId+"'";
+							System.out.println("srcFldQrys" + srcFldQrys);
+							ResultSet resltSetSrcFldQrys = connection.createStatement().executeQuery(srcFldQrys);
+							List<String> destColLst = null;
+							List<String> srcFldLst = null;
+							int destColCntr = 0;
+							while(resltSetSrcFldQrys.next()){
+								if(destColLst == null){
+									destColLst = new ArrayList<String>();
+									srcFldLst = new ArrayList<String>();
+								}
+								destColLst.add(destColCntr,resltSetSrcFldQrys.getString(1));
+								srcFldLst.add(destColCntr,resltSetSrcFldQrys.getString(2));
+							}
+							
+								if(destTableName == null || destTableName.trim() == ""){
+									destTableName = joinName;
+									colName = "ROW_ID";
+									String destColQry = "SELECT TBLCOL.NAME FROM SIEBEL.S_COLUMN TBLCOL INNER JOIN SIEBEL.S_TABLE "
+											+ "TBL ON TBL.ROW_ID = TBLCOL.TBL_ID AND TBL.NAME = '"+destTableName+"' AND TBL.REPOSITORY_ID = '"+repositoryId+"' "
+											+ "INNER JOIN SIEBEL.S_TABLE FKEYTBL ON FKEYTBL.ROW_ID = TBLCOL.FKEY_TBL_ID AND FKEYTBL.REPOSITORY_ID = '"+repositoryId+"' "
+											+ "AND FKEYTBL.NAME = '"+buscompTable+"' ";
+									ResultSet resltSetDestColQry = connection.createStatement().executeQuery(destColQry);
+									while(resltSetDestColQry.next()){
+										destCol = resltSetDestColQry.getString(1);
+									}
+									
+									if(joinCondition == null || joinCondition.trim().equals("")){
+										joinCondition = "LEFT OUTER JOIN " +siebel + destTableName + " T"+ vTableCounter+"_"+rowNumber +" ON T" + vTableCounter+"_"+rowNumber +  "." +destCol +"="+ buscompTable + ".ROW_ID";
+										System.out.println("JOIN Condition : Else : If loop  : "+ joinCondition);
+									}
+									
+									joinName = "";
+								}
+								
+								else if(srcFldLst != null && srcFldLst.size() > 0) {
+									for(int i=0; i<srcFldLst.size() ; i++){
+										
+										if(joinCondition == null || joinCondition.trim() == "") {
+											joinCondition = "LEFT OUTER JOIN "+ siebel + destTableName + " T" +vTableCounter+"_"+rowNumber +" ON T" + vTableCounter+"_"+rowNumber +  "." + destColLst.get(i) + " = " + srcFldLst.get(i); 
+										}else {
+											joinCondition = "LEFT OUTER JOIN "+ siebel + destTableName + " T"+ vTableCounter+"_"+rowNumber+ " ON T" + vTableCounter+"_"+rowNumber +  "." + destColLst.get(i) + " = " + srcFldLst.get(i) + " " + joinCondition; 
+										}
+										
+										// Join name, Column names :
+										String joinColNmQry2 = "SELECT BCFIELD.JOIN_NAME, BCFIELD.COL_NAME FROM SIEBEL.S_FIELD BCFIELD WHERE BCFIELD.NAME = '"+srcFldLst.get(i)+"' "
+												+ "AND BCFIELD.BUSCOMP_ID = '"+busCompId+"' AND BCFIELD.MULTI_VALUED = 'N' AND BCFIELD.CALCULATED = 'N' AND BCFIELD.REPOSITORY_ID = '"+repositoryId+"' ";
+										ResultSet resltSetjoinColNmQry2 = connection.createStatement().executeQuery(joinColNmQry2);
+										while(resltSetjoinColNmQry2.next()){
+											joinName = resltSetjoinColNmQry2.getString(1);
+											colName = resltSetjoinColNmQry2.getString(2);
+										}
+										
+										if(joinName != null && joinName.trim().equals("")){
+											joinCondition = joinCondition.replace(srcFldLst.get(i), /*buscompTable*/"T0" + "." + colName);
+										}else{
+											vTableCounter++;
+											destTableName = "SELECT BCJOIN.DEST_TBL_NAME FROM SIEBEL.S_JOIN BCJOIN WHERE "
+													+ "BCJOIN.BUSCOMP_ID = '"+buscompTable+"' AND BCJOIN.REPOSITORY_ID = '"+repositoryId+"' AND BCJOIN.NAME = '"+joinName+"'";
+											if(joinCondition != null && !joinCondition.trim().equals("")){
+												joinCondition = joinCondition.replace(srcFldLst.get(i), "T" + vTableCounter+"_"+rowNumber + "." + colName);
+											}
+										}
+										
+									}
+									System.out.println("JOIN Condition : Else : If else loop  : "+ joinCondition);
+								}	
+							}
+						}	
+					fieldNameList.add(joinNameUi);
+					fieldNameList.add("T1_"+rowNum+"."+columnName);
+					fieldNameList.add(joinCondition);
+					fieldNameList.add(foreignKeyName);
+				}
+				
+			}
+			catch(SQLException e){
+				System.out.println("Connection Failed! Check output console");
+				e.printStackTrace();
+			}
+			return fieldNameList; 	 
 		} 
-}
+	 
+	 private static String addJoinToMap(String joinNmKey, String joinCndtnVal){
+		 if(joinNmCndtnMap.containsKey(joinNmKey)){
+			 return joinNmCndtnMap.get(joinNmKey);
+		 }
+		 joinNmCndtnMap.put(joinNmKey, joinCndtnVal);
+		 return joinCndtnVal;
+	 }
+
+  }
 

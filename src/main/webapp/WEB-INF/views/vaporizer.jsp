@@ -281,7 +281,7 @@ var sfdcObjectForExtarction="";
 				 
 	  }
 function submitForm(rowNum, page){
-	alert(page);
+	
 	  $("#rowNo").val(rowNum); 
 	  $("#pageName").val(page);
 	  $("#mainForm").submit();

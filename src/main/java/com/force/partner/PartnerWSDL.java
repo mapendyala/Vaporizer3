@@ -12,15 +12,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,17 +31,16 @@ import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.MappingModel;
 import com.force.utility.ChildObjectBO;
 import com.force.utility.SfdcObjectBO;
-import com.force.utility.UtilityClass;
 import com.sforce.soap.partner.DescribeGlobalResult;
 import com.sforce.soap.partner.DescribeGlobalSObjectResult;
 import com.sforce.soap.partner.DescribeSObjectResult;
+import com.sforce.soap.partner.Field;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.QueryResult;
 import com.sforce.soap.partner.SaveResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
-import com.sforce.ws.bind.XmlObject;
 
 public class PartnerWSDL {
 
@@ -779,6 +774,111 @@ System.out.println("records "+records);
 		}*/
 	}
 
+	public void saveMappingSingleValuedDataIntoDB(List<MappingModel> data,
+			HttpServletRequest request, String attribute)
+			throws ConnectionException {
+
+		// TODO Auto-generated method stub
+		HttpSession session = request.getSession(true);
+
+		// String [] dataArray = data.toArray(new String[data.size()]);
+		
+		List<SObject> lstContactUpdate= new ArrayList<SObject>();
+		List<SObject> lstContactInsert= new ArrayList<SObject>();
+		SObject[] contactUpdate = new SObject[data.size()];
+		SObject[] contactInsert = new SObject[data.size()];
+		// data.get(0).getMigrate();
+		for (Iterator<MappingModel> iterator = data.iterator(); iterator
+				.hasNext();) {
+			MappingModel mappingModel = (MappingModel) iterator.next();
+			
+			if( mappingModel.getId()==null || mappingModel.getId().equalsIgnoreCase("")){
+				SObject contact = new SObject();
+				contact.setType("Single_Valued_Screen__c");
+				contact.setField("Foreign_Key_Table__c",
+						mappingModel.getFrgnKeyrow());
+				contact.setField("Join_Name__c",
+						mappingModel.getJoinNamerow());
+				/*contact.setField("SFDC_Field_Description__c",
+						mappingModel.getSlsfrcdscription());*/
+				contact.setField("SFDC_Field_Name__c",
+						mappingModel.getSlfrcdropdown());
+			/*	contact.setField("Siebel_Field_Description__c",
+						mappingModel.getSbldscription());*/
+				contact.setField("Siebel_Field_Name__c",
+						mappingModel.getSblFieldNmdropdown());
+				contact.setField("Column_Name__c",
+						mappingModel.getClmnNmrow());
+				contact.setField("Lov_Mapping__c", "View");
+				contact.setField("Select__c", 
+						mappingModel.getCheckFlag());
+				contact.setField("LookUpField__c", 
+						mappingModel.getLookUpFlag());
+				contact.setField("Siebel_Table_Name__c",
+						mappingModel.getSiebelEntity());
+				contact.setField("Join_Condition__c",
+						mappingModel.getJoinCondition());
+				contact.setField("LookUpObject__c",
+						mappingModel.getLookUpObject());
+				lstContactInsert.add(contact);
+				// Add this sObject to an array
+			}else{
+				SObject contact = new SObject();
+				
+				contact.setType("Single_Valued_Screen__c");
+				contact.setField("Foreign_Key_Table__c",
+						mappingModel.getFrgnKeyrow());
+				contact.setField("Join_Name__c",
+						mappingModel.getJoinNamerow());
+				contact.setField("Id",
+						mappingModel.getId());  
+				/*contact.setField("SFDC_Field_Description__c",
+						mappingModel.getSlsfrcdscription());*/
+				contact.setField("SFDC_Field_Name__c",
+						mappingModel.getSlfrcdropdown());
+				/*contact.setField("Siebel_Field_Description__c",
+						mappingModel.getSbldscription());*/
+				contact.setField("Siebel_Field_Name__c",
+						mappingModel.getSblFieldNmdropdown());
+				contact.setField("Column_Name__c",
+						mappingModel.getClmnNmrow());
+				contact.setField("Lov_Mapping__c", "View");
+				contact.setField("Select__c", 
+						mappingModel.getCheckFlag());
+				contact.setField("LookUpField__c", 
+						mappingModel.getLookUpFlag());
+				contact.setField("Siebel_Table_Name__c",
+						mappingModel.getSiebelEntity());
+				contact.setField("Join_Condition__c",
+						mappingModel.getJoinCondition());
+				contact.setField("LookUpObject__c",
+						mappingModel.getLookUpObject());
+				lstContactUpdate.add(contact);
+	
+			}
+		}
+		
+		
+		if(lstContactInsert.size()>0){
+			contactInsert=lstContactInsert.toArray(new SObject[lstContactInsert.size()]);
+			SaveResult[] saveResults = getPartnerConnection().create(contactInsert);
+			for (int j = 0; j < saveResults.length; j++) {
+				System.out.println(saveResults[j].isSuccess());
+				// System.out.println(saveResults[j].getErrors()[j].getMessage());
+			}
+		}
+		if(lstContactUpdate.size()>0){
+			contactUpdate=lstContactUpdate.toArray(new SObject[lstContactUpdate.size()]);
+			SaveResult[] saveResults = getPartnerConnection().update(contactUpdate);
+			for (int j = 0; j < saveResults.length; j++) {
+				System.out.println(saveResults[j].isSuccess());
+				// System.out.println(saveResults[j].getErrors()[j].getMessage());
+			}
+		}
+		
+	}
+
+	
 	public JSONObject getRelatedSiebelTable(String subprojectId) {
 		JSONObject tableData = new JSONObject();
 		try {
@@ -1093,6 +1193,61 @@ System.out.println("records "+records);
 					mappingModel1.setForeignFieldMapping(fieldMapping1);
 					mappingData.add(mappingModel1);
 					// mappingData.add(mappingModel);
+				}
+
+				if (qr1.isDone()) {
+					done1 = true;
+				} else {
+					qr1 = partnerConnection.queryMore(qr1.getQueryLocator());
+				}
+
+			}
+		} catch (ConnectionException ce) {
+			ce.printStackTrace();
+		}
+		System.out.println("\nQuery execution completed.");
+		return mappingData;
+	}
+	
+	public List<MappingModel> getSavedMappingSingleValueDBData(String projectId,
+			List<MappingModel> mappingData, JSONObject tableData , String entityName) {
+		try {
+			partnerConnection.setQueryOptions(250);
+			// SOQL query to use
+			// String subprojectId="a0PG000000AtiEAMAZ";
+			String soqlQuery1 = "Select Id,  Foreign_Key_Table__c, SFDC_Field_Description__c, SFDC_Field_Name__c, Siebel_Field_Description__c, Siebel_Field_Name__c,"
+					+ "Column_Name__c,Lov_Mapping__c,Select__c,Join_Condition__C,Join_Name__c,LookUpField__c,LookUpObject__c from Single_Valued_Screen__c where  Siebel_Table_Name__c='"+ entityName + "'";
+			// Make the query call and get the query results
+			QueryResult qr1 = partnerConnection.query(soqlQuery1);
+			boolean done1 = false;
+
+			 mappingData.clear();
+			 
+			while (!done1) {
+				SObject[] records1 = qr1.getRecords();
+				if(mappingData == null){
+					mappingData = new ArrayList<MappingModel>();
+				}
+				// Process the query results
+				for (int i = 0; i < records1.length; i++) {
+					MappingModel mappingModel1 = new MappingModel();
+					SObject contact = records1[i];
+
+					mappingModel1.setCheckFlag(Boolean.parseBoolean((String)contact.getField("Select__c")));
+					mappingModel1.setLookUpFlag(Boolean.parseBoolean((String)contact.getField("LookUpField__c")));
+					mappingModel1.setSblFieldNmdropdown((String)contact.getField("Siebel_Field_Name__c"));
+					/*mappingModel1.setSbldscription((String)contact.getField("Siebel_Field_Description__c"));*/
+					mappingModel1.setJoinNamerow((String)contact.getField("Join_Name__c"));
+					mappingModel1.setFrgnKeyrow((String)contact.getField("Foreign_Key_Table__c"));
+					mappingModel1.setJoinCondition((String)contact.getField("Join_Condition__c"));
+					mappingModel1.setClmnNmrow((String)contact.getField("Column_Name__c"));
+					mappingModel1.setSlfrcdropdown((String)contact.getField("SFDC_Field_Name__c"));
+					mappingModel1.setLookUpObject((String)contact.getField("LookUpObject__c"));
+					/*mappingModel1.setSlsfrcdscription((String)contact.getField("SFDC_Field_Description__c"));*/
+					mappingModel1.setId( (String)contact.getField("Id"));
+					mappingModel1.setMappingSeq(i);
+					
+					mappingData.add(mappingModel1);
 				}
 
 				if (qr1.isDone()) {
@@ -1904,5 +2059,36 @@ System.out.println("records "+records);
 		String projectId="a0PG000000B5e3fMAB";
 		pw.getProjectName(projectId);*/
 	}
+	
+	public  List<String> getSFDCFieldList(String sfdcObj){
+		List<String> labelList= null;
+		try {
+		    // Call describeSObjectResults and pass it an array with the names of the objects to describe.
+		//	System.out.println("User Info : "+partnerConnection.getUserInfo());
+			
+				DescribeSObjectResult desObj = partnerConnection.describeSObject(sfdcObj);
+		        // Get the name of the sObject
+		        String objectName = desObj.getName();
+		        // For each described sObject, get the fields
+		        Field[] fields = desObj.getFields();
+		        // Get some other properties
+		        if (desObj.getActivateable()) System.out.println("\tActivateable");
+		        // Iterate through the fields to get properties for each field
+		        for(int j=0;j < fields.length; j++){                        
+		            Field field = fields[j];
+		            String name = field.getName();
+		            String label = field.getLabel();
+		            System.out.println("\tField: " + name);
+		            System.out.println("\t\tLabel: " + label);
+		            if(labelList == null){
+		            	labelList = new ArrayList<String>();
+		            }
+		            labelList.add(label);
+		        }            
+		  } catch(ConnectionException ce) {
+		    ce.printStackTrace();  
+		  }
+		  return labelList;
+		}
 
 }
