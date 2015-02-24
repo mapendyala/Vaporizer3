@@ -545,6 +545,7 @@ function submitForm(rowNum, page){
 					<tr>
 						<td style="float: left;  padding: 50px; width: 450px !Important; padding-top: 10px; padding-bottom: 10px;">
 							<!-- <input type="text" style="width:100%;" placeholder="CSV Location" id="datafileUrl" /> -->
+							<!-- File Uplaod  -->
 							<form id="uploadForm" method="POST" onsubmit="return validateUploadForm();" action="uploadFile" enctype="multipart/form-data">
 							<table>
 							<tr>
