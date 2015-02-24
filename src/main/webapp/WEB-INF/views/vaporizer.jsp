@@ -150,7 +150,20 @@ var sfdcObjectForExtarction="";
 	}
 	
 
-	
+	 function validateUploadForm()
+		{
+			 var fileName=$("#fileNameID").val();
+		      if(fileName!="")
+		    	  {
+		    	  $("#csvUploadID").innerHTML = 'Uploading...';
+		    	  
+		    	  }
+		      else
+		    	  {
+		    	  alert("Please enter file Name.");
+		    	  return false;
+		    	  }
+		}
 	
 	
 	 //function to get SFDC object mapping from siebel object as input
@@ -535,9 +548,22 @@ function submitForm(rowNum, page){
 						</td>
 					</tr>
 					<tr>
-						<td
-							style="float: left;  padding: 50px; width: 450px !Important; padding-top: 10px; padding-bottom: 10px;">
-							<input type="text" style="width:100%;" placeholder="CSV Location" id="datafileUrl" />
+						<td style="float: left;  padding: 50px; width: 450px !Important; padding-top: 10px; padding-bottom: 10px;">
+							<!-- <input type="text" style="width:100%;" placeholder="CSV Location" id="datafileUrl" /> -->
+							<form id="uploadForm" method="POST" onsubmit="return validateUploadForm();" action="uploadFile" enctype="multipart/form-data">
+							<table>
+							<tr>
+							<td> <input type="text" id="fileNameID" placeholder="Enter file name" name="name"></td>
+							<td><input id="fileID" type="file" name="file"></td>
+							<td></td>
+							</tr>
+							<tr>
+							<td colspan="3"> <input class="btn btn-block btn-inverse"id="csvUploadID" type="submit" value="Upload"> Press here to upload the
+								file!</td>
+							</tr>
+							</table>
+							</form>
+							
 						</td>
 						<td
 							style="float: right; padding: 50px;width:350px !Important; padding-top: 10px; padding-bottom: 10px;">
