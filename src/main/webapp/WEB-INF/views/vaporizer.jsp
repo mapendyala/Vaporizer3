@@ -33,9 +33,6 @@
 
 <script type="text/javascript"
 	src="<c:url value="/resources/json.min.js" /> "></script>
-	<script type="text/javascript"
-	src="<c:url value="/resources/scripts/jQuery.download.js" /> "></script>
-	
 	
 <script type="text/javascript">
 
@@ -297,7 +294,7 @@ var sfdcObjectForExtarction="";
 				 
 	  }
 function submitForm(rowNum, page){
-	
+	alert(page);
 	  $("#rowNo").val(rowNum); 
 	  $("#pageName").val(page);
 	  $("#mainForm").submit();
@@ -413,10 +410,11 @@ function submitForm(rowNum, page){
 		sfdcObjectForExtarction=$("#"+SFDCObjectId).val();
 		var sfdcId = $("#"+"SfdcId"+(rowNum)).val();
 		var siebelObjName = $("#objectName" +(rowNum)).val();
-		/*  $.ajax({
+		var baseTable = $("#prim" +(rowNum)).val();
+		 $.ajax({
 				type : "GET",
 				url : "getextractData",
-				data : {sfdcId:sfdcId, siebelObjName:siebelObjName},
+				data : {sfdcId:sfdcId, siebelObjName:siebelObjName, baseTable:baseTable},
 				success : function(response){
 					if(response!="")
 				 	$("#datafileUrl").val(response);
@@ -426,10 +424,7 @@ function submitForm(rowNum, page){
 						}
 			
 				}  
-				});    */
-		$.download('getextractData',
-				"sfdcId="+sfdcId+"& siebelObjName="+siebelObjName+"filename=mySpreadsheet&format=csv ","GET");
-				
+				});   
 	}
 	
 	function submitDependant(rowNum)

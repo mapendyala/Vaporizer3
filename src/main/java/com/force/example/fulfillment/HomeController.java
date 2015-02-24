@@ -37,6 +37,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.force.example.fulfillment.order.controller.SiebelObjectController;
 import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.MappingModel;
+import com.force.example.fulfillment.order.model.MappingSFDC;
 import com.force.partner.PartnerWSDL;
 import com.force.partner.TargetPartner;
 import com.force.utility.ChildObjectBO;
@@ -74,6 +75,9 @@ public class HomeController {
 		//String projectId="a0PG000000B2wmDMAR";
 		String projectId="a0PG000000B5e3fMAB";
 		//String projectId="a0PG000000B3OFn";
+		if(request.getParameter("projectId") != null){
+			projectId = request.getParameter("projectId");
+		}
 		session.setAttribute("projectId", projectId);
 		TargetPartner tp= new TargetPartner(session);
 		data = tp.getSavedDBData(projectId, data);
@@ -255,7 +259,7 @@ public class HomeController {
 				mappingModel.setCheckFlag(true);
 			}else
 				mappingModel.setCheckFlag(false);
-			if(request.getParameter("lookUpField"+i)!=null){
+			if(request.getParameter("lookUpFieldrow"+i)!=null){
 				mappingModel.setLookUpFlag(true);
 			}else
 				mappingModel.setLookUpFlag(false);
@@ -279,8 +283,8 @@ public class HomeController {
 				mappingModel.setSlfrcdropdown(request.getParameter("slfrcdropdown"+i));}
 			else
 				mappingModel.setSlfrcdropdown("");
-			if(request.getParameter("lookUpObj"+i)!=null){
-				mappingModel.setLookUpObject(request.getParameter("lookUpObj"+i));}
+			if(request.getParameter("lookUpObjrow"+i)!=null){
+				mappingModel.setLookUpObject(request.getParameter("lookUpObjrow"+i));}
 			else
 				mappingModel.setLookUpObject("");
 			if(request.getParameter("joinConditionrow"+i)!=null){
@@ -291,6 +295,14 @@ public class HomeController {
 				mappingModel.setSiebelEntity(request.getParameter("siebelEntity"));}
 			else
 				mappingModel.setSiebelEntity("");
+			if(request.getParameter("lookUpRltnNmerow"+i)!=null){
+				mappingModel.setLookUpRelationShipName(request.getParameter("lookUpRltnNmerow"+i));}
+			else
+				mappingModel.setLookUpRelationShipName("");
+			if(request.getParameter("lookUpExtrnlrow"+i)!=null){
+				mappingModel.setLookUpExternalId(request.getParameter("lookUpExtrnlrow"+i));}
+			else
+				mappingModel.setLookUpExternalId("");
 			mappingData.add(mappingModel);
 		}
 		if(partnerWSDL.login()){
@@ -453,6 +465,33 @@ public class HomeController {
 
 		return clmNmLst;
 	}
+	
+	@RequestMapping(value="/getLookUpInfo", method = RequestMethod.GET)
+	@ResponseBody public List<Object> retrieveLookUpFieldInfo(HttpServletRequest request, @RequestParam("slctdSlsFrcFldOption")String slsfrcFldValSlctd, @RequestParam("rowNum") String rowNum) throws ConnectionException{
+		System.out.println("In retrieveColumnAndFieldVal method");
+		System.out.println("Selected SalesForce Value : "+ slsfrcFldValSlctd);
+		List<Object> lookUpFlds = null;
+		List<MappingSFDC> externlFldLst = null;
+		List<MappingSFDC> mpngSFDC = SiebelObjectController.sfdcFldRowNmList;
+		String lookUpObj = null;
+		for(MappingSFDC mpngDtl : mpngSFDC){
+			if(mpngDtl.getName().equals(slsfrcFldValSlctd)){
+				if(lookUpFlds == null){
+					lookUpFlds = new ArrayList<Object>();
+				}
+				PartnerWSDL prtnrWSDL1 = new PartnerWSDL(request.getSession());
+				prtnrWSDL1.login();
+				lookUpFlds.add(mpngDtl.getRelationshipName());
+				lookUpObj = mpngDtl.getReferenceTo()[0];
+				lookUpFlds.add(lookUpObj);
+				
+				externlFldLst = prtnrWSDL1.getExternalIdList((String)lookUpObj);
+				lookUpFlds.add(externlFldLst);
+			}
+		}
+		
+		return lookUpFlds;
+	}
 
 	/*@RequestMapping(value="/getFieldDropdwnVal", method = RequestMethod.GET)
 	@ResponseBody public List<List<String>> retrieveFieldDrpDwnVal(HttpServletRequest request, @RequestParam("sblFldValSlctd")String sblFldValSlctd) throws ConnectionException{
@@ -561,25 +600,21 @@ public class HomeController {
             System.out.println("---------------"+thresholdValue+" "+primBaseValue);
 			String subprojectId=tg.getsubprojects(siebelTableNameValue);
 			if(null != subprojectId){
-				List<String> sfdcObjList = prtnrWSDL.getSFDCFieldList((String)sfdcObjectName);
+				
+				PartnerWSDL prtnrWSDL1 = new PartnerWSDL(request.getSession());
+				prtnrWSDL1.login();
 				
 				JSONObject tableName=tg.getRelatedSiebelTable(subprojectId);//gives siebel and sfdc table name
 				String id=tg.getMappingId((String)session.getAttribute("projectId"),mappingData,tableName);
 
-				List<MappingModel> mappingDataSaved=prtnrWSDL.getSavedMappingSingleValueDBData((String)session.getAttribute("projectId"), mappingData, tableName, siebelTableNameValue);
+				List<MappingModel> mappingDataSaved=prtnrWSDL1.getSavedMappingSingleValueDBData((String)session.getAttribute("projectId"), mappingData, tableName, siebelTableNameValue);
 				List<String> childTables=tg.getSavedChild((String)session.getAttribute("projectId"),tableName);
 				
 				SiebelObjectController siObj=new SiebelObjectController();
 				List<Object> myChildList=siObj.fetchColumns(request, primBaseValue,thresholdValue,childTables);
-				
-				
 				List<MappingModel> mappingData=tg.getFieldMapping(tableName,myChildList);
 				//Gets the list of SFDC Field names
-				/*ArrayList<String> field= new ArrayList<String>();
-						field=tg.getFieldTarget(tableName);*/
-				
-			//	List<String> sfdcObjList = prtnrWSDL.getSFDCFieldList((String)sfdcObjectName);
-						
+				List<MappingSFDC> sfdcObjList = prtnrWSDL1.getSFDCFieldList((String)sfdcObjectName);
 				// To get the list of siebel field names for a siebel entity.
 				List<String> sblFldList = new ArrayList<String>();
 				sblFldList = siObj.fetchFieldNameList(request, siebelTableNameValue);
