@@ -556,7 +556,7 @@ public class HomeController {
 				JSONObject tableName=tg.getRelatedSiebelTable(subprojectId);//gives siebel and sfdc table name
 				String id=tg.getMappingId((String)session.getAttribute("projectId"),mappingData,tableName);
 
-				List<MappingModel> mappingDataSaved=prtnrWSDL.getSavedMappingSingleValueDBData((String)session.getAttribute("projectId"), mappingData, tableName, siebelTableNameValue);
+				List<MappingModel> mappingDataSaved=prtnrWSDL1.getSavedMappingSingleValueDBData((String)session.getAttribute("projectId"), mappingData, tableName, siebelTableNameValue);
 				List<String> childTables=tg.getSavedChild((String)session.getAttribute("projectId"),tableName);
 				
 				SiebelObjectController siObj=new SiebelObjectController();
