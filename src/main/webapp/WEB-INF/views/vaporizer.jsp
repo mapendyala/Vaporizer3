@@ -281,7 +281,7 @@ var sfdcObjectForExtarction="";
 				 
 	  }
 function submitForm(rowNum, page){
-	
+	alert(page);
 	  $("#rowNo").val(rowNum); 
 	  $("#pageName").val(page);
 	  $("#mainForm").submit();
@@ -397,10 +397,11 @@ function submitForm(rowNum, page){
 		sfdcObjectForExtarction=$("#"+SFDCObjectId).val();
 		var sfdcId = $("#"+"SfdcId"+(rowNum)).val();
 		var siebelObjName = $("#objectName" +(rowNum)).val();
+		var baseTable = $("#prim" +(rowNum)).val();
 		 $.ajax({
 				type : "GET",
 				url : "getextractData",
-				data : {sfdcId:sfdcId, siebelObjName:siebelObjName},
+				data : {sfdcId:sfdcId, siebelObjName:siebelObjName, baseTable:baseTable},
 				success : function(response){
 					if(response!="")
 				 	$("#datafileUrl").val(response);

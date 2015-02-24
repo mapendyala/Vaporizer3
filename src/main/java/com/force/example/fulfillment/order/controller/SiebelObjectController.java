@@ -3,15 +3,20 @@
  */
 package com.force.example.fulfillment.order.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.force.example.fulfillment.order.model.MappingSFDC;
+import com.force.partner.PartnerWSDL;
 import com.force.utility.ChildObjectBO;
 import com.force.utility.SiebelObjectBO;
 
@@ -36,7 +43,10 @@ public class SiebelObjectController {
 	 * 
 	 */
 	private static Connection connection = null;
-	private static Map<String,String> joinNmCndtnMap = new HashMap<String,String>();
+	public static Map<String,Integer> joinNmRowNumMap = new HashMap<String,Integer>();
+	public static Map<Integer,String> colNmRowNmMap = new HashMap<Integer,String>();
+	public static Map<Integer,String> joinCndtnRowNmMap = new HashMap<Integer,String>();
+	public static List<MappingSFDC> sfdcFldRowNmList = new ArrayList<MappingSFDC>();
 	
 	@RequestMapping(value="/SiebelObject", method=RequestMethod.POST)
 
@@ -349,61 +359,26 @@ public class SiebelObjectController {
 						columnName = colName;
 					}
 					
+					Integer dupJoinNm = addJoinToMap(joinNameUi, rowNumber);
+					Integer simlrRowNumber = null;
 					
-					while(joinName != null && !joinName.trim().equals("")){
+					if(dupJoinNm == null){
 						
-						destTableName = "";						
-
-						String destNmQry = "SELECT BCJOIN.DEST_TBL_NAME FROM SIEBEL.S_JOIN BCJOIN WHERE BCJOIN.BUSCOMP_ID = '"+busCompId+"' "
-								+ "AND BCJOIN.REPOSITORY_ID = '"+repositoryId+"' AND BCJOIN.NAME = '"+joinName+"' ";
-						ResultSet resltSetDestNmQry = connection.createStatement().executeQuery(destNmQry);
-						while(resltSetDestNmQry.next()){
-							destTableName = resltSetDestNmQry.getString(1);
-							foreignKeyName = destTableName;
-						}
-
-						if(destTableName == null || destTableName.trim() == ""){
-								destTableName = joinName;
-								foreignKeyName = joinName;
-								colName = "ROW_ID";
-								String destColQry = "SELECT TBLCOL.NAME FROM SIEBEL.S_COLUMN TBLCOL INNER JOIN SIEBEL.S_TABLE "
-										+ "TBL ON TBL.ROW_ID = TBLCOL.TBL_ID AND TBL.NAME = '"+destTableName+"' AND TBL.REPOSITORY_ID = '"+repositoryId+"' "
-										+ "INNER JOIN SIEBEL.S_TABLE FKEYTBL ON FKEYTBL.ROW_ID = TBLCOL.FKEY_TBL_ID AND FKEYTBL.REPOSITORY_ID = '"+repositoryId+"' "
-										+ "AND FKEYTBL.NAME = '"+buscompTable+"' ";
-								ResultSet resltSetDestColQry = connection.createStatement().executeQuery(destColQry);
-								while(resltSetDestColQry.next()){
-									destCol = resltSetDestColQry.getString(1);
-								}
-								
-								if(joinCondition == null || joinCondition.trim().equals("")){
-									joinCondition = "LEFT OUTER JOIN "+ siebel + destTableName + " T" + vTableCounter+"_"+rowNumber+ " ON T" + vTableCounter+"_"+rowNumber +  "." +destCol +"="+ /*buscompTable*/"T0" + ".ROW_ID";
-									System.out.println("JOIN Condition : IF loop  : "+ joinCondition);
-								}else{
-									joinCondition = "LEFT OUTER JOIN "+ siebel + destTableName + " T" + vTableCounter+"_"+rowNumber+ " ON T" + vTableCounter+"_"+rowNumber +  "." +destCol +"="+ /*buscompTable*/"T0" + ".ROW_ID " + joinCondition;
-								}
-								
-								joinName = "";
-						}else {
-							/* Take the below query's result set into a Property Set, as there could be multiple rows returned by this query */ 
-							String srcFldQrys = "SELECT JOINSPEC.DEST_COL_NAME, JOINSPEC.SRC_FLD_NAME FROM SIEBEL.S_JOIN_SPEC "
-									+ "JOINSPEC INNER JOIN SIEBEL.S_JOIN SJOIN ON SJOIN.ROW_ID = JOINSPEC.JOIN_ID AND SJOIN.NAME = '"+joinName+"' "
-									+ "AND SJOIN.BUSCOMP_ID = '"+busCompId+"' AND SJOIN.REPOSITORY_ID = '"+repositoryId+"'";
-							System.out.println("srcFldQrys" + srcFldQrys);
-							ResultSet resltSetSrcFldQrys = connection.createStatement().executeQuery(srcFldQrys);
-							List<String> destColLst = null;
-							List<String> srcFldLst = null;
-							int destColCntr = 0;
-							while(resltSetSrcFldQrys.next()){
-								if(destColLst == null){
-									destColLst = new ArrayList<String>();
-									srcFldLst = new ArrayList<String>();
-								}
-								destColLst.add(destColCntr,resltSetSrcFldQrys.getString(1));
-								srcFldLst.add(destColCntr,resltSetSrcFldQrys.getString(2));
-							}
+						while(joinName != null && !joinName.trim().equals("")){
 							
-								if(destTableName == null || destTableName.trim() == ""){
+							destTableName = "";						
+	
+							String destNmQry = "SELECT BCJOIN.DEST_TBL_NAME FROM SIEBEL.S_JOIN BCJOIN WHERE BCJOIN.BUSCOMP_ID = '"+busCompId+"' "
+									+ "AND BCJOIN.REPOSITORY_ID = '"+repositoryId+"' AND BCJOIN.NAME = '"+joinName+"' ";
+							ResultSet resltSetDestNmQry = connection.createStatement().executeQuery(destNmQry);
+							while(resltSetDestNmQry.next()){
+								destTableName = resltSetDestNmQry.getString(1);
+								foreignKeyName = destTableName;
+							}
+	
+							if(destTableName == null || destTableName.trim() == ""){
 									destTableName = joinName;
+									foreignKeyName = joinName;
 									colName = "ROW_ID";
 									String destColQry = "SELECT TBLCOL.NAME FROM SIEBEL.S_COLUMN TBLCOL INNER JOIN SIEBEL.S_TABLE "
 											+ "TBL ON TBL.ROW_ID = TBLCOL.TBL_ID AND TBL.NAME = '"+destTableName+"' AND TBL.REPOSITORY_ID = '"+repositoryId+"' "
@@ -415,49 +390,105 @@ public class SiebelObjectController {
 									}
 									
 									if(joinCondition == null || joinCondition.trim().equals("")){
-										joinCondition = "LEFT OUTER JOIN " +siebel + destTableName + " T"+ vTableCounter+"_"+rowNumber +" ON T" + vTableCounter+"_"+rowNumber +  "." +destCol +"="+ buscompTable + ".ROW_ID";
-										System.out.println("JOIN Condition : Else : If loop  : "+ joinCondition);
+										joinCondition = "LEFT OUTER JOIN "+ siebel + destTableName + " T" + vTableCounter+"_"+rowNumber+ " ON T" + vTableCounter+"_"+rowNumber +  "." +destCol +"="+ /*buscompTable*/"T0" + ".ROW_ID";
+										System.out.println("JOIN Condition : IF loop  : "+ joinCondition);
+									}else{
+										joinCondition = "LEFT OUTER JOIN "+ siebel + destTableName + " T" + vTableCounter+"_"+rowNumber+ " ON T" + vTableCounter+"_"+rowNumber +  "." +destCol +"="+ /*buscompTable*/"T0" + ".ROW_ID " + joinCondition;
 									}
-									
+									joinCndtnRowNmMap.put(rowNumber, joinCondition);
 									joinName = "";
+							}else {
+								/* Take the below query's result set into a Property Set, as there could be multiple rows returned by this query */ 
+								String srcFldQrys = "SELECT JOINSPEC.DEST_COL_NAME, JOINSPEC.SRC_FLD_NAME FROM SIEBEL.S_JOIN_SPEC "
+										+ "JOINSPEC INNER JOIN SIEBEL.S_JOIN SJOIN ON SJOIN.ROW_ID = JOINSPEC.JOIN_ID AND SJOIN.NAME = '"+joinName+"' "
+										+ "AND SJOIN.BUSCOMP_ID = '"+busCompId+"' AND SJOIN.REPOSITORY_ID = '"+repositoryId+"'";
+								System.out.println("srcFldQrys" + srcFldQrys);
+								ResultSet resltSetSrcFldQrys = connection.createStatement().executeQuery(srcFldQrys);
+								List<String> destColLst = null;
+								List<String> srcFldLst = null;
+								int destColCntr = 0;
+								while(resltSetSrcFldQrys.next()){
+									if(destColLst == null){
+										destColLst = new ArrayList<String>();
+										srcFldLst = new ArrayList<String>();
+									}
+									destColLst.add(destColCntr,resltSetSrcFldQrys.getString(1));
+									srcFldLst.add(destColCntr,resltSetSrcFldQrys.getString(2));
 								}
 								
-								else if(srcFldLst != null && srcFldLst.size() > 0) {
-									for(int i=0; i<srcFldLst.size() ; i++){
-										
-										if(joinCondition == null || joinCondition.trim() == "") {
-											joinCondition = "LEFT OUTER JOIN "+ siebel + destTableName + " T" +vTableCounter+"_"+rowNumber +" ON T" + vTableCounter+"_"+rowNumber +  "." + destColLst.get(i) + " = " + srcFldLst.get(i); 
-										}else {
-											joinCondition = "LEFT OUTER JOIN "+ siebel + destTableName + " T"+ vTableCounter+"_"+rowNumber+ " ON T" + vTableCounter+"_"+rowNumber +  "." + destColLst.get(i) + " = " + srcFldLst.get(i) + " " + joinCondition; 
+									if(destTableName == null || destTableName.trim() == ""){
+										destTableName = joinName;
+										colName = "ROW_ID";
+										String destColQry = "SELECT TBLCOL.NAME FROM SIEBEL.S_COLUMN TBLCOL INNER JOIN SIEBEL.S_TABLE "
+												+ "TBL ON TBL.ROW_ID = TBLCOL.TBL_ID AND TBL.NAME = '"+destTableName+"' AND TBL.REPOSITORY_ID = '"+repositoryId+"' "
+												+ "INNER JOIN SIEBEL.S_TABLE FKEYTBL ON FKEYTBL.ROW_ID = TBLCOL.FKEY_TBL_ID AND FKEYTBL.REPOSITORY_ID = '"+repositoryId+"' "
+												+ "AND FKEYTBL.NAME = '"+buscompTable+"' ";
+										ResultSet resltSetDestColQry = connection.createStatement().executeQuery(destColQry);
+										while(resltSetDestColQry.next()){
+											destCol = resltSetDestColQry.getString(1);
 										}
 										
-										// Join name, Column names :
-										String joinColNmQry2 = "SELECT BCFIELD.JOIN_NAME, BCFIELD.COL_NAME FROM SIEBEL.S_FIELD BCFIELD WHERE BCFIELD.NAME = '"+srcFldLst.get(i)+"' "
-												+ "AND BCFIELD.BUSCOMP_ID = '"+busCompId+"' AND BCFIELD.MULTI_VALUED = 'N' AND BCFIELD.CALCULATED = 'N' AND BCFIELD.REPOSITORY_ID = '"+repositoryId+"' ";
-										ResultSet resltSetjoinColNmQry2 = connection.createStatement().executeQuery(joinColNmQry2);
-										while(resltSetjoinColNmQry2.next()){
-											joinName = resltSetjoinColNmQry2.getString(1);
-											colName = resltSetjoinColNmQry2.getString(2);
+										if(joinCondition == null || joinCondition.trim().equals("")){
+											joinCondition = "LEFT OUTER JOIN " +siebel + destTableName + " T"+ vTableCounter+"_"+rowNumber +" ON T" + vTableCounter+"_"+rowNumber +  "." +destCol +"="+ buscompTable + ".ROW_ID";
+											System.out.println("JOIN Condition : Else : If loop  : "+ joinCondition);
 										}
 										
-										if(joinName != null && joinName.trim().equals("")){
-											joinCondition = joinCondition.replace(srcFldLst.get(i), /*buscompTable*/"T0" + "." + colName);
-										}else{
-											vTableCounter++;
-											destTableName = "SELECT BCJOIN.DEST_TBL_NAME FROM SIEBEL.S_JOIN BCJOIN WHERE "
-													+ "BCJOIN.BUSCOMP_ID = '"+buscompTable+"' AND BCJOIN.REPOSITORY_ID = '"+repositoryId+"' AND BCJOIN.NAME = '"+joinName+"'";
-											if(joinCondition != null && !joinCondition.trim().equals("")){
-												joinCondition = joinCondition.replace(srcFldLst.get(i), "T" + vTableCounter+"_"+rowNumber + "." + colName);
-											}
-										}
-										
+										joinName = "";
 									}
-									System.out.println("JOIN Condition : Else : If else loop  : "+ joinCondition);
-								}	
-							}
-						}	
+									
+									else if(srcFldLst != null && srcFldLst.size() > 0) {
+										for(int i=0; i<srcFldLst.size() ; i++){
+											
+											if(joinCondition == null || joinCondition.trim() == "") {
+												joinCondition = "LEFT OUTER JOIN "+ siebel + destTableName + " T" +vTableCounter+"_"+rowNumber +" ON T" + vTableCounter+"_"+rowNumber +  "." + destColLst.get(i) + " = " + srcFldLst.get(i); 
+											}else {
+												joinCondition = "LEFT OUTER JOIN "+ siebel + destTableName + " T"+ vTableCounter+"_"+rowNumber+ " ON T" + vTableCounter+"_"+rowNumber +  "." + destColLst.get(i) + " = " + srcFldLst.get(i) + " " + joinCondition; 
+											}
+											
+											// Join name, Column names :
+											String joinColNmQry2 = "SELECT BCFIELD.JOIN_NAME, BCFIELD.COL_NAME FROM SIEBEL.S_FIELD BCFIELD WHERE BCFIELD.NAME = '"+srcFldLst.get(i)+"' "
+													+ "AND BCFIELD.BUSCOMP_ID = '"+busCompId+"' AND BCFIELD.MULTI_VALUED = 'N' AND BCFIELD.CALCULATED = 'N' AND BCFIELD.REPOSITORY_ID = '"+repositoryId+"' ";
+											ResultSet resltSetjoinColNmQry2 = connection.createStatement().executeQuery(joinColNmQry2);
+											while(resltSetjoinColNmQry2.next()){
+												joinName = resltSetjoinColNmQry2.getString(1);
+												colName = resltSetjoinColNmQry2.getString(2);
+											}
+											
+											if(joinName != null && joinName.trim().equals("")){
+												joinCondition = joinCondition.replace(srcFldLst.get(i), /*buscompTable*/"T0" + "." + colName);
+											}else{
+												vTableCounter++;
+												destTableName = "SELECT BCJOIN.DEST_TBL_NAME FROM SIEBEL.S_JOIN BCJOIN WHERE "
+														+ "BCJOIN.BUSCOMP_ID = '"+buscompTable+"' AND BCJOIN.REPOSITORY_ID = '"+repositoryId+"' AND BCJOIN.NAME = '"+joinName+"'";
+												if(joinCondition != null && !joinCondition.trim().equals("")){
+													joinCondition = joinCondition.replace(srcFldLst.get(i), "T" + vTableCounter+"_"+rowNumber + "." + colName);
+												}
+											}
+											
+										}
+										joinCndtnRowNmMap.put(rowNumber, joinCondition);
+										System.out.println("JOIN Condition : Else : If else loop  : "+ joinCondition);
+									}	
+								}
+
+							}	
+					}else{
+						simlrRowNumber = dupJoinNm;
+						joinCondition = joinCndtnRowNmMap.get(simlrRowNumber);
+						joinCndtnRowNmMap.put(rowNumber, joinCondition);
+						
+					}
 					fieldNameList.add(joinNameUi);
-					fieldNameList.add("T1_"+rowNum+"."+columnName);
+					String colNameUI = null;
+					if(dupJoinNm == null){
+						colNameUI = "T1_"+rowNumber+"."+columnName;
+					}else{
+						colNameUI = "T1_"+simlrRowNumber+"."+columnName;
+					}
+					
+					 
+					fieldNameList.add(colNameUI);
+					colNmRowNmMap.put(rowNumber, colNameUI);
 					fieldNameList.add(joinCondition);
 					fieldNameList.add(foreignKeyName);
 				}
@@ -470,13 +501,107 @@ public class SiebelObjectController {
 			return fieldNameList; 	 
 		} 
 	 
-	 private static String addJoinToMap(String joinNmKey, String joinCndtnVal){
-		 if(joinNmCndtnMap.containsKey(joinNmKey)){
-			 return joinNmCndtnMap.get(joinNmKey);
+	 private static Integer addJoinToMap(String joinNmKey, int rowNum){
+		 if(joinNmRowNumMap.containsKey(joinNmKey)){
+			 return joinNmRowNumMap.get(joinNmKey);
 		 }
-		 joinNmCndtnMap.put(joinNmKey, joinCndtnVal);
-		 return joinCndtnVal;
+		 joinNmRowNumMap.put(joinNmKey, rowNum);
+		 return null;
 	 }
+	 
+		public String getextractionData(HttpServletRequest request, String projectId, String baseTable, String subProjectId, String siebelTableNameValue) {
+			Map<String,Integer> joinNameMap =  SiebelObjectController.joinNmRowNumMap;
+			Map<Integer,String> colNameMap =  SiebelObjectController.colNmRowNmMap;
+			Map<Integer,String> joinCndtnMap =  SiebelObjectController.joinCndtnRowNmMap;
+			if(joinNameMap.isEmpty()){
+				PartnerWSDL prtnrWSDL = new PartnerWSDL(request.getSession());
+				prtnrWSDL.login();
+				prtnrWSDL.getSavedMappingSingleValueDBData(projectId, null, null, siebelTableNameValue);
+				joinNameMap =  SiebelObjectController.joinNmRowNumMap;
+				colNameMap =  SiebelObjectController.colNmRowNmMap;
+				joinCndtnMap =  SiebelObjectController.joinCndtnRowNmMap;
+			}
+			
+			StringBuffer extractionQry =  new StringBuffer("SELECT ");
+			String colNms = null;
+			String joinCond = " ";
+			Iterator colNmItrtr = colNameMap.entrySet().iterator();
+			while (colNmItrtr.hasNext()) {
+		        Map.Entry pair = (Map.Entry)colNmItrtr.next();
+		        String colmVal = (String)  pair.getValue();
+		        if(colNms == null){
+		        	colNms = colmVal;
+		        }else{
+		        	colNms =  colNms + "," + colmVal;
+		        }
+		    }
+			
+			Set<String> keys = joinNameMap.keySet();
+	        for(String key: keys){
+	            System.out.println(key);
+	            String joinCondition = joinCndtnMap.get(joinNameMap.get(key));
+	            joinCond = joinCond + joinCondition + " ";
+	        }
+			
+			extractionQry = extractionQry.append(colNms.substring(0, colNms.length())).append(" FROM ").append("SIEBEL.").append("S_PARTY").append(" T0").append(joinCond);
+			
+			makeConnection();
+			ResultSet mySet = null;
+			ResultSetMetaData rsmd = null;
+			try
+			{
+				if (connection != null)
+				{
+					System.out.println("You made it, take control your database now!");
+					Statement st=connection.createStatement();
+					System.out.println("extraction query is"+extractionQry);
+					mySet=st.executeQuery(extractionQry.toString());
+
+					while(mySet.next()){
+						System.out.println(mySet.getString(1));
+						System.out.println(mySet.getString(2));
+						System.out.println(mySet.getString(3));
+						System.out.println(mySet.getString(4));
+						System.out.println(mySet.getString(5));
+					}
+					rsmd = mySet.getMetaData();
+				}
+			}
+			catch(SQLException e)
+			{
+				System.out.println("Connection Failed! Check output console");
+				e.printStackTrace();
+			}
+
+			File file = null;
+			String sFileName = "tryAndTest";
+			file = new File(sFileName + ".csv");
+			createFile(file);
+			
+         //   TargetPartner.createCSV(mySet,sfdcMapping, siebelNames,rsmd, file, mappingFile);
+            
+			return extractionQry.toString();
+	    }
+
+		public void createFile(File file) {
+			try {
+				if (file.createNewFile()) {
+					System.out.println("File is created!");
+					System.out.println(file.getAbsolutePath());
+				} else {
+					System.out.println("File already exists.Deleting Existing file");
+					file.delete();
+					if (file.createNewFile()) {
+						System.out.println("File is created again!");
+						System.out.println(file.getAbsolutePath());
+					}
+
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 
   }
 

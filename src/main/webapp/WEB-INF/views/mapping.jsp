@@ -46,6 +46,59 @@
 	var primBaseTable;
 
 	$(document).ready(function() {
+		
+		$('body').delegate('.slsFrcFldUpdate', 'change', function() {
+			var slctdSlsFrcFldOption = $(this).attr('value');
+			var slctdSblFldId = $(this).attr('id');
+			var parentRow = $(this).parent().parent().attr("id");
+			 $.ajax({
+					type : "GET",
+					url : "getLookUpInfo",
+				 	data :
+				 		{
+				 		slctdSlsFrcFldOption:slctdSlsFrcFldOption,
+				 		rowNum:rowNum
+				 		},
+				 		contentType : 'application/text',
+				 		success : function(response) {
+						var fieldColmnRsponse=response;
+							if(response != null && response.length != 0){
+								$("#lookUpRltnNme"+parentRow).val(fieldColmnRsponse[0]);
+								$("#lookUpRltnNme"+parentRow).attr("readonly", true); 
+								$("#lookUpObj"+parentRow).val(fieldColmnRsponse[1]);
+								$("#lookUpObj"+parentRow).attr("readonly", true);
+								var lookupfldrow = "lookUpField"+parentRow;
+								$("#lookUpField"+parentRow).attr("checked", true);
+								if(fieldColmnRsponse[2] != null && fieldColmnRsponse[2].length > 0){
+									$("#lookUpExtrnl"+parentRow).val(fieldColmnRsponse[2][0].label);
+									$("#lookUpExtrnl"+parentRow).attr("readonly", true);
+								}else{
+									$("#lookUpExtrnl"+parentRow).val("");
+									$("#lookUpExtrnl"+parentRow).attr("readonly", true);
+								}
+							}else{
+								$("#lookUpField"+parentRow).attr();	
+								$("#lookUpRltnNme"+parentRow).val("");
+								$("#lookUpRltnNme"+parentRow).attr("disabled", "disabled"); 
+								$("#lookUpObj"+parentRow).val("");
+								$("#lookUpObj"+parentRow).attr("disabled", "disabled");
+								$("#lookUpExtrnl"+parentRow).val("");
+								$("#lookUpExtrnl"+parentRow).attr("disabled", "disabled");
+								$("#lookUpField"+parentRow).attr("checked", false);
+							}
+						},
+				 		error: function(errorThrown){
+				 			$("#lookUpRltnNme"+parentRow).val("");
+				 			$("#lookUpRltnNme"+parentRow).attr("disabled", "disabled");
+							$("#lookUpObj"+parentRow).val("");
+							$("#lookUpObj"+parentRow).attr("disabled", "disabled");
+							$("#lookUpExtrnl"+parentRow).val("");
+							$("#lookUpExtrnl"+parentRow).attr("disabled", "disabled");
+							$("#lookUpField"+parentRow).attr("checked", false);
+				 	    } 
+			 });  
+		});
+		
 		$('body').delegate('.sblFldColFrgnUpdate', 'change', function() {
 			var slctdSblFldOption = $(this).val();
 			var slctdSblFldId = $(this).attr('id');
@@ -124,10 +177,10 @@
 							+ " </c:forEach> "
 							+ "  </c:if>"
 							+ "</select></td>"
-							+ "<td style='margin-left: 35px; padding-left:25px;'><input name=lookUpField"+rowNum+" id=lookUpField"+rowNum+"  type='checkbox' checked='checked'></td>"
-							+ "<td style='margin-left: 35px;'><input type='text' style='margin-left: 35px;' name=lookUpObj"+rowNum+" id=lookUpObj"+rowNum+"></td>"
-							+ "<td style='margin-left: 35px;'><input type='text' style='margin-left: 35px;' name=lookUpRltnNme"+rowNum+" id=lookUpRltnNme"+rowNum+"></td>"
-							+ "<td style='margin-left: 35px;'><input type='text' style='margin-left: 35px;' name=lookUpExtrnl"+rowNum+" id=lookUpExtrnl"+rowNum+"></td>"
+							+ "<td style='margin-left: 35px; padding-left:25px;'><input name=lookUpFieldrow"+rowNum+" id=lookUpFieldrow"+rowNum+"  type='checkbox'></td>"
+							+ "<td style='margin-left: 35px;'><input type='text' style='margin-left: 35px;' name=lookUpObjrow"+rowNum+" id=lookUpObjrow"+rowNum+"></td>"
+							+ "<td style='margin-left: 35px;'><input type='text' style='margin-left: 35px;' name=lookUpRltnNmerow"+rowNum+" id=lookUpRltnNmerow"+rowNum+"></td>"
+							+ "<td style='margin-left: 35px;'><input type='text' style='margin-left: 35px;' name=lookUpExtrnlrow"+rowNum+" id=lookUpExtrnlrow"+rowNum+"></td>"
 							+ "<input type='hidden' id='"+sfdcId+"' name='"+sfdcId+"'></tr>"); 
  
 	}
@@ -245,17 +298,17 @@
 										<!-- TODO : To load the column name value dynamically -->
 										<td><input type="text" style='margin-left: 35px;' id="clmnNmrow${mapping.mappingSeq}" name="clmnNmrow${mapping.mappingSeq}" value="${mapping.clmnNmrow}" /></td>
 										<td><textarea style='margin-left: 35px;' id="joinConditionrow${mapping.mappingSeq}" name="joinConditionrow${mapping.mappingSeq}" cols="40">${mapping.joinCondition}</textarea></td>
-										<td style="padding:5px;"><select name="slfrcdropdown${mapping.mappingSeq}" id="slfrcdropdown${mapping.mappingSeq}">
+										<td style="padding:5px;"><select name="slfrcdropdown${mapping.mappingSeq}" id="slfrcdropdown${mapping.mappingSeq}" class='slsFrcFldUpdate'>
 												<c:if test="${not empty mappingField}">
 													<c:forEach items="${mappingField}" var="field" varStatus="status">
-														<c:set var="tem2" value="${field}" />
+														<c:set var="temp2" value="${field.name}" />
                                 						<c:set var="temp3" value="${mapping.slfrcdropdown}" />
 														<c:choose>
-															<c:when test="${temp2} eq ${temp3}">
-												                <option value="${mapping.slfrcdropdown}" selected>${mapping.slfrcdropdown}</option>
+															<c:when test="${temp2 == temp3}">
+												                <option value='${field.name}' selected>${field.label}</option>
 												            </c:when>
 												            <c:otherwise>
-												                <option value="${field}">${field}</option>
+												                <option value='${field.name}'>${field.label}</option>
 												            </c:otherwise>
 											            </c:choose>
 													</c:forEach>
@@ -264,19 +317,19 @@
 										<!-- Look Up Field -->
 										<td style="margin-left: 35px;padding-left : 25px;">
 										<c:choose>
-										<c:when test="${mapping.checkFlag}">
-										<input name="lookUpField${mapping.mappingSeq}" type='checkbox' checked="checked">
+										<c:when test="${mapping.lookUpFlag}">
+										<input name="lookUpFieldrow${mapping.mappingSeq}" id="lookUpFieldrow${mapping.mappingSeq}" type='checkbox' checked="checked">
 										</c:when>
 										<c:otherwise>
-										<input name="lookUpField${mapping.mappingSeq}" type='checkbox'>
+										<input name="lookUpFieldrow${mapping.mappingSeq}" id="lookUpFieldrow${mapping.mappingSeq}" type='checkbox'>
 										</c:otherwise>
 										</c:choose></td>
 										<!-- Look Up Object -->
-										<td><input type="text" style="margin-left: 35px;" id="lookUpObj${mapping.mappingSeq}" name="lookUpObj${mapping.mappingSeq}" /></td>
+										<td><input type="text" style="margin-left: 35px;" id="lookUpObjrow${mapping.mappingSeq}" name="lookUpObjrow${mapping.mappingSeq}" value="${mapping.lookUpObject}" /></td>
 										<!-- Lookup Relationship Name -->
-										<td><input type="text" style="margin-left: 35px;" id="lookUpRltnNme${mapping.mappingSeq}" name="lookUpRltnNme${mapping.mappingSeq}" /></td>
+										<td><input type="text" style="margin-left: 35px;" id="lookUpRltnNmerow${mapping.mappingSeq}" name="lookUpRltnNmerow${mapping.mappingSeq}" value="${mapping.lookUpRelationShipName}"/></td>
 										<!-- Lookup External Id Field -->
-										<td><input type="text" style="margin-left: 35px;" id="lookUpExtrnl${mapping.mappingSeq}" name="lookUpExtrnl${mapping.mappingSeq}" /></td>
+										<td><input type="text" style="margin-left: 35px;" id="lookUpExtrnlrow${mapping.mappingSeq}" name="lookUpExtrnlrow${mapping.mappingSeq}" value="${mapping.lookUpExternalId}"/></td>
 										<input type='hidden' id="sfdcId${mapping.mappingSeq}" name="sfdcId${mapping.mappingSeq}" value="${mapping.id}" />
 									 </tr> 
 								</c:forEach>

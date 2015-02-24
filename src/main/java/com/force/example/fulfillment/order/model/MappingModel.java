@@ -21,6 +21,8 @@ public class MappingModel {
 	public Boolean checkFlag ;
 	public Boolean lookUpFlag;
 	public String lookUpObject;
+	public String lookUpRelationShipName;
+	public String lookUpExternalId;
 	
 	public String getId() {
 		return id;
@@ -142,5 +144,17 @@ public class MappingModel {
 	}
 	public void setJoinNamerow(String joinNamerow) {
 		this.joinNamerow = joinNamerow;
+	}
+	public String getLookUpRelationShipName() {
+		return lookUpRelationShipName;
+	}
+	public void setLookUpRelationShipName(String lookUpRelationShipName) {
+		this.lookUpRelationShipName = lookUpRelationShipName;
+	}
+	public String getLookUpExternalId() {
+		return lookUpExternalId;
+	}
+	public void setLookUpExternalId(String lookUpExternalId) {
+		this.lookUpExternalId = lookUpExternalId;
 	}
 }
