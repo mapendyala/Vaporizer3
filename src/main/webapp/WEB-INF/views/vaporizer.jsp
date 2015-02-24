@@ -33,6 +33,9 @@
 
 <script type="text/javascript"
 	src="<c:url value="/resources/json.min.js" /> "></script>
+	<script type="text/javascript"
+	src="<c:url value="/resources/scripts/jQuery.download.js" /> "></script>
+	
 	
 <script type="text/javascript">
 
@@ -397,7 +400,7 @@ function submitForm(rowNum, page){
 		sfdcObjectForExtarction=$("#"+SFDCObjectId).val();
 		var sfdcId = $("#"+"SfdcId"+(rowNum)).val();
 		var siebelObjName = $("#objectName" +(rowNum)).val();
-		 $.ajax({
+		/*  $.ajax({
 				type : "GET",
 				url : "getextractData",
 				data : {sfdcId:sfdcId, siebelObjName:siebelObjName},
@@ -410,7 +413,10 @@ function submitForm(rowNum, page){
 						}
 			
 				}  
-				});   
+				});    */
+		$.download('getextractData',
+				"sfdcId="+sfdcId+"& siebelObjName="+siebelObjName+"filename=mySpreadsheet&format=csv ","GET");
+				
 	}
 	
 	function submitDependant(rowNum)

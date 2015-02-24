@@ -11,7 +11,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -764,7 +766,7 @@ public class TargetPartner {
 		
 		
 	}
-	public  String getextractionData(String projectId, String sfdcId, String subProjectId) 
+	public  File getextractionData(String projectId, String sfdcId, String subProjectId) 
     {
         
         String selectTables = "";
@@ -1051,11 +1053,11 @@ public class TargetPartner {
             }
                 System.out.println("\nQuery execution completed.");
                 //query="Select mainTableAlias.CREATED_BY, mainTableAlias.CREATED, mainTableAlias.DESC_TEXT, mainTableAlias.MAIN_FAX_PH_NUM, mainTableAlias.NAME, mainTableAlias.MAIN_PH_NUM FROM SIEBEL.S_ORG_EXT mainTableAlias";
-                String mappingFileURL=ExtractDataFromSiebel(query, sfdcFieldMap, siebelFieldMap, projectId);
+                File mappingFileURL=ExtractDataFromSiebel(query, sfdcFieldMap, siebelFieldMap, projectId);
                 return mappingFileURL;
         }
 
-	public String ExtractDataFromSiebel(String query,Map sfdcMapping,Map siebelNames, String ProjectId) {
+	public File ExtractDataFromSiebel(String query,Map sfdcMapping,Map siebelNames, String ProjectId) {
 
         File file = null;
         File mappingFile = null;
@@ -1081,7 +1083,10 @@ public class TargetPartner {
                   List<Object> myList = new ArrayList<Object>();
                   Statement st = connection.createStatement();
                   ResultSet mySet = st.executeQuery(query);
-                  String sFileName = "tryAndTest";
+                 // String sFileName = "tryAndTest";
+                  String sFileName = new Date()+"_"+ Calendar.getInstance().getTime();
+                  sFileName=sFileName.trim();
+                  System.out.println(sFileName+"==================================");
                   if (mySet.next()) {
 
                         file = new File(sFileName + ".csv");
@@ -1120,7 +1125,7 @@ public class TargetPartner {
         }
         // return file;
 
-        return mappingFileURL;
+        return file;
 
   }
 

@@ -1,5 +1,6 @@
 package com.force.example.fulfillment;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -348,7 +350,7 @@ public class HomeController {
 
 	}
 	
-	
+/*	
 	@RequestMapping(value="/getextractData", method = RequestMethod.GET)
 	@ResponseBody public String createExtractQuery(HttpServletRequest request){
 		System.out.println("In Home controller get extract data method");
@@ -367,6 +369,28 @@ public class HomeController {
 			 
 		}
 		return mappingUrl;
+	}*/
+	@RequestMapping(value="/getextractData", method = RequestMethod.GET)
+	@ResponseBody public void createExtractQuery(HttpServletRequest request, HttpServletResponse response){
+		System.out.println("In Home controller get extract data method");
+		HttpSession session = request.getSession(true);
+		String projId  = (String)session.getAttribute("projectId");
+		TargetPartner tg= new TargetPartner(request.getSession());
+		
+		String sfdcId=request.getParameter("sfdcId");
+		String siebelTableNameValue = request.getParameter("siebelObjName");
+		String subprojectId=tg.getsubprojects(siebelTableNameValue);
+		String mappingUrl="";
+		File mappingFIle = null;
+		if(sfdcId  != null){			
+			mappingFIle=tg.getextractionData(projId, sfdcId, subprojectId);
+		}else{
+			System.out.println("Child Base and Mapping pages have not been selected");
+			 
+		}
+		response.setContentType("application/csv");
+		response.setHeader("Content-Disposition", "attachment; filename="+mappingFIle);
+		//return mapingFIle;
 	}
 
 
