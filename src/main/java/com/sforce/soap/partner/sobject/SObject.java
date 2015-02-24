@@ -89,7 +89,7 @@ public class SObject extends XmlObject implements ISObject {
             return o;
         } else if (!(o instanceof SObject)) {
             SObject sObject = new SObject();
-            sObject.cloneFrom((XmlObject)o);
+         //   sObject.cloneFrom((XmlObject)o);
             return sObject;
         } else {
             return o;
