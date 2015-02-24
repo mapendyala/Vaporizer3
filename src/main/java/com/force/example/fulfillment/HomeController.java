@@ -366,23 +366,17 @@ public class HomeController {
 		HttpSession session = request.getSession(true);
 		String projId  = (String)session.getAttribute("projectId");
 		TargetPartner tg= new TargetPartner(request.getSession());
-		SiebelObjectController sblObjCntrlr = new SiebelObjectController();
 		
-		PartnerWSDL prtnrWSDL = new PartnerWSDL(request.getSession());
-		prtnrWSDL.login();
 		String sfdcId=request.getParameter("sfdcId");
 		String siebelTableNameValue = request.getParameter("siebelObjName");
 		String subprojectId=tg.getsubprojects(siebelTableNameValue);
-		String baseTable = request.getParameter("baseTable");
 		String mappingUrl="";
-		/*if(sfdcId  != null){			
+		if(sfdcId  != null){			
 			mappingUrl=tg.getextractionData(projId, sfdcId, subprojectId);
 		}else{
 			System.out.println("Child Base and Mapping pages have not been selected");
 			 
-		}*/
-		mappingUrl = sblObjCntrlr.getextractionData(request, projId, baseTable, subprojectId, siebelTableNameValue);
-		
+		}
 		return mappingUrl;
 	}*/
 	@RequestMapping(value="/getextractData", method = RequestMethod.GET)
@@ -448,6 +442,25 @@ public class HomeController {
 		return lookUpFlds;
 	}
 
+	/*@RequestMapping(value="/getFieldDropdwnVal", method = RequestMethod.GET)
+	@ResponseBody public List<List<String>> retrieveFieldDrpDwnVal(HttpServletRequest request, @RequestParam("sblFldValSlctd")String sblFldValSlctd) throws ConnectionException{
+		System.out.println("In retrieveFieldDrpDwnVal method");
+		System.out.println("Selected Siebel Value : "+ sblFldValSlctd);
+		HttpSession session = request.getSession(true);
+		TargetPartner tg= new TargetPartner(request.getSession()); 
+		//Gets the list of SFDC Field names
+		ArrayList<String> field= new ArrayList<String>();
+				field=tg.getFieldTarget(tableName);
+				
+		// To get the list of siebel field names for a siebel entity.
+		List<String> sblFldList = new ArrayList<String>();
+		sblFldList = siObj.fetchFieldNameList(request, siebelTableNameValue);
+		
+		return clmNmLst;
+	}
+*/
+
+	
 	@RequestMapping(value = "saveData",method = RequestMethod.POST)
 	public ModelAndView getSiebelFielddata(HttpServletRequest request, Map<String, Object> model, Model modelChild) throws ConnectionException {
 		HttpSession session = request.getSession(true);
