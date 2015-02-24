@@ -71,6 +71,9 @@ public class HomeController {
 		//String projectId="a0PG000000B2wmDMAR";
 		String projectId="a0PG000000B5e3fMAB";
 		//String projectId="a0PG000000B3OFn";
+		if(request.getParameter("projectId") != null){
+			projectId = request.getParameter("projectId");
+		}
 		session.setAttribute("projectId", projectId);
 		TargetPartner tp= new TargetPartner(session);
 		data = tp.getSavedDBData(projectId, data);
