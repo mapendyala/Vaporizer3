@@ -77,6 +77,7 @@
 									$("#lookUpExtrnl"+parentRow).attr("readonly", true);
 								}
 							}else{
+								alert("no response");
 								$("#lookUpField"+parentRow).attr();	
 								$("#lookUpRltnNme"+parentRow).val("");
 								$("#lookUpRltnNme"+parentRow).attr("disabled", "disabled"); 
@@ -88,6 +89,7 @@
 							}
 						},
 				 		error: function(errorThrown){
+				 			alert("err thrwn");
 				 			$("#lookUpRltnNme"+parentRow).val("");
 				 			$("#lookUpRltnNme"+parentRow).attr("disabled", "disabled");
 							$("#lookUpObj"+parentRow).val("");
@@ -173,7 +175,7 @@
 							+ "<td style='padding:5px;'><select name=slfrcdropdown"+rowNum+ " id=slfrcdropdown"+rowNum+">"
 							+ " <c:if test="${not empty mappingField}"> "
 							+ " <c:forEach items="${mappingField}" var="field1" varStatus="status">"
-							+ " <option value='${field1}'>${field1}</option>"
+							+ " <option value='${field1.name}'>${field1.label}</option>"
 							+ " </c:forEach> "
 							+ "  </c:if>"
 							+ "</select></td>"
