@@ -73,6 +73,7 @@ String password;
 		boolean success = false;
 		try {
 			ConnectorConfig config = new ConnectorConfig();
+			System.out.println("username passoerd"+username+"   "+password);
 			config.setUsername(username);
 			config.setPassword(password);
 			config.setAuthEndpoint(authEndPoint);
@@ -996,10 +997,10 @@ System.out.println("records "+records);
 
 					SaveResult[] saveResults = partnerConnection
 							.update(new SObject[] { updateContact });
-					/*for (int j = 0; j < saveResults.length; j++) {
+					for (int j = 0; j < saveResults.length; j++) {
 						//System.out.println(saveResults[j].isSuccess());
 						// System.out.println(results[i].getErrors()[i].getMessage());
-					}*/
+					}
 
 				}
 
@@ -1234,6 +1235,9 @@ System.out.println("records "+records);
 				SiebelObjectController.joinNmRowNumMap = new HashMap<String, Integer>();
 				SiebelObjectController.colNmRowNmMap = new HashMap<Integer, String>();
 				SiebelObjectController.joinCndtnRowNmMap = new HashMap<Integer, String>();
+				SiebelObjectController.relationShpNmRowNmMap = new HashMap<Integer, String>();
+				SiebelObjectController.salesFrcNmRowNmMap = new HashMap<Integer, String>();
+				SiebelObjectController.externalIdRowNmMap = new HashMap<Integer, String>();
 			 
 			while (!done1) {
 				SObject[] records1 = qr1.getRecords();
@@ -1249,6 +1253,9 @@ System.out.println("records "+records);
 					String joinName = (String)contact.getField("Join_Name__c");
 					String colName = (String)contact.getField("Column_Name__c");
 					String joinCond = (String)contact.getField("Join_Condition__c");
+					String reltnShpNme = (String)contact.getField("Lookup_Relationship_Name__c");
+					String extrnlId = (String)contact.getField("Lookup_External_Id_Field__c");
+					String slsfrcDrpDwnSlctd = (String)contact.getField("SFDC_Field_Name__c");
 
 					mappingModel1.setCheckFlag(Boolean.parseBoolean((String)contact.getField("Select__c")));
 					mappingModel1.setLookUpFlag(Boolean.parseBoolean((String)contact.getField("LookUpField__c")));
@@ -1258,10 +1265,10 @@ System.out.println("records "+records);
 					mappingModel1.setFrgnKeyrow((String)contact.getField("Foreign_Key_Table__c"));
 					mappingModel1.setJoinCondition(joinCond);
 					mappingModel1.setClmnNmrow(colName);
-					mappingModel1.setSlfrcdropdown((String)contact.getField("SFDC_Field_Name__c"));
+					mappingModel1.setSlfrcdropdown(slsfrcDrpDwnSlctd);
 					mappingModel1.setLookUpObject((String)contact.getField("LookUpObject__c"));
-					mappingModel1.setLookUpRelationShipName((String)contact.getField("Lookup_Relationship_Name__c"));
-					mappingModel1.setLookUpExternalId((String)contact.getField("Lookup_External_Id_Field__c"));
+					mappingModel1.setLookUpRelationShipName(reltnShpNme);
+					mappingModel1.setLookUpExternalId(extrnlId);
 					/*mappingModel1.setSlsfrcdscription((String)contact.getField("SFDC_Field_Description__c"));*/
 					mappingModel1.setId( (String)contact.getField("Id"));
 					mappingModel1.setMappingSeq(i);
@@ -1270,6 +1277,15 @@ System.out.println("records "+records);
 					}
 					SiebelObjectController.colNmRowNmMap.put(j, colName);
 					SiebelObjectController.joinCndtnRowNmMap.put(j, joinCond);
+					if(reltnShpNme != null && !reltnShpNme.trim().equals("")){
+						SiebelObjectController.relationShpNmRowNmMap.put(j, reltnShpNme);
+					}
+					if(slsfrcDrpDwnSlctd != null && !slsfrcDrpDwnSlctd.trim().equals("")){
+						SiebelObjectController.salesFrcNmRowNmMap.put(j, slsfrcDrpDwnSlctd);
+					}
+					if(extrnlId != null && !extrnlId.trim().equals("")){
+						SiebelObjectController.externalIdRowNmMap.put(j, extrnlId);
+					}
 					mappingData.add(mappingModel1);
 				}
 

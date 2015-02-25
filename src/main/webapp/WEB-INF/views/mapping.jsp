@@ -64,38 +64,38 @@
 						var fieldColmnRsponse=response;
 							if(response != null && response.length != 0){
 								$("#lookUpRltnNme"+parentRow).val(fieldColmnRsponse[0]);
-								$("#lookUpRltnNme"+parentRow).attr("readonly", true); 
+								/* $("#lookUpRltnNme"+parentRow).attr("readonly", true); */ 
 								$("#lookUpObj"+parentRow).val(fieldColmnRsponse[1]);
-								$("#lookUpObj"+parentRow).attr("readonly", true);
+								/* $("#lookUpObj"+parentRow).attr("readonly", true); */
 								var lookupfldrow = "lookUpField"+parentRow;
 								$("#lookUpField"+parentRow).attr("checked", true);
 								if(fieldColmnRsponse[2] != null && fieldColmnRsponse[2].length > 0){
 									$("#lookUpExtrnl"+parentRow).val(fieldColmnRsponse[2][0].label);
-									$("#lookUpExtrnl"+parentRow).attr("readonly", true);
+									/* $("#lookUpExtrnl"+parentRow).attr("readonly", true); */
 								}else{
 									$("#lookUpExtrnl"+parentRow).val("");
-									$("#lookUpExtrnl"+parentRow).attr("readonly", true);
+									/* $("#lookUpExtrnl"+parentRow).attr("readonly", true); */
 								}
 							}else{
 								alert("no response");
 								$("#lookUpField"+parentRow).attr();	
 								$("#lookUpRltnNme"+parentRow).val("");
-								$("#lookUpRltnNme"+parentRow).attr("disabled", "disabled"); 
+								/* $("#lookUpRltnNme"+parentRow).attr("disabled", "disabled");  */
 								$("#lookUpObj"+parentRow).val("");
-								$("#lookUpObj"+parentRow).attr("disabled", "disabled");
+								/* $("#lookUpObj"+parentRow).attr("disabled", "disabled"); */
 								$("#lookUpExtrnl"+parentRow).val("");
-								$("#lookUpExtrnl"+parentRow).attr("disabled", "disabled");
+								/* $("#lookUpExtrnl"+parentRow).attr("disabled", "disabled"); */
 								$("#lookUpField"+parentRow).attr("checked", false);
 							}
 						},
 				 		error: function(errorThrown){
 				 			alert("err thrwn");
 				 			$("#lookUpRltnNme"+parentRow).val("");
-				 			$("#lookUpRltnNme"+parentRow).attr("disabled", "disabled");
+				 		/* 	$("#lookUpRltnNme"+parentRow).attr("disabled", "disabled"); */
 							$("#lookUpObj"+parentRow).val("");
-							$("#lookUpObj"+parentRow).attr("disabled", "disabled");
+						/* 	$("#lookUpObj"+parentRow).attr("disabled", "disabled"); */
 							$("#lookUpExtrnl"+parentRow).val("");
-							$("#lookUpExtrnl"+parentRow).attr("disabled", "disabled");
+							/* $("#lookUpExtrnl"+parentRow).attr("disabled", "disabled"); */
 							$("#lookUpField"+parentRow).attr("checked", false);
 				 	    } 
 			 });  

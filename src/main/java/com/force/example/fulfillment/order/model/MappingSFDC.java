@@ -10,6 +10,7 @@ public class MappingSFDC {
 	public String name;
 	public String relationshipName;
 	public String[] referenceTo;
+	public String externalIdField;
 	
 	public String getLabel() {
 		return label;
@@ -34,5 +35,11 @@ public class MappingSFDC {
 	}
 	public void setReferenceTo(String[] referenceTo) {
 		this.referenceTo = referenceTo;
+	}
+	public String getExternalIdField() {
+		return externalIdField;
+	}
+	public void setExternalIdField(String externalIdField) {
+		this.externalIdField = externalIdField;
 	}
 }
