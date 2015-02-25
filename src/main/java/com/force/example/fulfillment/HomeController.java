@@ -498,7 +498,9 @@ public class HomeController {
 				
 				SiebelObjectController.relationShpNmRowNmMap.put(Integer.parseInt(rowNum), relationShpName);
 				SiebelObjectController.salesFrcNmRowNmMap.put(Integer.parseInt(rowNum), slsfrcFldValSlctd);
-				SiebelObjectController.externalIdRowNmMap.put(Integer.parseInt(rowNum), externlFldLst.get(0).getName());
+				if(externlFldLst.get(0).getName() != null && !externlFldLst.get(0).getName().equals("")){
+					SiebelObjectController.externalIdRowNmMap.put(Integer.parseInt(rowNum), externlFldLst.get(0).getName());
+				}
 				
 			}
 		}
