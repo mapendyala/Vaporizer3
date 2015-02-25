@@ -73,6 +73,7 @@ String password;
 		boolean success = false;
 		try {
 			ConnectorConfig config = new ConnectorConfig();
+			System.out.println("username passoerd"+username+""   "+password);
 			config.setUsername(username);
 			config.setPassword(password);
 			config.setAuthEndpoint(authEndPoint);
@@ -996,10 +997,10 @@ System.out.println("records "+records);
 
 					SaveResult[] saveResults = partnerConnection
 							.update(new SObject[] { updateContact });
-					/*for (int j = 0; j < saveResults.length; j++) {
+					for (int j = 0; j < saveResults.length; j++) {
 						//System.out.println(saveResults[j].isSuccess());
 						// System.out.println(results[i].getErrors()[i].getMessage());
-					}*/
+					}
 
 				}
 

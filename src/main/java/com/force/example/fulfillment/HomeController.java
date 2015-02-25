@@ -73,7 +73,7 @@ public class HomeController {
 		
 		session.setAttribute("authParams", authParams);
 		//String projectId="a0PG000000B2wmDMAR";
-		String projectId="a0PG000000B5e3fMAB";
+		String projectId="a0PG000000CHT1SMAX";
 		//String projectId="a0PG000000B3OFn";
 		if(request.getParameter("projectId") != null){
 			projectId = request.getParameter("projectId");
@@ -518,7 +518,6 @@ public class HomeController {
 		System.out.println("In main controller");
 		TargetPartner tg= new TargetPartner(request.getSession()); 
 		PartnerWSDL prtnrWSDL = new PartnerWSDL(request.getSession());
-		prtnrWSDL.login();
 		data.clear();
 		rowCount= request.getParameter("rowCount");
 		String rowNo = request.getParameter("rowNo");
@@ -563,7 +562,7 @@ public class HomeController {
 			data.add(mainPage);
 		}
 
-		tg.saveDataDB(data, request, (String)session.getAttribute("projectId"));
+		prtnrWSDL.saveDataDB(data, request, (String)session.getAttribute("projectId"));
 
 
 		if(page.equals("child")){
