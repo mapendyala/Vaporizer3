@@ -77,7 +77,6 @@
 									/* $("#lookUpExtrnl"+parentRow).attr("readonly", true); */
 								}
 							}else{
-								alert("no response");
 								$("#lookUpField"+parentRow).attr();	
 								$("#lookUpRltnNme"+parentRow).val("");
 								/* $("#lookUpRltnNme"+parentRow).attr("disabled", "disabled");  */
@@ -89,7 +88,6 @@
 							}
 						},
 				 		error: function(errorThrown){
-				 			alert("err thrwn");
 				 			$("#lookUpRltnNme"+parentRow).val("");
 				 		/* 	$("#lookUpRltnNme"+parentRow).attr("disabled", "disabled"); */
 							$("#lookUpObj"+parentRow).val("");
@@ -130,7 +128,6 @@
 							}
 						},
 				 		error: function(errorThrown){
-				 	        alert("No foreign key an column names for the selected siebel field.");
 				 	        $("#joinName"+parentRow).val("");
 							$("#clmnNm"+parentRow).val("");
 							$("#joinCondition"+parentRow).val("");
