@@ -414,7 +414,7 @@ function submitForm(rowNum, page){
 		 $.ajax({
 				type : "GET",
 				url : "getextractData",
-				data : {sfdcId:sfdcId, siebelObjName:siebelObjName, baseTable:baseTable},
+				data : {sfdcId:sfdcId, siebelObjName:siebelObjName, baseTable:baseTable, sfdcObject:sfdcObjectForExtarction},
 				success : function(response){
 					if(response!="")
 				 	$("#datafileUrl").val(response);
