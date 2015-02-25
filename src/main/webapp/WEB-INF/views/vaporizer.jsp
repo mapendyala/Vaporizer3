@@ -553,7 +553,7 @@ function submitForm(rowNum, page){
 						<td style="float: left;  padding: 50px; width: 450px !Important; padding-top: 10px; padding-bottom: 10px;">
 							<!-- <input type="text" style="width:100%;" placeholder="CSV Location" id="datafileUrl" /> -->
 							<!-- File Uplaod  -->
-							<form id="uploadForm" method="POST" onsubmit="return validateUploadForm();" action="uploadFile" enctype="multipart/form-data">
+							<form id="uploadForm" method="POST" onsubmit="return validateUploadForm();" target="formSending" action="uploadFile" enctype="multipart/form-data">
 							<table>
 							<tr>
 							<td> <input type="text" id="fileNameID" placeholder="Enter file name" name="name"></td>
@@ -561,8 +561,12 @@ function submitForm(rowNum, page){
 							<td></td>
 							</tr>
 							<tr>
-							<td colspan="3"> <input class="btn btn-block btn-inverse"id="csvUploadID" type="submit" value="Upload" target="formSending"> Press here to upload the
-								file!</td>
+							<td colspan="3"> <input class="btn btn-block btn-inverse"id="csvUploadID" type="submit" value="Upload" target="formSending"></td>
+							</tr>
+							<tr>
+							<td colspan="2">
+							<iframe name="formSending" style="height: 50px;width:100%;border: 0px none;font-family:verdana;"></iframe>
+							</td>
 							</tr>
 							</table>
 							</form>
@@ -590,7 +594,7 @@ function submitForm(rowNum, page){
 					</tr>	
 
 				</table>
-				<iframe name="formSending"></iframe>
+				
 			</div> 
 		</div>
 

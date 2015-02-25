@@ -171,7 +171,7 @@ public class HomeController {
 	 *  Upload single file using Spring Controller
 	 */
 	 @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-	    public 
+	    public @ResponseBody
 	    String uploadFileHandler(@RequestParam("name") String name,
 	            @RequestParam("file") MultipartFile file) {
 	 
@@ -198,13 +198,12 @@ public class HomeController {
 	                System.out.println("Server File Location="
 	                        + serverFile.getAbsolutePath());
 	 
-	                return "You successfully uploaded file=" + name;
+	               return "You successfully uploaded file=" + name;
 	            } catch (Exception e) {
-	                return "You failed to upload " + name + " => " + e.getMessage();
+	               return "You failed to upload " + name + " => " + e.getMessage();
 	            }
 	        } else {
-	            return "You failed to upload " + name
-	                    + " because the file was empty.";
+	            return "You failed to upload " + name	                    + " because the file was empty.";
 	        }
 	    }
 	@RequestMapping(value = "/mapping", method = RequestMethod.GET)
