@@ -171,7 +171,7 @@ public class HomeController {
 	 *  Upload single file using Spring Controller
 	 */
 	 @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-	    public @ResponseBody
+	    public 
 	    String uploadFileHandler(@RequestParam("name") String name,
 	            @RequestParam("file") MultipartFile file) {
 	 
@@ -448,14 +448,17 @@ public class HomeController {
 			System.out.println("Child Base and Mapping pages have not been selected");
 			 
 		}*/
-		response.setContentType("application/csv");
-		response.setHeader("Content-Disposition", "attachment; filename="+mappingFIle);
 		SiebelObjectController sblObjCntrlr = new SiebelObjectController();
 		PartnerWSDL prtnrWSDL = new PartnerWSDL(request.getSession());
 		prtnrWSDL.login();
 		String baseTable = request.getParameter("baseTable");
 		String sfdcObject = request.getParameter("sfdcObject");
-		mappingUrl = sblObjCntrlr.getextractionData(request, projId, baseTable, subprojectId, siebelTableNameValue, sfdcObject);
+		
+		System.out.println("========="+baseTable+"===="+subprojectId+"==="+siebelTableNameValue+"===="+sfdcObject);
+	    mappingFIle = sblObjCntrlr.getextractionData(request, projId, baseTable, subprojectId, siebelTableNameValue, sfdcObject);
+		
+		response.setContentType("application/csv");
+		response.setHeader("Content-Disposition", "attachment; filename="+mappingFIle);
 		//return mapingFIle;
 	}
 

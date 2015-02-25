@@ -31,8 +31,10 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 
-<script type="text/javascript"
-	src="<c:url value="/resources/json.min.js" /> "></script>
+<script type="text/javascript" 	src="<c:url value="/resources/json.min.js" /> "></script>
+	<script type="text/javascript" 	src="<c:url value="/resources/scripts/jQuery.download.js" /> "></script>
+	 
+
 	
 <script type="text/javascript">
 
@@ -411,7 +413,7 @@ function submitForm(rowNum, page){
 		var sfdcId = $("#"+"SfdcId"+(rowNum)).val();
 		var siebelObjName = $("#objectName" +(rowNum)).val();
 		var baseTable = $("#prim" +(rowNum)).val();
-		 $.ajax({
+	/* /* 	 $.ajax({
 				type : "GET",
 				url : "getextractData",
 				data : {sfdcId:sfdcId, siebelObjName:siebelObjName, baseTable:baseTable, sfdcObject:sfdcObjectForExtarction},
@@ -424,8 +426,13 @@ function submitForm(rowNum, page){
 						}
 			
 				}  
-				});   
-	}
+				});  */  
+				var data= "sfdcId="+sfdcId+"&siebelObjName="+siebelObjName+"&baseTable="+baseTable+"&sfdcObject="+sfdcObjectForExtarction+"&format=csv ";
+
+			 $.download('getextractData',
+					data,
+					 "GET"); 
+	 }
 	
 	function submitDependant(rowNum)
 	 
@@ -554,7 +561,7 @@ function submitForm(rowNum, page){
 							<td></td>
 							</tr>
 							<tr>
-							<td colspan="3"> <input class="btn btn-block btn-inverse"id="csvUploadID" type="submit" value="Upload"> Press here to upload the
+							<td colspan="3"> <input class="btn btn-block btn-inverse"id="csvUploadID" type="submit" value="Upload" target="formSending"> Press here to upload the
 								file!</td>
 							</tr>
 							</table>
@@ -583,6 +590,7 @@ function submitForm(rowNum, page){
 					</tr>	
 
 				</table>
+				<iframe name="formSending"></iframe>
 			</div> 
 		</div>
 

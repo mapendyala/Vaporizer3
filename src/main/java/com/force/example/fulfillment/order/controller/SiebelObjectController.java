@@ -515,7 +515,7 @@ public class SiebelObjectController {
 		 return null;
 	 }
 	 
-	 public String getextractionData(HttpServletRequest request, String projectId, String baseTable, String subProjectId, String siebelTableNameValue, String sfdcObject) {
+	 public File getextractionData(HttpServletRequest request, String projectId, String baseTable, String subProjectId, String siebelTableNameValue, String sfdcObject) {
 			Map<String,Integer> joinNameMap =  SiebelObjectController.joinNmRowNumMap;
 			Map<Integer,String> colNameMap =  SiebelObjectController.colNmRowNmMap;
 			Map<Integer,String> joinCndtnMap =  SiebelObjectController.joinCndtnRowNmMap;
@@ -569,7 +569,7 @@ public class SiebelObjectController {
 		        	String mapVal = asCondition.replace("\"", "").replace("AS", "");
 		        	headers.put(rowNumKey, mapVal);
 		        }else{
-		        	return "Sales Force Fields are not selected for row : " + rowNumKey;
+		        	//return "Sales Force Fields are not selected for row : " + rowNumKey;
 		        }
 		    }
 			
@@ -633,7 +633,7 @@ public class SiebelObjectController {
 			
 	        System.out.println("============ Writing to csv file is complete==================");
 
-		    return extractionQry.toString();
+		    return file;
 	    }
 
 		public void createFile(File file) {
