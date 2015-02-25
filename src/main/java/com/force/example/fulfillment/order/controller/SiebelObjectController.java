@@ -4,6 +4,7 @@
 package com.force.example.fulfillment.order.controller;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -47,6 +48,11 @@ public class SiebelObjectController {
 	public static Map<Integer,String> colNmRowNmMap = new HashMap<Integer,String>();
 	public static Map<Integer,String> joinCndtnRowNmMap = new HashMap<Integer,String>();
 	public static List<MappingSFDC> sfdcFldRowNmList = new ArrayList<MappingSFDC>();
+	public static Map<Integer,String> relationShpNmRowNmMap = new HashMap<Integer,String>();
+	public static Map<Integer,String> externalIdRowNmMap = new HashMap<Integer,String>();
+	public static Map<Integer,String> salesFrcNmRowNmMap = new HashMap<Integer,String>();
+	private static final String COMMA_DELIMITER = ",";
+	private static final String NEW_LINE_SEPARATOR = "\n";
 	
 	@RequestMapping(value="/SiebelObject", method=RequestMethod.POST)
 
@@ -509,10 +515,16 @@ public class SiebelObjectController {
 		 return null;
 	 }
 	 
-		public String getextractionData(HttpServletRequest request, String projectId, String baseTable, String subProjectId, String siebelTableNameValue) {
+	 public String getextractionData(HttpServletRequest request, String projectId, String baseTable, String subProjectId, String siebelTableNameValue, String sfdcObject) {
 			Map<String,Integer> joinNameMap =  SiebelObjectController.joinNmRowNumMap;
 			Map<Integer,String> colNameMap =  SiebelObjectController.colNmRowNmMap;
 			Map<Integer,String> joinCndtnMap =  SiebelObjectController.joinCndtnRowNmMap;
+			Map<Integer,String> reltnShpMap =  SiebelObjectController.relationShpNmRowNmMap;
+			Map<Integer,String> slFrcNm =  SiebelObjectController.salesFrcNmRowNmMap;
+			Map<Integer,String> extrnlIdMap =  SiebelObjectController.externalIdRowNmMap;
+			String salesForceObjName = sfdcObject;
+			
+			
 			if(joinNameMap.isEmpty()){
 				PartnerWSDL prtnrWSDL = new PartnerWSDL(request.getSession());
 				prtnrWSDL.login();
@@ -520,19 +532,44 @@ public class SiebelObjectController {
 				joinNameMap =  SiebelObjectController.joinNmRowNumMap;
 				colNameMap =  SiebelObjectController.colNmRowNmMap;
 				joinCndtnMap =  SiebelObjectController.joinCndtnRowNmMap;
+				reltnShpMap =  SiebelObjectController.relationShpNmRowNmMap;
+				slFrcNm =  SiebelObjectController.salesFrcNmRowNmMap;
+				extrnlIdMap =  SiebelObjectController.externalIdRowNmMap; 
 			}
-			
+			Map<Integer,String> headers = new HashMap<Integer,String>();
+			int size = colNameMap.size();
 			StringBuffer extractionQry =  new StringBuffer("SELECT ");
 			String colNms = null;
 			String joinCond = " ";
 			Iterator colNmItrtr = colNameMap.entrySet().iterator();
 			while (colNmItrtr.hasNext()) {
-		        Map.Entry pair = (Map.Entry)colNmItrtr.next();
+				String asCondition = null;
+
+				Map.Entry pair = (Map.Entry)colNmItrtr.next();
 		        String colmVal = (String)  pair.getValue();
 		        if(colNms == null){
 		        	colNms = colmVal;
 		        }else{
 		        	colNms =  colNms + "," + colmVal;
+		        }
+		        Integer rowNumKey = (Integer)pair.getKey();
+		        if((reltnShpMap.containsKey(rowNumKey) && reltnShpMap.get(rowNumKey) != null && !reltnShpMap.get(rowNumKey).equals("")) &&
+		        		(extrnlIdMap.containsKey(rowNumKey) && extrnlIdMap.get(rowNumKey) != null && !extrnlIdMap.get(rowNumKey).equals(""))){
+		        	asCondition = " AS \"" ;
+		        	asCondition = asCondition + salesForceObjName + "#" + reltnShpMap.get(rowNumKey) + "." + extrnlIdMap.get(rowNumKey);
+		        	asCondition = asCondition +"\"";
+		        	colNms = colNms + asCondition;
+		        	String mapVal = asCondition.replace("\"", "").replace("AS", "");
+		        	headers.put(rowNumKey, mapVal);
+		        }else if(slFrcNm.containsKey(rowNumKey) && slFrcNm.get(rowNumKey) != null && !slFrcNm.get(rowNumKey).equals("")){
+		        	asCondition = " AS \"" ;
+		        	asCondition = asCondition + salesForceObjName + "#" + slFrcNm.get(rowNumKey);
+		        	asCondition = asCondition + "\"";
+		        	colNms = colNms + asCondition;
+		        	String mapVal = asCondition.replace("\"", "").replace("AS", "");
+		        	headers.put(rowNumKey, mapVal);
+		        }else{
+		        	return "Sales Force Fields are not selected for row : " + rowNumKey;
 		        }
 		    }
 			
@@ -545,42 +582,58 @@ public class SiebelObjectController {
 			
 			extractionQry = extractionQry.append(colNms.substring(0, colNms.length())).append(" FROM ").append("SIEBEL.").append("S_PARTY").append(" T0").append(joinCond);
 			
+			File file = null;
+			if(extractionQry != null){
+				String sFileName = "tryAndTest";
+				file = new File(sFileName + ".csv");
+				createFile(file);
+			}
 			makeConnection();
 			ResultSet mySet = null;
 			ResultSetMetaData rsmd = null;
-			try
-			{
-				if (connection != null)
-				{
+			try{
+				if (connection != null){
 					System.out.println("You made it, take control your database now!");
 					Statement st=connection.createStatement();
 					System.out.println("extraction query is"+extractionQry);
 					mySet=st.executeQuery(extractionQry.toString());
-
-					while(mySet.next()){
-						System.out.println(mySet.getString(1));
-						System.out.println(mySet.getString(2));
-						System.out.println(mySet.getString(3));
-						System.out.println(mySet.getString(4));
-						System.out.println(mySet.getString(5));
+					
+					FileWriter fileWriter = new FileWriter(file);
+					for(int i=1; i<headers.size()+1 ; i++){
+						fileWriter.append((String)headers.get(i));
+						fileWriter.append(COMMA_DELIMITER);
 					}
-					rsmd = mySet.getMetaData();
+					fileWriter.append(NEW_LINE_SEPARATOR);
+					
+					while(mySet.next()){
+						for(int i=1 ; i < size+1 ; i++){
+							String value = mySet.getString(i);
+							System.out.println(value);
+							if(value == null ){
+								fileWriter.append("");
+							}else{
+								fileWriter.append(value);
+							}
+							fileWriter.append(COMMA_DELIMITER);
+						}
+						fileWriter.append(NEW_LINE_SEPARATOR);
+					}
+					
+					fileWriter.flush();
+					fileWriter.close();
 				}
 			}
-			catch(SQLException e)
-			{
+			catch(SQLException e){
 				System.out.println("Connection Failed! Check output console");
 				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-
-			File file = null;
-			String sFileName = "tryAndTest";
-			file = new File(sFileName + ".csv");
-			createFile(file);
 			
-         //   TargetPartner.createCSV(mySet,sfdcMapping, siebelNames,rsmd, file, mappingFile);
-            
-			return extractionQry.toString();
+	        System.out.println("============ Writing to csv file is complete==================");
+
+		    return extractionQry.toString();
 	    }
 
 		public void createFile(File file) {
@@ -603,5 +656,7 @@ public class SiebelObjectController {
 			}
 		}
 
-  }
+}
+
+
 
