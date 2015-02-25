@@ -73,7 +73,7 @@ String password;
 		boolean success = false;
 		try {
 			ConnectorConfig config = new ConnectorConfig();
-			System.out.println("username passoerd"+username+""   "+password);
+			System.out.println("username passoerd"+username+"   "+password);
 			config.setUsername(username);
 			config.setPassword(password);
 			config.setAuthEndpoint(authEndPoint);
