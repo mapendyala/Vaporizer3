@@ -77,7 +77,6 @@
 									/* $("#lookUpExtrnl"+parentRow).attr("readonly", true); */
 								}
 							}else{
-								alert("no response");
 								$("#lookUpField"+parentRow).attr();	
 								$("#lookUpRltnNme"+parentRow).val("");
 								/* $("#lookUpRltnNme"+parentRow).attr("disabled", "disabled");  */
@@ -89,7 +88,6 @@
 							}
 						},
 				 		error: function(errorThrown){
-				 			alert("err thrwn");
 				 			$("#lookUpRltnNme"+parentRow).val("");
 				 		/* 	$("#lookUpRltnNme"+parentRow).attr("disabled", "disabled"); */
 							$("#lookUpObj"+parentRow).val("");
@@ -130,7 +128,6 @@
 							}
 						},
 				 		error: function(errorThrown){
-				 	        alert("No foreign key an column names for the selected siebel field.");
 				 	        $("#joinName"+parentRow).val("");
 							$("#clmnNm"+parentRow).val("");
 							$("#joinCondition"+parentRow).val("");
@@ -172,7 +169,7 @@
 							+ "<td><input type='text' style='margin-left: 35px;' id=frgnKeyrow"+rowNum+" name=frgnKeyrow"+rowNum+" /></td>"
 							+ "<td><input type='text' style='margin-left: 35px;' id=clmnNmrow"+rowNum+" name=clmnNmrow"+rowNum+" /></td>"
 							+ "<td><textarea style='margin-left: 35px;' id=joinConditionrow"+rowNum+" name=joinConditionrow"+rowNum+" cols='40'></textarea></td>"
-							+ "<td style='padding:5px;'><select name=slfrcdropdown"+rowNum+ " id=slfrcdropdown"+rowNum+">"
+							+ "<td style='padding:5px;'><select name=slfrcdropdown"+rowNum+ " id=slfrcdropdown"+rowNum+" class='slsFrcFldUpdate'>"
 							+ " <c:if test="${not empty mappingField}"> "
 							+ " <c:forEach items="${mappingField}" var="field1" varStatus="status">"
 							+ " <option value='${field1.name}'>${field1.label}</option>"
