@@ -442,14 +442,20 @@ public class HomeController {
 		String subprojectId=tg.getsubprojects(siebelTableNameValue);
 		String mappingUrl="";
 		File mappingFIle = null;
-		if(sfdcId  != null){			
+		/*if(sfdcId  != null){			
 			mappingFIle=tg.getextractionData(projId, sfdcId, subprojectId);
 		}else{
 			System.out.println("Child Base and Mapping pages have not been selected");
 			 
-		}
+		}*/
 		response.setContentType("application/csv");
 		response.setHeader("Content-Disposition", "attachment; filename="+mappingFIle);
+		SiebelObjectController sblObjCntrlr = new SiebelObjectController();
+		PartnerWSDL prtnrWSDL = new PartnerWSDL(request.getSession());
+		prtnrWSDL.login();
+		String baseTable = request.getParameter("baseTable");
+		String sfdcObject = request.getParameter("sfdcObject");
+		mappingUrl = sblObjCntrlr.getextractionData(request, projId, baseTable, subprojectId, siebelTableNameValue, sfdcObject);
 		//return mapingFIle;
 	}
 
@@ -468,7 +474,7 @@ public class HomeController {
 	
 	@RequestMapping(value="/getLookUpInfo", method = RequestMethod.GET)
 	@ResponseBody public List<Object> retrieveLookUpFieldInfo(HttpServletRequest request, @RequestParam("slctdSlsFrcFldOption")String slsfrcFldValSlctd, @RequestParam("rowNum") String rowNum) throws ConnectionException{
-		System.out.println("In retrieveColumnAndFieldVal method");
+		System.out.println("In getLookUpInfo method");
 		System.out.println("Selected SalesForce Value : "+ slsfrcFldValSlctd);
 		List<Object> lookUpFlds = null;
 		List<MappingSFDC> externlFldLst = null;
@@ -481,12 +487,19 @@ public class HomeController {
 				}
 				PartnerWSDL prtnrWSDL1 = new PartnerWSDL(request.getSession());
 				prtnrWSDL1.login();
-				lookUpFlds.add(mpngDtl.getRelationshipName());
+				
+				String relationShpName = mpngDtl.getRelationshipName();
+				lookUpFlds.add(relationShpName);
 				lookUpObj = mpngDtl.getReferenceTo()[0];
 				lookUpFlds.add(lookUpObj);
 				
 				externlFldLst = prtnrWSDL1.getExternalIdList((String)lookUpObj);
 				lookUpFlds.add(externlFldLst);
+				
+				SiebelObjectController.relationShpNmRowNmMap.put(Integer.parseInt(rowNum), relationShpName);
+				SiebelObjectController.salesFrcNmRowNmMap.put(Integer.parseInt(rowNum), slsfrcFldValSlctd);
+				SiebelObjectController.externalIdRowNmMap.put(Integer.parseInt(rowNum), externlFldLst.get(0).getName());
+				
 			}
 		}
 		
@@ -606,7 +619,7 @@ public class HomeController {
 				JSONObject tableName=tg.getRelatedSiebelTable(subprojectId);//gives siebel and sfdc table name
 				String id=tg.getMappingId((String)session.getAttribute("projectId"),mappingData,tableName);
 
-				List<MappingModel> mappingDataSaved=prtnrWSDL1.getSavedMappingSingleValueDBData((String)session.getAttribute("projectId"), mappingData, tableName, siebelTableNameValue);
+				List<MappingModel> mappingDataSaved=prtnrWSDL.getSavedMappingSingleValueDBData((String)session.getAttribute("projectId"), mappingData, tableName, siebelTableNameValue);
 				List<String> childTables=tg.getSavedChild((String)session.getAttribute("projectId"),tableName);
 				
 				SiebelObjectController siObj=new SiebelObjectController();
