@@ -610,7 +610,7 @@ public class SiebelObjectController {
 		        	}
 		        	
 		        	String mapVal = aliasConditionQry.replace("\'", "");
-		        	headers.put(rowNumKey, mapVal);
+		        	headers.put(rowNumKey, "\'"+salesForceObjName /*+ "#"*/ + reltnShpMap.get(rowNumKey) + "." + extrnlIdMap.get(rowNumKey)+"\'");
 		        }else if(slFrcNm.containsKey(rowNumKey) && slFrcNm.get(rowNumKey) != null && !slFrcNm.get(rowNumKey).equals("")){
 		        	if(aliasConditionQry == null){
 		        		aliasConditionQry = "\'";
@@ -623,7 +623,7 @@ public class SiebelObjectController {
 		        		aliasConditionQry = aliasConditionQry + "\'";
 		        	}
 		        	String mapVal = aliasConditionQry.replace("\"", "");
-		        	headers.put(rowNumKey, mapVal);
+		        	headers.put(rowNumKey, "\'"+salesForceObjName /*+ "#"*/ + slFrcNm.get(rowNumKey)+"\'");
 		        }else{
 		        	//return file;
 		        }
@@ -655,7 +655,6 @@ public class SiebelObjectController {
 			ResultSetMetaData rsmd = null;
 			try{
 				if (connection != null){
-					System.out.println("You made it, take control your database now!");
 					Statement st=connection.createStatement();
 					System.out.println("extraction query is"+extractionQry);
 					mySet=st.executeQuery(extractionQry2.toString());
