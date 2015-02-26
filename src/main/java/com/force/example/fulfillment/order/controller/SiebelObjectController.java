@@ -625,7 +625,7 @@ public class SiebelObjectController {
 		        	String mapVal = aliasConditionQry.replace("\"", "");
 		        	headers.put(rowNumKey, salesForceObjName /*+ "#"*/ + slFrcNm.get(rowNumKey));
 		        }else{
-		        	return "Sales Force Fields are not selected for row : " + rowNumKey;
+		        	/*return "Sales Force Fields are not selected for row : " + rowNumKey;*/
 		        }
 		    }
 			
