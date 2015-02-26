@@ -579,7 +579,7 @@ public class SiebelObjectController {
 		    }*/
 			
 			
-			/***** ----- UNION Query -----Start  **********/
+	/***** ----- UNION Query -----Start  **********/
 			
 			String columnNamesQry = null;
 			String aliasConditionQry = null;
@@ -610,7 +610,7 @@ public class SiebelObjectController {
 		        	}
 		        	
 		        	String mapVal = aliasConditionQry.replace("\'", "");
-		        	headers.put(rowNumKey, "\'"+salesForceObjName /*+ "#"*/ + reltnShpMap.get(rowNumKey) + "." + extrnlIdMap.get(rowNumKey)+"\'");
+		        	headers.put(rowNumKey, salesForceObjName /*+ "#"*/ + reltnShpMap.get(rowNumKey) + "." + extrnlIdMap.get(rowNumKey));
 		        }else if(slFrcNm.containsKey(rowNumKey) && slFrcNm.get(rowNumKey) != null && !slFrcNm.get(rowNumKey).equals("")){
 		        	if(aliasConditionQry == null){
 		        		aliasConditionQry = "\'";
@@ -623,9 +623,9 @@ public class SiebelObjectController {
 		        		aliasConditionQry = aliasConditionQry + "\'";
 		        	}
 		        	String mapVal = aliasConditionQry.replace("\"", "");
-		        	headers.put(rowNumKey, "\'"+salesForceObjName /*+ "#"*/ + slFrcNm.get(rowNumKey)+"\'");
+		        	headers.put(rowNumKey, salesForceObjName /*+ "#"*/ + slFrcNm.get(rowNumKey));
 		        }else{
-		        	//return file;
+		        	return "Sales Force Fields are not selected for row : " + rowNumKey;
 		        }
 		    }
 			
@@ -661,7 +661,7 @@ public class SiebelObjectController {
 					
 					FileWriter fileWriter = new FileWriter(file);
 					for(int i=1; i<headers.size()+1 ; i++){
-						fileWriter.append((String)headers.get(i));
+						fileWriter.append(sfdcObject+"#"+(String)headers.get(i));
 						fileWriter.append(COMMA_DELIMITER);
 					}
 					fileWriter.append(NEW_LINE_SEPARATOR);
