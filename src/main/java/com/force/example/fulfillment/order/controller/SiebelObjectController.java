@@ -625,7 +625,7 @@ public class SiebelObjectController {
 		        	String mapVal = aliasConditionQry.replace("\"", "");
 		        	headers.put(rowNumKey, mapVal);
 		        }else{
-		        	return "Sales Force Fields are not selected for row : " + rowNumKey;
+		        	//return file;
 		        }
 		    }
 			
@@ -695,7 +695,7 @@ public class SiebelObjectController {
 			
 	        System.out.println("============ Writing to csv file is complete==================");
 
-		    return extractionQry.toString();
+		    return file ;
 	    }
 
 		public void createFile(File file) {
