@@ -546,7 +546,7 @@ public class SiebelObjectController {
 			StringBuffer extractionQry =  new StringBuffer("SELECT ");
 			String colNms = null;
 			String joinCond = " ";
-			Iterator colNmItrtr = colNameMap.entrySet().iterator();
+		/*	Iterator colNmItrtr = colNameMap.entrySet().iterator();
 			while (colNmItrtr.hasNext()) {
 				String asCondition = null;
 
@@ -574,10 +574,65 @@ public class SiebelObjectController {
 		        	String mapVal = asCondition.replace("\"", "").replace("AS", "");
 		        	headers.put(rowNumKey, mapVal);
 		        }else{
-		        	//return "Sales Force Fields are not selected for row : " + rowNumKey;
+		        	return "Sales Force Fields are not selected for row : " + rowNumKey;
+		        }
+		    }*/
+			
+			
+			/***** ----- UNION Query -----Start  **********/
+			
+			String columnNamesQry = null;
+			String aliasConditionQry = null;
+			Iterator colNmItrtr1 = colNameMap.entrySet().iterator();
+			while (colNmItrtr1.hasNext()) {
+				String asCondition = null;
+
+				Map.Entry pair = (Map.Entry)colNmItrtr1.next();
+		        String colmVal = (String)  pair.getValue();
+		        if(columnNamesQry == null){
+		        	columnNamesQry = colmVal;
+		        }else{
+		        	columnNamesQry =  columnNamesQry + "," + colmVal;
+		        }
+		        
+		        Integer rowNumKey = (Integer)pair.getKey();
+		        if((reltnShpMap.containsKey(rowNumKey) && reltnShpMap.get(rowNumKey) != null && !reltnShpMap.get(rowNumKey).equals("")) &&
+		        		(extrnlIdMap.containsKey(rowNumKey) && extrnlIdMap.get(rowNumKey) != null && !extrnlIdMap.get(rowNumKey).equals(""))){
+		        	if(aliasConditionQry == null){
+		        		aliasConditionQry = "\'";
+		        		aliasConditionQry = aliasConditionQry + salesForceObjName /*+ "#"*/ + reltnShpMap.get(rowNumKey) + "." + extrnlIdMap.get(rowNumKey);
+		        		aliasConditionQry = aliasConditionQry + "\'";
+		        	}else{
+		        		aliasConditionQry = aliasConditionQry + ",";
+		        		aliasConditionQry = aliasConditionQry + "\'";
+		        		aliasConditionQry = aliasConditionQry + salesForceObjName /*+ "#"*/ + reltnShpMap.get(rowNumKey) + "." + extrnlIdMap.get(rowNumKey);
+		        		aliasConditionQry = aliasConditionQry + "\'";
+		        	}
+		        	
+		        	String mapVal = aliasConditionQry.replace("\'", "");
+		        	headers.put(rowNumKey, mapVal);
+		        }else if(slFrcNm.containsKey(rowNumKey) && slFrcNm.get(rowNumKey) != null && !slFrcNm.get(rowNumKey).equals("")){
+		        	if(aliasConditionQry == null){
+		        		aliasConditionQry = "\'";
+		        		aliasConditionQry = aliasConditionQry + salesForceObjName /*+ "#"*/ + slFrcNm.get(rowNumKey);
+		        		aliasConditionQry = aliasConditionQry + "\'";
+		        	}else{
+		        		aliasConditionQry = aliasConditionQry + ",";
+		        		aliasConditionQry = aliasConditionQry + "\'";
+		        		aliasConditionQry = aliasConditionQry + salesForceObjName /*+ "#"*/ + slFrcNm.get(rowNumKey);
+		        		aliasConditionQry = aliasConditionQry + "\'";
+		        	}
+		        	String mapVal = aliasConditionQry.replace("\"", "");
+		        	headers.put(rowNumKey, mapVal);
+		        }else{
+		        	return "Sales Force Fields are not selected for row : " + rowNumKey;
 		        }
 		    }
 			
+			StringBuffer extractionQry2 = new StringBuffer("SELECT ").append(aliasConditionQry).append(" FROM DUAL UNION ").append("SELECT ").append(columnNamesQry).append(" FROM ");
+			
+			
+			/*********---------- End *************/
 			Set<String> keys = joinNameMap.keySet();
 	        for(String key: keys){
 	            System.out.println(key);
@@ -585,8 +640,10 @@ public class SiebelObjectController {
 	            joinCond = joinCond + joinCondition + " ";
 	        }
 			
-			extractionQry = extractionQry.append(colNms.substring(0, colNms.length())).append(" FROM ").append("SIEBEL.").append("S_PARTY").append(" T0").append(joinCond);
+		//	extractionQry = extractionQry.append(colNms.substring(0, colNms.length())).append(" FROM ").append("SIEBEL.").append(baseTable).append(" T0").append(joinCond);
 			
+			extractionQry2 = extractionQry2.append("SIEBEL.").append(baseTable).append(" T0").append(joinCond);
+			System.out.println("EXtraction Query 2  :"  + extractionQry2.toString());
 			File file = null;
 			if(extractionQry != null){
 				String sFileName = "tryAndTest";
@@ -601,7 +658,7 @@ public class SiebelObjectController {
 					System.out.println("You made it, take control your database now!");
 					Statement st=connection.createStatement();
 					System.out.println("extraction query is"+extractionQry);
-					mySet=st.executeQuery(extractionQry.toString());
+					mySet=st.executeQuery(extractionQry2.toString());
 					
 					FileWriter fileWriter = new FileWriter(file);
 					for(int i=1; i<headers.size()+1 ; i++){
@@ -638,7 +695,7 @@ public class SiebelObjectController {
 			
 	        System.out.println("============ Writing to csv file is complete==================");
 
-		    return file;
+		    return extractionQry.toString();
 	    }
 
 		public void createFile(File file) {
