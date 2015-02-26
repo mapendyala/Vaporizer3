@@ -79,7 +79,7 @@ public class SiebelObjectController {
 			if (connection != null)
 			{
 				System.out.println("You made it, take control your database now!");
-				String query="SELECT BUSCOMP.NAME, " +
+				/*String query="SELECT BUSCOMP.NAME, " +
 						" CASE 	WHEN BASETABLE.NAME = 'S_PARTY' AND BUSCOMP.NAME = 'Account' THEN 'S_ORG_EXT'" +
 						" WHEN BASETABLE.NAME = 'S_PARTY' AND BUSCOMP.NAME = 'Contact' THEN 'S_CONTACT' WHEN BASETABLE.NAME = 'S_PARTY'" +
 						" AND BUSCOMP.NAME = 'User' THEN 'S_USER'" +
@@ -89,7 +89,12 @@ public class SiebelObjectController {
 						" ON REP.ROW_ID = BUSCOMP.REPOSITORY_ID AND REP.NAME = 'Siebel Repository' " +
 						" INNER JOIN SIEBEL.S_TABLE BASETABLE ON BASETABLE.NAME = BUSCOMP.TABLE_NAME AND " +
 						" BASETABLE.REPOSITORY_ID = REP.ROW_ID " +
-						" WHERE BUSCOMP.NAME LIKE '"+userValue+"%'";
+						" WHERE BUSCOMP.NAME LIKE '"+userValue+"%'";*/
+				
+				String query="SELECT BUSCOMP.NAME, BASETABLE.NAME FROM SIEBEL.S_BUSCOMP BUSCOMP "
+						+ "INNER JOIN SIEBEL.S_REPOSITORY REP ON REP.ROW_ID = BUSCOMP.REPOSITORY_ID AND REP.NAME = 'Siebel Repository' "
+						+ "INNER JOIN SIEBEL.S_TABLE BASETABLE ON BASETABLE.NAME = BUSCOMP.TABLE_NAME AND BASETABLE.REPOSITORY_ID = REP.ROW_ID "
+						+ "WHERE BUSCOMP.NAME LIKE '"+userValue+"%'";
 
 				// System.out.println("qry is"+query);
 
