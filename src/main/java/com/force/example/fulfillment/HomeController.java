@@ -636,11 +636,11 @@ public class HomeController {
 				//Siebel Entity
 				hdrValues.add(siebelTableNameValue);
 				//Siebel Base Table
-				hdrValues.add(mappingData.get(0).getSiebleBaseTable());
+				hdrValues.add(/*mappingData.get(0).getSiebleBaseTable()*/primBaseValue);
 				//SFDC Entity
-				hdrValues.add(mappingData.get(0).getSfdcObjectName());
+				hdrValues.add(/*mappingData.get(0).getSfdcObjectName()*/sfdcObjectName);
 				
-				modelChild.addAttribute("sfdcObj",mappingData.get(0).getSfdcObjectName());
+				modelChild.addAttribute("sfdcObj",sfdcObjectName);
 				modelChild.addAttribute("mappingField",sfdcObjList);
 				modelChild.addAttribute("sbllFlddNmList",sblFldList);
 				modelChild.addAttribute("sblObjName",siebelTableNameValue);
