@@ -2,8 +2,12 @@ package com.force.example.fulfillment;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -427,7 +432,7 @@ public class HomeController {
 		return mappingUrl;
 	}*/
 	@RequestMapping(value="/getextractData", method = RequestMethod.GET)
-	@ResponseBody public void createExtractQuery(HttpServletRequest request, HttpServletResponse response){
+	@ResponseBody public void  createExtractQuery(HttpServletRequest request, HttpServletResponse response){
 		System.out.println("In Home controller get extract data method");
 		HttpSession session = request.getSession(true);
 		String projId  = (String)session.getAttribute("projectId");
@@ -437,7 +442,7 @@ public class HomeController {
 		String siebelTableNameValue = request.getParameter("siebelObjName");
 		String subprojectId=tg.getsubprojects(siebelTableNameValue);
 		String mappingUrl="";
-		File mappingFIle = null;
+		//File mappingFIle = null;
 		/*if(sfdcId  != null){			
 			mappingFIle=tg.getextractionData(projId, sfdcId, subprojectId);
 		}else{
@@ -451,12 +456,59 @@ public class HomeController {
 		String sfdcObject = request.getParameter("sfdcObject");
 		
 		System.out.println("========="+baseTable+"===="+subprojectId+"==="+siebelTableNameValue+"===="+sfdcObject);
-	    mappingFIle = sblObjCntrlr.getextractionData(request, projId, baseTable, subprojectId, siebelTableNameValue, sfdcObject);
-		
+	    File  mappingFIle = sblObjCntrlr.getextractionData(request, projId, baseTable, subprojectId, siebelTableNameValue, sfdcObject);
+	    
+	    String fullPath=mappingFIle.getAbsolutePath();
+	    File downloadFile = new File(fullPath);     
+	    FileInputStream inputStream;
+		try {
+			inputStream = new FileInputStream(downloadFile);
+		 
+	    // get MIME type of the file   
+	    final int BUFFER_SIZE = 4096;
+	    String mimeType ="application/csv";  
+	    System.out.println("MIME type: " + mimeType);    
+	    // set content attributes for the response   
+	    response.setContentType(mimeType);      
+	    response.setContentLength((int) downloadFile.length());     
+	    // set headers for the response     
+	    String headerKey = "Content-Disposition";     
+	    String headerValue = String.format("attachment; filename=\"%s\"",  
+	    		downloadFile.getName());   
+	    response.setHeader(headerKey, headerValue);   
+	    // get output stream of the response  
+     OutputStream outStream = response.getOutputStream();   
+     byte[] buffer = new byte[BUFFER_SIZE];     
+     int bytesRead = -1;      
+     // write bytes read from the input stream into the output stream  
+     while ((bytesRead = inputStream.read(buffer)) != -1) 
+     {            outStream.write(buffer, 0, bytesRead); 
+     }       
+     inputStream.close();
+     outStream.close();
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}   
+	   /* FileInputStream fis = null;
+		try {
+			fis = new FileInputStream(mappingFIle.getAbsoluteFile());
+			 InputStream is = fis;
+			 org.apache.commons.io.IOUtils.copy(fis, response.getOutputStream());
+		     response.flushBuffer();
+		     fis.close();
+		     is.close();
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		   
 		response.setContentType("application/csv");
 		response.setHeader("Content-Disposition", "attachment; filename="+mappingFIle);
-		//return mapingFIle;
+		//return new FileSystemResource(mappingFIle);
+*/	
 	}
+
 
 
 	@RequestMapping(value="/getFieldColumnVal", method = RequestMethod.GET)
