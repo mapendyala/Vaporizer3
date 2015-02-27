@@ -629,7 +629,7 @@ public class SiebelObjectController {
 		        }
 		    }
 			
-			StringBuffer extractionQry2 = new StringBuffer("SELECT ").append(aliasConditionQry).append(" FROM DUAL UNION ").append("SELECT ").append(columnNamesQry).append(" FROM ");
+			StringBuffer extractionQry2 = new StringBuffer("SELECT ")/*.append(aliasConditionQry).append(" FROM DUAL UNION ").append("SELECT ")*/.append(columnNamesQry).append(" FROM ");
 			
 			
 			/*********---------- End *************/
