@@ -967,10 +967,10 @@ System.out.println("records "+records);
 				// Add this sObject to an array
 				SaveResult[] saveResults = getPartnerConnection().create(
 						contacts);
-				/*for (int j = 0; j < saveResults.length; j++) {
-					//System.out.println(saveResults[j].isSuccess());
-					// System.out.println(results[i].getErrors()[i].getMessage());
-				}*/
+				for (int j = 0; j < saveResults.length; j++) {
+					System.out.println(saveResults[j].isSuccess());
+					System.out.println(saveResults[j].getErrors());
+				}
 			} else {
 				String sqlQuery = "Select Id from Mapping_Staging_Table__c where Id ='"
 						+ mainPage.getSfdcId() + "'";
@@ -998,8 +998,8 @@ System.out.println("records "+records);
 					SaveResult[] saveResults = partnerConnection
 							.update(new SObject[] { updateContact });
 					for (int j = 0; j < saveResults.length; j++) {
-						//System.out.println(saveResults[j].isSuccess());
-						// System.out.println(results[i].getErrors()[i].getMessage());
+						System.out.println(saveResults[j].isSuccess());
+						System.out.println(saveResults[j].getErrors());
 					}
 
 				}

@@ -72,9 +72,7 @@ public class HomeController {
 		JSONObject authParams = getOAuthToken();
 		
 		session.setAttribute("authParams", authParams);
-		//String projectId="a0PG000000B2wmDMAR";
-		String projectId="a0PG000000CHT1SMAX";
-		//String projectId="a0PG000000B3OFn";
+		String projectId="a0PG000000CHkBvMAL";
 		if(request.getParameter("projectId") != null){
 			projectId = request.getParameter("projectId");
 		}
@@ -100,7 +98,6 @@ public class HomeController {
 	public String initiateDataLoader(Locale locale,Model model,HttpServletRequest request,@RequestParam("datafileUrl")String datafileUrl,@RequestParam("objectName")String objectName) throws IOException, AsyncApiException, ConnectionException
 	{
 		TargetPartner tpWSDL= new TargetPartner(request.getSession()); 	  
-		
 		HttpSession session = request.getSession(true);
 		JSONObject connData=tpWSDL.getTargetOrgDetails((String) session.getAttribute("projectId"));
 		String password=(String)connData.get("password");

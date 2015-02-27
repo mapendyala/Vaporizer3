@@ -323,10 +323,11 @@ public class TargetPartner {
 			data.clear();
 
 			while (!done) {
-				System.out.println("done");
+				
 				List<Map> records = qr.getRecords();
+				System.out.println("lengthhhhh" + records.size());
+
 				// Process the query results
-				System.out.println("length" + records.size());
 				for (int i = 0; i < records.size(); i++) {
 					MainPage mainPage = new MainPage();
 					Map contact = records.get(i);
