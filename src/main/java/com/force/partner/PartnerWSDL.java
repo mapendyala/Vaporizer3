@@ -944,8 +944,11 @@ System.out.println("records "+records);
 		HttpSession session = request.getSession(true);
 
 		login();
-		SObject[] contacts = new SObject[data.size()];
-		int counter = 0;
+		List<SObject> lstCreate= new ArrayList<SObject>();
+		List<SObject> lstUpdate= new ArrayList<SObject>();
+		
+		//int createCounter = 0;
+		//int updateCounter = 0;
 		for (Iterator<MainPage> iterator = data.iterator(); iterator.hasNext();) {
 			MainPage mainPage = (MainPage) iterator.next();
 			if (mainPage.getSfdcId().equals("")) {
@@ -962,15 +965,8 @@ System.out.println("records "+records);
 				contact.setField("SFDC_Object__c", mainPage.getSfdcObject());
 				contact.setField("Siebel_Object__c", mainPage.getSiebelObject());
 				contact.setField("Threshold__c", mainPage.getThreshold());
-				contacts[counter] = contact;
-				counter++;
-				// Add this sObject to an array
-				SaveResult[] saveResults = getPartnerConnection().create(
-						contacts);
-				for (int j = 0; j < saveResults.length; j++) {
-					System.out.println(saveResults[j].isSuccess());
-					System.out.println(saveResults[j].getErrors());
-				}
+				lstCreate.add(contact);
+				
 			} else {
 				String sqlQuery = "Select Id from Mapping_Staging_Table__c where Id ='"
 						+ mainPage.getSfdcId() + "'";
@@ -994,18 +990,24 @@ System.out.println("records "+records);
 							mainPage.getThreshold());
 					updateContact.setField("Sequence__c",
 							mainPage.getSequence());
-
-					SaveResult[] saveResults = partnerConnection
-							.update(new SObject[] { updateContact });
-					for (int j = 0; j < saveResults.length; j++) {
-						System.out.println(saveResults[j].isSuccess());
-						System.out.println(saveResults[j].getErrors());
-					}
-
+					lstUpdate.add(updateContact);
 				}
-
 			}
-
+			SObject[] createContacts = lstCreate.toArray(new SObject[lstCreate.size()]);
+			SObject[] updateContacts = lstUpdate.toArray(new SObject[lstUpdate.size()]);
+			// Add this sObject to an array
+			SaveResult[] saveCreateResults = getPartnerConnection().create(
+					createContacts);
+			for (int j = 0; j < saveCreateResults.length; j++) {
+				System.out.println(saveCreateResults[j].isSuccess());
+				System.out.println(saveCreateResults[j].getErrors());
+			}
+			SaveResult[] saveUpdateResults = partnerConnection
+					.update(updateContacts);
+			for (int j = 0; j < saveUpdateResults.length; j++) {
+				System.out.println(saveUpdateResults[j].isSuccess());
+				System.out.println(saveUpdateResults[j].getErrors());
+			}
 		}
 	}
 
