@@ -20,223 +20,92 @@ public class DataLoaderController {
     File MapFileVal=null;
    public static void main(String args[]) throws IOException, AsyncApiException, ConnectionException{
     	DataLoaderController dt=new DataLoaderController();
-    	dt.dataUploadController("https://na11.salesforce.com/00PG000000HyLDs","subhchakraborty@deloitte.com.vaporizer","May@2013","Account");
+    	dt.dataUploadController(new File("C:\\Users\\subhchakraborty\\Downloads\\request.csv"),"subhojit_service3@gmail.com","deltaone33HkxP984RH6O1s5muxZ5b7dd9g","Account");
     	
     	
     }
-    public String dataUploadController(String dataFileUrl,String userId,String pwd,String objectName) throws IOException, AsyncApiException, ConnectionException
+    public String dataUploadController(File dataFileUrl,String userId,String pwd,String objectName) throws IOException, AsyncApiException, ConnectionException
     {
     	DataLoaderController example = new DataLoaderController();
-    	File[] fileList=new File[2];
-    	
-    	/* Get Data File    f   */
-    	dataFileUrl=dataFileUrl.substring(29,dataFileUrl.length());
-    	String dataFile=getUploadedFile(dataFileUrl,false,userId,pwd);
-    	dataFile=dataFile.replaceAll("\\\\r", "");
-    	dataFile=dataFile.replaceAll("\"", "");
-    	example.DataFileVal=generateFile(dataFile,"DataFile.csv");
-    	fileList[0]=example.DataFileVal;
-    	
-    	String mapFile=getUploadedFile(dataFileUrl,true,userId,pwd);
-    	//System.out.println("Next...."+mapFileUrl);
-    	mapFile=mapFile.replaceAll("\\\\r", "");
-    	mapFile=mapFile.replaceAll("\"", "");
-    	example.MapFileVal=generateFile(mapFile,"MapFile.sdl");
-    	fileList[1]=example.MapFileVal;
-    	
-    	//For Data file
-    	//String dataFileUrl=PersonController2.getFile(fileList[0],"DataFile.csv","application/vnd.ms-excel","a0PG000000Atg1U",null);
-    	System.out.println(dataFileUrl);
-    	
-    	System.out.println(dataFileUrl);
-    	//mapFile=mapFile.replaceAll("\\\\r", "");
-    	//mapFile=mapFile.replaceAll("\"", "");
-    	/*String dataFile=getUploadedFile(dataFileUrl,false);
     	
     	
-    	//For Mapping File
-    	String mapFileUrl=PersonController2.getFile(fileList[1],"MapFile.sdl","text/plain","a0PG000000Atg1U",dataFileUrl);
-    	System.out.println(mapFileUrl);
-    	mapFileUrl=mapFileUrl.substring(29,mapFileUrl.length()-2);
-    	String mapFile=getUploadedFile(dataFileUrl,true);
-    	System.out.println("Next...."+mapFileUrl);
-    	mapFile=mapFile.replaceAll("\\\\r", "");
-    	mapFile=mapFile.replaceAll("\"", "");
-    	example.MapFileVal=generateFile(mapFile,"MapFile.sdl");
-    	//File tmp=DataFileVal;
-    	/*File DataFileVal = generateFile(dataFile,"DataFile.csv");
-        // creates the file
-    	DataFileVal.createNewFile();
-        // creates a FileWriter Object
-        FileWriter writer = new FileWriter(DataFileVal); 
-        // Writes the content to the file
-        writer.write(dataFile); 
-        writer.flush();
-        writer.close();
-    	*/
     	
+    	
+    	
+    	
+    	String csvFile = "/Users/mkyong/Downloads/GeoIPCountryWhois.csv";
+    	DataFileVal=dataFileUrl;
+    	FileReader fr = new FileReader(DataFileVal);
+    	BufferedReader br = null;
+    	String line = "";
+    	String cvsSplitBy = ",";
+    	int i=0;
+    	File finalData=new File("data.csv");
+    	FileWriter fileWriter = new FileWriter(finalData);
+
+    	try {
+     
+    		br = new BufferedReader(fr);
+    		while ((line = br.readLine()) != null) {
+     
+    		        // use comma as separator
+    			String[] cellElement = line.split(cvsSplitBy);
+                if(i==0){
+                	objectName=cellElement[0].split("#")[0];
+                	for(int j=0;j<cellElement.length;j++){
+                		System.out.println(cellElement[j]);
+                		fileWriter.append(String.valueOf(cellElement[j].split("#")[1]));
+                		if(j+1!=cellElement.length)
+                		   fileWriter.append(",");
+                		else
+                			fileWriter.append("\n");
+                		
+                	}
+                	
+                }
+                else{
+                	
+                	for(int j=0;j<cellElement.length;j++){
+                		fileWriter.append(String.valueOf(cellElement[j]));
+                		if(j+1!=cellElement.length)
+                		   fileWriter.append(",");
+                		else
+                			fileWriter.append("\n");
+                	}
+                	
+                	
+                }
+    		i++;
+    		}
+     
+    	} catch (FileNotFoundException e) {
+    		e.printStackTrace();
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	} finally {
+    		fileWriter.flush();
+    		
+    		fileWriter.close();
+
+    		if (br != null) {
+    			try {
+    				br.close();
+    			} catch (IOException e) {
+    				e.printStackTrace();
+    			}
+    		}
+    	}
+     
+    	System.out.println("Done");
     	
         
-    return	example.runSample(objectName, userId, pwd, "DataFile.csv","MapFile.sdl");
+    return	example.runSample(objectName, userId, pwd, finalData);
     	
     	//example.runSample("Account", "subhchakraborty@deloitte.com.vaporizer", "May@2013", "DataFile.csv","C:\\Users\\subhchakraborty\\Downloads\\Sep.sdl");
         
     }
     
-    private static File[] createFileTest(){
-    	
-    	File file = new File("DataFile.csv");
-    	File file2 = new File("mapping.sdl");
-    	File[] fileList=new File[2];
-    	try{
-        // creates the file
-        file.createNewFile();
-        FileWriter fw = new FileWriter(file);
-        PrintWriter out = new PrintWriter(fw);
-        // ',' divides the word into columns
-        out.print("Full Name");// first row first column
-        out.print(",");
-        
-        out.println("Account_Type__c");// first row third column
-            
-        out.print("Alice Supporter54"); // second row first column.
-        out.print(",");
-        out.print("Web");// second row second column
-      
-           
-        //Flush the output to the file
-        out.flush();
-            
-        //Close the Print Writer
-        out.close();
-            
-        //Close the File Writer
-        fw.close();      
-        fileList[0]=file;
-        file2.createNewFile();
-         fw = new FileWriter(file2);
-         out = new PrintWriter(fw);
-        // ',' divides the word into columns
-      
-        
-        out.println("Full Name=NAME");// first row third column
-            
-        out.println("Account_Type__c=TYPE"); // second row first column.
-        
-      
-           
-        //Flush the output to the file
-        out.flush();
-            
-        //Close the Print Writer
-        out.close();
-            
-        //Close the File Writer
-        fw.close();      
-        
-        fileList[1]=file2;
-        
-        
-        
-        
-    	}
-    	catch(IOException e){
-    		System.out.println(">>>>>>"+e);
-    	}
-    	return fileList;
-    	
-    }
-    
-    private static File generateFile(String csvStr,String fileName){
-    	
-    	File file = new File(fileName);
-    	try{
-    	file.createNewFile();
-        FileWriter fw = new FileWriter(file);
-        PrintWriter out = new PrintWriter(fw);
-    	
-    	
-    		if(fileName.contains(".csv")){
-         // creates the file
-         
-         
-         // ',' divides the word into columns
-         String [] arrList=csvStr.split("\\\\n");
-         for(int k=0;k<arrList.length;k++){
-        	
-        	 String row=arrList[k];
-        	 String [] rowList=row.split(",");
-        	 for(int j=0;j<rowList.length;j++){
-        		 
-        		 out.print(rowList[j]);
-        		 if(j!=rowList.length-1)
-        		 out.print(",");
-        		 System.out.print(rowList[j]+",");
-        		 
-        	 }
-        	 out.println(); 
-        	 System.out.println();
-         }
-         
-         
-        /* out.print("This");// first row first column
-         out.print(",");
-         out.print("is");// first row second column
-         out.print(",");
-         out.println("amazing");// first row third column
-             
-         out.print("It's"); // second row first column.
-         out.print(",");
-         out.print("really");// second row second column
-         out.print(",");
-         out.print("amazing");// second row third column
-       */     
-         //Flush the output to the file
-               
-    	}
-    	else{
-    		
-    		
-             
-             // ',' divides the word into columns
-             String [] arrList=csvStr.split("\\\\n");
-             for(int k=0;k<arrList.length;k++){
-            	 if(arrList[k]!="")
-              	 out.println(arrList[k]); 
-              	System.out.println("<<<<<<<<<<<>>>>>>>>>>>>"+arrList[k]); 
-             }
-             
-    		
-    		
-    		
-    	}
-    	 out.flush();
-         
-         //Close the Print Writer
-         out.close();
-             
-         //Close the File Writer
-         fw.close();
-    	}
-    	catch(IOException e){
-    		
-    		System.out.println(">>>>>>"+e);
-    		
-    	}
-    	
-    	
-    	
-    	
-    	
-		return file;
-    	
-    	
-    	
-    }
-    
-    
-    
-    
+   
     
     private static LoginResult loginToSalesforce(
             final String username,
@@ -249,101 +118,20 @@ public class DataLoaderController {
         return (new PartnerConnection(config)).login(username, password);
     }
     
-    private static String getUploadedFile(String fileId,boolean isMap,String userId,String pwd){
-    	HttpURLConnection connection = null; 
-    	try{
-    	final String URL = "https://login.salesforce.com/services/Soap/u/31.0";
-        final LoginResult loginResult = loginToSalesforce(userId, pwd, URL);
-        
-        String sessionId=loginResult.getSessionId();
-        System.out.println(loginResult.getSessionId());
-        String targetURL ="";
-        if(isMap)
-           targetURL = "https://na11.salesforce.com/services/apexrest/GetUploadFile/"+fileId+"_1";
-        else
-        	targetURL = "https://na11.salesforce.com/services/apexrest/GetUploadFile/"+fileId;
-        targetURL=targetURL.replaceAll("\\s+","");
-        System.out.println("URL..."+targetURL);
-		//Create connection
-        targetURL=targetURL.replaceAll("\"", "");
-          URL url = new URL(targetURL);
-          
-          connection = (HttpURLConnection)url.openConnection();
-          connection.setRequestMethod("POST");
-          /*connection.setRequestProperty("Content-Type", 
-        		  contentType);
-          connection.setRequestProperty("filename", 
-        		  fileNane);	*/
-          connection.setRequestProperty("Authorization", "Bearer " +loginResult.getSessionId()); 
-          //connection.setRequestProperty("Content-Language", "en-US");  
-          connection.setDoInput(true);
-          connection.setDoOutput(true);
-    	
-          DataOutputStream wr = new DataOutputStream (
-                  connection.getOutputStream ());
-  
-System.out.println(">>>>"+ connection.getResponseMessage());
-      //Get Response	
-      InputStream is = connection.getInputStream();
-      BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-      String line;
-      StringBuffer response = new StringBuffer(); 
-      while((line = rd.readLine()) != null) {
-        response.append(line+"\n");
-       // response.append('\r');
-      }
-      rd.close();
-      System.out.println("......"+response.toString());
-     return response.toString();
-
-    } catch (Exception e) {
-
-      e.printStackTrace();
-     return null;
-
-    } finally {
-
-     
-	if(connection != null) {
-        connection.disconnect(); 
-      }
-    }
-  }
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
+   
     /**
      * Creates a Bulk API job and uploads batches for a CSV file.
      */
-    
     public String runSample(String sobjectType, String userName,
-              String password, String sampleFileName,String mappingFileName)
+              String password, File sampleFileName)
             throws AsyncApiException, ConnectionException, IOException {
         BulkConnection connection = getBulkConnection(userName, password);
         JobInfo job = createJob(sobjectType, connection);
         List<BatchInfo> batchInfoList = createBatchesFromCSVFile(connection, job,
-            sampleFileName,mappingFileName);
+            sampleFileName);
         closeJob(connection, job.getId());
         awaitCompletion(connection, job, batchInfoList);
-       return checkResults(connection, job, batchInfoList);
+      return  checkResults(connection, job, batchInfoList);
     }
 
 
@@ -352,44 +140,44 @@ System.out.println(">>>>"+ connection.getResponseMessage());
      * Gets the results of the operation and checks for errors.
      */
     private String checkResults(BulkConnection connection, JobInfo job,
-              List<BatchInfo> batchInfoList)
-            throws AsyncApiException, IOException {
-        // batchInfoList was populated when batches were created and submitted
-    	int noOfSuccess=0;
-    	int noOfFailure=0;
-        for (BatchInfo b : batchInfoList) {
-            CSVReader rdr =
-              new CSVReader(connection.getBatchResultStream(job.getId(), b.getId()));
-            List<String> resultHeader = rdr.nextRecord();
-            int resultCols = resultHeader.size();
+            List<BatchInfo> batchInfoList)
+          throws AsyncApiException, IOException {
+      // batchInfoList was populated when batches were created and submitted
+  	int noOfSuccess=0;
+  	int noOfFailure=0;
+      for (BatchInfo b : batchInfoList) {
+          CSVReader rdr =
+            new CSVReader(connection.getBatchResultStream(job.getId(), b.getId()));
+          List<String> resultHeader = rdr.nextRecord();
+          int resultCols = resultHeader.size();
 
-            List<String> row;
-            while ((row = rdr.nextRecord()) != null) {
-                Map<String, String> resultInfo = new HashMap<String, String>();
-                for (int i = 0; i < resultCols; i++) {
-                    resultInfo.put(resultHeader.get(i), row.get(i));
-                }
-                boolean success = Boolean.valueOf(resultInfo.get("Success"));
-                boolean created = Boolean.valueOf(resultInfo.get("Created"));
-                String id = resultInfo.get("Id");
-                String error = resultInfo.get("Error");
-                if (success && created) {
-                    System.out.println("Created row with id " + id);
-                    noOfSuccess++;
-                    if(checkI==0)
-                    	 System.out.println("Data File" + id);
-                    else
-                    	 System.out.println("Mapping id " + id);
-                    
-                    } else if (!success) {
-                    System.out.println("Failed with error: " + error);
-                    noOfFailure++;
-                }
-            }
-            checkI++;  
-        }
-        return (String.valueOf(noOfSuccess)+"_"+String.valueOf(noOfFailure));
-    }
+          List<String> row;
+          while ((row = rdr.nextRecord()) != null) {
+              Map<String, String> resultInfo = new HashMap<String, String>();
+              for (int i = 0; i < resultCols; i++) {
+                  resultInfo.put(resultHeader.get(i), row.get(i));
+              }
+              boolean success = Boolean.valueOf(resultInfo.get("Success"));
+              boolean created = Boolean.valueOf(resultInfo.get("Created"));
+              String id = resultInfo.get("Id");
+              String error = resultInfo.get("Error");
+              if (success && created) {
+                  System.out.println("Created row with id " + id);
+                  noOfSuccess++;
+                  if(checkI==0)
+                  	 System.out.println("Data File" + id);
+                  else
+                  	 System.out.println("Mapping id " + id);
+                  
+                  } else if (!success) {
+                  System.out.println("Failed with error: " + error);
+                  noOfFailure++;
+              }
+          }
+          checkI++;  
+      }
+      return (String.valueOf(noOfSuccess)+"_"+String.valueOf(noOfFailure));
+  }
 
 
 
@@ -474,7 +262,7 @@ System.out.println(">>>>"+ connection.getResponseMessage());
         ConnectorConfig partnerConfig = new ConnectorConfig();
         partnerConfig.setUsername(userName);
         partnerConfig.setPassword(password);
-        partnerConfig.setAuthEndpoint("https://login.salesforce.com/services/Soap/u/31.0");
+        partnerConfig.setAuthEndpoint("https://login.salesforce.com/services/Soap/u/33.0");
         // Creating the connection automatically handles login and stores
         // the session in partnerConfig
         new PartnerConnection(partnerConfig);
@@ -487,7 +275,7 @@ System.out.println(">>>>"+ connection.getResponseMessage());
         // The endpoint for the Bulk API service is the same as for the normal
         // SOAP uri until the /Soap/ part. From here it's '/async/versionNumber'
         String soapEndpoint = partnerConfig.getServiceEndpoint();
-        String apiVersion = "31.0";
+        String apiVersion = "33.0";
         String restEndpoint = soapEndpoint.substring(0, soapEndpoint.indexOf("Soap/"))
             + "async/" + apiVersion;
         config.setRestEndpoint(restEndpoint);
@@ -513,67 +301,16 @@ System.out.println(">>>>"+ connection.getResponseMessage());
      *            The source file for batch data
      */
     private List<BatchInfo> createBatchesFromCSVFile(BulkConnection connection,
-          JobInfo jobInfo, String csvFileName,String mappingFileName)
+          JobInfo jobInfo, File csvFileName)
             throws IOException, AsyncApiException {
         List<BatchInfo> batchInfos = new ArrayList<BatchInfo>();
-        BufferedReader reader = new BufferedReader(new FileReader(mappingFileName));
-        String line = null;
-        String[] strList;
-        String[] actName = null;
-        int i=0;
-        Map mapA = new HashMap();
-        while ((line = reader.readLine()) != null) {
-        	if(line!=""){
-        	strList=line.split("=");
-        	if(strList.length==2){
-        	System.out.println(line+">>>>>>"+strList[1]);
-        	//actName[i]=strList[1];
-        	strList[0]=strList[0].replaceAll("\\s+","")!=null ?strList[0].replaceAll("\\s+",""):strList[0];
-        	strList[1]=strList[1].replaceAll("\\s+","")!=null ?strList[1].replaceAll("\\s+",""):strList[1];
-        	mapA.put(strList[0],strList[1]);
-        	i++;
-        	}
-        	}
-        }
-        System.out.println(csvFileName+".........."+mapA.get("Account Type"));
-        
-        BufferedReader rdr = new BufferedReader( new FileReader(csvFileName));
-       // );
+        FileReader fr=new FileReader(csvFileName);
+        BufferedReader rdr = new BufferedReader(fr );
         // read the CSV header row
         byte[] headerBytes = (rdr.readLine() + "\n").getBytes("UTF-8");
-       
-        System.out.println(mapA.keySet()+"..........Map...."+mapA.values());
-        String doc2 = new String(headerBytes, "UTF-8");
-        System.out.println(".ui..."+doc2);
-        doc2=doc2.replaceAll("\\s+", "");
-        String arr[]=doc2.split(",");
-       String headerString="";
-        for(int j=0;j<arr.length;j++){
-        	if((String)mapA.get(arr[j])!=null){
-        	System.out.println(arr[j]+"..........hhhhin....");
-        	//if((String)mapA.get(arr[j].replaceAll("\\s+$", ""))!=null)
-        	arr[j]=(String)mapA.get(arr[j]);
-        	arr[j]=arr[j].replaceAll("\\s+","")!=null ?arr[j].replaceAll("\\s+",""):arr[j];
-        	System.out.println(arr[j]+"..........hhhhout....");
-        	if(j+1!=arr.length)
-        	headerString+=arr[j]+",";
-        	else
-        		headerString+=arr[j];
-        	}
-        }
-       if (null != headerString && headerString.length() > 0 )
-        {
-            int endIndex = headerString.lastIndexOf(",");
-            if ((endIndex != -1) &&(endIndex==headerString.length()-1)) 
-            {
-                 headerString = headerString.substring(0, endIndex); // not forgot to put check if(endIndex != -1)
-            }
-        }  
-        System.out.println(new String(headerBytes)+"..........hhhh...."+headerString);
-        headerBytes=(headerString+"\n").getBytes("UTF-8");
         int headerBytesLength = headerBytes.length;
         File tmpFile = File.createTempFile("bulkAPIInsert", ".csv");
-        
+
         // Split the CSV file into multiple batches
         try {
             FileOutputStream tmpOut = new FileOutputStream(tmpFile);

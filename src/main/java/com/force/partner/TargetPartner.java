@@ -176,7 +176,7 @@ public class TargetPartner {
 		try {
 			//partnerConnection.setQueryOptions(250);
 			if (projectId == null)
-				projectId = "a0PG000000B23yKMAR";
+				projectId = "a0PG000000CHjXCMA1";
 
 			// SOQL query to use
 			String soqlQuery = " Select Name, Parent_Project__c, Type__c from Project__c where id= '"
@@ -312,6 +312,7 @@ public class TargetPartner {
 	public List<MainPage> getSavedDBData(String projectId, List<MainPage> data) {
 		try {
 			// SOQL query to use
+			System.out.println(">>>>>"+projectId);
 			String soqlQuery = "Select Id, Migrate__c, Sequence__c, Prim_Base_Table__c, Project__c, SFDC_Object__c, Siebel_Object__c, Threshold__c from Mapping_Staging_Table__c where Project__c ='"
 					+ projectId + "'";
 			// Make the query call and get the query results
@@ -376,7 +377,7 @@ public class TargetPartner {
 		try {
 		//	partnerConnection.setQueryOptions(250);
 			if (projectId == null)
-				projectId = "a0PG000000B23yKMAR";
+				projectId = "a0PG000000CHjXCMA1";
 
 			// SOQL query to use
 			String soqlQuery = " Select Salesforce_Password__c, Salesforce_Token__c, Salesforce_Username__c from Project__c where id= '"

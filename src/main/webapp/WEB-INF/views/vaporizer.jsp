@@ -94,13 +94,7 @@ var sfdcObjectForExtarction="";
 		 
 		 var dataFileUrlVar= $("[id$='datafileUrl']").val();
 		  var str = dataFileUrlVar;
-		    var res = str.split(".salesforce.com/");
-		    var s=res[0].split("https://");
-		    var s2=res[1];
-		    var res = str.split(".salesforce.com/");
-		var s=res[0].split("https://");
-		var s2=res[1];
-		 var finUrl=s[1]+"-"+s2;
+		  sfdcObjectForExtarction="Account";  
 		// alert('hiii');
 		$("#statusBlock").empty();
 		 $("#statusBlock").append('<div id="stat"><h4> Data Loading status: In Progress</h4></div>');
@@ -109,8 +103,7 @@ var sfdcObjectForExtarction="";
 			url : "initiateDataloader",
 		 	data :
 		 		{
-		 		datafileUrl:finUrl	 ,
-		 		objectName:sfdcObjectForExtarction
+		 			objectName:sfdcObjectForExtarction
 		 		},
 			contentType : 'application/text',
 			success : function(response) {

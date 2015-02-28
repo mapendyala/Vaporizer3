@@ -62,7 +62,7 @@ public class HomeController {
 	public static String rowCount;
 	public List<MainPage> data = new ArrayList<MainPage>();
 	public List<MappingModel> mappingData = new ArrayList<MappingModel>();
-
+    public File dataFile;
 
 	/**
 	 * Simply selects the home view to render by returning its name.
@@ -77,7 +77,7 @@ public class HomeController {
 		JSONObject authParams = getOAuthToken();
 		
 		session.setAttribute("authParams", authParams);
-		String projectId="a0PG000000CHkBvMAL";
+		String projectId = "a0PG000000CHjXCMA1";
 		if(request.getParameter("projectId") != null){
 			projectId = request.getParameter("projectId");
 		}
@@ -100,7 +100,7 @@ public class HomeController {
 
 	@RequestMapping(value="/initiateDataloader", method=RequestMethod.GET,produces="text/plain")
 	@ResponseBody
-	public String initiateDataLoader(Locale locale,Model model,HttpServletRequest request,@RequestParam("datafileUrl")String datafileUrl,@RequestParam("objectName")String objectName) throws IOException, AsyncApiException, ConnectionException
+	public String initiateDataLoader(Locale locale,Model model,HttpServletRequest request,@RequestParam("objectName")String objectName) throws IOException, AsyncApiException, ConnectionException
 	{
 		TargetPartner tpWSDL= new TargetPartner(request.getSession()); 	  
 		HttpSession session = request.getSession(true);
@@ -108,15 +108,16 @@ public class HomeController {
 		String password=(String)connData.get("password");
 		String token=(String)connData.get("token");
 		String username=(String)connData.get("username");
-		String[] strList=datafileUrl.split("-");
-		datafileUrl="https://"+strList[0]+".salesforce.com/"+strList[1];
+		
 		com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
 		 
 		if(objectName==null || objectName=="")
 		{
 			objectName="Account";
 		}
-		return dt.dataUploadController(datafileUrl,"subhchakraborty@deloitte.com.vaporizer","Sep@2013",objectName);
+		if(token!=null)
+			password+=token;
+		return dt.dataUploadController(dataFile,username,password,objectName);
 		// TODO Auto-generated catch block
 	}
 
@@ -196,7 +197,7 @@ public class HomeController {
 	                        new FileOutputStream(serverFile));
 	                stream.write(bytes);
 	                stream.close();
-	 
+	                dataFile=serverFile;
 	                System.out.println("Server File Location="
 	                        + serverFile.getAbsolutePath());
 	 
