@@ -70,7 +70,7 @@
 								var lookupfldrow = "lookUpField"+parentRow;
 								$("#lookUpField"+parentRow).attr("checked", true);
 								if(fieldColmnRsponse[2] != null && fieldColmnRsponse[2].length > 0){
-									$("#lookUpExtrnl"+parentRow).val(fieldColmnRsponse[2][0].label);
+									$("#lookUpExtrnl"+parentRow).val(fieldColmnRsponse[2][0].Name);
 									/* $("#lookUpExtrnl"+parentRow).attr("readonly", true); */
 								}else{
 									$("#lookUpExtrnl"+parentRow).val("");
