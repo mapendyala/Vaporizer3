@@ -54,7 +54,8 @@ public class DataLoaderController {
                 	objectName=cellElement[0].split("#")[0];
                 	for(int j=0;j<cellElement.length;j++){
                 		System.out.println(cellElement[j]);
-                		fileWriter.append(String.valueOf(cellElement[j].split("#")[1]));
+                		fileWriter.append(String.valueOf((cellElement[j].split("#")[1]).split(objectName)[1]));
+                		System.out.println(String.valueOf((cellElement[j].split("#")[1]).split(objectName)[1]));
                 		if(j+1!=cellElement.length)
                 		   fileWriter.append(",");
                 		else

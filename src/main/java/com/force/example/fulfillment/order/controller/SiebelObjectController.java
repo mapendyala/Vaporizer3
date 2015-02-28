@@ -661,6 +661,7 @@ public class SiebelObjectController {
 					
 					FileWriter fileWriter = new FileWriter(file);
 					for(int i=1; i<headers.size()+1 ; i++){
+						System.out.println(">>>>>"+(String)headers.get(i));
 						fileWriter.append(sfdcObject+"#"+(String)headers.get(i));
 						fileWriter.append(COMMA_DELIMITER);
 					}
