@@ -2116,9 +2116,11 @@ System.out.println("records "+records);
 		        		if(extrnlIdList == null){
 			            	extrnlIdList= new ArrayList<MappingSFDC>();
 			            }
-		        		mpngSFDC.setLabel(fieldLabel);
+		        		//mpngSFDC.setLabel(fieldLabel);
+		        		mpngSFDC.setLabel(fieldName);
 		        		mpngSFDC.setName(fieldName);
 		        		extrnlIdList.add(mpngSFDC);
+		        		System.out.println(fieldLabel+">>>>>>>>>"+fieldName);
 		        	}
 		        		
 		        }

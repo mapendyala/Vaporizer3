@@ -77,7 +77,7 @@ public class HomeController {
 		JSONObject authParams = getOAuthToken();
 		
 		session.setAttribute("authParams", authParams);
-		String projectId = "a0PG000000CHjXCMA1";
+		String projectId = "a0PG000000CHllH";
 		if(request.getParameter("projectId") != null){
 			projectId = request.getParameter("projectId");
 		}
