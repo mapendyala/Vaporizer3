@@ -313,7 +313,7 @@ public class TargetPartner {
 		try {
 			// SOQL query to use
 			System.out.println(">>>>>"+projectId);
-			String soqlQuery = "Select Id, Migrate__c, Sequence__c, Prim_Base_Table__c, Project__c, SFDC_Object__c, Siebel_Object__c, Threshold__c from Mapping_Staging_Table__c where Project__c ='"
+			String soqlQuery = "Select Id, Migrate__c, Sequence__c, Prim_Base_Table__c, Project__c, SFDC_Object__c, Siebel_Object__c, Threshold__c from Mapping_Staging_Table__c where Siebel_Object__c != null and Project__c ='"
 					+ projectId + "'";
 			// Make the query call and get the query results
 			 QueryResult<Map> qr = getForceApi().query(soqlQuery);
