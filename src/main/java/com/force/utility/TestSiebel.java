@@ -5,8 +5,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TestSiebel {
 
@@ -58,7 +56,6 @@ public class TestSiebel {
 		                     		" BASETABLE.REPOSITORY_ID = REP.ROW_ID " +
 		                     		" WHERE BUSCOMP.NAME = 'Account'";
 		                    
-		                     List<Object> myList=new ArrayList<Object>();
 		                     
 		                     Statement st=connection.createStatement();
 		                     

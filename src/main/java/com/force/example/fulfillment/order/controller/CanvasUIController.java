@@ -30,7 +30,6 @@ import com.force.example.fulfillment.order.service.InvoiceService;
 import com.force.example.fulfillment.order.service.OrderService;
 import com.force.partner.TargetPartner;
 import com.force.utility.UtilityClass;
-import com.sforce.soap.partner.DescribeSObjectResult;
 //import com.deloitte.bean.Team;
 
 @Controller

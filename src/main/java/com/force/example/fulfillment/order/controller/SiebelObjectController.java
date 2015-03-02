@@ -115,7 +115,6 @@ public class SiebelObjectController {
 
 				if(objList!=null && objList.size()!=0)
 				{
-					SiebelObjectBO	myObj=objList.get(0);
 				}
 
 			}
@@ -306,12 +305,6 @@ public class SiebelObjectController {
 						
 						Integer dupJoinNm = addJoinToMap(joinNameUi, rowNumber);
 						Integer simlrRowNumber = null;
-						
-						//List<String> usedJoinNames = new ArrayList<String>();
-						Map<String, String> usedJoinNames = new HashMap<String, String>();
-						
-						//usedJoinNames.add(joinName);
-						
 						if(dupJoinNm == null){
 							
 							while(joinName != null && !joinName.trim().equals("")){
@@ -509,48 +502,13 @@ public class SiebelObjectController {
 			Map<Integer,String> headers = new HashMap<Integer,String>();
 			int size = colNameMap.size();
 			StringBuffer extractionQry =  new StringBuffer("SELECT ");
-			String colNms = null;
 			String joinCond = " ";
-		/*	Iterator colNmItrtr = colNameMap.entrySet().iterator();
-			while (colNmItrtr.hasNext()) {
-				String asCondition = null;
-
-				Map.Entry pair = (Map.Entry)colNmItrtr.next();
-		        String colmVal = (String)  pair.getValue();
-		        if(colNms == null){
-		        	colNms = colmVal;
-		        }else{
-		        	colNms =  colNms + "," + colmVal;
-		        }
-		        Integer rowNumKey = (Integer)pair.getKey();
-		        if((reltnShpMap.containsKey(rowNumKey) && reltnShpMap.get(rowNumKey) != null && !reltnShpMap.get(rowNumKey).equals("")) &&
-		        		(extrnlIdMap.containsKey(rowNumKey) && extrnlIdMap.get(rowNumKey) != null && !extrnlIdMap.get(rowNumKey).equals(""))){
-		        	asCondition = " AS \"" ;
-		        	asCondition = asCondition + salesForceObjName + "#" + reltnShpMap.get(rowNumKey) + "." + extrnlIdMap.get(rowNumKey);
-		        	asCondition = asCondition +"\"";
-		        	colNms = colNms + asCondition;
-		        	String mapVal = asCondition.replace("\"", "").replace("AS", "");
-		        	headers.put(rowNumKey, mapVal);
-		        }else if(slFrcNm.containsKey(rowNumKey) && slFrcNm.get(rowNumKey) != null && !slFrcNm.get(rowNumKey).equals("")){
-		        	asCondition = " AS \"" ;
-		        	asCondition = asCondition + salesForceObjName + "#" + slFrcNm.get(rowNumKey);
-		        	asCondition = asCondition + "\"";
-		        	colNms = colNms + asCondition;
-		        	String mapVal = asCondition.replace("\"", "").replace("AS", "");
-		        	headers.put(rowNumKey, mapVal);
-		        }else{
-		        	return "Sales Force Fields are not selected for row : " + rowNumKey;
-		        }
-		    }*/
-			
-			
 	/***** ----- UNION Query -----Start  **********/
 			
 			String columnNamesQry = null;
 			String aliasConditionQry = null;
 			Iterator colNmItrtr1 = colNameMap.entrySet().iterator();
 			while (colNmItrtr1.hasNext()) {
-				String asCondition = null;
 
 				Map.Entry pair = (Map.Entry)colNmItrtr1.next();
 		        String colmVal = (String)  pair.getValue();
@@ -574,7 +532,6 @@ public class SiebelObjectController {
 		        		aliasConditionQry = aliasConditionQry + "\'";
 		        	}
 		        	
-		        	String mapVal = aliasConditionQry.replace("\'", "");
 		        	headers.put(rowNumKey, salesForceObjName /*+ "#"*/ + reltnShpMap.get(rowNumKey) + "." + extrnlIdMap.get(rowNumKey));
 		        }else if(slFrcNm.containsKey(rowNumKey) && slFrcNm.get(rowNumKey) != null && !slFrcNm.get(rowNumKey).equals("")){
 		        	if(aliasConditionQry == null){
@@ -587,7 +544,6 @@ public class SiebelObjectController {
 		        		aliasConditionQry = aliasConditionQry + salesForceObjName /*+ "#"*/ + slFrcNm.get(rowNumKey);
 		        		aliasConditionQry = aliasConditionQry + "\'";
 		        	}
-		        	String mapVal = aliasConditionQry.replace("\"", "");
 		        	headers.put(rowNumKey, salesForceObjName /*+ "#"*/ + slFrcNm.get(rowNumKey));
 		        }else{
 		        	/*return "Sales Force Fields are not selected for row : " + rowNumKey;*/
@@ -617,7 +573,6 @@ public class SiebelObjectController {
 			}
 			makeConnection();
 			ResultSet mySet = null;
-			ResultSetMetaData rsmd = null;
 			try{
 				if (connection != null){
 					Statement st=connection.createStatement();

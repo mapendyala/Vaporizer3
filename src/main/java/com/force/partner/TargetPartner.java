@@ -3,7 +3,6 @@ package com.force.partner;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -20,20 +19,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import com.force.api.ApiSession;
 import com.force.api.DescribeGlobal;
@@ -44,12 +33,11 @@ import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.MappingModel;
 import com.force.utility.SfdcObjectBO;
 import com.force.utility.UtilityClass;
-import com.google.gson.JsonArray;
-import com.sforce.soap.partner.SaveResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.bind.XmlObject;
 
+@SuppressWarnings("rawtypes")
 public class TargetPartner {
 	
 	HttpSession session;
@@ -73,102 +61,7 @@ public class TargetPartner {
         s.setApiEndpoint(authParams.getString("instanceUrl"));
         return new ForceApi(s);
 	}
-	
-	
-	/*public static void main(String args[]){
-		HttpClient httpClient= new HttpClient();
-		JSONObject authParams= new JSONObject();
-		PostMethod post = new PostMethod("https://login.salesforce.com/services/oauth2/token");
-        //post.addParameter("code", code);
-        post.addParameter("grant_type", "password");
-        post.addParameter("client_id", "3MVG98XJQQAccJQftNctCshPH7OHgKw4QQrOUSQbbp.dJK7pBXpbwdKGtE2u3U_mCSIWrd9RbAafS6PpwaveH");
-        post.addParameter("client_secret", "5595747085030222154");
-        post.addParameter("username","rachitjain@deloitte.com.vaporizer");
-        post.addParameter("password","deloitte@1");
- 
-                try {
-                 httpClient.executeMethod(post);
-                    try {
-	                        JSONObject authResponse = new JSONObject(
-	                                        post.getResponseBodyAsString());
-	                        System.out.println("Auth response: "
-	                                + authResponse.toString());
-	 
-	                       String accessToken = authResponse.getString("access_token");
-	                       String instanceUrl = authResponse.getString("instance_url");
-	                      
-	               		authParams.put("oAuthToken", accessToken);
-	               		authParams.put("instanceUrl", instanceUrl);
-	                        System.out.println("Got access token: " + accessToken);
-	                    } catch (JSONException e) {
-	                        e.printStackTrace();
-	                        
-	                    }
-	                } catch (HttpException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} finally {
-	                    post.releaseConnection();
-	                }
-                httpClient= new HttpClient();
-        PostMethod post1 = new PostMethod(authParams.getString("instanceUrl")+"/services/data/v20.0/sobjects/Test_Object__c/");
-        		        post1.setRequestHeader("Authorization", "OAuth "+authParams.getString("oAuthToken"));
-        		        try {
-        		        	JSONArray arr= new JSONArray();
-        		        	JSONObject account = new JSONObject();
-        		        	JSONObject account1 = new JSONObject();
-        		            try {
-        		            	account.put("Name", "hello1");
-        		                account.put("Roll__c", 65766);
-        		                account1.put("Name", "hello1");
-        		                account1.put("Roll__c", 12132);
-        		            } catch (JSONException e) {
-        		                e.printStackTrace();
-        		                
-        		            }
-        		            arr.put(account);
-        		            arr.put(account1);
-        		            
-							post1.setRequestEntity(new StringRequestEntity(arr.toString(),
-							        "application/json", null));
-						
-        		        System.err.println("outputtt isss "+httpClient.executeMethod(post1));
-        		        if (post1.getStatusCode() == HttpStatus.SC_CREATED) {
-        		        	                try {
-        		        	                    JSONObject response = new JSONObject(
-        		        	                                    post1.getResponseBodyAsString());
-        		        	                    System.out.println("Create response: "
-        		        	                            + response.toString(2));
-        		        	                    if (response.getBoolean("success")) {
-        		        	                    String    accountId = response.getString("id");
-        		        	                        System.out
-															.println("New record id " + accountId + "\n\n");
-        		        	                    }
-        		        	                } catch (JSONException e) {
-        		        	                    e.printStackTrace();
-        		        	                    //throw new ServletException(e);
-        		        	                }
-        		        	            }
-        		        } catch (UnsupportedEncodingException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (HttpException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-        		 
-		
-		//fa.UpdateSObject("Test_Object__c", "Name",js);
-		
-		System.out.println("bye");
-		
-	}*/
+
 	public String getProjectName(String projectId) {
 
 		String projectName = null;
@@ -181,11 +74,9 @@ public class TargetPartner {
 			String soqlQuery = " Select Name, Parent_Project__c, Type__c from Project__c where id= '"
 					+ projectId + "'";
 			// Make the query call and get the query results
-			@SuppressWarnings("rawtypes")
 			QueryResult<Map> qr = getForceApi().query(soqlQuery);
 			boolean done = false;
 
-			int loopCount = 0;
 			// Loop through the batches of returned results
 			while (!done) {
 
@@ -229,10 +120,10 @@ public class TargetPartner {
 			QueryResult<Map> qr = getForceApi().query(soqlQuery);
 			boolean done = false;
 
-			int loopCount = 0;
 			// Loop through the batches of returned results
 			while (!done) {
 
+				
 				List<Map> records = qr.getRecords();
 				// Process the query results
 				for (int i = 0; i < records.size(); i++) {
@@ -274,7 +165,6 @@ public class TargetPartner {
 			QueryResult<Map> qr = getForceApi().query(soqlQuery);
 			boolean done = false;
 
-			int loopCount = 0;
 			// Loop through the batches of returned results
 			while (!done) {
 
@@ -385,7 +275,6 @@ public class TargetPartner {
 			QueryResult<Map> qr = getForceApi().query(soqlQuery);
 			boolean done = false;
 
-			int loopCount = 0;
 			// Loop through the batches of returned results
 			while (!done) {
 
@@ -440,7 +329,6 @@ public class TargetPartner {
 			// Make the query call and get the query results
 			QueryResult<Map> qr = getForceApi().query(soqlQuery);
 			boolean done = false;
-			int loopCount = 0;
 			// Loop through the batches of returned results
 			while (!done) {
 
@@ -561,7 +449,6 @@ public class TargetPartner {
 			QueryResult<Map> qr = getForceApi().query(soqlQuery);
 			boolean done = false;
 
-			int loopCount = 0;
 			// Loop through the batches of returned results
 			while (!done) {
 
@@ -574,7 +461,6 @@ public class TargetPartner {
 							.get("Object_API_Name__c");
 					String sfdcTableName = (String) contact
 							.get("Table_Name__c");
-					String type = (String) contact.get("Type__c");
 					tableData.put("id", id);
 					tableData.put("siebelTableName", siebelTableName);
 					tableData.put("sfdcTableName", sfdcTableName);
@@ -601,84 +487,7 @@ public class TargetPartner {
 	}
 	
 	
-	public void saveMappingDataIntoDB(List<MappingModel> data,
-			HttpServletRequest request, String attribute)
-			throws ConnectionException {
-
-		// TODO Auto-generated method stub
-		HttpSession session = request.getSession(true);
-
-		// String [] dataArray = data.toArray(new String[data.size()]);
-		
-		List<SObject> lstContactUpdate= new ArrayList<SObject>();
-		List<SObject> lstContactInsert= new ArrayList<SObject>();
-		SObject[] contactUpdate = new SObject[data.size()];
-		SObject[] contactInsert = new SObject[data.size()];
-		// data.get(0).getMigrate();
-		for (Iterator<MappingModel> iterator = data.iterator(); iterator
-				.hasNext();) {
-			MappingModel mappingModel = (MappingModel) iterator.next();
-			
-			if( mappingModel.getId()==null || mappingModel.getId().equalsIgnoreCase("")){
-				SObject contact = new SObject();
-				contact.setType("Field_Mapping_Data_Migration__c");
-				contact.setField("Table_Name__c",
-						mappingModel.getForeignFieldMapping());
-				contact.setField("Field_Target__c",
-						mappingModel.getSfdcFieldTable());
-				contact.setField("Source_Field__c",
-						mappingModel.getSiebleBaseTableColumn());
-				// contact.setField("Project__c",
-				// ((String)session.getAttribute("projectId")));
-				contact.setField("Mapping_Staging_Table__c",
-						mappingModel.getMappingSfdcId());
 	
-				lstContactInsert.add(contact);
-				// Add this sObject to an array
-			}else{
-				SObject contact = new SObject();
-				contact.setType("Field_Mapping_Data_Migration__c");
-				contact.setField("Id",
-						mappingModel.getId());
-				
-				contact.setField("Table_Name__c",
-						mappingModel.getForeignFieldMapping());
-				contact.setField("Field_Target__c",
-						mappingModel.getSfdcFieldTable());
-				contact.setField("Source_Field__c",
-						mappingModel.getSiebleBaseTableColumn());
-				// contact.setField("Project__c",
-				// ((String)session.getAttribute("projectId")));
-				contact.setField("Mapping_Staging_Table__c",
-						mappingModel.getMappingSfdcId());
-	
-				lstContactUpdate.add(contact);
-	
-			}
-		}
-		
-		if(lstContactInsert.size()>0){
-			contactInsert=lstContactInsert.toArray(new SObject[lstContactInsert.size()]);
-			String saveResults = getForceApi().createSObject("Field_Mapping_Data_Migration__c", contactInsert);
-			/*for (int j = 0; j < saveResults.length; j++) {
-				System.out.println(saveResults[j].isSuccess());
-				// System.out.println(saveResults[j].getErrors()[j].getMessage());
-			}*/
-		}
-		if(lstContactUpdate.size()>0){
-			contactUpdate=lstContactUpdate.toArray(new SObject[lstContactUpdate.size()]);
-			//SaveResult[] saveResults = getForceApi().updateSObject(arg0, arg1, arg2)pdate(contactUpdate);
-			/*for (int j = 0; j < saveResults.length; j++) {
-				System.out.println(saveResults[j].isSuccess());
-				// System.out.println(saveResults[j].getErrors()[j].getMessage());
-			}*/
-		}
-		/*SaveResult[] saveResults = getPartnerConnection().create(contacts);
-		for (int j = 0; j < saveResults.length; j++) {
-			System.out.println(saveResults[j].isSuccess());
-			// System.out.println(saveResults[j].getErrors()[j].getMessage());
-		}*/
-	}
 
 	
 	public  File getextractionData(String projectId, String sfdcId, String subProjectId) 
@@ -700,7 +509,6 @@ public class TargetPartner {
                 System.out.println(">>>>"+sfdcId);
                 try{
                     QueryResult<Map> qr = getForceApi().query(soqlQuery2);
-                    @SuppressWarnings("rawtypes")
 					QueryResult<Map> qr1=null;
                     boolean done = false;
                     while(!done){
@@ -749,8 +557,6 @@ public class TargetPartner {
                                         Map mappingRecord = mappingRecords.get(j);
                                         String salesForceField = (String) mappingRecord.get("Field_Target__c");
                                         String siebelField = (String) mappingRecord.get("Source_Field__c");
-                                        XmlObject sourceTable = (XmlObject) mappingRecord.get("Source_Base_Table__r");
-                                        String siebelBaseTable = (String) sourceTable.getChild("Object_API_Name__c").getValue();
                                         siebelFieldMap.put("siebelFieldKey"+j, siebelField);
                                         sfdcFieldMap.put("sfdcFieldKey"+j, salesForceField);
                                         System.out.println(j+"Sibel "+siebelField);
@@ -791,29 +597,14 @@ public class TargetPartner {
                                             	}
                                             	
                                             }
-                                            
-                                            //mappingRecords=records4.toArray(new SObject[records4.size()]);
-                                            
-                                            
                                             for(int j=0;j<mappingRecords.size();j++){
                                                 Map mappingRecord = mappingRecords.get(j);
-                                                
-                                                String salesForceField = (String) mappingRecord.get("Field_Target__c");
                                                 String siebelField = (String) mappingRecord.get("Source_Field__c");
-                                                XmlObject sourceTable = (XmlObject) mappingRecord.get("Source_Base_Table__r");
-                                                String siebelBaseTable = (String) sourceTable.getChild("Object_API_Name__c").getValue();
-                                                //siebelFieldMap.put("siebelFieldKey"+mainCount, siebelField);
-                                               // sfdcFieldMap.put("sfdcFieldKey"+mainCount, salesForceField);
-                                               // System.out.println((mainCount++)+"Sibel "+siebelField);
-                                               // System.out.println(mainCount+"sfdc "+salesForceField);
-                                                //selectTables = selectTables+" "+ siebelBaseTable+"."+siebelField +" "+"as"+ " "+"\""+ siebelField+"="+salesForceField+"\""+",";                                   
                                                 selectTables = selectTables+" "+ "childTableAlias"+childTableCounter+"."+siebelField+",";
                                             }
                                             childTableCounter++;
-                                            
                                         }
                                     }
-                                
                                 }
                         }
                         //if user defined data is present
@@ -912,8 +703,6 @@ public class TargetPartner {
 
                                 String salesForceField = (String) contact.get("Field_Target__c");
                                 String siebelField = (String) contact.get("Source_Field__c");
-                                XmlObject sourceTable = (XmlObject) contact.get("Source_Base_Table__r");
-                                String siebelBaseTable = (String) sourceTable.getChild("Object_API_Name__c").getValue();
                                 siebelFieldMap.put("siebelFieldKey"+i, siebelField);
                                 sfdcFieldMap.put("sfdcFieldKey"+i, salesForceField);
                                 //selectTables = selectTables+" "+ siebelBaseTable+"."+siebelField +" "+"as"+ " "+"\""+ siebelField+"="+salesForceField+"\""+",";                                   
@@ -995,7 +784,6 @@ public class TargetPartner {
                                   + " INNER JOIN SIEBEL.S_ADDR_PER ADDR ON ADDR.ROW_ID = ACC.PR_ADDR_ID";
                   }
                   System.out.println(query);
-                  List<Object> myList = new ArrayList<Object>();
                   Statement st = connection.createStatement();
                   ResultSet mySet = st.executeQuery(query);
                  // String sFileName = "tryAndTest";
@@ -1030,8 +818,6 @@ public class TargetPartner {
           mappingFileURL=  new PartnerWSDL(session).getFile(file, "19SepDemoFile.csv", "application/vnd.ms-excel", ProjectId, null);
           String SDlFileURl= new PartnerWSDL(session).getFile(mappingFile, "195SepDemoMappingFile.sdl", "application/vnd.ms-excel", ProjectId, mappingFileURL);
           System.out.println("filr path : " +mappingFileURL+":::::::"+SDlFileURl);
-          com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
-         // dt.dataUploadController(mappingFileURL,"subhchakraborty@deloitte.com.vaporizer","Sep@2013","Account");
 
         } catch (Exception e) {
             // System.out.println(e);
@@ -1212,9 +998,7 @@ public class TargetPartner {
 	public String getMappingId(String projectId,
 			List<MappingModel> mappingData, JSONObject tableData) {
 		// List<MappingModel> mappingData= new LinkedList<MappingModel>();
-		String siebelTableName = tableData.getString("siebelTableName");
 		String sfdcTablename = tableData.getString("sfdcTableName");
-		MappingModel mappingModel = new MappingModel();
 		String id = "";
 		try {
 			//partnerConnection.setQueryOptions(250);
@@ -1234,9 +1018,6 @@ public class TargetPartner {
 
 					Map contact = records.get(i);
 					id = (String) contact.get("Id");
-					// mappingModel.setMappingSfdcId(id);
-					// mappingData.add(mappingModel);
-					// mappingData.add(mappingModel);
 				}
 
 				if (qr.isDone()) {
@@ -1260,7 +1041,6 @@ public class TargetPartner {
 		// List<MappingModel> mappingData= new LinkedList<MappingModel>();
 		String siebelTableName = tableData.getString("siebelTableName");
 		String sfdcTablename = tableData.getString("sfdcTableName");
-		MappingModel mappingModel = new MappingModel();
 		String id = "0";
 		try {
 		//	partnerConnection.setQueryOptions(250);
@@ -1276,7 +1056,6 @@ public class TargetPartner {
 			QueryResult<Map> qr = getForceApi().query(soqlQuery);
 			boolean done = false;
 
-			int loopCount = 0;
 			// Loop through the batches of returned results
 			mappingData.clear();
 
@@ -1312,7 +1091,6 @@ public class TargetPartner {
 			QueryResult<Map> qr1 = getForceApi().query(soqlQuery1);
 			boolean done1 = false;
 
-			int loopCount1 = 0;
 			// Loop through the batches of returned results
 			// mappingData.clear();
 
@@ -1575,7 +1353,6 @@ public class TargetPartner {
 
 public ArrayList<String> getFieldTarget(JSONObject tableData){
 		
-		String siebelTableName = tableData.getString("siebelTableName");
 		String sfdcTablename = tableData.getString("sfdcTableName");
 		String SFDTargetName = "No data";
 		ArrayList<String> field=new ArrayList<String>();
@@ -1596,7 +1373,6 @@ public ArrayList<String> getFieldTarget(JSONObject tableData){
 			
 				QueryResult<Map> qr = getForceApi().query(soqlQuery);
 				boolean done = false;
-				int loopCount = 0;
 				// Loop through the batches of returned results
 				while (!done) {
 					List<Map> records1 = qr.getRecords();

@@ -1,6 +1,5 @@
 package com.force.example.fulfillment.order.model;
 
-import java.util.List;
 
 public class Mapping {
 	

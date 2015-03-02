@@ -1,16 +1,31 @@
 package com.force.example.fulfillment;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.force.api.QueryResult;
-import com.sforce.async.*;
-import com.sforce.soap.partner.LoginResult;
+import com.sforce.async.AsyncApiException;
+import com.sforce.async.BatchInfo;
+import com.sforce.async.BatchStateEnum;
+import com.sforce.async.BulkConnection;
+import com.sforce.async.CSVReader;
+import com.sforce.async.ContentType;
+import com.sforce.async.JobInfo;
+import com.sforce.async.JobStateEnum;
+import com.sforce.async.OperationEnum;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
-import com.sforce.soap.partner.*;
                         
   
 //Data Loading
@@ -27,13 +42,6 @@ public class DataLoaderController {
     public String dataUploadController(File dataFileUrl,String userId,String pwd,String objectName) throws IOException, AsyncApiException, ConnectionException
     {
     	DataLoaderController example = new DataLoaderController();
-    	
-    	
-    	
-    	
-    	
-    	
-    	String csvFile = "/Users/mkyong/Downloads/GeoIPCountryWhois.csv";
     	DataFileVal=dataFileUrl;
     	FileReader fr = new FileReader(DataFileVal);
     	BufferedReader br = null;
@@ -108,7 +116,7 @@ public class DataLoaderController {
     
    
     
-    private static LoginResult loginToSalesforce(
+  /*  private static LoginResult loginToSalesforce(
             final String username,
             final String password,
             final String loginUrl) throws ConnectionException {
@@ -117,7 +125,7 @@ public class DataLoaderController {
         config.setServiceEndpoint(loginUrl);
         config.setManualLogin(true);
         return (new PartnerConnection(config)).login(username, password);
-    }
+    }*/
     
    
     /**

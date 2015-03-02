@@ -372,7 +372,6 @@ System.out.println("records "+records);
 	
 	public ArrayList<String> getFieldTarget(JSONObject tableData){
 		
-		String siebelTableName = tableData.getString("siebelTableName");
 		String sfdcTablename = tableData.getString("sfdcTableName");
 		String SFDTargetName = "No data";
 		ArrayList<String> field=new ArrayList<String>();
@@ -393,7 +392,6 @@ System.out.println("records "+records);
 			
 				QueryResult qr = partnerConnection.query(soqlQuery);
 				boolean done = false;
-				int loopCount = 0;
 				// Loop through the batches of returned results
 				while (!done) {
 					SObject[] records1 = qr.getRecords();
@@ -692,7 +690,6 @@ System.out.println("records "+records);
 			throws ConnectionException {
 
 		// TODO Auto-generated method stub
-		HttpSession session = request.getSession(true);
 
 		// String [] dataArray = data.toArray(new String[data.size()]);
 		login();
@@ -769,19 +766,10 @@ System.out.println("records "+records);
 	public void saveMappingSingleValuedDataIntoDB(List<MappingModel> data,
 			HttpServletRequest request, String attribute)
 			throws ConnectionException {
-
-		// TODO Auto-generated method stub
-		HttpSession session = request.getSession(true);
-
-		// String [] dataArray = data.toArray(new String[data.size()]);
-		
 		List<SObject> lstContactUpdate= new ArrayList<SObject>();
 		List<SObject> lstContactInsert= new ArrayList<SObject>();
 		SObject[] contactUpdate = new SObject[data.size()];
 		SObject[] contactInsert = new SObject[data.size()];
-		
-		String projectID= (String) request.getSession().getAttribute("projectId");
-		// data.get(0).getMigrate();
 		for (Iterator<MappingModel> iterator = data.iterator(); iterator
 				.hasNext();) {
 			MappingModel mappingModel = (MappingModel) iterator.next();
@@ -893,8 +881,6 @@ System.out.println("records "+records);
 			// Make the query call and get the query results
 			QueryResult qr = partnerConnection.query(soqlQuery);
 			boolean done = false;
-
-			int loopCount = 0;
 			// Loop through the batches of returned results
 			while (!done) {
 
@@ -907,7 +893,6 @@ System.out.println("records "+records);
 							.getField("Object_API_Name__c");
 					String sfdcTableName = (String) contact
 							.getField("Table_Name__c");
-					String type = (String) contact.getField("Type__c");
 					tableData.put("id", id);
 					tableData.put("siebelTableName", siebelTableName);
 					tableData.put("sfdcTableName", sfdcTableName);
@@ -1071,9 +1056,7 @@ System.out.println("records "+records);
 	public String getMappingId(String projectId,
 			List<MappingModel> mappingData, JSONObject tableData) {
 		// List<MappingModel> mappingData= new LinkedList<MappingModel>();
-		String siebelTableName = tableData.getString("siebelTableName");
 		String sfdcTablename = tableData.getString("sfdcTableName");
-		MappingModel mappingModel = new MappingModel();
 		String id = "";
 		try {
 			partnerConnection.setQueryOptions(250);
@@ -1118,7 +1101,6 @@ System.out.println("records "+records);
 		// List<MappingModel> mappingData= new LinkedList<MappingModel>();
 		String siebelTableName = tableData.getString("siebelTableName");
 		String sfdcTablename = tableData.getString("sfdcTableName");
-		MappingModel mappingModel = new MappingModel();
 		String id = "0";
 		try {
 			partnerConnection.setQueryOptions(250);
@@ -1129,12 +1111,9 @@ System.out.println("records "+records);
 					+ "' and Siebel_Object__c='"
 					+ sfdcTablename
 					+ "' ";
-			// 'a0PG000000Atg1UMAR'
 			// Make the query call and get the query results
 			QueryResult qr = partnerConnection.query(soqlQuery);
 			boolean done = false;
-
-			int loopCount = 0;
 			// Loop through the batches of returned results
 			mappingData.clear();
 
@@ -1169,11 +1148,6 @@ System.out.println("records "+records);
 			// Make the query call and get the query results
 			QueryResult qr1 = partnerConnection.query(soqlQuery1);
 			boolean done1 = false;
-
-			int loopCount1 = 0;
-			// Loop through the batches of returned results
-			// mappingData.clear();
-
 			while (!done1) {
 				SObject[] records1 = qr1.getRecords();
 				// Process the query results
@@ -1307,77 +1281,6 @@ System.out.println("records "+records);
 	 * @param query
 	 * @param ProjectId
 	 */
-
-	@SuppressWarnings("unchecked")
-/*	public String ExtractDataFromSiebel(String query,Map sfdcMapping,Map siebelNames, String ProjectId) {
-
-        File file = null;
-        File mappingFile = null;
-        Connection connection = null;
-        String mappingFileURL="";
-        ;
-        try {
-             connection = UtilityClass.getSiebelConnection();
-        } catch (SQLException e1) {
-
-             e1.printStackTrace();
-        }
-        try {
-
-             if (connection != null) {
-
-                  if (query == null) {
-                        query = "SELECT ACC.NAME AS \"Name = Name\", ACC.LOC AS \"Location = BillingCity\", ADDR.ADDR AS \"Address1 = BillingStreet\""
-                                  + " FROM SIEBEL.S_ORG_EXT ACC"
-                                  + " INNER JOIN SIEBEL.S_ADDR_PER ADDR ON ADDR.ROW_ID = ACC.PR_ADDR_ID";
-                  }
-                  System.out.println(query);
-                  List<Object> myList = new ArrayList<Object>();
-                  Statement st = connection.createStatement();
-                  ResultSet mySet = st.executeQuery(query);
-                  String sFileName = "tryAndTest";
-                  if (mySet.next()) {
-
-                        file = new File(sFileName + ".csv");
-                        mappingFile = new File(sFileName + ".sdl");
-                        createFile(file);
-                        createFile(mappingFile);
-                        ResultSetMetaData rsmd = mySet.getMetaData();
-                        createCSV(mySet,sfdcMapping, siebelNames,rsmd, file, mappingFile);
-                  }
-
-                  while (mySet.next()) {
-                	 /* System.out.println("=================== in myset");
-                        ResultSetMetaData rsmd = mySet.getMetaData();
-                        createCSV(mySet,sfdcMapping, siebelNames,rsmd, file, mappingFile);
-*/
-
-                 /* }
-
-             } else {
-                  System.out.println("Failed to make connection!");
-             }
-
-
-             if (ProjectId == null)
-                  ProjectId = "a0PG000000Atg1U";
-          mappingFileURL=  new PartnerWSDL().getFile(file, "19SepDemoFile.csv", "application/vnd.ms-excel", ProjectId, null);
-          String SDlFileURl= new PartnerWSDL().getFile(mappingFile, "195SepDemoMappingFile.sdl", "application/vnd.ms-excel", ProjectId, mappingFileURL);
-          System.out.println("filr path : " +mappingFileURL+":::::::"+SDlFileURl);
-          com.force.example.fulfillment.DataLoaderController dt=new com.force.example.fulfillment.DataLoaderController();
-         // dt.dataUploadController(mappingFileURL,"subhchakraborty@deloitte.com.vaporizer","Sep@2013","Account");
-
-        } catch (Exception e) {
-            // System.out.println(e);
-             
-             e.printStackTrace();
-        }
-        // return file;
-
-        return mappingFileURL;
-
-  }*/
-
 
 	/**
 	 * @author piymishra

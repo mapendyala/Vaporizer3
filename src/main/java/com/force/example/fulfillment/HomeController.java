@@ -3,14 +3,10 @@ package com.force.example.fulfillment;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -27,10 +23,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -154,8 +148,6 @@ public class HomeController {
 	@ResponseBody public List<SfdcObjectBO> fetchSFDCObjects(HttpServletRequest request)
 	{
 
-		List<SfdcObjectBO> objList=new ArrayList<SfdcObjectBO>(); 
-		HttpSession session = request.getSession(true);
 		String userValue = request.getParameter("objectName");
 		System.out.println("uservalues in bean is"+userValue);
 		TargetPartner targetPartner= new TargetPartner(request.getSession());	
@@ -205,36 +197,6 @@ public class HomeController {
 	            return "You failed to upload " + name	                    + " because the file was empty.";
 	        }
 	    }
-	@RequestMapping(value = "/mapping", method = RequestMethod.GET)
-	public String home1(Locale locale, Model model,HttpServletRequest request) {
-		// TODO!!!
-		logger.info("Welcome home! the client locale is "+ locale.toString());
-		String threshold=request.getParameter("threshold");
-		String primBase=request.getParameter("primBase");
-		String siebelTableName=request.getParameter("siebelTableName");
-		System.out.println("---------------"+threshold+" "+primBase);
-		//ThresholdController tc= new ThresholdController();
-		//List<SiebelObjectBO> listSiebelObject = tc.fetchSiebelObjects(request);
-		TargetPartner targetPartner= new TargetPartner(request.getSession());
-		
-		HttpSession session=request.getSession();
-
-		String subprojectId=targetPartner.getsubprojects(siebelTableName);
-		JSONObject tableName=targetPartner.getRelatedSiebelTable(subprojectId);
-		//List<MappingModel> mappingData=partnerWSDL.getFieldMapping(tableName);
-		//model.addAttribute("mappingData",mappingData);
-
-		return "mapping";
-	}
-
-	@RequestMapping(value = "/ChildBase", method = RequestMethod.GET)
-	public String home2(Locale locale, Model model) {
-		// TODO!!!
-		logger.info("Welcome home! the client locale is "+ locale.toString());
-		System.out.println("In Child Base");
-		
-		return "ChildBase";
-	}
 
 	@RequestMapping(value = "mappingSave", method = RequestMethod.POST)
 	//public ModelAndView save1(@ModelAttribute("data") List<MainPage> data, Locale locale, Model model) {
@@ -242,7 +204,6 @@ public class HomeController {
 	public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> model) throws ConnectionException {	
 		HttpSession session = request.getSession(true);
 		System.out.println("------mappingSave entry-----");
-		TargetPartner targetPartner= new TargetPartner(request.getSession()); 
 		PartnerWSDL partnerWSDL = new PartnerWSDL(request.getSession());
 		mappingData.clear();
 		rowCount= request.getParameter("rowCount");
@@ -317,17 +278,8 @@ public class HomeController {
 		String projId  = (String)session.getAttribute("projectId");
 		TargetPartner tg= new TargetPartner(request.getSession());
 		
-		String sfdcId=request.getParameter("sfdcId");
 		String siebelTableNameValue = request.getParameter("siebelObjName");
 		String subprojectId=tg.getsubprojects(siebelTableNameValue);
-		String mappingUrl="";
-		//File mappingFIle = null;
-		/*if(sfdcId  != null){			
-			mappingFIle=tg.getextractionData(projId, sfdcId, subprojectId);
-		}else{
-			System.out.println("Child Base and Mapping pages have not been selected");
-			 
-		}*/
 		SiebelObjectController sblObjCntrlr = new SiebelObjectController();
 		PartnerWSDL prtnrWSDL = new PartnerWSDL(request.getSession());
 		prtnrWSDL.login();
@@ -397,7 +349,7 @@ public class HomeController {
 		HttpSession session = request.getSession(true);
 		SiebelObjectController siObj=new SiebelObjectController();
 		// Toget the foreign key, column name thru ajax call.
-		List<String> clmNmLst = siObj.fetchColumndAndFrgnKeyName(request, (String)session.getValue("siebelTableNameValue"), sblFldValSlctd, rowNum);
+		List<String> clmNmLst = siObj.fetchColumndAndFrgnKeyName(request, (String)session.getAttribute("siebelTableNameValue"), sblFldValSlctd, rowNum);
 
 		return clmNmLst;
 	}
@@ -476,7 +428,7 @@ public class HomeController {
 		String siebelTableNameValue=request.getParameter("objectName"+rowNo);
 		String sfdcObjectName = request.getParameter("SFDCObjName"+rowNo);
 		System.out.println("in MY getSiebl Siebel Table"+siebelTableNameValue);
-		session.putValue("siebelTableNameValue", siebelTableNameValue);
+		session.setAttribute("siebelTableNameValue", siebelTableNameValue);
 		System.out.println("RowCount is: " +rowCount);
 		for(int i=1;i<=Integer.parseInt(rowCount);i++){
 			//mainPage[i] =  new MainPage();
@@ -519,30 +471,22 @@ public class HomeController {
 				
 				PartnerWSDL prtnrWSDL1 = new PartnerWSDL(request.getSession());
 				prtnrWSDL1.login();
-				
 				JSONObject tableName=tg.getRelatedSiebelTable(subprojectId);//gives siebel and sfdc table name
 				String id=tg.getMappingId((String)session.getAttribute("projectId"),mappingData,tableName);
-
 				List<MappingModel> mappingDataSaved=prtnrWSDL.getSavedMappingSingleValueDBData((String)session.getAttribute("projectId"), mappingData, tableName, siebelTableNameValue);
-				List<String> childTables=tg.getSavedChild((String)session.getAttribute("projectId"),tableName);
-				
 				SiebelObjectController siObj=new SiebelObjectController();
-				List<Object> myChildList=siObj.fetchColumns(request, primBaseValue,thresholdValue,childTables);
-				List<MappingModel> mappingData=tg.getFieldMapping(tableName,myChildList);
 				//Gets the list of SFDC Field names
 				List<MappingSFDC> sfdcObjList = prtnrWSDL1.getSFDCFieldList((String)sfdcObjectName);
 				// To get the list of siebel field names for a siebel entity.
 				List<String> sblFldList = new ArrayList<String>();
 				sblFldList = siObj.fetchFieldNameList(request, siebelTableNameValue);
-				
 				List<String> hdrValues = new ArrayList<String>();
 				//Siebel Entity
 				hdrValues.add(siebelTableNameValue);
 				//Siebel Base Table
-				hdrValues.add(/*mappingData.get(0).getSiebleBaseTable()*/primBaseValue);
+				hdrValues.add(primBaseValue);
 				//SFDC Entity
-				hdrValues.add(/*mappingData.get(0).getSfdcObjectName()*/sfdcObjectName);
-				
+				hdrValues.add(sfdcObjectName);
 				modelChild.addAttribute("sfdcObj",sfdcObjectName);
 				modelChild.addAttribute("mappingField",sfdcObjList);
 				modelChild.addAttribute("sbllFlddNmList",sblFldList);
