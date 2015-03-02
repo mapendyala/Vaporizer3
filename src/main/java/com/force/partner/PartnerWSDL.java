@@ -993,15 +993,18 @@ System.out.println("records "+records);
 					lstUpdate.add(updateContact);
 				}
 			}
+		}
+		if(lstCreate != null && lstCreate.size()>0){
 			SObject[] createContacts = lstCreate.toArray(new SObject[lstCreate.size()]);
-			SObject[] updateContacts = lstUpdate.toArray(new SObject[lstUpdate.size()]);
-			// Add this sObject to an array
 			SaveResult[] saveCreateResults = getPartnerConnection().create(
 					createContacts);
 			for (int j = 0; j < saveCreateResults.length; j++) {
 				System.out.println(saveCreateResults[j].isSuccess());
 				System.out.println(saveCreateResults[j].getErrors());
 			}
+		}
+		if(lstUpdate != null && lstUpdate.size()>0){
+			SObject[] updateContacts = lstUpdate.toArray(new SObject[lstUpdate.size()]);
 			SaveResult[] saveUpdateResults = partnerConnection
 					.update(updateContacts);
 			for (int j = 0; j < saveUpdateResults.length; j++) {
