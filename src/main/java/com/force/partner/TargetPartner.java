@@ -42,7 +42,6 @@ import com.force.api.ForceApi;
 import com.force.api.QueryResult;
 import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.MappingModel;
-import com.force.utility.ChildObjectBO;
 import com.force.utility.SfdcObjectBO;
 import com.force.utility.UtilityClass;
 import com.google.gson.JsonArray;
@@ -681,93 +680,7 @@ public class TargetPartner {
 		}*/
 	}
 
-	public void saveChildDataDB(List<ChildObjectBO> data,
-			HttpServletRequest request) throws ConnectionException {
-		HttpSession session = request.getSession(true);
-
-		// String [] dataArray = data.toArray(new String[data.size()]);
-		
-		SObject[] contacts = new SObject[data.size()];
-		int counter = 0;
-		// data.get(0).getMigrate();
-		System.out.println("in WSDL save child method");
-		int i = 1;
-		
-		List<SObject> lstContactUpdate= new ArrayList<SObject>();
-		List<SObject> lstContactInsert= new ArrayList<SObject>();
-		SObject[] contactUpdate = new SObject[data.size()];
-		SObject[] contactInsert = new SObject[data.size()];
-		
-		for (ChildObjectBO childObj : data) {
-			
-			if( childObj.getChildSfdcId()==null || childObj.getChildSfdcId().equalsIgnoreCase("")){
-			
-				System.out.println("in saving for loop" + i);
-				SObject contact = new SObject();
-				contact.setType("Child_Base__c");
-				contact.setField("Primary_Table__c", childObj.getBaseObjName());
-				contact.setField("Project__c",
-						((String) session.getAttribute("projectId")));
-				contact.setField("Child_Table__c", childObj.getChildObjName());
-				contact.setField("Join_Condition__c",
-						childObj.getJoinCondition());
-				contact.setField("Saved__c ", childObj.isCheckFlag());
-				
-				lstContactInsert.add(contact);
-				// System.out.println("child Saved value is"+
-				// contact.getField("Child_Table__c"));
-				/*contacts[counter] = contact;*/
-				counter++;
-			
-				
-			}
-			else
-			{
-				System.out.println("in UPDATING for loop" + i);
-				SObject contact = new SObject();
-				contact.setType("Child_Base__c");
-				contact.setField("Id",childObj.getChildSfdcId());
-				contact.setField("Primary_Table__c", childObj.getBaseObjName());
-				contact.setField("Project__c",
-						((String) session.getAttribute("projectId")));
-				contact.setField("Child_Table__c", childObj.getChildObjName());
-				contact.setField("Join_Condition__c",
-						childObj.getJoinCondition());
-				contact.setField("Saved__c ", childObj.isCheckFlag());
-
-				// System.out.println("child Saved value is"+
-				// contact.getField("Child_Table__c"));
-				/*contacts[counter] = contact;*/
-				lstContactUpdate.add(contact);
-				counter++;
-				
-			}
-			
-		} //end of for loop
-//here I save it
-		
-		if(lstContactInsert.size()>0){
-			System.out.println("in insert save loop");
-			contactInsert=lstContactInsert.toArray(new SObject[lstContactInsert.size()]);
-			//SaveResult[] saveResults = getPartnerConnection().create(contactInsert);
-			/*for (int j = 0; j < saveResults.length; j++) {
-				System.out.println("save"+saveResults[j].isSuccess());
-				// System.out.println(saveResults[j].getErrors()[j].getMessage());
-			}*/
-		}
-		if(lstContactUpdate.size()>0){
-			System.out.println("in update save loop");
-			contactUpdate=lstContactUpdate.toArray(new SObject[lstContactUpdate.size()]);
-			/*SaveResult[] saveResults = getPartnerConnection().update(contactUpdate);
-			for (int j = 0; j < saveResults.length; j++) {
-				System.out.println("update"+saveResults[j].isSuccess());
-				// System.out.println(saveResults[j].getErrors()[j].getMessage());
-			}*/
-		}
-		
-		
-		
-	}
+	
 	public  File getextractionData(String projectId, String sfdcId, String subProjectId) 
     {
         
@@ -1295,100 +1208,7 @@ public class TargetPartner {
 		}
 	}
 
-	public List<ChildObjectBO> getSavedChildDBData(String projectId,
-			String primTable) {
-		List<ChildObjectBO> childData = new ArrayList<ChildObjectBO>();
-		try {
-			System.out.println("in getSave Child Data proj is" + projectId
-					+ "and prim is" + primTable);
-			//partnerConnection.setQueryOptions(250);
-
-			// String subprojectId="a0PG000000AtiEAMAZ";
-			// String soqlQuery =
-			// "Select Id, Migrate__c, Sequence__c, Prim_Base_Table__c, Project__c, SFDC_Object__c, Siebel_Object__c, Threshold__c from Mapping_Staging_Table__c where Project__c ='"+projectId+"'";
-
-			String soqlQuery = "Select Id, Saved__c , Primary_Table__c, Child_Table__c, Join_Condition__c, Project__c"
-					+ " from Child_Base__c where Project__c ='"
-					+ projectId
-					+ "' and Primary_Table__c = '" + primTable + "' ";
-
-			// Make the query call and get the query results
-			QueryResult<Map> qryResult = getForceApi().query(soqlQuery);
-			boolean done = false;
-			int loopCount = 0;
-			// Loop through the batches of returned results
-			childData.clear();
-			int counter = 1;
-			while (!done) {
-				List<Map> records = qryResult.getRecords();
-				System.out.println("records len from DB is" + records.size());
-
-				// Process the query results
-				for (int i = 0; i < records.size(); i++) {
-
-					ChildObjectBO childPageObj = new ChildObjectBO();
-					Map contact = records.get(i);
-					/*
-					 * String id = (String) contact .getField("Id");
-					 * mainPage.setSfdcId(id);
-					 */
-
-					boolean checkFlag = Boolean.parseBoolean((String) contact
-							.get("Saved__c"));
-					childPageObj.setCheckFlag(checkFlag);
-
-					String siebelBaseTable = (String) contact
-							.get("Primary_Table__c");
-					childPageObj.setBaseObjName(siebelBaseTable);
-
-					String siebelChildTable = (String) contact
-							.get("Child_Table__c");
-					childPageObj.setChildObjName(siebelChildTable);
-
-					String joinCondtn = (String) contact
-							.get("Join_Condition__c");
-					childPageObj.setJoinCondition(joinCondtn);
-
-					childPageObj.setSeqNum(counter);
-					
-					String childSfdcId=(String)contact.get("Id");
-					System.out.println("childSfdc id in get method is"+childSfdcId);
-					childPageObj.setChildSfdcId(childSfdcId);
-
-					/*
-					 * String projId = (String) contact.getField("Project__c");
-					 * mainPage.setProjId(projId);
-					 */
-
-					childData.add(childPageObj);
-					counter++;
-				}
-				/*
-				 * Collections.sort(childData, new Comparator<ChildObjectBO>(){
-				 * 
-				 * @Override public int compare(MainPage mainPage1, MainPage
-				 * mainPage2) {
-				 * 
-				 * return
-				 * mainPage1.getSequence().compareTo(mainPage2.getSequence()); }
-				 * });
-				 */
-if (qryResult.isDone()) {
-					done = true;
-				} else {
-					/*qryResult = partnerConnection.queryMore(qryResult
-							.getQueryLocator());*/
-				}
-
-			} // end of while
-
-		} catch (Exception ce) {
-			System.out.println("in catch block");
-			ce.printStackTrace();
-		}
-		/*System.out.println("\n Child Saved Data Query execution completed.");*/
-		return childData;
-	}
+	
 	public String getMappingId(String projectId,
 			List<MappingModel> mappingData, JSONObject tableData) {
 		// List<MappingModel> mappingData= new LinkedList<MappingModel>();

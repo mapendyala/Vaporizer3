@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.force.example.fulfillment.order.model.MappingSFDC;
 import com.force.partner.PartnerWSDL;
-import com.force.utility.ChildObjectBO;
 import com.force.utility.SiebelObjectBO;
 
 /**
@@ -205,85 +204,7 @@ public class SiebelObjectController {
 			}
 		}	 return myList; 
 	}	
-	@RequestMapping(value="/siebelChildObject", method=RequestMethod.POST)
 
-	@ResponseBody public List<ChildObjectBO> fetchChildObjects(HttpServletRequest request,String siebelObjName)
-	{
-		System.out.println("in child contoller method");
-		List<ChildObjectBO> childObjList=new ArrayList<ChildObjectBO>(); 
-		/* String userValue = request.getParameter("baseObjectName");
-			 System.out.println("child uservalues in bean is"+userValue);*/
-		System.out.println("SIEBL OBJ PARAM IS"+siebelObjName);
-		String userValue=siebelObjName;
-		makeConnection();
-		/* try{
-	    		 PartnerWSDL partnerWSDL= new PartnerWSDL();
-	    		 String projectId = (String) session.getAttribute("projectName");
-	    		 JSONObject connectionData=partnerWSDL.getConnectionData(projectId);
-	    		  UtilityClass utilityClass= new UtilityClass();
-	    		  connection= utilityClass.getConnection(connectionData);
-	    	 } catch (Exception e)
-	    	    {
-	             System.out.println("Connection Failed! Check output console");
-	             e.printStackTrace();
-
-	      }*/
-
-
-		try
-		{
-			if (connection != null)
-			{
-				System.out.println("You made it, take control your database now!");
-				String query="SELECT CHILDTABLE.NAME, CHILDTABLE.NAME || '.' || CHILDTABLECOLUMN.NAME || ' = ' || BASETABLE.NAME || '.ROW_ID' FROM " +
-						" SIEBEL.S_COLUMN CHILDTABLECOLUMN INNER JOIN SIEBEL.S_TABLE CHILDTABLE ON CHILDTABLE.ROW_ID = CHILDTABLECOLUMN.TBL_ID AND " +
-						" CHILDTABLE.REPOSITORY_ID = CHILDTABLECOLUMN.REPOSITORY_ID INNER JOIN SIEBEL.S_TABLE BASETABLE ON " +
-						" BASETABLE.ROW_ID = CHILDTABLECOLUMN.FKEY_TBL_ID AND BASETABLE.REPOSITORY_ID = CHILDTABLECOLUMN.REPOSITORY_ID AND BASETABLE.NAME ='"+userValue+"'" +
-						" INNER JOIN SIEBEL.S_REPOSITORY REP ON REP.ROW_ID = CHILDTABLECOLUMN.REPOSITORY_ID " ;			                 
-				Statement st=connection.createStatement();
-				System.out.println("child query is"+query);
-				ResultSet mySet=st.executeQuery(query);
-				/* while(mySet.next())
-	                {
-	                	System.out.println("CONTROLLER NEW myset is"+mySet.getString(1));
-
-	                	System.out.println("CONTROLLER myset second is"+mySet.getString(2));
-
-	                	//System.out.println("MEW myset second is"+mySet.getString(3));
-	                }*/
-
-				int i=0;
-				while(mySet.next())
-				{
-					//System.out.println("myset is"+mySet.getString(1));
-					//System.out.println("myset second is"+mySet.getString(2));
-					i++;
-					ChildObjectBO chObj=new ChildObjectBO();
-					chObj.setSeqNum(i);
-					chObj.setBaseObjName(userValue);
-					chObj.setChildObjName(mySet.getString(1));
-					chObj.setJoinCondition(mySet.getString(2));
-					childObjList.add(chObj);
-				}
-
-				System.out.println("list size is"+childObjList.size());
-				if(childObjList!=null && childObjList.size()!=0)
-				{
-					ChildObjectBO	myObj=childObjList.get(0);
-					System.out.println("childObjList  objname is"+ myObj.getChildObjName());
-					System.out.println("childObjList list prim is"+myObj.getJoinCondition());
-				}
-
-			}
-		}
-		catch(SQLException e)
-		{
-			System.out.println("Connection Failed! Check output console");
-			e.printStackTrace();
-		}
-		return childObjList; 	 
-	} 	 
-	
 	public void makeConnection(){
 		try{
 			Class.forName("oracle.jdbc.driver.OracleDriver");

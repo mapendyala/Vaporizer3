@@ -45,7 +45,6 @@ import com.force.example.fulfillment.order.model.MappingModel;
 import com.force.example.fulfillment.order.model.MappingSFDC;
 import com.force.partner.PartnerWSDL;
 import com.force.partner.TargetPartner;
-import com.force.utility.ChildObjectBO;
 import com.force.utility.SfdcObjectBO;
 import com.sforce.async.AsyncApiException;
 import com.sforce.ws.ConnectionException;
@@ -137,9 +136,6 @@ public class HomeController {
 	@ResponseBody
 	public String getSFDCObject(Locale locale,Model model,HttpServletRequest request,@RequestParam("siebelObject")String siebelObject)
 	{
-
-
-
 		HttpSession session = request.getSession(true);
 		String projectId=(String) session.getAttribute("projectId");
 		TargetPartner targetPartner= new TargetPartner(request.getSession());	    	
@@ -313,125 +309,7 @@ public class HomeController {
 		return new ModelAndView("vaporizer" , "data", data);
 
 	}
-	@RequestMapping(value = "childSave", method = RequestMethod.POST)
-	public ModelAndView save1(@ModelAttribute("data") List<MainPage> data, Locale locale, Model model,HttpServletRequest request) throws ConnectionException{
-
-
-		logger.info("Welcome home! the client locale is "+ locale.toString());
-
-
-		System.out.println("inside demo");
-
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-		TargetPartner tg= new TargetPartner(request.getSession());
-		//partnerWSDL.login();
-		String formattedDate = dateFormat.format(date);
-
-		HttpSession session=request.getSession();
-		System.out.println("----------doneeeeeeee");
-		//System.out.println(dataForm);
-		// System.out.println(dataForm.getData());
-		System.out.println("doneeeeeeee-------------");
-		//System.out.println(data.get(0).getSiebelObject());
-		
-		data = tg.getSavedDBData((String)session.getAttribute("projectId"), data);
-
-
-		List<ChildObjectBO> childDataList = new ArrayList<ChildObjectBO>();
-		String totalRowCount= request.getParameter("rowCount");
-		System.out.println("total row count is"+totalRowCount);
-
-		/*	
-		for(int i=1;i<=Integer.parseInt(totalRowCount);i++){
-			//mainPage[i] =  new MainPage();
-			System.out.println("my i value is "+i);
-			ChildObjectBO childObj = new ChildObjectBO();
-
-			String sequenceNumber = "sequenceNum"+i;
-			String siebelBaseObjName = "baseObjName"+i;
-			String siebelChildObjName = "childObjName"+i;
-			String siebelJoinCondition= "joinCondition"+i;
-
-			childObj.setSeqNum(Integer.parseInt(request.getParameter(sequenceNumber)));
-			childObj.setBaseObjName(request.getParameter(siebelBaseObjName));
-			childObj.setChildObjName(request.getParameter(siebelChildObjName));
-			childObj.setJoinCondition(request.getParameter(siebelJoinCondition));
-			System.out.println("checkbox value is"+request.getParameter("checkFlag"+i));
-			System.out.println("values are"+ childObj.getSeqNum() + "and" + childObj.getBaseObjName());
-			System.out.println("rest values are"+ childObj.getChildObjName() + "and" + childObj.getJoinCondition());
-			childDataList.add(childObj);
-		}*/
-
-		for(int i=1;i<=Integer.parseInt(totalRowCount);i++){
-			//mainPage[i] =  new MainPage();
-			System.out.println("my i value is "+i);
-			ChildObjectBO childObj = new ChildObjectBO();
-
-			String sequenceNumber = "sequenceNum"+i;
-			String siebelBaseObjName = "baseObjName"+i;
-			String siebelChildObjName = "childObjName"+i;
-			String siebelJoinCondition= "joinCondition"+i;
-			String siebelCheckFlag="checkFlag"+i;
-			String childSfdcId="sfdcId"+i;
-			
-			
-			
-			childObj.setSeqNum(Integer.parseInt(request.getParameter(sequenceNumber)));
-			childObj.setBaseObjName(request.getParameter(siebelBaseObjName));
-			childObj.setChildObjName(request.getParameter(siebelChildObjName));
-			childObj.setJoinCondition(request.getParameter(siebelJoinCondition));
-			System.out.println("sfdc id is"+request.getParameter(childSfdcId));
-			childObj.setChildSfdcId(request.getParameter(childSfdcId));
-			String checkedFlagStr=request.getParameter(siebelCheckFlag);
-
-			if(checkedFlagStr != "" && checkedFlagStr !=null)
-			{
-				if(checkedFlagStr.equals("on"))
-				{
-					System.out.println("in true block"+i);
-					childObj.setCheckFlag(true);
-				}
-			}
-			else
-			{
-				System.out.println("in false block");
-				childObj.setCheckFlag(false);
-			}
-
-
-			System.out.println("checkbox value is"+request.getParameter(siebelCheckFlag));
-			/*System.out.println("values are"+ childObj.getSeqNum() + "and" + childObj.getBaseObjName());
-			System.out.println("rest values are"+ childObj.getChildObjName() + "and" + childObj.getJoinCondition());*/
-			childDataList.add(childObj);
-		}
-		//System.out.println("child data save list is"+childDataList);
-		tg.saveChildDataDB(childDataList,request);
-
-		return new ModelAndView("vaporizer" , "data", data);
-
-	}
 	
-/*	
-	@RequestMapping(value="/getextractData", method = RequestMethod.GET)
-	@ResponseBody public String createExtractQuery(HttpServletRequest request){
-		System.out.println("In Home controller get extract data method");
-		HttpSession session = request.getSession(true);
-		String projId  = (String)session.getAttribute("projectId");
-		TargetPartner tg= new TargetPartner(request.getSession());
-		
-		String sfdcId=request.getParameter("sfdcId");
-		String siebelTableNameValue = request.getParameter("siebelObjName");
-		String subprojectId=tg.getsubprojects(siebelTableNameValue);
-		String mappingUrl="";
-		if(sfdcId  != null){			
-			mappingUrl=tg.getextractionData(projId, sfdcId, subprojectId);
-		}else{
-			System.out.println("Child Base and Mapping pages have not been selected");
-			 
-		}
-		return mappingUrl;
-	}*/
 	@RequestMapping(value="/getextractData", method = RequestMethod.GET)
 	@ResponseBody public void  createExtractQuery(HttpServletRequest request, HttpServletResponse response){
 		System.out.println("In Home controller get extract data method");
@@ -632,35 +510,7 @@ public class HomeController {
 		prtnrWSDL.saveDataDB(data, request, (String)session.getAttribute("projectId"));
 
 
-		if(page.equals("child")){
-			SiebelObjectController siObj=new SiebelObjectController();
-			
-			List<ChildObjectBO> myChildList=siObj.fetchChildObjects(request, primBaseValue);
-			/*if(myChildList!=null)
-			{
-				System.out.println("mychild list is"+myChildList.size());
-			}
-			modelChild.addAttribute("myChildList",myChildList);*/
-			List<ChildObjectBO> childSavedList=new ArrayList<ChildObjectBO>();
-			childSavedList=	tg.getSavedChildDBData((String)session.getAttribute("projectId"), primBaseValue);
-			
-			if(childSavedList!=null && childSavedList.size()!=0)
-			{
-				System.out.println("CHild Saved  list size is"+childSavedList.size());
-				modelChild.addAttribute("myChildList",childSavedList);
-			}
-			else if(myChildList!=null && myChildList.size()!=0)
-			{
-				System.out.println("Siebel BLOCK child list is"+myChildList.size());
-				modelChild.addAttribute("myChildList",myChildList);
-				
-			}
-	
-				return new ModelAndView("ChildBase" , "data", data);
-		}
-
-		// Displays Single Value Field Mapping Screen
-		else if(page.equals("map")){
+		if(page.equals("map")){
 			//Else go to mapping page
 			logger.info("Welcome to single valued mapping ");
             System.out.println("---------------"+thresholdValue+" "+primBaseValue);
