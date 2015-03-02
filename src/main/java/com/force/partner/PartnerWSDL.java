@@ -1447,47 +1447,6 @@ System.out.println("records "+records);
 		return objList;
 	}
 
-	// Amrita:Fetch selected siebel child
-	public List<String> getSavedChild(String projectId, JSONObject tableData) {
-		// List<MappingModel> mappingData= new LinkedList<MappingModel>();
-		String siebelTableName = tableData.getString("siebelTableName");
-		ArrayList<String> child = new ArrayList<String>();
-		try {
-
-			partnerConnection.setQueryOptions(250);
-			// SOQL query to use
-			// String subprojectId="a0PG000000AtiEAMAZ";
-			String soqlQuery = "Select   Child_Table__c  from Child_Base__c where Project__c='"
-					+ projectId
-					+ "' and Primary_Table__c='"
-					+ siebelTableName
-					+ "' and Saved__c=true";
-			// Make the query call and get the query results
-			QueryResult qr = partnerConnection.query(soqlQuery);
-			boolean done = false;
-			// Loop through the batches of returned results
-			while (!done) {
-
-				SObject[] records = qr.getRecords();
-				// Process the query results
-				for (int i = 0; i < records.length; i++) {
-					SObject contact = records[i];
-
-					child.add((String) contact.getField("Child_Table__c"));
-				}
-
-				if (qr.isDone()) {
-					done = true;
-				} else {
-					qr = partnerConnection.queryMore(qr.getQueryLocator());
-				}
-
-			}
-		} catch (ConnectionException ce) {
-			ce.printStackTrace();
-		}
-		return child;
-	}
 
 	public static void main(String args[]){
 		

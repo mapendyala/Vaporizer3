@@ -131,10 +131,7 @@ public class SiebelObjectController {
 
 	public List<Object> fetchColumns(HttpServletRequest request,String siebelObjName,String thresholdValue,List<String>childTables){
 
-		System.out.println("in child contoller method");
 		List<Object> myList=new ArrayList<Object>();
-		/* String userValue = request.getParameter("baseObjectName");
-				 System.out.println("child uservalues in bean is"+userValue);*/
 		System.out.println("SIEBL OBJ PARAM IS"+siebelObjName);
 		String userValue=siebelObjName;
 		int tvalue=0;
@@ -152,7 +149,6 @@ public class SiebelObjectController {
 						+"AND (SELECT NUM_ROWS FROM ALL_TABLES WHERE TABLE_NAME = '"+userValue+"') - ALLTAB.NUM_NULLS > ("+tvalue+" * (SELECT NUM_ROWS FROM ALL_TABLES WHERE TABLE_NAME = '"+userValue+"') / 100)";
 
 				Statement st=connection.createStatement();
-				System.out.println("child query is"+query);
 				ResultSet mySet=st.executeQuery(query);
 
 				while(mySet.next())
@@ -168,24 +164,17 @@ public class SiebelObjectController {
 			System.out.println("Connection Failed! Check output console");
 			e.printStackTrace();
 		}
-
-		//for child tables
-
-
-
 		if(null!=childTables){
 			try
 			{
 				if (connection != null)
 				{
-					System.out.println("Inside child");
 					for (int i = 0; i < childTables.size(); i++) {
 						String child=  childTables.get(i);
 						String query1="SELECT ALLTAB.COLUMN_NAME FROM ALL_TAB_COLUMNS ALLTAB WHERE ALLTAB.TABLE_NAME ='"+child+"' "
 								+"AND (SELECT NUM_ROWS FROM ALL_TABLES WHERE TABLE_NAME = '"+child+"') - ALLTAB.NUM_NULLS > ("+tvalue+" * (SELECT NUM_ROWS FROM ALL_TABLES WHERE TABLE_NAME = '"+child+"') / 100)";
 
 						Statement st=connection.createStatement();
-						System.out.println("child query is"+query1);
 						ResultSet mySet1=st.executeQuery(query1);
 
 						while(mySet1.next())
@@ -223,7 +212,6 @@ public class SiebelObjectController {
 	}
 	
 	 public List<String> fetchFieldNameList(HttpServletRequest request,String siebelObjName){
-			System.out.println("in child contoller method");
 			List<String> fieldNameList=new ArrayList<String>(); 
 			System.out.println("SIEBL OBJ PARAM IS"+siebelObjName);
 			makeConnection();

@@ -34,15 +34,7 @@ public class VaporizerDataController {
         return new ModelAndView("vaporizer1" , "dataForm", dataForm);
     }
     
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public ModelAndView save(@ModelAttribute("dataForm") VaporizerDataForm dataForm) {
-    	System.out.println("----------save methofff");
-        System.out.println(dataForm);
-        System.out.println(dataForm.getData());
-        System.out.println("save methofff-----------");       
-        return new ModelAndView("ChildBase", "dataForm", dataForm);
-    }
-     
+    
     @RequestMapping(value = "/save1", method = RequestMethod.POST)
     public ModelAndView save1(@ModelAttribute("dataForm") VaporizerDataForm dataForm) {
     	System.out.println("----------doneeeeeeee");

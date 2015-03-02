@@ -515,23 +515,8 @@ public class HomeController {
 				String id=tg.getMappingId((String)session.getAttribute("projectId"),mappingData,tableName);
 
 				List<MappingModel> mappingData1=tg.getSavedMappingDBData((String)session.getAttribute("projectId"),mappingData,tableName);
-				List<String>childTables=tg.getSavedChild((String)session.getAttribute("projectId"),tableName);
-
-				SiebelObjectController siObj=new SiebelObjectController();
-				List<Object> myChildList=siObj.fetchColumns(request, primBaseValue,thresholdValue,childTables);
-
-
-			
-				//List<String>childTables=partnerWSDL.getSavedChild((String)session.getAttribute("projectId"),tableName);
-				//System.out.println(mappingData1.get(0));
-
-				List<MappingModel> mappingData=tg.getFieldMapping(tableName,myChildList);
 				ArrayList<String> field= new ArrayList<String>();
 						field=tg.getFieldTarget(tableName);
-				/*for(int count=0;count<mappingData.size();count++){
-					field.add(mappingData.get(count).getSfdcFieldTable());
-
-				}*/
 				modelChild.addAttribute("sfdcObj",mappingData.get(0).getSfdcObjectName());
 				modelChild.addAttribute("mappingField",field);
 				if(mappingData1.isEmpty()){

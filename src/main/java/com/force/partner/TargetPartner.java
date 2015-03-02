@@ -613,9 +613,6 @@ public class TargetPartner {
                         QueryResult<Map> qr2 = getForceApi().query(soqlQuery2);
                         List<Map> records2 = qr2.getRecords();
                         
-                        String soqlQuery3 = "Select Id, Child_Table__c, Join_Condition__c,Primary_Table__c from Child_Base__c where Project__c='"+subProjectId+"'";
-                        QueryResult<Map> qr3 = getForceApi().query(soqlQuery3);
-                        List<Map> records3 = qr3.getRecords();
                         List<Map> records4 =new ArrayList();
                         Map childBase = null;
                         for (int i = 0; i < records2.size(); i++) {
@@ -644,15 +641,7 @@ public class TargetPartner {
                             }
                             
                             boolean bFlag=false;
-                            for (int op=0; op<records3.size();op++){
-                            	//if((String)records3[op].getField("Table_Name__c")!=null)
-                            	
-                                if(records3.get(op).get("Child_Table__c")==contact.get("Table_Name__c")){
-                                    bFlag=true;
-                                    childBase = records3.get(op);
-                                    //id = records3[j].getField("Id");
-                                }
-                            }
+                            
                             //its a main table
                             if(bFlag==false) {
                             	// System.out.println("sfdce"+(((String) contact.getField("Field_Target__c")).equals("CREATEDBYID"))); 
@@ -1135,46 +1124,7 @@ public class TargetPartner {
 		System.out.println("\nQuery execution completed.");
 		return mappingData;
 	}
-	public List<String> getSavedChild(String projectId, JSONObject tableData) {
-		// List<MappingModel> mappingData= new LinkedList<MappingModel>();
-		String siebelTableName = tableData.getString("siebelTableName");
-		ArrayList<String> child = new ArrayList<String>();
-		try {
-
-			//partnerConnection.setQueryOptions(250);
-			// SOQL query to use
-			// String subprojectId="a0PG000000AtiEAMAZ";
-			String soqlQuery = "Select   Child_Table__c  from Child_Base__c where Project__c='"
-					+ projectId
-					+ "' and Primary_Table__c='"
-					+ siebelTableName
-					+ "' and Saved__c=true";
-			// Make the query call and get the query results
-			QueryResult<Map> qr = getForceApi().query(soqlQuery);
-			boolean done = false;
-			// Loop through the batches of returned results
-			while (!done) {
-
-				List<Map> records = qr.getRecords();
-				// Process the query results
-				for (int i = 0; i < records.size(); i++) {
-					Map contact = records.get(i);
-
-					child.add((String) contact.get("Child_Table__c"));
-				}
-
-				if (qr.isDone()) {
-					done = true;
-				}/** else {
-					qr = partnerConnection.queryMore(qr.getQueryLocator());
-				}**/
-
-			}
-		} catch (Exception ce) {
-			ce.printStackTrace();
-		}
-		return child;
-	}
+	
 
 	public List<MappingModel> getFieldMapping(JSONObject tableData,
 			List<Object> myChildList) {
