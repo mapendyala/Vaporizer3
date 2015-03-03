@@ -451,7 +451,7 @@ public class SiebelObjectController {
 			 Integer removedJoinNm = joinNmRowNumMap.get(joinNmKey);
 			 String prevJoinName = rowNumJoinNameMap.get(removedJoinNm); 
 			 
-			 if(!(prevJoinName.equals(joinNmKey))){
+			 if((prevJoinName != null && joinNmKey != null && !(prevJoinName.equals(joinNmKey))) || (prevJoinName !=null && joinNmKey == null) || (prevJoinName == null && joinNmKey != null)){
 				 
 				 joinNmRowNumMap.remove(joinNmKey);
 				 
