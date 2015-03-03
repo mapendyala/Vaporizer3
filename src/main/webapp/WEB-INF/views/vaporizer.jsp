@@ -58,6 +58,7 @@ var sfdcObjectForExtarction="";
 		var SFDCObjName = "SFDCObjName"+(rowNum);
 		var migrateId = "migrate"+(rowNum);
 		var seqId = "seq"+(rowNum);
+		var rowId=rowNum;
 		
 		 $("#masterTable tbody")
 				.append(
@@ -70,7 +71,7 @@ var sfdcObjectForExtarction="";
 								+ "<td><input type='text' id ="+thresholdId+" name="+thresholdId+" onchange='makeReadonly("+rowNum+")' style='margin-left:15px;'></td>"
 								+ "<td><a href='#' onclick='submitForm("+rowNum+")' style='margin-left:15px;'>Select</a></td>" 
 								+ "<td><input id="+SFDCObjName+" name="+SFDCObjName+" readonly='true' style='margin-left:35px;'/><button type='button'id="+srchSFDCObj+" style='display: inline;' onclick='getSFDCPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
-								+ "<td><a href='#' onclick='submit("+rowNum+"$"+")' style='margin-left:15px;'>Select</a></td>"
+								+ "<td><a href='#' onclick='submit("+rowId+")' style='margin-left:15px;'>Select</a></td>"
 								+ "<td><c:out value='Selected'/></td>"
 								+ "<td>"
 								+ "<input class='btn btn-inverse' type='button' name='Extract' value='E' onclick='extract("+rowNum+")'/>"
@@ -281,10 +282,17 @@ var sfdcObjectForExtarction="";
 	  
  function submit(rowNum)
 	  
-	  {		
-	   var values = rowNum.split("$");
-			var row=values[0]; 
-			var rowId=values[1];
+	  {	
+	 var row;
+	 var rowId;
+	 if(isNaN(rowNum)){
+		 var values = rowNum.split("$");
+		  row=values[0]; 
+			rowId=values[1];
+		 }else{
+			 row=rowNum; 
+				 rowId="";
+			 } 	
 		  var page = "map";
 		  $("#rowId").val(rowId);
 		  $("#rowNo").val(row); 

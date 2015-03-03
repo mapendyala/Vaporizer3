@@ -914,75 +914,7 @@ public class TargetPartner {
 
  }
 
-	public void saveDataDB(List<MainPage> data, HttpServletRequest request,
-			String projId) throws ConnectionException {
-		HttpSession session = request.getSession(true);
-
-		SObject[] contacts = new SObject[data.size()];
-		int counter = 0;
-		for (Iterator<MainPage> iterator = data.iterator(); iterator.hasNext();) {
-			MainPage mainPage = (MainPage) iterator.next();
-			if (mainPage.getSfdcId().equals("")) {
-				SObject contact = new SObject();
-				contact.setType("Mapping_Staging_Table__c");
-				contact.setField("Migrate__c",
-						mainPage.getMigrate());
-
-				contact.setField("Sequence__c", mainPage.getSequence());
-				contact.setField("Prim_Base_Table__c",
-						mainPage.getPrimBaseTable());
-				contact.setField("Project__c",
-						((String) session.getAttribute("projectId")));
-				contact.setField("SFDC_Object__c", mainPage.getSfdcObject());
-				contact.setField("Siebel_Object__c", mainPage.getSiebelObject());
-				contact.setField("Threshold__c", mainPage.getThreshold());
-				contacts[counter] = contact;
-				counter++;
-				// Add this sObject to an array
-				/**************SaveResult[] saveResults = getForceApi().create(
-						contacts);*******************/
-				/*for (int j = 0; j < saveResults.length; j++) {
-					//System.out.println(saveResults[j].isSuccess());
-					// System.out.println(results[i].getErrors()[i].getMessage());
-				}*/
-			} else {
-				String sqlQuery = "Select Id from Mapping_Staging_Table__c where Id ='"
-						+ mainPage.getSfdcId() + "'";
-				QueryResult<Map> qr = getForceApi().query(sqlQuery);
-				List<Map> records = qr.getRecords();
-				for (int i = 0; i < records.size(); i++) {
-					Map<String, Object> updateContact = new HashMap<String, Object>();
-					//updateContact.setType("Mapping_Staging_Table__c");
-					//updateContact.setId(mainPage.getSfdcId());
-					updateContact.put("Migrate__c",
-							mainPage.getMigrate());
-					updateContact.put("Prim_Base_Table__c",
-							mainPage.getPrimBaseTable());
-					updateContact.put("Project__c",
-							((String) session.getAttribute("projectId")));
-					updateContact.put("SFDC_Object__c",
-							mainPage.getSfdcObject());
-					updateContact.put("Siebel_Object__c",
-							mainPage.getSiebelObject());
-					updateContact.put("Threshold__c",
-							mainPage.getThreshold());
-					updateContact.put("Sequence__c",
-							mainPage.getSequence());
-
-					/***SaveResult[] saveResults = getForceApi()
-							.update(new SObject[] { updateContact });********/
-					/*for (int j = 0; j < saveResults.length; j++) {
-						//System.out.println(saveResults[j].isSuccess());
-						// System.out.println(results[i].getErrors()[i].getMessage());
-					}*/
-
-				}
-
-			}
-
-		}
-	}
-
+	
 	
 	public String getMappingId(String projectId,
 			List<MappingModel> mappingData, JSONObject tableData) {

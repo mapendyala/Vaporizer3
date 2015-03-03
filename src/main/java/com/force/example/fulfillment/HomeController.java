@@ -19,6 +19,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.io.FileUtils;
+import org.hsqldb.lib.StringUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -32,6 +33,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+
+import antlr.StringUtils;
 
 import com.force.example.fulfillment.order.controller.SiebelObjectController;
 import com.force.example.fulfillment.order.model.MainPage;
@@ -474,6 +477,10 @@ public class HomeController {
 			//Else go to mapping page
 			logger.info("Welcome to single valued mapping ");
 			String rowId=request.getParameter("rowId" );
+			if(rowId==null || rowId.equals("")){
+				Map<String,String> mapSeqId= prtnrWSDL.getIdForSeq((String)session.getAttribute("projectId"));
+				rowId=mapSeqId.get(rowNo);
+			}
 			String subprojectId=tg.getsubprojects(siebelTableNameValue);
 			if(null != subprojectId){
 				

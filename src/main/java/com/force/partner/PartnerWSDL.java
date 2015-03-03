@@ -1052,6 +1052,46 @@ System.out.println("records "+records);
 		System.out.println("\nQuery execution completed.");
 		return data;
 	}
+	
+	
+	
+	public Map<String,String> getIdForSeq(String projectId) {
+		Map<String,String> mapOfIdSeq= new HashMap<String, String>();
+		try {
+			
+			// SOQL query to use
+			String soqlQuery = "Select Id, Sequence__c from Mapping_Staging_Table__c where Project__c ='"
+					+ projectId + "'";
+			// Make the query call and get the query results
+			QueryResult qr = partnerConnection.query(soqlQuery);
+			boolean done = false;
+
+			while (!done) {
+				System.out.println("done");
+				SObject[] records = qr.getRecords();
+				// Process the query results
+				System.out.println("length" + records.length);
+				for (int i = 0; i < records.length; i++) {
+					SObject contact = records[i];
+					String id = (String) contact.getField("Id");
+					String seq = (String) contact.getField("Sequence__c");
+					mapOfIdSeq.put(seq,id);
+				}
+			//	System.out.println("dataaaa  " + data);
+				if (qr.isDone()) {
+					done = true;
+				} else {
+					qr = partnerConnection.queryMore(qr.getQueryLocator());
+				}
+
+			}
+
+		} catch (ConnectionException ce) {
+			ce.printStackTrace();
+		}
+		System.out.println("\nQuery execution completed.");
+		return mapOfIdSeq;
+	}
 
 	// Amrita
 	public String getMappingId(String projectId,
