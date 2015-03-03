@@ -73,7 +73,7 @@ public class HomeController {
 		JSONObject authParams = getOAuthToken();
 		
 		session.setAttribute("authParams", authParams);
-		String projectId = "a0PG000000CHllH";
+		String projectId = "a0PG000000CHllHMAT";
 		if(request.getParameter("projectId") != null){
 			projectId = request.getParameter("projectId");
 		}
@@ -211,6 +211,8 @@ public class HomeController {
 		PartnerWSDL partnerWSDL = new PartnerWSDL(request.getSession());
 		mappingData.clear();
 		rowCount= request.getParameter("rowCount");
+		TargetPartner tp= new TargetPartner(session);
+		data = tp.getSavedDBData((String)session.getAttribute("projectId"), data);
 		for(int i=0;i<Integer.parseInt(rowCount);i++){
 			String siebelCheckFlag="select"+i;
 			MappingModel mappingModel = new MappingModel();
@@ -487,9 +489,7 @@ public class HomeController {
 				PartnerWSDL prtnrWSDL1 = new PartnerWSDL(request.getSession());
 				prtnrWSDL1.login();
 				JSONObject tableName = tg.getRelatedSiebelTable(subprojectId);// gives
-				String id = tg.getMappingId(
-						(String) session.getAttribute("projectId"),
-						mappingData, tableName);
+				
 				List<MappingModel> mappingDataSaved = prtnrWSDL
 						.getSavedMappingSingleValueDBData(
 								rowId,mappingData);
@@ -517,7 +517,7 @@ public class HomeController {
 				 * modelChild.addAttribute("mappingData",mappingData);} else
 				 */
 					modelChild.addAttribute("mappingData",mappingDataSaved);
-				modelChild.addAttribute("MappingId",id);
+				modelChild.addAttribute("MappingId",rowId);
 
 			}
 			return new ModelAndView("mapping", "data", data);
