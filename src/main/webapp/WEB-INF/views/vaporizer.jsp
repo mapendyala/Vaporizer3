@@ -534,6 +534,7 @@ function submitForm(rowNum, page){
 						</table>
 						 <div id="row"><input id="rowCount" name='rowCount' type="hidden" value="${data.size()}"></div>
 						  <div id="page"><input id="pageName" name='pageName' type="hidden" readonly></div>
+<input id="rowId" name='rowId' type="hidden" readonly>
 						 <div id="No"><input id="rowNo" name='rowNo' type="hidden" readonly></div>
 			</form:form>
 		 <div class="buttonContainer">

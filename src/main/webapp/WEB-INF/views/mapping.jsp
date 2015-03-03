@@ -365,7 +365,7 @@
 					</div>
 			</div>
 
-<input id="rowId" name='rowId' type="hidden" value="${sbllFlddNmList}">
+<input id="rowId" name='rowId' type="hidden" value="${rowId}">
 
 			</form:form>
 		</div>
