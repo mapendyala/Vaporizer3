@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.force.example.fulfillment.order.model.MappingSFDC;
 import com.force.partner.PartnerWSDL;
+//import com.force.utility.ChildObjectBO;
 import com.force.utility.SiebelObjectBO;
 
 /**
@@ -204,7 +205,9 @@ public class SiebelObjectController {
 			}
 		}	 return myList; 
 	}	
+	@RequestMapping(value="/siebelChildObject", method=RequestMethod.POST)
 
+	
 	public void makeConnection(){
 		try{
 			Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -440,7 +443,7 @@ public class SiebelObjectController {
 						if(dupJoinNm == null){
 							colNameUI = "T1_"+rowNumber+"."+columnName;
 						}else{
-							colNameUI = "T1_"+simlrRowNumber+"."+columnName;
+							colNameUI = colNmRowNmMap.get(simlrRowNumber).substring(0,colNmRowNmMap.get(simlrRowNumber).indexOf(".")) +"."+columnName;
 						}
 						
 					}
@@ -465,12 +468,28 @@ public class SiebelObjectController {
 			 Integer removedJoinNm = joinNmRowNumMap.get(joinNmKey);
 			 String prevJoinName = rowNumJoinNameMap.get(removedJoinNm); 
 			 
-			 if(!(prevJoinName.equals(joinNmKey))){
+			 if((prevJoinName != null && joinNmKey != null && !(prevJoinName.equals(joinNmKey))) || (prevJoinName !=null && joinNmKey == null) || (prevJoinName == null && joinNmKey != null)){
 				 
 				 joinNmRowNumMap.remove(joinNmKey);
-				 joinNmRowNumMap.put(joinNmKey, rowNum);
 				 
-				 return null;
+				 Boolean bFound = false;
+				 
+				 for (Map.Entry<Integer, String> e : rowNumJoinNameMap.entrySet()) {
+					    Integer key = e.getKey();
+					    String value = e.getValue();
+					    
+					    if (value != null && joinNmKey != null && value.equals(joinNmKey)) {
+					    	bFound = true;
+					    	joinNmRowNumMap.put(joinNmKey, key);
+					    	return joinNmRowNumMap.get(joinNmKey);
+					    }
+					}
+				 
+				 if(!bFound) {
+					 joinNmRowNumMap.put(joinNmKey, rowNum);
+					 return null;
+				 }
+				 
 			 }
 			 
 			 else {
@@ -510,7 +529,7 @@ public class SiebelObjectController {
 			int size = colNameMap.size();
 			StringBuffer extractionQry =  new StringBuffer("SELECT ");
 			String colNms = null;
-			String joinCond = " ";
+			String joinCond = "";
 		/*	Iterator colNmItrtr = colNameMap.entrySet().iterator();
 			while (colNmItrtr.hasNext()) {
 				String asCondition = null;
@@ -594,7 +613,7 @@ public class SiebelObjectController {
 		        }
 		    }
 			
-			StringBuffer extractionQry2 = new StringBuffer("SELECT ")/*.append(aliasConditionQry).append(" FROM DUAL UNION ").append("SELECT ")*/.append(columnNamesQry).append(" FROM ");
+			StringBuffer extractionQry2 = new StringBuffer("SELECT ")/*.append(aliasConditionQry).append(" FROM DUAL UNION ").append("SELECT ")*/.append(columnNamesQry).append(" FROM");
 			
 			
 			/*********---------- End *************/
@@ -602,12 +621,16 @@ public class SiebelObjectController {
 	        for(String key: keys){
 	            System.out.println(key);
 	            String joinCondition = joinCndtnMap.get(joinNameMap.get(key));
-	            joinCond = joinCond + joinCondition + " ";
+	            
+	            if(joinCondition != null && joinCondition != ""){
+	            	joinCond = joinCond + " " + joinCondition;
+	            }
+	            
 	        }
 			
 		//	extractionQry = extractionQry.append(colNms.substring(0, colNms.length())).append(" FROM ").append("SIEBEL.").append(baseTable).append(" T0").append(joinCond);
 			
-			extractionQry2 = extractionQry2.append("SIEBEL.").append(baseTable).append(" T0").append(joinCond);
+			extractionQry2 = extractionQry2.append(" SIEBEL.").append(baseTable).append(" T0").append(joinCond);
 			System.out.println("EXtraction Query 2  :"  + extractionQry2.toString());
 			File file = null;
 			if(extractionQry != null){

@@ -1237,6 +1237,7 @@ System.out.println("records "+records);
 				SiebelObjectController.relationShpNmRowNmMap = new HashMap<Integer, String>();
 				SiebelObjectController.salesFrcNmRowNmMap = new HashMap<Integer, String>();
 				SiebelObjectController.externalIdRowNmMap = new HashMap<Integer, String>();
+				SiebelObjectController.rowNumJoinNameMap = new HashMap<Integer, String>();
 			 
 			while (!done1) {
 				SObject[] records1 = qr1.getRecords();
@@ -1285,6 +1286,9 @@ System.out.println("records "+records);
 					if(extrnlId != null && !extrnlId.trim().equals("")){
 						SiebelObjectController.externalIdRowNmMap.put(j, extrnlId);
 					}
+					
+					SiebelObjectController.rowNumJoinNameMap.put(j, joinName);
+					
 					mappingData.add(mappingModel1);
 				}
 
