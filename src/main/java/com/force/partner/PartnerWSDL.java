@@ -763,8 +763,7 @@ System.out.println("records "+records);
 		}*/
 	}
 
-	public void saveMappingSingleValuedDataIntoDB(List<MappingModel> data,
-			HttpServletRequest request, String attribute)
+	public void saveMappingSingleValuedDataIntoDB(List<MappingModel> data)
 			throws ConnectionException {
 		List<SObject> lstContactUpdate= new ArrayList<SObject>();
 		List<SObject> lstContactInsert= new ArrayList<SObject>();
@@ -781,8 +780,8 @@ System.out.println("records "+records);
 						mappingModel.getFrgnKeyrow());
 				contact.setField("Join_Name__c",
 						mappingModel.getJoinNamerow());
-				/*contact.setField("SFDC_Field_Description__c",
-						mappingModel.getSlsfrcdscription());*/
+				contact.setField("Mapping_Staging_Table__c",
+						mappingModel.getSfdcRowId());
 				contact.setField("SFDC_Field_Name__c",
 						mappingModel.getSlfrcdropdown());
 			/*	contact.setField("Siebel_Field_Description__c",
@@ -815,6 +814,8 @@ System.out.println("records "+records);
 				contact.setType("Single_Valued_Screen__c");
 				contact.setField("Foreign_Key_Table__c",
 						mappingModel.getFrgnKeyrow());
+				contact.setField("Mapping_Staging_Table__c",
+						mappingModel.getSfdcRowId());
 				contact.setField("Join_Name__c",
 						mappingModel.getJoinNamerow());
 				contact.setField("Id",
@@ -1190,14 +1191,14 @@ System.out.println("records "+records);
 		return mappingData;
 	}
 	
-	public List<MappingModel> getSavedMappingSingleValueDBData(String projectId,
-			List<MappingModel> mappingData, JSONObject tableData , String entityName) {
+	public List<MappingModel> getSavedMappingSingleValueDBData(String rowId,
+			List<MappingModel> mappingData) {
 		try {
 			partnerConnection.setQueryOptions(250);
 			// SOQL query to use
 			// String subprojectId="a0PG000000AtiEAMAZ";
 			String soqlQuery1 = "Select Id,  Foreign_Key_Table__c, SFDC_Field_Description__c, SFDC_Field_Name__c, Siebel_Field_Description__c, Siebel_Field_Name__c,"
-					+ "Column_Name__c,Lov_Mapping__c,Select__c,Join_Condition__C,Join_Name__c,LookUpField__c,LookUpObject__c,Lookup_External_Id_Field__c,Lookup_Relationship_Name__c from Single_Valued_Screen__c where  Siebel_Table_Name__c='"+ entityName + "'";
+					+ "Column_Name__c,Lov_Mapping__c,Select__c,Join_Condition__C,Join_Name__c,LookUpField__c,LookUpObject__c,Lookup_External_Id_Field__c,Lookup_Relationship_Name__c from Single_Valued_Screen__c where  Mapping_Staging_Table__c='"+ rowId + "'";
 			// Make the query call and get the query results
 			QueryResult qr1 = partnerConnection.query(soqlQuery1);
 			boolean done1 = false;
@@ -1211,6 +1212,7 @@ System.out.println("records "+records);
 				SiebelObjectController.relationShpNmRowNmMap = new HashMap<Integer, String>();
 				SiebelObjectController.salesFrcNmRowNmMap = new HashMap<Integer, String>();
 				SiebelObjectController.externalIdRowNmMap = new HashMap<Integer, String>();
+				SiebelObjectController.rowNumJoinNameMap = new HashMap<Integer, String>();
 			 
 			while (!done1) {
 				SObject[] records1 = qr1.getRecords();
@@ -1259,6 +1261,9 @@ System.out.println("records "+records);
 					if(extrnlId != null && !extrnlId.trim().equals("")){
 						SiebelObjectController.externalIdRowNmMap.put(j, extrnlId);
 					}
+					
+					SiebelObjectController.rowNumJoinNameMap.put(j, joinName);
+					
 					mappingData.add(mappingModel1);
 				}
 

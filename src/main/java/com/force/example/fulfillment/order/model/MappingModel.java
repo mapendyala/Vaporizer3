@@ -23,7 +23,14 @@ public class MappingModel {
 	public String lookUpObject;
 	public String lookUpRelationShipName;
 	public String lookUpExternalId;
+	public String sfdcRowId;
 	
+	public String getSfdcRowId() {
+		return sfdcRowId;
+	}
+	public void setSfdcRowId(String sfdcRowId) {
+		this.sfdcRowId = sfdcRowId;
+	}
 	public String getId() {
 		return id;
 	}

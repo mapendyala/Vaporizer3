@@ -192,6 +192,7 @@ public class SiebelObjectController {
 			}
 		}	 return myList; 
 	}	
+	@RequestMapping(value="/siebelChildObject", method=RequestMethod.POST)
 
 	public void makeConnection(){
 		try{
@@ -225,12 +226,10 @@ public class SiebelObjectController {
 							+ "AND BUSCOMP.NAME = '"+siebelObjName+"'";
 					
 					Statement st=connection.createStatement();
-					System.out.println("fieldNameQry is"+fieldNameQry);
 					ResultSet mySet=st.executeQuery(fieldNameQry);
 					while(mySet.next()){
 						fieldNameList.add(mySet.getString(1));
 					}
-					System.out.println("list size is"+fieldNameList.size());
 				}
 			}
 			catch(SQLException e){
@@ -293,6 +292,12 @@ public class SiebelObjectController {
 						
 						Integer dupJoinNm = addJoinToMap(joinNameUi, rowNumber);
 						Integer simlrRowNumber = null;
+						
+						//List<String> usedJoinNames = new ArrayList<String>();
+						Map<String, String> usedJoinNames = new HashMap<String, String>();
+						
+						//usedJoinNames.add(joinName);
+						
 						if(dupJoinNm == null){
 							
 							while(joinName != null && !joinName.trim().equals("")){
@@ -421,7 +426,7 @@ public class SiebelObjectController {
 						if(dupJoinNm == null){
 							colNameUI = "T1_"+rowNumber+"."+columnName;
 						}else{
-							colNameUI = "T1_"+simlrRowNumber+"."+columnName;
+							colNameUI = colNmRowNmMap.get(simlrRowNumber).substring(0,colNmRowNmMap.get(simlrRowNumber).indexOf(".")) +"."+columnName;
 						}
 						
 					}
@@ -449,9 +454,25 @@ public class SiebelObjectController {
 			 if(!(prevJoinName.equals(joinNmKey))){
 				 
 				 joinNmRowNumMap.remove(joinNmKey);
-				 joinNmRowNumMap.put(joinNmKey, rowNum);
 				 
-				 return null;
+				 Boolean bFound = false;
+				 
+				 for (Map.Entry<Integer, String> e : rowNumJoinNameMap.entrySet()) {
+					    Integer key = e.getKey();
+					    String value = e.getValue();
+					    
+					    if (value != null && joinNmKey != null && value.equals(joinNmKey)) {
+					    	bFound = true;
+					    	joinNmRowNumMap.put(joinNmKey, key);
+					    	return joinNmRowNumMap.get(joinNmKey);
+					    }
+					}
+				 
+				 if(!bFound) {
+					 joinNmRowNumMap.put(joinNmKey, rowNum);
+					 return null;
+				 }
+				 
 			 }
 			 
 			 else {
@@ -465,8 +486,8 @@ public class SiebelObjectController {
 		 
 		 return null;
 	 }
-	 
-	 public File getextractionData(HttpServletRequest request, String projectId, String baseTable, String subProjectId, String siebelTableNameValue, String sfdcObject) {
+	 /**rachita**/
+	 public File getextractionData(HttpServletRequest request, String rowId, String baseTable, String subProjectId, String siebelTableNameValue, String sfdcObject) {
 			Map<String,Integer> joinNameMap =  SiebelObjectController.joinNmRowNumMap;
 			Map<Integer,String> colNameMap =  SiebelObjectController.colNmRowNmMap;
 			Map<Integer,String> joinCndtnMap =  SiebelObjectController.joinCndtnRowNmMap;
@@ -479,7 +500,7 @@ public class SiebelObjectController {
 			if(joinNameMap.isEmpty()){
 				PartnerWSDL prtnrWSDL = new PartnerWSDL(request.getSession());
 				prtnrWSDL.login();
-				prtnrWSDL.getSavedMappingSingleValueDBData(projectId, null, null, siebelTableNameValue);
+				prtnrWSDL.getSavedMappingSingleValueDBData(rowId,null);
 				joinNameMap =  SiebelObjectController.joinNmRowNumMap;
 				colNameMap =  SiebelObjectController.colNmRowNmMap;
 				joinCndtnMap =  SiebelObjectController.joinCndtnRowNmMap;
@@ -490,13 +511,48 @@ public class SiebelObjectController {
 			Map<Integer,String> headers = new HashMap<Integer,String>();
 			int size = colNameMap.size();
 			StringBuffer extractionQry =  new StringBuffer("SELECT ");
-			String joinCond = " ";
+			String colNms = null;
+			String joinCond = "";
+		/*	Iterator colNmItrtr = colNameMap.entrySet().iterator();
+			while (colNmItrtr.hasNext()) {
+				String asCondition = null;
+
+				Map.Entry pair = (Map.Entry)colNmItrtr.next();
+		        String colmVal = (String)  pair.getValue();
+		        if(colNms == null){
+		        	colNms = colmVal;
+		        }else{
+		        	colNms =  colNms + "," + colmVal;
+		        }
+		        Integer rowNumKey = (Integer)pair.getKey();
+		        if((reltnShpMap.containsKey(rowNumKey) && reltnShpMap.get(rowNumKey) != null && !reltnShpMap.get(rowNumKey).equals("")) &&
+		        		(extrnlIdMap.containsKey(rowNumKey) && extrnlIdMap.get(rowNumKey) != null && !extrnlIdMap.get(rowNumKey).equals(""))){
+		        	asCondition = " AS \"" ;
+		        	asCondition = asCondition + salesForceObjName + "#" + reltnShpMap.get(rowNumKey) + "." + extrnlIdMap.get(rowNumKey);
+		        	asCondition = asCondition +"\"";
+		        	colNms = colNms + asCondition;
+		        	String mapVal = asCondition.replace("\"", "").replace("AS", "");
+		        	headers.put(rowNumKey, mapVal);
+		        }else if(slFrcNm.containsKey(rowNumKey) && slFrcNm.get(rowNumKey) != null && !slFrcNm.get(rowNumKey).equals("")){
+		        	asCondition = " AS \"" ;
+		        	asCondition = asCondition + salesForceObjName + "#" + slFrcNm.get(rowNumKey);
+		        	asCondition = asCondition + "\"";
+		        	colNms = colNms + asCondition;
+		        	String mapVal = asCondition.replace("\"", "").replace("AS", "");
+		        	headers.put(rowNumKey, mapVal);
+		        }else{
+		        	return "Sales Force Fields are not selected for row : " + rowNumKey;
+		        }
+		    }*/
+			
+			
 	/***** ----- UNION Query -----Start  **********/
 			
 			String columnNamesQry = null;
 			String aliasConditionQry = null;
 			Iterator colNmItrtr1 = colNameMap.entrySet().iterator();
 			while (colNmItrtr1.hasNext()) {
+				String asCondition = null;
 
 				Map.Entry pair = (Map.Entry)colNmItrtr1.next();
 		        String colmVal = (String)  pair.getValue();
@@ -520,6 +576,7 @@ public class SiebelObjectController {
 		        		aliasConditionQry = aliasConditionQry + "\'";
 		        	}
 		        	
+		        	String mapVal = aliasConditionQry.replace("\'", "");
 		        	headers.put(rowNumKey, salesForceObjName /*+ "#"*/ + reltnShpMap.get(rowNumKey) + "." + extrnlIdMap.get(rowNumKey));
 		        }else if(slFrcNm.containsKey(rowNumKey) && slFrcNm.get(rowNumKey) != null && !slFrcNm.get(rowNumKey).equals("")){
 		        	if(aliasConditionQry == null){
@@ -532,13 +589,14 @@ public class SiebelObjectController {
 		        		aliasConditionQry = aliasConditionQry + salesForceObjName /*+ "#"*/ + slFrcNm.get(rowNumKey);
 		        		aliasConditionQry = aliasConditionQry + "\'";
 		        	}
+		        	String mapVal = aliasConditionQry.replace("\"", "");
 		        	headers.put(rowNumKey, salesForceObjName /*+ "#"*/ + slFrcNm.get(rowNumKey));
 		        }else{
 		        	/*return "Sales Force Fields are not selected for row : " + rowNumKey;*/
 		        }
 		    }
 			
-			StringBuffer extractionQry2 = new StringBuffer("SELECT ")/*.append(aliasConditionQry).append(" FROM DUAL UNION ").append("SELECT ")*/.append(columnNamesQry).append(" FROM ");
+			StringBuffer extractionQry2 = new StringBuffer("SELECT ")/*.append(aliasConditionQry).append(" FROM DUAL UNION ").append("SELECT ")*/.append(columnNamesQry).append(" FROM");
 			
 			
 			/*********---------- End *************/
@@ -546,12 +604,16 @@ public class SiebelObjectController {
 	        for(String key: keys){
 	            System.out.println(key);
 	            String joinCondition = joinCndtnMap.get(joinNameMap.get(key));
-	            joinCond = joinCond + joinCondition + " ";
+	            
+	            if(joinCondition != null && joinCondition != ""){
+	            	joinCond = joinCond + " " + joinCondition;
+	            }
+	            
 	        }
 			
 		//	extractionQry = extractionQry.append(colNms.substring(0, colNms.length())).append(" FROM ").append("SIEBEL.").append(baseTable).append(" T0").append(joinCond);
 			
-			extractionQry2 = extractionQry2.append("SIEBEL.").append(baseTable).append(" T0").append(joinCond);
+			extractionQry2 = extractionQry2.append(" SIEBEL.").append(baseTable).append(" T0").append(joinCond);
 			System.out.println("EXtraction Query 2  :"  + extractionQry2.toString());
 			File file = null;
 			if(extractionQry != null){
@@ -561,6 +623,7 @@ public class SiebelObjectController {
 			}
 			makeConnection();
 			ResultSet mySet = null;
+			ResultSetMetaData rsmd = null;
 			try{
 				if (connection != null){
 					Statement st=connection.createStatement();

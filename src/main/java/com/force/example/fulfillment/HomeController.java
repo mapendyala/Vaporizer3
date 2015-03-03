@@ -203,6 +203,7 @@ public class HomeController {
 
 	public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> model) throws ConnectionException {	
 		HttpSession session = request.getSession(true);
+		String rowId= request.getParameter("rowId");
 		System.out.println("------mappingSave entry-----");
 		PartnerWSDL partnerWSDL = new PartnerWSDL(request.getSession());
 		mappingData.clear();
@@ -214,6 +215,10 @@ public class HomeController {
 				mappingModel.setId(request.getParameter("sfdcId"+i));}
 			else
 				mappingModel.setId("");
+			if (rowId != null) {
+				mappingModel.setSfdcRowId(rowId);
+			} else
+				mappingModel.setSfdcRowId("");
 			if(request.getParameter(siebelCheckFlag)!=null){
 				mappingModel.setCheckFlag(true);
 			}else
@@ -265,7 +270,7 @@ public class HomeController {
 			mappingData.add(mappingModel);
 		}
 		if(partnerWSDL.login()){
-			partnerWSDL.saveMappingSingleValuedDataIntoDB(mappingData, request, (String)session.getAttribute("projectId"));
+			partnerWSDL.saveMappingSingleValuedDataIntoDB(mappingData);
 		}
 		return new ModelAndView("vaporizer" , "data", data);
 
@@ -279,6 +284,7 @@ public class HomeController {
 		TargetPartner tg= new TargetPartner(request.getSession());
 		
 		String siebelTableNameValue = request.getParameter("siebelObjName");
+		String sfdcId=request.getParameter("sfdcId");
 		String subprojectId=tg.getsubprojects(siebelTableNameValue);
 		SiebelObjectController sblObjCntrlr = new SiebelObjectController();
 		PartnerWSDL prtnrWSDL = new PartnerWSDL(request.getSession());
@@ -286,8 +292,10 @@ public class HomeController {
 		String baseTable = request.getParameter("baseTable");
 		String sfdcObject = request.getParameter("sfdcObject");
 		
-		System.out.println("========="+baseTable+"===="+subprojectId+"==="+siebelTableNameValue+"===="+sfdcObject);
-	    File  mappingFIle = sblObjCntrlr.getextractionData(request, projId, baseTable, subprojectId, siebelTableNameValue, sfdcObject);
+		System.out.println("=========" + baseTable + "====" + subprojectId
+				+ "===" + siebelTableNameValue + "====" + sfdcObject);
+		File mappingFIle = sblObjCntrlr.getextractionData(request, sfdcId,
+				baseTable, subprojectId, siebelTableNameValue, sfdcObject);
 	    
 	    String fullPath=mappingFIle.getAbsolutePath();
 	    File downloadFile = new File(fullPath);     
@@ -465,15 +473,19 @@ public class HomeController {
 		if(page.equals("map")){
 			//Else go to mapping page
 			logger.info("Welcome to single valued mapping ");
-            System.out.println("---------------"+thresholdValue+" "+primBaseValue);
+			String rowId=request.getParameter("rowId" );
 			String subprojectId=tg.getsubprojects(siebelTableNameValue);
 			if(null != subprojectId){
 				
 				PartnerWSDL prtnrWSDL1 = new PartnerWSDL(request.getSession());
 				prtnrWSDL1.login();
-				JSONObject tableName=tg.getRelatedSiebelTable(subprojectId);//gives siebel and sfdc table name
-				String id=tg.getMappingId((String)session.getAttribute("projectId"),mappingData,tableName);
-				List<MappingModel> mappingDataSaved=prtnrWSDL.getSavedMappingSingleValueDBData((String)session.getAttribute("projectId"), mappingData, tableName, siebelTableNameValue);
+				JSONObject tableName = tg.getRelatedSiebelTable(subprojectId);// gives
+				String id = tg.getMappingId(
+						(String) session.getAttribute("projectId"),
+						mappingData, tableName);
+				List<MappingModel> mappingDataSaved = prtnrWSDL
+						.getSavedMappingSingleValueDBData(
+								rowId,mappingData);
 				SiebelObjectController siObj=new SiebelObjectController();
 				//Gets the list of SFDC Field names
 				List<MappingSFDC> sfdcObjList = prtnrWSDL1.getSFDCFieldList((String)sfdcObjectName);
@@ -492,9 +504,11 @@ public class HomeController {
 				modelChild.addAttribute("sbllFlddNmList",sblFldList);
 				modelChild.addAttribute("sblObjName",siebelTableNameValue);
 				modelChild.addAttribute("hdrValues",hdrValues);
-			/*	if(mappingDataSaved.isEmpty()){
-					modelChild.addAttribute("mappingData",mappingData);}
-				else*/
+				modelChild.addAttribute("rowId", rowId);
+				/*
+				 * if(mappingDataSaved.isEmpty()){
+				 * modelChild.addAttribute("mappingData",mappingData);} else
+				 */
 					modelChild.addAttribute("mappingData",mappingDataSaved);
 				modelChild.addAttribute("MappingId",id);
 
@@ -556,7 +570,6 @@ public class HomeController {
 	                      
 	               		authParams.put("oAuthToken", accessToken);
 	               		authParams.put("instanceUrl", instanceUrl);
-	                        System.out.println("Got access token: " + accessToken);
 	                    } catch (JSONException e) {
 	                        e.printStackTrace();
 	                        

@@ -70,7 +70,7 @@ var sfdcObjectForExtarction="";
 								+ "<td><input type='text' id ="+thresholdId+" name="+thresholdId+" onchange='makeReadonly("+rowNum+")' style='margin-left:15px;'></td>"
 								+ "<td><a href='#' onclick='submitForm("+rowNum+")' style='margin-left:15px;'>Select</a></td>" 
 								+ "<td><input id="+SFDCObjName+" name="+SFDCObjName+" readonly='true' style='margin-left:35px;'/><button type='button'id="+srchSFDCObj+" style='display: inline;' onclick='getSFDCPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
-								+ "<td><a href='#' onclick='submit("+rowNum+")' style='margin-left:15px;'>Select</a></td>"
+								+ "<td><a href='#' onclick='submit("+rowNum+"$"+")' style='margin-left:15px;'>Select</a></td>"
 								+ "<td><c:out value='Selected'/></td>"
 								+ "<td>"
 								+ "<input class='btn btn-inverse' type='button' name='Extract' value='E' onclick='extract("+rowNum+")'/>"
@@ -282,14 +282,17 @@ var sfdcObjectForExtarction="";
  function submit(rowNum)
 	  
 	  {		
+	   var values = rowNum.split("$");
+			var row=values[0]; 
+			var rowId=values[1];
 		  var page = "map";
-		  $("#rowNo").val(rowNum); 
+		  $("#rowId").val(rowId);
+		  $("#rowNo").val(row); 
 		  $("#pageName").val(page);
 		  $("#mainForm").submit(); 
 				 
 	  }
 function submitForm(rowNum, page){
-	alert(page);
 	  $("#rowNo").val(rowNum); 
 	  $("#pageName").val(page);
 	  $("#mainForm").submit();
@@ -512,7 +515,7 @@ function submitForm(rowNum, page){
 								<td><input type='text' id="thresh${mainPage.sequence}" name="thresh${mainPage.sequence}" value="${mainPage.threshold}" onchange='makeReadonly(${mainPage.sequence})' style='margin-left:15px;'></td>
 								<td><a href="#" onclick='submitForm(${mainPage.sequence})' style='margin-left:15px;'>Select</a></td>
 								<td width="220px"><input name="SFDCObjName${mainPage.sequence}" id="SFDCObjName${mainPage.sequence}" value="${mainPage.sfdcObject}" readonly /><button type='button' style='display: inline;'><span class='glyphicon glyphicon-search'></span></button></td>
-								<td><a href='#' onclick='submit(${mainPage.sequence})' style='margin-left:15px;'>Select</a></td>
+								<td><a href='#' onclick='submit("${mainPage.sequence}$${mainPage.sfdcId}")' style='margin-left:15px;'>Select</a></td>
 								<td><a href='#' onclick='submitForm(${mainPage.sequence},"multiMap")' style='margin-left:15px;'>Select</a></td>
 								<td><a href='#' onclick='submitDependant(${mainPage.sequence},"dependantEntity")' style='margin-left:15px;'>Select</a></td>
 								<td><c:out value='Selected'/></td>
