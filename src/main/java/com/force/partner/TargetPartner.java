@@ -393,7 +393,7 @@ public class TargetPartner {
 		return sobjectResults;
 	}
 
-	public String getsubprojects(String siebelTableName) {
+	/*public String getsubprojects(String siebelTableName) {
 		String subprojectId = null;
 		String parentProjectId = "a0PG000000AtiE5";
 		try {
@@ -435,8 +435,8 @@ public class TargetPartner {
 		// Project__c where Parent_Project__c='a0PG000000AtiE5' and
 		// Name='Account_PreDefined_Mapping'];
 	}
-
-	public JSONObject getRelatedSiebelTable(String subprojectId) {
+*/
+	/*public JSONObject getRelatedSiebelTable(String subprojectId) {
 		JSONObject tableData = new JSONObject();
 		try {
 			//partnerConnection.setQueryOptions(250);
@@ -485,7 +485,7 @@ public class TargetPartner {
 		// Project__c where Parent_Project__c='a0PG000000AtiE5' and
 		// Name='Account_PreDefined_Mapping'];
 	}
-	
+	*/
 	
 	
 

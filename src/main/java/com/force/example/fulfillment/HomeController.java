@@ -288,17 +288,16 @@ public class HomeController {
 		
 		String siebelTableNameValue = request.getParameter("siebelObjName");
 		String sfdcId=request.getParameter("sfdcId");
-		String subprojectId=tg.getsubprojects(siebelTableNameValue);
+		//String subprojectId=tg.getsubprojects(siebelTableNameValue);
 		SiebelObjectController sblObjCntrlr = new SiebelObjectController();
 		PartnerWSDL prtnrWSDL = new PartnerWSDL(request.getSession(),true);
 		prtnrWSDL.login();
 		String baseTable = request.getParameter("baseTable");
 		String sfdcObject = request.getParameter("sfdcObject");
 		
-		System.out.println("=========" + baseTable + "====" + subprojectId
-				+ "===" + siebelTableNameValue + "====" + sfdcObject);
+		System.out.println("=========" + baseTable + "====" +  siebelTableNameValue + "====" + sfdcObject);
 		File mappingFIle = sblObjCntrlr.getextractionData(request, sfdcId,
-				baseTable, subprojectId, siebelTableNameValue, sfdcObject);
+				baseTable,  siebelTableNameValue, sfdcObject);
 	    
 	    String fullPath=mappingFIle.getAbsolutePath();
 	    File downloadFile = new File(fullPath);     
@@ -481,12 +480,12 @@ public class HomeController {
 				Map<String,String> mapSeqId= prtnrWSDL.getIdForSeq((String)session.getAttribute("projectId"));
 				rowId=mapSeqId.get(rowNo);
 			}
-			String subprojectId=tg.getsubprojects(siebelTableNameValue);
-			if(null != subprojectId){
+			
+			
 				//
 				PartnerWSDL prtnrWSDL1 = new PartnerWSDL(request.getSession(),false);
 				prtnrWSDL1.login();
-				JSONObject tableName = tg.getRelatedSiebelTable(subprojectId);// gives
+				//JSONObject tableName = tg.getRelatedSiebelTable(subprojectId);// gives
 				
 				List<MappingModel> mappingDataSaved = prtnrWSDL
 						.getSavedMappingSingleValueDBData(
@@ -517,7 +516,7 @@ public class HomeController {
 					modelChild.addAttribute("mappingData",mappingDataSaved);
 				modelChild.addAttribute("MappingId",rowId);
 
-			}
+			
 			return new ModelAndView("mapping", "data", data);
 		} 
 		// Displays Multi Value Field Mapping Screen
@@ -528,8 +527,8 @@ public class HomeController {
             System.out.println("---------------"+thresholdValue+" "+primBaseValue);
 			//ThresholdController tc= new ThresholdController();
 			//List<SiebelObjectBO> listSiebelObject = tc.fetchSiebelObjects(request);
-			String subprojectId=tg.getsubprojects(siebelTableNameValue);
-			if(null != subprojectId){
+			//String subprojectId=tg.getsubprojects(siebelTableNameValue);
+			/*if(null != subprojectId){
 				JSONObject tableName=tg.getRelatedSiebelTable(subprojectId);
 				String id=tg.getMappingId((String)session.getAttribute("projectId"),mappingData,tableName);
 
@@ -544,7 +543,7 @@ public class HomeController {
 					modelChild.addAttribute("mappingData",mappingData1);
 				modelChild.addAttribute("MappingId",id);
 
-			}
+			}*/
 			return new ModelAndView("multiMapping", "data", data);
 		
 		}else{
