@@ -804,8 +804,8 @@ public class TargetPartner {
 
              if (ProjectId == null)
                   ProjectId = "a0PG000000Atg1U";
-          mappingFileURL=  new PartnerWSDL(session).getFile(file, "19SepDemoFile.csv", "application/vnd.ms-excel", ProjectId, null);
-          String SDlFileURl= new PartnerWSDL(session).getFile(mappingFile, "195SepDemoMappingFile.sdl", "application/vnd.ms-excel", ProjectId, mappingFileURL);
+          mappingFileURL=  new PartnerWSDL(session,true).getFile(file, "19SepDemoFile.csv", "application/vnd.ms-excel", ProjectId, null);
+          String SDlFileURl= new PartnerWSDL(session,true).getFile(mappingFile, "195SepDemoMappingFile.sdl", "application/vnd.ms-excel", ProjectId, mappingFileURL);
           System.out.println("filr path : " +mappingFileURL+":::::::"+SDlFileURl);
 
         } catch (Exception e) {

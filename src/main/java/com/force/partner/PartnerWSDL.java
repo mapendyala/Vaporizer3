@@ -58,10 +58,16 @@ String password;
 	}
 
 	
-	public PartnerWSDL(HttpSession session){
-		JSONObject middleWareConn=(JSONObject)session.getAttribute("middleWareConn");
-		username=middleWareConn.getString("username");
-		password=middleWareConn.getString("password");
+	public PartnerWSDL(HttpSession session,boolean fromMiddleWare){
+		if(fromMiddleWare){
+			JSONObject middleWareConn=(JSONObject)session.getAttribute("middleWareConn");
+			username=middleWareConn.getString("username");
+			password=middleWareConn.getString("password");
+		}else {
+			JSONObject middleWareConn=(JSONObject)session.getAttribute("targetOrgConn");
+			username=middleWareConn.getString("username");
+			password=middleWareConn.getString("password");
+		}
 		
 		
 	}

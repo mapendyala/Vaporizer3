@@ -83,8 +83,8 @@ public class HomeController {
 		JSONObject middleWareConn= tp.getMiddleWareData(projectId);
 		System.out.println("middleWareConn "+middleWareConn);
 		session.setAttribute("middleWareConn", middleWareConn);
-		System.out.println("data "+data);
-		System.out.println("In home page");
+		JSONObject TargetOrgConn= tp.getTargetOrgDetails(projectId);
+		session.setAttribute("targetOrgConn", TargetOrgConn);
 		return new ModelAndView("vaporizer", "data", data);
 	}
 
@@ -202,13 +202,11 @@ public class HomeController {
 	    }
 
 	@RequestMapping(value = "mappingSave", method = RequestMethod.POST)
-	//public ModelAndView save1(@ModelAttribute("data") List<MainPage> data, Locale locale, Model model) {
-
 	public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> model) throws ConnectionException {	
 		HttpSession session = request.getSession(true);
 		String rowId= request.getParameter("rowId");
 		System.out.println("------mappingSave entry-----");
-		PartnerWSDL partnerWSDL = new PartnerWSDL(request.getSession());
+		PartnerWSDL partnerWSDL = new PartnerWSDL(request.getSession(),true);
 		mappingData.clear();
 		rowCount= request.getParameter("rowCount");
 		TargetPartner tp= new TargetPartner(session);
@@ -292,7 +290,7 @@ public class HomeController {
 		String sfdcId=request.getParameter("sfdcId");
 		String subprojectId=tg.getsubprojects(siebelTableNameValue);
 		SiebelObjectController sblObjCntrlr = new SiebelObjectController();
-		PartnerWSDL prtnrWSDL = new PartnerWSDL(request.getSession());
+		PartnerWSDL prtnrWSDL = new PartnerWSDL(request.getSession(),true);
 		prtnrWSDL.login();
 		String baseTable = request.getParameter("baseTable");
 		String sfdcObject = request.getParameter("sfdcObject");
@@ -380,7 +378,7 @@ public class HomeController {
 				if(lookUpFlds == null){
 					lookUpFlds = new ArrayList<Object>();
 				}
-				PartnerWSDL prtnrWSDL1 = new PartnerWSDL(request.getSession());
+				PartnerWSDL prtnrWSDL1 = new PartnerWSDL(request.getSession(),true);
 				prtnrWSDL1.login();
 				
 				String relationShpName = mpngDtl.getRelationshipName();
@@ -427,7 +425,7 @@ public class HomeController {
 		HttpSession session = request.getSession(true);
 		System.out.println("In main controller");
 		TargetPartner tg= new TargetPartner(request.getSession()); 
-		PartnerWSDL prtnrWSDL = new PartnerWSDL(request.getSession());
+		PartnerWSDL prtnrWSDL = new PartnerWSDL(request.getSession(),true);
 		data.clear();
 		rowCount= request.getParameter("rowCount");
 		String rowNo = request.getParameter("rowNo");
@@ -485,8 +483,8 @@ public class HomeController {
 			}
 			String subprojectId=tg.getsubprojects(siebelTableNameValue);
 			if(null != subprojectId){
-				
-				PartnerWSDL prtnrWSDL1 = new PartnerWSDL(request.getSession());
+				//
+				PartnerWSDL prtnrWSDL1 = new PartnerWSDL(request.getSession(),false);
 				prtnrWSDL1.login();
 				JSONObject tableName = tg.getRelatedSiebelTable(subprojectId);// gives
 				

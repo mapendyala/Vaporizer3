@@ -89,6 +89,10 @@ public class CanvasUIController {
 		data = targetPart.getSavedDBData(projectId, data);
 		JSONObject middleWareConn= targetPart.getMiddleWareData(projectId);
 		session.setAttribute("middleWareConn", middleWareConn);
+		
+		JSONObject TargetOrgConn= targetPart.getTargetOrgDetails(projectId);
+		session.setAttribute("targetOrgConn", TargetOrgConn);
+		
 		String projectName = targetPart.getProjectName(projectId);
 		session.setAttribute("projectName", projectName);/* added by piyush */
 		JSONObject connectionData = targetPart.getConnectionData(projectId);
