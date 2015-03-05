@@ -28,10 +28,13 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 
+import com.force.api.DescribeGlobal;
+import com.force.api.DescribeSObject;
 import com.force.example.fulfillment.order.controller.SiebelObjectController;
 import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.MappingModel;
 import com.force.example.fulfillment.order.model.MappingSFDC;
+import com.force.example.fulfillment.order.model.MultiValMappingModel;
 import com.force.utility.SfdcObjectBO;
 import com.sforce.soap.partner.DescribeGlobalResult;
 import com.sforce.soap.partner.DescribeGlobalSObjectResult;
@@ -1578,6 +1581,260 @@ System.out.println("records "+records);
 		  SiebelObjectController.sfdcFldRowNmList = mpngSFDCLookUpList;
 		  return mpngSFDCList;
 		}
+	
+
+	public List<MultiValMappingModel> getSavedMappingMultiValueDBData(String projectId , String entityName) {
+		
+		List<MultiValMappingModel> mappingData=null;
+		try {
+			partnerConnection.setQueryOptions(250);
+			// SOQL query to use
+			// String subprojectId="a0PG000000AtiEAMAZ";
+			String soqlQuery1 = "Select Id,  Foreign_Key_Table__c, SFDC_Field_Description__c, SFDC_Field_Name__c, Siebel_Field_Description__c, Siebel_Field_Name__c,"
+					+ "Column_Name__c,Lov_Mapping__c,Select__c,Join_Condition__C,Join_Name__c,LookUpField__c,LookUpObject__c from Single_Valued_Screen__c where  Siebel_Table_Name__c='"+ entityName + "'";
+			// Make the query call and get the query results
+			QueryResult qr1 = partnerConnection.query(soqlQuery1);
+			boolean done1 = false;
+
+			 mappingData = new ArrayList<MultiValMappingModel>();
+			 
+			 for(int i=0;i<3;i++){
+				 MultiValMappingModel mappingModel1 = new MultiValMappingModel();
+				 mappingModel1.setMappingSeq(i);
+				 mappingModel1.setCheckFlag(true);
+				 mappingModel1.setSiebelField("ASDASD"+i);
+				 if(i%2==0){
+				 mappingModel1.setRelationType("1:M");
+				 }else{
+				 mappingModel1.setRelationType("M:M");
+				 }
+				 mappingModel1.setChildEntity("centitiy"+i);
+				 mappingModel1.setChildTable("ctable"+i);
+				 mappingModel1.setChildColumn("childColumn"+i);
+				 mappingModel1.setInterTable("interTable"+i);
+				 mappingModel1.setInterParentColumn("ipcolumn"+i);
+				 mappingModel1.setInterChildColumn("iccolumn"+i);
+				 mappingModel1.setJoinCondition("joinc"+i);
+				 mappingModel1.setSfdcChildObject("sfdcChildObject"+i);
+				 mappingModel1.setLookupField("lookupField"+i);
+				 mappingModel1.setLookupRelationName("lookupRelationName"+i);
+				 mappingModel1.setLookupExternalId("lookupExternalId"+i);
+				 mappingModel1.setJunctionObject("junctionObject"+i);
+				 mappingModel1.setJunctionObjParentField("parentObjParentField"+i);
+				 mappingModel1.setParentRelationName("parentRelationName"+i);
+				 mappingModel1.setParentExternalId("parentExternalId"+i);
+				 mappingModel1.setJunctionObjectChildField("junctionObjectChildField"+i);
+				 mappingModel1.setChildRelationName("childRelationName"+i);
+				 mappingModel1.setChildExternalId("childExternalId"+i);
+				 
+				 mappingData.add(mappingModel1);
+				 
+				 
+				 
+			 }
+			 
+	/*		while (!done1) {
+				SObject[] records1 = qr1.getRecords();
+				// Process the query results
+				for (int i = 0; i < records1.length; i++) {
+					MultiValMappingModel mappingModel1 = new MultiValMappingModel();
+					SObject contact = records1[i];
+
+					mappingModel1.setCheckFlag(Boolean.parseBoolean((String)contact.getField("Select__c")));
+					mappingModel1.setLookUpFlag(Boolean.parseBoolean((String)contact.getField("LookUpField__c")));
+					mappingModel1.setSblFieldNmdropdown((String)contact.getField("Siebel_Field_Name__c"));
+					mappingModel1.setSbldscription((String)contact.getField("Siebel_Field_Description__c"));
+					mappingModel1.setJoinNamerow((String)contact.getField("Join_Name__c"));
+					mappingModel1.setFrgnKeyrow((String)contact.getField("Foreign_Key_Table__c"));
+					mappingModel1.setJoinCondition((String)contact.getField("Join_Condition__c"));
+					mappingModel1.setClmnNmrow((String)contact.getField("Column_Name__c"));
+					mappingModel1.setSlfrcdropdown((String)contact.getField("SFDC_Field_Name__c"));
+					mappingModel1.setLookUpObject((String)contact.getField("LookUpObject__c"));
+					mappingModel1.setSlsfrcdscription((String)contact.getField("SFDC_Field_Description__c"));
+					mappingModel1.setId( (String)contact.getField("Id"));
+					mappingModel1.setMappingSeq(i);
+					
+					mappingData.add(mappingModel1);
+				}
+
+				if (qr1.isDone()) {
+					done1 = true;
+				} else {
+					qr1 = partnerConnection.queryMore(qr1.getQueryLocator());
+				}
+
+			}*/
+		} catch (ConnectionException ce) {
+			ce.printStackTrace();
+		}
+		System.out.println("\nQuery execution completed.");
+		return mappingData;
+	}
+	
+	public  List<MappingSFDC> getLookupObjFieldList(String sfdcObj){
+		List<MappingSFDC> mpngSFDCLookUpList= null;
+		List<MappingSFDC> mpngSFDCList= null;
+		try {
+			DescribeSObjectResult[] describeSObjectResults = partnerConnection.describeSObjects(new String[] { sfdcObj });
+		    // Iterate through the list of describe sObject results
+		    for (int i=0;i < describeSObjectResults.length; i++){
+		        DescribeSObjectResult desObj = describeSObjectResults[i];
+		        // Get the name of the sObject
+		    	Field[] field=   desObj.getFields();
+		      //  String objectName = desObj.getName();
+		        for(int j=0;j<field.length;j++){
+		        	MappingSFDC  mpngSFDCLookUp = new MappingSFDC();
+		        	MappingSFDC  mpngSFDC = new MappingSFDC();
+		        	String fieldName = field[j].getName();
+		            String fieldLabel = field[j].getLabel();
+		            if(mpngSFDCLookUpList == null){
+		            	mpngSFDCLookUpList= new ArrayList<MappingSFDC>();
+		            }
+		            if(mpngSFDCList == null){
+		            	mpngSFDCList= new ArrayList<MappingSFDC>();
+		            }
+		            mpngSFDC.setLabel(fieldLabel);
+		            mpngSFDC.setName(fieldName);
+	        		mpngSFDCList.add(mpngSFDC);
+	        		
+		        	if(field[j].getRelationshipName()!=null && field[j].getReferenceTo() != null && field[j].getReferenceTo().length > 0){
+		        		mpngSFDCLookUp.setLabel(fieldLabel);
+		        		mpngSFDCLookUp.setName(fieldName);
+		        		mpngSFDCLookUp.setRelationshipName(field[j].getRelationshipName());
+		        		mpngSFDCLookUp.setReferenceTo(field[j].getReferenceTo());
+		        		mpngSFDCLookUpList.add(mpngSFDCLookUp);
+		        	}
+		        }
+		     }
+		  } catch(ConnectionException ce) {
+		    ce.printStackTrace();  
+		  }
+			SiebelObjectController.lookUpRelationMap.put(sfdcObj, mpngSFDCLookUpList);
+		  return mpngSFDCLookUpList;
+		}
+	
+	public  List<MappingSFDC> getJnObjParentFieldList(String sfdcObj){
+		List<MappingSFDC> mpngSFDCLookUpList= null;
+		List<MappingSFDC> mpngSFDCList= null;
+		try {
+			DescribeSObjectResult[] describeSObjectResults = partnerConnection.describeSObjects(new String[] { sfdcObj });
+		    // Iterate through the list of describe sObject results
+		    for (int i=0;i < describeSObjectResults.length; i++){
+		        DescribeSObjectResult desObj = describeSObjectResults[i];
+		        // Get the name of the sObject
+		    	Field[] field=   desObj.getFields();
+		      //  String objectName = desObj.getName();
+		        for(int j=0;j<field.length;j++){
+		        	MappingSFDC  mpngSFDCLookUp = new MappingSFDC();
+		        	MappingSFDC  mpngSFDC = new MappingSFDC();
+		        	String fieldName = field[j].getName();
+		            String fieldLabel = field[j].getLabel();
+		            if(mpngSFDCLookUpList == null){
+		            	mpngSFDCLookUpList= new ArrayList<MappingSFDC>();
+		            }
+		            if(mpngSFDCList == null){
+		            	mpngSFDCList= new ArrayList<MappingSFDC>();
+		            }
+		            mpngSFDC.setLabel(fieldLabel);
+		            mpngSFDC.setName(fieldName);
+	        		mpngSFDCList.add(mpngSFDC);
+	        		
+		        	if(field[j].getRelationshipName()!=null && field[j].getReferenceTo() != null && field[j].getReferenceTo().length > 0){
+		        		mpngSFDCLookUp.setLabel(fieldLabel);
+		        		mpngSFDCLookUp.setName(fieldName);
+		        		mpngSFDCLookUp.setRelationshipName(field[j].getRelationshipName());
+		        		mpngSFDCLookUp.setReferenceTo(field[j].getReferenceTo());
+		        		mpngSFDCLookUpList.add(mpngSFDCLookUp);
+		        	}
+		        }
+		     }
+		  } catch(ConnectionException ce) {
+		    ce.printStackTrace();  
+		  }
+			SiebelObjectController.juncRelationMap.put(sfdcObj, mpngSFDCLookUpList);
+		  return mpngSFDCLookUpList;
+		}
+	
+	public  List<MappingSFDC> getJnObjChildFieldList(String sfdcObj){
+		List<MappingSFDC> mpngSFDCLookUpList= null;
+		List<MappingSFDC> mpngSFDCList= null;
+		try {
+			DescribeSObjectResult[] describeSObjectResults = partnerConnection.describeSObjects(new String[] { sfdcObj });
+		    // Iterate through the list of describe sObject results
+		    for (int i=0;i < describeSObjectResults.length; i++){
+		        DescribeSObjectResult desObj = describeSObjectResults[i];
+		        // Get the name of the sObject
+		    	Field[] field=   desObj.getFields();
+		      //  String objectName = desObj.getName();
+		        for(int j=0;j<field.length;j++){
+		        	MappingSFDC  mpngSFDCLookUp = new MappingSFDC();
+		        	MappingSFDC  mpngSFDC = new MappingSFDC();
+		        	String fieldName = field[j].getName();
+		            String fieldLabel = field[j].getLabel();
+		            if(mpngSFDCLookUpList == null){
+		            	mpngSFDCLookUpList= new ArrayList<MappingSFDC>();
+		            }
+		            if(mpngSFDCList == null){
+		            	mpngSFDCList= new ArrayList<MappingSFDC>();
+		            }
+		            mpngSFDC.setLabel(fieldLabel);
+		            mpngSFDC.setName(fieldName);
+	        		mpngSFDCList.add(mpngSFDC);
+	        		
+		        	if(field[j].getRelationshipName()!=null && field[j].getReferenceTo() != null && field[j].getReferenceTo().length > 0){
+		        		mpngSFDCLookUp.setLabel(fieldLabel);
+		        		mpngSFDCLookUp.setName(fieldName);
+		        		mpngSFDCLookUp.setRelationshipName(field[j].getRelationshipName());
+		        		mpngSFDCLookUp.setReferenceTo(field[j].getReferenceTo());
+		        		mpngSFDCLookUpList.add(mpngSFDCLookUp);
+		        	}
+		        }
+		      
+		     }
+		  
+		  } catch(ConnectionException ce) {
+		    ce.printStackTrace();  
+		  }
+		  SiebelObjectController.sfdcFldRowNmList = mpngSFDCLookUpList;
+		  return mpngSFDCLookUpList;
+		}
+	
+	public List<DescribeSObject> getJunctionObjFromSObject(
+			List<DescribeSObject> sobjectResults) {
+		List<DescribeSObject> JuncObjList = null;
+		try {
+			JuncObjList = new ArrayList<DescribeSObject>();
+			for (DescribeSObject describeSObject : sobjectResults) {
+				int masterReadCount = 0;
+				DescribeSObjectResult[] describeSObjectResults = partnerConnection
+						.describeSObjects(new String[] { describeSObject
+								.getName() });
+
+				for (int i = 0; i < describeSObjectResults.length; i++) {
+					DescribeSObjectResult desObj = describeSObjectResults[i];
+					Field[] field = desObj.getFields();
+					if (field != null) {
+						for (int j = 0; j < field.length; j++) {
+							if (field[j].isWriteRequiresMasterRead()) {
+								masterReadCount++;
+							}
+						}
+					}
+					if (masterReadCount == 2) {
+						JuncObjList.add(describeSObject);
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return JuncObjList;
+
+	}
+	
+	
 	
 
 }

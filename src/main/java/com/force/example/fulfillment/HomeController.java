@@ -40,6 +40,7 @@ import com.force.example.fulfillment.order.controller.SiebelObjectController;
 import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.MappingModel;
 import com.force.example.fulfillment.order.model.MappingSFDC;
+import com.force.example.fulfillment.order.model.MultiValMappingModel;
 import com.force.partner.PartnerWSDL;
 import com.force.partner.TargetPartner;
 import com.force.utility.SfdcObjectBO;
@@ -527,23 +528,57 @@ public class HomeController {
             System.out.println("---------------"+thresholdValue+" "+primBaseValue);
 			//ThresholdController tc= new ThresholdController();
 			//List<SiebelObjectBO> listSiebelObject = tc.fetchSiebelObjects(request);
-			//String subprojectId=tg.getsubprojects(siebelTableNameValue);
-			/*if(null != subprojectId){
-				JSONObject tableName=tg.getRelatedSiebelTable(subprojectId);
-				String id=tg.getMappingId((String)session.getAttribute("projectId"),mappingData,tableName);
+			String subprojectId=(String)session.getAttribute("projectId");//tg.getsubprojects(siebelTableNameValue);
+			if(null != subprojectId){
+				PartnerWSDL prtnrWSDL1 = new PartnerWSDL(request.getSession(),false);
+				prtnrWSDL1.login();
+				SiebelObjectController siObj=new SiebelObjectController();
+				List<String> sblFldList = new ArrayList<String>();
+				sblFldList = siObj.fetchFieldNameListForMultiVal(request, siebelTableNameValue);
+				modelChild.addAttribute("sbllFlddNmList",sblFldList);
+				
+				/* Sending EmptyList, populating the list dynamically*/
+				List<MappingSFDC> lookupObjList = new ArrayList<MappingSFDC>();//prtnrWSDL1.getLookupObjFieldList((String)sfdcObjectName);
+				List<MappingSFDC> jnObjParentList =new ArrayList<MappingSFDC>();// prtnrWSDL1.getJnObjParentFieldList((String)sfdcObjectName);
+				List<MappingSFDC> jnObjChildList = new ArrayList<MappingSFDC>();//prtnrWSDL1.getJnObjChildFieldList((String)sfdcObjectName);
+				
+				//JSONObject tableName=tg.getRelatedSiebelTable(subprojectId);
+				//String id=tg.getMappingId((String)session.getAttribute("projectId"),mappingData,tableName);
 
-				List<MappingModel> mappingData1=tg.getSavedMappingDBData((String)session.getAttribute("projectId"),mappingData,tableName);
-				ArrayList<String> field= new ArrayList<String>();
-						field=tg.getFieldTarget(tableName);
+				//List<MappingModel> mappingData1=tg.getSavedMappingDBData((String)session.getAttribute("projectId"),mappingData,tableName);
+				
+				List<MultiValMappingModel> multivalmapping=prtnrWSDL.getSavedMappingMultiValueDBData((String)session.getAttribute("projectId"), siebelTableNameValue);
+				//List<String>childTables=tg.getSavedChild((String)session.getAttribute("projectId"),tableName);
+
+				//List<Object> myChildList=siObj.fetchColumns(request, primBaseValue,thresholdValue,childTables);
+
+
+			
+				//List<String>childTables=partnerWSDL.getSavedChild((String)session.getAttribute("projectId"),tableName);
+				//System.out.println(mappingData1.get(0));
+
+			//	List<MappingModel> mappingData=tg.getFieldMapping(tableName,myChildList);
+			//	ArrayList<String> field= new ArrayList<String>();
+				//		field=tg.getFieldTarget(tableName);
+				/*for(int count=0;count<mappingData.size();count++){
+					field.add(mappingData.get(count).getSfdcFieldTable());
+
+				}*/
 				modelChild.addAttribute("sfdcObj",mappingData.get(0).getSfdcObjectName());
-				modelChild.addAttribute("mappingField",field);
-				if(mappingData1.isEmpty()){
+				//modelChild.addAttribute("mappingField",field);
+				modelChild.addAttribute("mappingData",multivalmapping);
+				
+				modelChild.addAttribute("lookUpFieldList",lookupObjList);
+				modelChild.addAttribute("jnObjParentList",jnObjParentList);
+				modelChild.addAttribute("jnObjChildList",jnObjChildList);
+				
+			/*	if(mappingData1.isEmpty()){
 					modelChild.addAttribute("mappingData",mappingData);}
 				else
-					modelChild.addAttribute("mappingData",mappingData1);
-				modelChild.addAttribute("MappingId",id);
+					modelChild.addAttribute("mappingData",mappingData1);*/
+				//modelChild.addAttribute("MappingId",id);
 
-			}*/
+			}
 			return new ModelAndView("multiMapping", "data", data);
 		
 		}else{
@@ -589,5 +624,136 @@ public class HomeController {
 	                }
                 return authParams;
 	}
+	
+	
+	@RequestMapping(value="/getFieldColumnMultiVal", method = RequestMethod.GET)
+	@ResponseBody public List<String> retrieveColumnAndFieldMultiVal(HttpServletRequest request, @RequestParam("sblFldValSlctd")String sblFldValSlctd, @RequestParam("rowNum") String rowNum) throws ConnectionException{
+		System.out.println("In retrieveColumnAndFieldMultiVal method");
+		System.out.println("Selected Siebel Value : "+ sblFldValSlctd);
+		HttpSession session = request.getSession(true);
+		SiebelObjectController siObj=new SiebelObjectController();
+		// Toget the foreign key, column name thru ajax call.
+		List<String> clmNmLst = siObj.fetchColumndAndFrgnKeyNameForMultiVal(request, (String)session.getValue("siebelTableNameValue"), sblFldValSlctd, rowNum);
+
+		String sfdcObjName=getSFDCObject(null, null, request, sblFldValSlctd);
+		clmNmLst.add(sfdcObjName);
+		return clmNmLst;
+	}
+	
+	/**
+	 * @author pshanmukham
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="/JunctionObjectList", method=RequestMethod.GET)
+	@ResponseBody public List<SfdcObjectBO> fetchJunctionObjects(HttpServletRequest request)
+	{
+
+		List<SfdcObjectBO> objList=new ArrayList<SfdcObjectBO>(); 
+		HttpSession session = request.getSession(true);
+		String userValue = request.getParameter("objectName");
+		System.out.println("uservalues in bean is"+userValue);
+		TargetPartner targetPartner= new TargetPartner(request.getSession());	
+		return targetPartner.getJuncOjectListforPopup(userValue);
+
+	} 
+	
+	/**
+	 * @author pshanmukham
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="/getLookupDropDownList", method=RequestMethod.GET)
+	@ResponseBody public List<MappingSFDC> getLookupDropDownList(HttpServletRequest request ,@RequestParam("SFDCObject")String sfdcObjectName)
+	{
+		PartnerWSDL prtnrWSDL1 = new PartnerWSDL(request.getSession(),false);
+		prtnrWSDL1.login();
+		List<MappingSFDC> jnObjParentList = prtnrWSDL1.getLookupObjFieldList((String)sfdcObjectName);
+		
+		return jnObjParentList;
+	} 
+	
+	/**
+	 * @author pshanmukham
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="/getJuncDropDownList", method=RequestMethod.GET)
+	@ResponseBody public List<MappingSFDC> getJuncObjDropDownList(HttpServletRequest request ,@RequestParam("SFDCObject")String sfdcObjectName)
+	{
+		PartnerWSDL prtnrWSDL1 = new PartnerWSDL(request.getSession(),false);
+		prtnrWSDL1.login();
+		List<MappingSFDC> jnObjParentList = prtnrWSDL1.getJnObjParentFieldList((String)sfdcObjectName);
+		
+		return jnObjParentList;
+	} 
+	@RequestMapping(value="/getMultivalSFDCLookUpInfo", method = RequestMethod.GET)
+	@ResponseBody public List<Object> retrieveSFDCObjLookUpFieldInfo(HttpServletRequest request, @RequestParam("slctdSlsFrcFldOption")String slsfrcFldValSlctd, @RequestParam("SFDCObject") String sfdcObject) throws ConnectionException{
+		List<Object> lookUpFlds = null;
+		List<MappingSFDC> externlFldLst = null;
+		List<MappingSFDC> mpngSFDC = SiebelObjectController.lookUpRelationMap.get(sfdcObject);
+		String lookUpObj = null;
+		for(MappingSFDC mpngDtl : mpngSFDC){
+			if(mpngDtl.getName().equals(slsfrcFldValSlctd)){
+				if(lookUpFlds == null){
+					lookUpFlds = new ArrayList<Object>();
+				}
+				PartnerWSDL prtnrWSDL1 = new PartnerWSDL(request.getSession(),false);
+				prtnrWSDL1.login();
+				
+				String relationShpName = mpngDtl.getRelationshipName();
+				lookUpFlds.add(relationShpName);
+				lookUpObj = mpngDtl.getReferenceTo()[0];
+				lookUpFlds.add(lookUpObj);
+				
+				externlFldLst = prtnrWSDL1.getExternalIdList((String)lookUpObj);
+				lookUpFlds.add(externlFldLst);
+				
+			}
+		}
+		
+		return lookUpFlds;
+	}
+	
+	
+	@RequestMapping(value="/getMultivalJuncLookUpInfo", method = RequestMethod.GET)
+	@ResponseBody public List<Object> retrieveJunctionObjLookUpFieldInfo(HttpServletRequest request, @RequestParam("slctdSlsFrcFldOption")String slsfrcFldValSlctd, @RequestParam("SFDCObject") String sfdcObject) throws ConnectionException{
+		List<Object> lookUpFlds = null;
+		List<MappingSFDC> externlFldLst = null;
+		List<MappingSFDC> mpngSFDC = SiebelObjectController.juncRelationMap.get(sfdcObject);
+		String lookUpObj = null;
+		for(MappingSFDC mpngDtl : mpngSFDC){
+			if(mpngDtl.getName().equals(slsfrcFldValSlctd)){
+				if(lookUpFlds == null){
+					lookUpFlds = new ArrayList<Object>();
+				}
+				PartnerWSDL prtnrWSDL1 = new PartnerWSDL(request.getSession(),false);
+				prtnrWSDL1.login();
+				
+				String relationShpName = mpngDtl.getRelationshipName();
+				lookUpFlds.add(relationShpName);
+				lookUpObj = mpngDtl.getReferenceTo()[0];
+				lookUpFlds.add(lookUpObj);
+				
+				externlFldLst = prtnrWSDL1.getExternalIdList((String)lookUpObj);
+				lookUpFlds.add(externlFldLst);
+				
+			}
+		}
+		
+		return lookUpFlds;
+	}
+	
+	
+	@RequestMapping(value = "multiValmappingSave", method = RequestMethod.POST)
+	//public ModelAndView save1(@ModelAttribute("data") List<MainPage> data, Locale locale, Model model) {
+
+	public ModelAndView multiValMappingSave(HttpServletRequest request, Map<String, Object> model) throws ConnectionException {	
+	String	rowCount= request.getParameter("rowCount");
+	
+	return new ModelAndView("vaporizer" , "data", data);
+	}
+	
+	
 
 }

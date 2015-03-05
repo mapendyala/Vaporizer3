@@ -53,6 +53,8 @@ public class SiebelObjectController {
 	public static Map<Integer,String> salesFrcNmRowNmMap = new HashMap<Integer,String>();
 	private static final String COMMA_DELIMITER = ",";
 	private static final String NEW_LINE_SEPARATOR = "\n";
+	public static Map<String,List> lookUpRelationMap=new HashMap<String, List>();
+	public static Map<String,List> juncRelationMap=new HashMap<String, List>();
 	
 	@RequestMapping(value="/SiebelObject", method=RequestMethod.POST)
 
@@ -688,6 +690,94 @@ public class SiebelObjectController {
 				e.printStackTrace();
 			}
 		}
+		 public List<String> fetchFieldNameListForMultiVal(HttpServletRequest request,String siebelObjName){
+				System.out.println("in child contoller method");
+				List<String> fieldNameList=new ArrayList<String>(); 
+				System.out.println("SIEBL OBJ PARAM IS"+siebelObjName);
+				makeConnection();
+				try{
+					if (connection != null){
+						System.out.println("You made it, take control your database now!");
+						
+						/*String fieldNameQry = "SELECT BCFIELD.NAME FROM FS77..S_FIELD  BCFIELD INNER JOIN FS77..S_BUSCOMP  BUSCOMP ON "
+								+ "BUSCOMP.ROW_ID = BCFIELD.BUSCOMP_ID AND BUSCOMP.REPOSITORY_ID = BCFIELD.REPOSITORY_ID WHERE BCFIELD.REPOSITORY_ID = "
+								+ "(SELECT ROW_ID FROM FS77..S_REPOSITORY WHERE NAME = 'Siebel Repository') AND BCFIELD.CALCULATED = 'N' AND BCFIELD.MULTI_VALUED = 'Y' "
+								+ "AND BUSCOMP.NAME = '"+siebelObjName+"'";*/
+						
+						String fieldNameQry = "SELECT BCFIELD.NAME FROM SIEBEL.S_FIELD BCFIELD INNER JOIN SIEBEL.S_BUSCOMP BUSCOMP ON "
+								+ "BUSCOMP.ROW_ID = BCFIELD.BUSCOMP_ID AND BUSCOMP.REPOSITORY_ID = BCFIELD.REPOSITORY_ID WHERE BCFIELD.REPOSITORY_ID = "
+								+ "(SELECT ROW_ID FROM SIEBEL.S_REPOSITORY WHERE NAME = 'Siebel Repository') AND BCFIELD.CALCULATED = 'N' AND BCFIELD.MULTI_VALUED = 'Y' "
+								+ "AND BUSCOMP.NAME = '"+siebelObjName+"'";
+						
+						Statement st=connection.createStatement();
+						System.out.println("fieldNameQry is"+fieldNameQry);
+						ResultSet mySet=st.executeQuery(fieldNameQry);
+						while(mySet.next()){
+							fieldNameList.add(mySet.getString(1));
+						}
+						System.out.println("list size is"+fieldNameList.size());
+					}
+				}
+				catch(SQLException e){
+					System.out.println("Connection Failed! Check output console");
+					e.printStackTrace();
+				}
+				return fieldNameList; 	 
+			}
+		 
+		 public List<String> fetchColumndAndFrgnKeyNameForMultiVal(HttpServletRequest request,String siebelObjName, String sblFldValSlctd, String rowNum){
+			 
+			 List<String> colValues=new ArrayList<String>();
+			 makeConnection();
+			 try{
+				 
+				 if(connection!=null){
+					 
+					 String colVal =" SELECT MVL.DEST_BC_NAME, DESTBUSCOMP.TABLE_NAME, MVL.SRC_FLD_NAME, BCFIELD.DEST_FLD_NAME, RLINK.DST_FLD_NAME, RLINK.INTER_TBL_NAME, RLINK.IPARENT_COL_NAME, RLINK.ICHILD_COL_NAME "
+					 + "FROM SIEBEL.S_FIELD BCFIELD "
+					 +"INNER JOIN SIEBEL.S_BUSCOMP BUSCOMP ON BUSCOMP.ROW_ID = BCFIELD.BUSCOMP_ID AND BUSCOMP.REPOSITORY_ID = BCFIELD.REPOSITORY_ID "
+					 +"INNER JOIN SIEBEL.S_MVLINK MVL ON MVL.NAME = BCFIELD.MVLINK_NAME AND MVL.BUSCOMP_ID = BCFIELD.BUSCOMP_ID AND MVL.REPOSITORY_ID = BCFIELD.REPOSITORY_ID "
+					 +"INNER JOIN SIEBEL.S_BUSCOMP DESTBUSCOMP ON DESTBUSCOMP.NAME = MVL.DEST_BC_NAME and DESTBUSCOMP.REPOSITORY_ID = BCFIELD.REPOSITORY_ID "
+					 +"INNER JOIN SIEBEL.S_LINK RLINK ON RLINK.NAME = MVL.DEST_LINK_NAME AND RLINK.REPOSITORY_ID = BCFIELD.REPOSITORY_ID "
+					 +"WHERE BCFIELD.REPOSITORY_ID = (SELECT ROW_ID FROM SIEBEL.S_REPOSITORY WHERE NAME = 'Siebel Repository') "
+					 +"AND BCFIELD.CALCULATED = 'N' "
+					 +"AND BCFIELD.MULTI_VALUED = 'Y' "
+					 +"AND BUSCOMP.NAME = '"+siebelObjName +"' "
+					 +"AND BCFIELD.NAME = '"+sblFldValSlctd+"'";
+					 Statement st=connection.createStatement();
+					 ResultSet mySet=st.executeQuery(colVal);
+					while(mySet.next()){
+						colValues=new ArrayList<String>();
+						if(mySet.getString(6)!=null && mySet.getString(6).trim().length()>0){
+							colValues.add("M:M");
+						}else{
+							colValues.add("1:M");
+						}
+						colValues.add(mySet.getString(1));
+						colValues.add(mySet.getString(2));
+						//colValues.add(mySet.getString(3));
+						colValues.add(mySet.getString(4));
+						//colValues.add(mySet.getString(5));
+						colValues.add(mySet.getString(6));
+						colValues.add(mySet.getString(7));
+						colValues.add(mySet.getString(8));
+					
+						
+						}
+
+					
+					 
+				 }
+				 
+			 }catch(Exception e){
+				 e.printStackTrace();
+				 
+			 }
+			 
+			 return colValues;
+			 
+		 }
+		 
 
 }
 
