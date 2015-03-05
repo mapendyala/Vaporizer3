@@ -355,6 +355,7 @@
 									name="Extract" value="Done" /> <!-- <button id="cancel" type="button" style="float: right;"
 						class="btn btn-block btn-inverse">Done</button> --> <!-- <button id="cancel" type="submit" style="float: right;"
 						class="btn btn-block btn-inverse">Done</button> -->
+						<input class="btn btn-block btn-inverse" type="button" name="Load" value="Load Pre-Defined Mapping" onclick="" />
 
 								</td>
 							</tr>
