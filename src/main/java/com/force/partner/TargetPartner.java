@@ -33,6 +33,7 @@ import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.MappingModel;
 import com.force.utility.SfdcObjectBO;
 import com.force.utility.UtilityClass;
+import com.sforce.soap.partner.DescribeSObjectResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.bind.XmlObject;
@@ -1327,17 +1328,22 @@ public ArrayList<String> getFieldTarget(JSONObject tableData){
 		
 		}
 
-	public List<SfdcObjectBO> getJuncOjectListforPopup(String ObjectName) {
+	public List<SfdcObjectBO> getJuncOjectListforPopup(String ObjectName,
+			String selectedSFDCChildObj) {
 		List<SfdcObjectBO> objList = new ArrayList<SfdcObjectBO>();
 
 		try {
-
-			List<DescribeSObject> sobjectResults = getJuncNames();
-			for (int i = 0; i < sobjectResults.size(); i++) {
-				SfdcObjectBO Sob = new SfdcObjectBO();
-				if (sobjectResults.get(i).getName().contains(ObjectName)) {
-					Sob.setObjName(sobjectResults.get(i).getName());
-					objList.add(Sob);
+			PartnerWSDL prtnrWSDL1 = new PartnerWSDL(session, false);
+			prtnrWSDL1.login();
+			List<DescribeSObjectResult> sobjectResults = prtnrWSDL1
+					.getJuncNames(selectedSFDCChildObj);
+			if (sobjectResults != null) {
+				for (int i = 0; i < sobjectResults.size(); i++) {
+					SfdcObjectBO Sob = new SfdcObjectBO();
+					if (sobjectResults.get(i).getName().contains(ObjectName)) {
+						Sob.setObjName(sobjectResults.get(i).getName());
+						objList.add(Sob);
+					}
 				}
 
 			}
@@ -1349,43 +1355,7 @@ public ArrayList<String> getFieldTarget(JSONObject tableData){
 		return objList;
 	}
 
-	public List<DescribeSObject> getJuncNames() {
-		List<DescribeSObject> sobjectResults = null;
-		List<DescribeSObject> juncObjResults = null;
-		try {
-			// Make the describeGlobal() call
-			DescribeGlobal describeGlobalResult = getForceApi()
-					.describeGlobal();
 
-			// Get the sObjects from the describe global result
-			sobjectResults = describeGlobalResult.getSObjects();
-
-			PartnerWSDL prtnrWSDL1 = new PartnerWSDL(session,false);
-			prtnrWSDL1.login();
-			// juncObjResults=prtnrWSDL1.getJunctionObjFromSObject(sobjectResults);
-
-			// Write the name of each sObject to the console
-			/*
-			 * for (int i = 0; i < sobjectResults.size(); i++) {
-			 * System.out.println(" SOBJECT " +
-			 * sobjectResults.get(i).getName()); List<Field>
-			 * fields=sobjectResults.get(i).getAllFields(); if(fields!=null){
-			 * 
-			 * for (Field field : fields) { System.out.println("FIELD " +
-			 * field.getName() +"  " + field.getRelationshipName());
-			 * List<String> referenceToFields=field.getReferenceToEntity();
-			 * if(referenceToFields!=null){ for (String string :
-			 * referenceToFields) {
-			 * System.out.println("Reference Entitiy: "+string); } } }
-			 * 
-			 * 
-			 * } }
-			 */
-		} catch (Exception ce) {
-			ce.printStackTrace();
-		}
-		return sobjectResults;// juncObjResults;
-	}
 
 
 }

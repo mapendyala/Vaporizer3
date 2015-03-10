@@ -1583,94 +1583,112 @@ System.out.println("records "+records);
 		}
 	
 
-	public List<MultiValMappingModel> getSavedMappingMultiValueDBData(String projectId , String entityName) {
-		
-		List<MultiValMappingModel> mappingData=null;
-		try {
-			partnerConnection.setQueryOptions(250);
-			// SOQL query to use
-			// String subprojectId="a0PG000000AtiEAMAZ";
-			String soqlQuery1 = "Select Id,  Foreign_Key_Table__c, SFDC_Field_Description__c, SFDC_Field_Name__c, Siebel_Field_Description__c, Siebel_Field_Name__c,"
-					+ "Column_Name__c,Lov_Mapping__c,Select__c,Join_Condition__C,Join_Name__c,LookUpField__c,LookUpObject__c from Single_Valued_Screen__c where  Siebel_Table_Name__c='"+ entityName + "'";
-			// Make the query call and get the query results
-			QueryResult qr1 = partnerConnection.query(soqlQuery1);
-			boolean done1 = false;
+public List<MultiValMappingModel> getSavedMappingMultiValueDBData(String rowId , String entityName) {
+        
+        List<MultiValMappingModel> mappingData=null;
+        try {
+               partnerConnection.setQueryOptions(250);
+               // SOQL query to use
+               // String subprojectId="a0PG000000AtiEAMAZ";
+               String soqlQuery1 = "Select Id, Siebel_Field_Name__c, Child_Entity__c, Child_Field__c, Child_Lookup_External_Id__c, Child_Relationship_Name__c, Child_Table__c, Inter_Child_Column__c, Inter_Parent_Column__c, Inter_Table__c,"+
+                                                 "Join_Condition__c, Junction_Object__c, Junction_Object_Child_Field__c, Junction_Object_Parent_Field__c, Lookup_External_Id__c, Lookup_Field__c, Lookup_Relationship_Name__c, "+
+                            "Mapping_Staging_Table__c, Parent_Lookup_External_Id__c, Parent_Relationship_Name__c, Relationship_Type__c, SFDC_Child_Object__c  from Multi_Valued_Screen__c where Mapping_Staging_Table__c ='"+ rowId + "'";
+               //, Siebel_Field_Name__c
+               // Make the query call and get the query results
+               QueryResult qr1 = partnerConnection.query(soqlQuery1);
+               boolean done1 = false;
 
-			 mappingData = new ArrayList<MultiValMappingModel>();
-			 
-			 for(int i=0;i<3;i++){
-				 MultiValMappingModel mappingModel1 = new MultiValMappingModel();
-				 mappingModel1.setMappingSeq(i);
-				 mappingModel1.setCheckFlag(true);
-				 mappingModel1.setSiebelField("ASDASD"+i);
-				 if(i%2==0){
-				 mappingModel1.setRelationType("1:M");
-				 }else{
-				 mappingModel1.setRelationType("M:M");
-				 }
-				 mappingModel1.setChildEntity("centitiy"+i);
-				 mappingModel1.setChildTable("ctable"+i);
-				 mappingModel1.setChildColumn("childColumn"+i);
-				 mappingModel1.setInterTable("interTable"+i);
-				 mappingModel1.setInterParentColumn("ipcolumn"+i);
-				 mappingModel1.setInterChildColumn("iccolumn"+i);
-				 mappingModel1.setJoinCondition("joinc"+i);
-				 mappingModel1.setSfdcChildObject("sfdcChildObject"+i);
-				 mappingModel1.setLookupField("lookupField"+i);
-				 mappingModel1.setLookupRelationName("lookupRelationName"+i);
-				 mappingModel1.setLookupExternalId("lookupExternalId"+i);
-				 mappingModel1.setJunctionObject("junctionObject"+i);
-				 mappingModel1.setJunctionObjParentField("parentObjParentField"+i);
-				 mappingModel1.setParentRelationName("parentRelationName"+i);
-				 mappingModel1.setParentExternalId("parentExternalId"+i);
-				 mappingModel1.setJunctionObjectChildField("junctionObjectChildField"+i);
-				 mappingModel1.setChildRelationName("childRelationName"+i);
-				 mappingModel1.setChildExternalId("childExternalId"+i);
-				 
-				 mappingData.add(mappingModel1);
-				 
-				 
-				 
-			 }
-			 
-	/*		while (!done1) {
-				SObject[] records1 = qr1.getRecords();
-				// Process the query results
-				for (int i = 0; i < records1.length; i++) {
-					MultiValMappingModel mappingModel1 = new MultiValMappingModel();
-					SObject contact = records1[i];
+               mappingData = new ArrayList<MultiValMappingModel>();
+               while(!done1){
+                     SObject[] records1 = qr1.getRecords();
+               for(int i=0;i<records1.length;i++){
+                     int j = i+1;
+                     SObject contact = records1[i];
+                     MultiValMappingModel mappingModel1 = new MultiValMappingModel();
+                     mappingModel1.setMappingSeq(i);
+                     mappingModel1.setCheckFlag(true);
+                    
+                     mappingModel1.setId( (String)contact.getField("Id"));
+                     mappingModel1.setMappingSeq(i);
+                     mappingModel1.setSiebelField((String)contact.getField("Siebel_Field_Name__c"));
+                     mappingModel1.setRelationType((String)contact.getField("Relationship_Type__c"));
+                     mappingModel1.setChildEntity((String)contact.getField("Child_Entity__c"));
+                     mappingModel1.setChildTable((String)contact.getField("Child_Table__c"));
+                     mappingModel1.setChildField((String)contact.getField("Child_Field__c"));
+                     mappingModel1.setInterTable((String)contact.getField("Inter_Table__c"));
+                     mappingModel1.setInterParentColumn((String)contact.getField("Inter_Parent_Column__c"));
+                     mappingModel1.setInterChildColumn((String)contact.getField("Inter_Child_Column__c"));
+                     mappingModel1.setJoinCondition((String)contact.getField("Join_Condition__c"));
+                     mappingModel1.setSfdcChildObject((String)contact.getField("SFDC_Child_Object__c"));
+                     mappingModel1.setLookupField((String)contact.getField("Lookup_Field__c"));
+                     if(mappingModel1.getLookupField()!=null && mappingModel1.getSfdcChildObject()!=null){
+                    	 mappingModel1.setLookupObjList(getLookupObjFieldList(mappingModel1.getSfdcChildObject()));
+                     }
+                     mappingModel1.setLookupRelationName((String)contact.getField("Lookup_Relationship_Name__c"));
+                     mappingModel1.setLookupExternalId((String)contact.getField("Lookup_External_Id__c"));
+                     mappingModel1.setJunctionObject((String)contact.getField("Junction_Object__c"));
+             		if(mappingModel1.getJunctionObject()!=null){
+             			mappingModel1.setJnObjParentList(getJnObjParentFieldList(mappingModel1.getJunctionObject()));
+             			mappingModel1.setJnObjChildList(getJnObjChildFieldList(mappingModel1.getJunctionObject()));
+             		}
+                     mappingModel1.setJunctionObjParentField((String)contact.getField("Junction_Object_Parent_Field__c"));
+                     mappingModel1.setParentRelationName((String)contact.getField("Parent_Relationship_Name__c"));
+                     mappingModel1.setParentExternalId((String)contact.getField("Parent_Lookup_External_Id__c"));
+                     mappingModel1.setJunctionObjectChildField((String)contact.getField("Junction_Object_Child_Field__c"));
+                     mappingModel1.setChildRelationName((String)contact.getField("Child_Relationship_Name__c"));
+                     mappingModel1.setChildExternalId((String)contact.getField("Child_Lookup_External_Id__c"));
+                     
+                      mappingData.add(mappingModel1);
+                     
+                      
+                }
+               
+                if (qr1.isDone()) {
+                            done1 = true;
+                     } else {
+                            qr1 = partnerConnection.queryMore(qr1.getQueryLocator());
+                     }
+               
+                }
+               
+ /*            while (!done1) {
+                     SObject[] records1 = qr1.getRecords();
+                     // Process the query results
+                     for (int i = 0; i < records1.length; i++) {
+                            MultiValMappingModel mappingModel1 = new MultiValMappingModel();
+                            SObject contact = records1[i];
 
-					mappingModel1.setCheckFlag(Boolean.parseBoolean((String)contact.getField("Select__c")));
-					mappingModel1.setLookUpFlag(Boolean.parseBoolean((String)contact.getField("LookUpField__c")));
-					mappingModel1.setSblFieldNmdropdown((String)contact.getField("Siebel_Field_Name__c"));
-					mappingModel1.setSbldscription((String)contact.getField("Siebel_Field_Description__c"));
-					mappingModel1.setJoinNamerow((String)contact.getField("Join_Name__c"));
-					mappingModel1.setFrgnKeyrow((String)contact.getField("Foreign_Key_Table__c"));
-					mappingModel1.setJoinCondition((String)contact.getField("Join_Condition__c"));
-					mappingModel1.setClmnNmrow((String)contact.getField("Column_Name__c"));
-					mappingModel1.setSlfrcdropdown((String)contact.getField("SFDC_Field_Name__c"));
-					mappingModel1.setLookUpObject((String)contact.getField("LookUpObject__c"));
-					mappingModel1.setSlsfrcdscription((String)contact.getField("SFDC_Field_Description__c"));
-					mappingModel1.setId( (String)contact.getField("Id"));
-					mappingModel1.setMappingSeq(i);
-					
-					mappingData.add(mappingModel1);
-				}
+                            mappingModel1.setCheckFlag(Boolean.parseBoolean((String)contact.getField("Select__c")));
+                            mappingModel1.setLookUpFlag(Boolean.parseBoolean((String)contact.getField("LookUpField__c")));
+                            mappingModel1.setSblFieldNmdropdown((String)contact.getField("Siebel_Field_Name__c"));
+                            mappingModel1.setSbldscription((String)contact.getField("Siebel_Field_Description__c"));
+                            mappingModel1.setJoinNamerow((String)contact.getField("Join_Name__c"));
+                            mappingModel1.setFrgnKeyrow((String)contact.getField("Foreign_Key_Table__c"));
+                            mappingModel1.setJoinCondition((String)contact.getField("Join_Condition__c"));
+                            mappingModel1.setClmnNmrow((String)contact.getField("Column_Name__c"));
+                            mappingModel1.setSlfrcdropdown((String)contact.getField("SFDC_Field_Name__c"));
+                            mappingModel1.setLookUpObject((String)contact.getField("LookUpObject__c"));
+                            mappingModel1.setSlsfrcdscription((String)contact.getField("SFDC_Field_Description__c"));
+                            mappingModel1.setId( (String)contact.getField("Id"));
+                            mappingModel1.setMappingSeq(i);
+                            
+                            mappingData.add(mappingModel1);
+                     }
 
-				if (qr1.isDone()) {
-					done1 = true;
-				} else {
-					qr1 = partnerConnection.queryMore(qr1.getQueryLocator());
-				}
+                     if (qr1.isDone()) {
+                            done1 = true;
+                     } else {
+                            qr1 = partnerConnection.queryMore(qr1.getQueryLocator());
+                     }
 
-			}*/
-		} catch (ConnectionException ce) {
-			ce.printStackTrace();
-		}
-		System.out.println("\nQuery execution completed.");
-		return mappingData;
-	}
-	
+               }*/
+        } catch (ConnectionException ce) {
+               ce.printStackTrace();
+        }
+        System.out.println("\nQuery execution completed.");
+        return mappingData;
+ }
+
 	public  List<MappingSFDC> getLookupObjFieldList(String sfdcObj){
 		List<MappingSFDC> mpngSFDCLookUpList= null;
 		List<MappingSFDC> mpngSFDCList= null;
@@ -1833,6 +1851,131 @@ System.out.println("records "+records);
 		return JuncObjList;
 
 	}
+	
+	public void saveMappingMultiValuedDataIntoDB(List<MultiValMappingModel> data)
+			throws ConnectionException {
+		List<SObject> lstContactUpdate= new ArrayList<SObject>();
+		List<SObject> lstContactInsert= new ArrayList<SObject>();
+		SObject[] contactUpdate = new SObject[data.size()];
+		SObject[] contactInsert = new SObject[data.size()];
+		for (Iterator<MultiValMappingModel> iterator = data.iterator(); iterator
+				.hasNext();) {
+			MultiValMappingModel mappingModel = (MultiValMappingModel) iterator.next();
+			
+			SObject contact = new SObject();
+			contact.setType("Multi_Valued_Screen__c");
+			contact.setField("Child_Entity__c",
+					mappingModel.getChildEntity());
+			contact.setField("Child_Field__c",
+					mappingModel.getChildField());
+			contact.setField("Mapping_Staging_Table__c",
+					mappingModel.getSfdcRowId());
+			contact.setField("Child_Lookup_External_Id__c",
+					mappingModel.getChildExternalId());
+			contact.setField("Child_Relationship_Name__c",
+					mappingModel.getChildRelationName());
+			contact.setField("Child_Table__c",
+					mappingModel.getChildTable());
+			contact.setField("Inter_Child_Column__c",mappingModel.getInterChildColumn() );
+			contact.setField("Inter_Parent_Column__c", 
+					mappingModel.getInterParentColumn());
+			contact.setField("Inter_Table__c", 
+					mappingModel.getInterTable());
+			contact.setField("Junction_Object__c",
+					mappingModel.getJunctionObject());
+			contact.setField("Junction_Object_Child_Field__c",
+					mappingModel.getJunctionObjectChildField());
+			contact.setField("Junction_Object_Parent_Field__c",
+					mappingModel.getJunctionObjParentField());
+			contact.setField("Lookup_External_Id__c",
+					mappingModel.getLookupExternalId());
+			contact.setField("Lookup_Field__c",
+					mappingModel.getLookupField());
+			contact.setField("Lookup_Relationship_Name__c",
+					mappingModel.getLookupRelationName());
+			contact.setField("Parent_Lookup_External_Id__c",
+					mappingModel.getParentExternalId());
+			contact.setField("Parent_Relationship_Name__c",
+					mappingModel.getParentRelationName());
+			contact.setField("Relationship_Type__c",
+					mappingModel.getRelationType());
+			contact.setField("SFDC_Child_Object__c",
+					mappingModel.getSfdcChildObject());
+			contact.setField("Siebel_Field_Name__c",
+					mappingModel.getSiebelField());
+			if( mappingModel.getId()==null || mappingModel.getId().trim().equalsIgnoreCase("")){
+				lstContactInsert.add(contact);
+			}else{
+				contact.setField("Id",
+						mappingModel.getId());  
+				lstContactUpdate.add(contact);
+			}
+		}
+		
+		
+		if(lstContactInsert.size()>0){
+			contactInsert=lstContactInsert.toArray(new SObject[lstContactInsert.size()]);
+			SaveResult[] saveResults = getPartnerConnection().create(contactInsert);
+			for (int j = 0; j < saveResults.length; j++) {
+				System.out.println(saveResults[j].isSuccess());
+				// System.out.println(saveResults[j].getErrors()[j].getMessage());
+			}
+		}
+		if(lstContactUpdate.size()>0){
+			contactUpdate=lstContactUpdate.toArray(new SObject[lstContactUpdate.size()]);
+			SaveResult[] saveResults = getPartnerConnection().update(contactUpdate);
+			for (int j = 0; j < saveResults.length; j++) {
+				System.out.println(saveResults[j].isSuccess());
+				// System.out.println(saveResults[j].getErrors()[j].getMessage());
+			}
+		}
+		
+	}
+	public List<DescribeSObjectResult> getJuncNames(String selectedSFDCChildObj) {
+		List<DescribeSObject> sobjectResults = null;
+		List<DescribeSObjectResult> juncObjResults = new ArrayList<DescribeSObjectResult>();
+		try {
+			// Make the describeGlobal() call
+			
+			 DescribeSObjectResult describeSObjectResult = 
+					 partnerConnection.describeSObject(selectedSFDCChildObj);
+			 for(int l=0;l<describeSObjectResult.getChildRelationships().length;l++){
+				 DescribeSObjectResult[] fieldDesc=partnerConnection.describeSObjects(new String[]{describeSObjectResult.getChildRelationships()[l].getChildSObject()});
+				 for(int a=0;a<fieldDesc.length;a++){
+					 com.sforce.soap.partner.Field[] fd=fieldDesc[a].getFields();
+			            int iCheck=0;
+			            int iCheck2=0;
+			            for(int g=0;g<fd.length;g++){
+			            	if((fd[g].getRelationshipName()!=null)&&(fd[g].isCreateable()==true)){
+			            		//iCheck++;
+			            		if(fd[g].getRelationshipOrder()==0){
+			            		System.out.println("Primary Master Details Object " +fd[g].getReferenceTo()[0]);
+			            		iCheck++;
+			            		}
+			            		else if(fd[g].getRelationshipOrder()==1){
+			            			System.out.println("Secondary Master Details Object " +fd[g].getReferenceTo()[0]);
+			            			iCheck2++;
+			            			
+			            		}
+			            	}
+			            	if((iCheck==1)&&(iCheck2==1)){
+			            		System.out.println(fieldDesc[a].getName()+" is a junction Object");
+			            		juncObjResults.add(fieldDesc[a]);
+			            		break;
+			            	}
+			            	else if(g+1==fd.length)
+			            		System.out.println(fieldDesc[a].getName()+" is not a junction Object");
+			            }
+					 
+				 }
+			 }
+			 
+		} catch (Exception ce) {
+			ce.printStackTrace();
+		}
+		return juncObjResults;// juncObjResults;
+	}
+	
 	
 	
 	

@@ -40,14 +40,13 @@
 <script type="text/javascript">
 	var rowNum = 1;
 	var primBaseTable;
-	
+	var selectedSFDCChildObj;
 	$(document).ready(function() {
 		$('body').delegate('.sblFldColFrgnUpdate', 'change', function() {
-			alert('1');
 			var slctdSblFldOption = $(this).val();
 			var slctdSblFldId = $(this).attr('id');
 			var parentRow = $(this).parent().parent().attr("id");
-			alert('parentRow ' + parentRow);
+			
 			var rowNum = $(this).closest('tr').index();
 			 $.ajax({
 					type : "GET",
@@ -59,22 +58,18 @@
 				 		},
 				 		contentType : 'application/text',
 				 		success : function(response) {
-				 			alert('response');
 						var fieldColmnRsponse=response;
-						alert(fieldColmnRsponse[0]);
 						
 						$("#relationtype"+parentRow).val(fieldColmnRsponse[0]);
-						$("#childentitiy"+parentRow).val(fieldColmnRsponse[1]);
-						$("#childcolumn"+parentRow).val(fieldColmnRsponse[2]);
+						$("#childentity"+parentRow).val(fieldColmnRsponse[1]);
+						$("#childtable"+parentRow).val(fieldColmnRsponse[2]);
 						$("#childField"+parentRow).val(fieldColmnRsponse[3]);
 						$("#intertable"+parentRow).val(fieldColmnRsponse[4]);
 						$("#interparent"+parentRow).val(fieldColmnRsponse[5]);
 						$("#interchild"+parentRow).val(fieldColmnRsponse[6]);
 						//$("#sfdcObjectName"+parentRow).val(fieldColmnRsponse[6]);
 						var index=Number(rowNum)-1;
-						alert('index' +index);
 						if(fieldColmnRsponse[0]!=null && fieldColmnRsponse[0]=="1:M"){
-							alert('inside');
 							$("#JuncObj"+parentRow).attr("disabled", true);
 							$("#JuncObjrowBut"+index).attr("disabled", true);
 							$("#JuncObjParentFieldropdown"+index).attr("disabled", true);
@@ -86,7 +81,7 @@
 							
 							$("#sfdcchild"+parentRow).attr("disabled", false);
 							$("#lookUpFieldropdown"+index).attr("disabled", false);
-							$("# sfdcChildBut"+index).attr("disabled", false);
+							$("#sfdcChildBut"+index).attr("disabled", false);
 							$("#lookUpRltnNme"+parentRow).attr("disabled", false);
 							$("#lookUpExtrnl"+parentRow).attr("disabled", false);
 							
@@ -135,14 +130,10 @@
 	
 	
 	$('body').delegate('.lookupFieldUpdate', 'change', function() {
-		alert('change')
 		var slctdSlsFrcFldOption = $(this).attr('value');
-		alert(slctdSlsFrcFldOption);
 		var slctdSblFldId = $(this).attr('id');
-		alert(slctdSblFldId);
 		var parentRow = $(this).parent().parent().attr("id");
 		var SFDCObject=$("#sfdcchild"+parentRow).attr('value');
-		alert(parentRow);
 		 $.ajax({
 				type : "GET",
 				url : "getMultivalSFDCLookUpInfo",
@@ -261,13 +252,12 @@
 
 		$("#rowCount").val(rowNum + 1);
 		
-		alert('value '+ $("#rowCount").val());
 
 		var checkFlag = "checkFlag" + rowNum;
 		var siebleBaseTable = "relationtyperow" + rowNum;
 		var siebleBaseTableColumn = "relationtyperow" + rowNum;
-		var foreignFieldMapping = "childentitiyrow" + rowNum;
-		var sfdcObjectName = "childcolumnrow" + rowNum;
+		var foreignFieldMapping = "childentityrow" + rowNum;
+		var sfdcObjectName = "childtablerow" + rowNum;
 		var dropdown = "dropdown" + rowNum;
 		var sfdcId = "sfdcId" + rowNum;
 		$("#masterTable tbody")
@@ -438,6 +428,12 @@
 		 function getJuncObjPopup(rowNum){
 			  //$("#indicator").css({'display':'none'});
 				var SFDCObjectId="JuncObjrow"+(rowNum);
+				selectedSFDCChildObj=$("#sfdcchildrow"+rowNum).val();
+		/* 		if(selectedSFDCChildObj==null ||selectedSFDCChildObj=""){
+					alert("Please select the SFDC Child Object");
+					return;
+				}
+				 */
 				$("#objJunction").dialog({title: "Select an Junction Object",
 					width: 500,
 					height: 500,
@@ -495,9 +491,8 @@
 			  $.ajax({
 				type : "GET",
 				url : "JunctionObjectList",
-				data : {objectName:objName},
+				data : {objectName:objName,selectedSFDCChildObj:selectedSFDCChildObj},
 			 	success : function(data){
-			 	alert('jn' +data.length);
 						displayJuncObjTable(data);
 					}  
 				});   
@@ -544,7 +539,6 @@
 		
 		
 		function populateJunctDropdown(SFDCObject,rowNum){
-			alert('popualte jun');
 			 $.ajax({
 					type : "GET",
 					url : "getJuncDropDownList",
@@ -554,15 +548,16 @@
 				 		},
 				 		contentType : 'application/text',
 				 		success : function(response) {
-				 			alert('response junc drop down');
 				 			var select = $("#JuncObjChildFieldropdown"+rowNum);
 				 			var options="";
 				 			for(var j=0;j<response.length;j++){
 				 				options=options +  "<option value='"+response[j].name+"'>"+response[j].label+"</option>"
 				 			}
-				 			alert("option" + options );
 				 			$("#JuncObjChildFieldropdown"+rowNum).html(options);
 				 			$("#JuncObjParentFieldropdown"+rowNum).html(options);
+				 			$("#JuncObjChildFieldropdown"+rowNum).attr("selectedIndex", -1);
+				 			$("#JuncObjParentFieldropdown"+rowNum).attr("selectedIndex", -1);
+				 			
 						},
 				 		error: function(errorThrown){
 				 			alert(errorThrown);
@@ -572,7 +567,6 @@
 		}
 		
 		function populateLookUpDropdown(SFDCObject,rowNum){
-			alert('populate lookup');
 			 $.ajax({
 					type : "GET",
 					url : "getLookupDropDownList",
@@ -582,13 +576,12 @@
 				 		},
 				 		contentType : 'application/text',
 				 		success : function(response) {
-				 			alert('response lookup drop down');
 				 			var options="";
 				 			for(var j=0;j<response.length;j++){
 				 				options=options +  "<option value='"+response[j].name+"'>"+response[j].label+"</option>"
 				 			}
-				 			alert("option" + options );
 				 			$("#lookUpFieldropdown"+rowNum).html(options);
+				 			$("#lookUpFieldropdown"+rowNum).attr("selectedIndex", -1);
 						},
 				 		error: function(errorThrown){
 				 			alert(errorThrown);
@@ -596,6 +589,15 @@
 			 });
 			
 		}
+	function openModal() {
+	        document.getElementById('modal').style.display = 'block';
+	        document.getElementById('fade').style.display = 'block';
+	}
+
+	function closeModal() {
+	    document.getElementById('modal').style.display = 'none';
+	    document.getElementById('fade').style.display = 'none';
+	}
 		
 		
 </script>
@@ -617,25 +619,30 @@
 								Field Mapping</td>
 						</tr>
 
-						<div class="sampleContainer" style="width: 250px;">
+						<div class="sampleContainer" style="width: 350px;">
 							<table class="table" style="margin: 2px;">
 								<tr>
 									<br />
-									<td style="width: 45px; text-align: left;" align="left">Siebel
+									<td style="width: 65px; text-align: left;" align="left">Siebel
 										Entity</td>
 
-									<td style="width: 45px; text-align: left;" align="left">${mappingData[0].siebleBaseTable
-										}</td>
+									<td style="width: 45px; text-align: left;" align="left">${hdrValues[0]}</td>
+					
+
+								</tr>
+								<tr>
+									<br />
+									<td style="width: 45px; text-align: left;" align="left">Siebel Base table</td>
+
+									<td style="width: 45px; text-align: left;" align="left">${hdrValues[1]}</td>
 
 
 								</tr>
-
 								<tr>
-									<td style="width: 45px; text-align: left;" align="left">SFDC
+									<td style="width: 65px; text-align: left;" align="left">SFDC
 										Entity</td>
 
-									<td style="width: 45px; text-align: left;" align="left">${mappingData[0].sfdcObjectName
-										}</td>
+									<td style="width: 45px; text-align: left;" align="left">${hdrValues[2]}</td>
 								</tr>
 
 
@@ -747,25 +754,25 @@
 													</select>	
 											</td>
 											<td>
-												<input type="text" style="margin-left: 35px;" id="relationType${mapping.mappingSeq}" name="relationType${mapping.mappingSeq}" value="${mapping.relationType}" />
+												<input type="text" style="margin-left: 35px;" id="relationtyperow${mapping.mappingSeq}" name="relationtyperow${mapping.mappingSeq}" value="${mapping.relationType}" />
 											</td>
 											<td>
-												<input type="text" style="margin-left: 35px;" id="childEntity${mapping.mappingSeq}" name="childEntity${mapping.mappingSeq}" value="${mapping.childEntity}" />
+												<input type="text" style="margin-left: 35px;" id="childentityrow${mapping.mappingSeq}" name="childentityrow${mapping.mappingSeq}" value="${mapping.childEntity}" />
 											</td>	
 											<td>
-												<input type="text" style="margin-left: 35px;" id="childTable${mapping.mappingSeq}" name="childTable${mapping.mappingSeq}" value="${mapping.childTable}" />
+												<input type="text" style="margin-left: 35px;" id="childtablerow${mapping.mappingSeq}" name="childtablerow${mapping.mappingSeq}" value="${mapping.childTable}" />
 											</td>
 											<td>
-												<input type="text" style="margin-left: 35px;" id="childColumn${mapping.mappingSeq}" name="childColumn${mapping.mappingSeq}" value="${mapping.childColumn}" />
+												<input type="text" style="margin-left: 35px;" id="childFieldrow${mapping.mappingSeq}" name="childFieldrow${mapping.mappingSeq}" value="${mapping.childField}" />
 											</td>	
 											<td>
-												<input type="text" style="margin-left: 35px;" id="interTable${mapping.mappingSeq}" name="interTable${mapping.mappingSeq}" value="${mapping.interTable}" />
+												<input type="text" style="margin-left: 35px;" id="intertablerow${mapping.mappingSeq}" name="intertablerow${mapping.mappingSeq}" value="${mapping.interTable}" />
 											</td>
 											<td>
-												<input type="text" style="margin-left: 35px;" id="interParentColumn${mapping.mappingSeq}" name="interParentColumn${mapping.mappingSeq}" value="${mapping.interParentColumn}" />
+												<input type="text" style="margin-left: 35px;" id="interparentrow${mapping.mappingSeq}" name="interparentrow${mapping.mappingSeq}" value="${mapping.interParentColumn}" />
 											</td>
 											<td>
-												<input type="text" style="margin-left: 35px;" id="interChildColumn${mapping.mappingSeq}" name="interChildColumn${mapping.mappingSeq}" value="${mapping.interChildColumn}" />
+												<input type="text" style="margin-left: 35px;" id="interchildrow${mapping.mappingSeq}" name="interchildrow${mapping.mappingSeq}" value="${mapping.interChildColumn}" />
 											</td>
 										<%-- 	<td>
 												<input type="text" style="margin-left: 35px;" id="joinCondition${mapping.mappingSeq}" name="joinCondition${mapping.mappingSeq}" value="${mapping.joinCondition}" />
@@ -778,15 +785,15 @@
 											<td align="center">
 													<select name="lookUpFieldropdown${mapping.mappingSeq}"
 														id="lookUpFieldropdown${mapping.mappingSeq}" class='lookupFieldUpdate' <c:if test="${mapping.relationType=='M:M'}"><c:out value="disabled='disabled'"/></c:if>>
-															<c:if test="${not empty lookUpFieldList}">
-																<c:forEach items="${lookUpFieldList}" var="field" varStatus="status">
+															<c:if test="${not empty mapping.lookupObjList}">
+																<c:forEach items="${mapping.lookupObjList}" var="field" varStatus="status">
 																	<c:set var="temp" value="${field}" />
 			                                						<c:set var="temp1" value="${mapping.lookupField}" />
 																<%-- 	temp: [<c:out value="${temp}" />]
 			                                						temp1: [<c:out value="${temp1}" />] --%>
 																	<c:choose>
 																		<c:when test="${temp.name== temp1}">
-															                <option value='${temp1}' selected>${temp1}</option>
+															                <option value='${temp1}' selected>${temp.label}</option>
 															            </c:when>
 															            <c:otherwise>
 															                <option value='${field.name}'>${field.label}</option>
@@ -810,17 +817,17 @@
 											</td>
 											
 											<td align="center">
-													<select name=JuncObjParentFieldropdown${mapping.mappingSeq}"
+													<select name="JuncObjParentFieldropdown${mapping.mappingSeq}"
 														id="JuncObjParentFieldropdown${mapping.mappingSeq}" class='JuncObjParentFieldUpdate' <c:if test="${mapping.relationType=='1:M'}"><c:out value="disabled='disabled'"/></c:if>>
-															<c:if test="${not empty jnObjParentList}">
-																<c:forEach items="${jnObjParentList}" var="field" varStatus="status">
+															<c:if test="${not empty mapping.jnObjParentList}">
+																<c:forEach items="${mapping.jnObjParentList}" var="field" varStatus="status">
 																	<c:set var="temp" value="${field}" />
 			                                						<c:set var="temp1" value="${mapping.junctionObjParentField}" />
 																<%-- 	temp: [<c:out value="${temp}" />]
 			                                						temp1: [<c:out value="${temp1}" />] --%>
 																	<c:choose>
 																		<c:when test="${temp.name == temp1}">
-															                <option value='${temp1}' selected>${temp1}</option>
+															                <option value='${temp1}' selected>${temp.label}</option>
 															            </c:when>
 															            <c:otherwise>
 															                <option value='${field.name}'>${field.label}</option>
@@ -838,17 +845,17 @@
 											</td>
 											
 											<td align="center">
-													<select name=JuncObjChildFieldropdown${mapping.mappingSeq}"
+													<select name="JuncObjChildFieldropdown${mapping.mappingSeq}"
 														id="JuncObjChildFieldropdown${mapping.mappingSeq}" class='JuncObjChildFieldUpdate' <c:if test="${mapping.relationType=='1:M'}"><c:out value="disabled='disabled'"/></c:if>>
-															<c:if test="${not empty jnObjChildList}">
-																<c:forEach items="${jnObjChildList}" var="field" varStatus="status">
+															<c:if test="${not empty mapping.jnObjChildList}">
+																<c:forEach items="${mapping.jnObjChildList}" var="field" varStatus="status">
 																	<c:set var="temp" value="${field}" />
-			                                						<c:set var="temp1" value="${mapping.juncObjChildField}" />
+			                                						<c:set var="temp1" value="${mapping.junctionObjectChildField}" />
 																<%-- 	temp: [<c:out value="${temp}" />]
 			                                						temp1: [<c:out value="${temp1}" />] --%>
 																	<c:choose>
 																		<c:when test="${temp.name == temp1}">
-															                <option value='${temp1}' selected>${temp1}</option>
+															                <option value='${temp1}' selected>${temp.label}</option>
 															            </c:when>
 															            <c:otherwise>
 															                <option value='${field.name}'>${field.label}</option>
@@ -865,7 +872,7 @@
 											<input type="text" style="margin-left: 35px;" id="childlookUpExtrnlrow${mapping.mappingSeq}" name="childlookUpExtrnlrow${mapping.mappingSeq}" value="${mapping.childExternalId}" <c:if test="${mapping.relationType=='1:M'}"><c:out value="disabled='disabled'"/></c:if> />
 											</td>
 										
-										
+											<input type='hidden' id="sfdcId${mapping.mappingSeq}" name="sfdcId${mapping.mappingSeq}" value="${mapping.id}" />
 										
 										
 										</tr>
@@ -901,7 +908,7 @@
 					</div>
 			</div>
 
-
+<input id="rowId" name='rowId' type="hidden" value="${rowId}">
 
 			</form:form>
 

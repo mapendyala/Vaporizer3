@@ -1,5 +1,8 @@
 package com.force.example.fulfillment.order.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MultiValMappingModel {
 	
 	private String id;
@@ -13,7 +16,7 @@ public class MultiValMappingModel {
 	public void setChildTable(String childTable) {
 		this.childTable = childTable;
 	}
-	private String childColumn;
+	private String childField;
 	private String interTable;
 	private String interParentColumn;
 	private String interChildColumn;
@@ -34,7 +37,35 @@ public class MultiValMappingModel {
 	private String juncObjChildField;
 	private String childRelationName;
 	private String childExternalId;
+	public String sfdcRowId;
+	List<MappingSFDC> lookupObjList = new ArrayList<MappingSFDC>();//prtnrWSDL1.getLookupObjFieldList((String)sfdcObjectName);
+	List<MappingSFDC> jnObjParentList =new ArrayList<MappingSFDC>();// prtnrWSDL1.getJnObjParentFieldList((String)sfdcObjectName);
+	List<MappingSFDC> jnObjChildList = new ArrayList<MappingSFDC>();
 	
+	public List<MappingSFDC> getLookupObjList() {
+		return lookupObjList;
+	}
+	public void setLookupObjList(List<MappingSFDC> lookupObjList) {
+		this.lookupObjList = lookupObjList;
+	}
+	public List<MappingSFDC> getJnObjParentList() {
+		return jnObjParentList;
+	}
+	public void setJnObjParentList(List<MappingSFDC> jnObjParentList) {
+		this.jnObjParentList = jnObjParentList;
+	}
+	public List<MappingSFDC> getJnObjChildList() {
+		return jnObjChildList;
+	}
+	public void setJnObjChildList(List<MappingSFDC> jnObjChildList) {
+		this.jnObjChildList = jnObjChildList;
+	}
+	public String getSfdcRowId() {
+		return sfdcRowId;
+	}
+	public void setSfdcRowId(String sfdcRowId) {
+		this.sfdcRowId = sfdcRowId;
+	}
 	public String getSfdcChildObject() {
 		return sfdcChildObject;
 	}
@@ -148,11 +179,11 @@ public class MultiValMappingModel {
 	public void setChildEntity(String childEntity) {
 		this.childEntity = childEntity;
 	}
-	public String getChildColumn() {
-		return childColumn;
+	public String getChildField() {
+		return childField;
 	}
-	public void setChildColumn(String childColumn) {
-		this.childColumn = childColumn;
+	public void setChildField(String childField) {
+		this.childField = childField;
 	}
 	public String getInterTable() {
 		return interTable;

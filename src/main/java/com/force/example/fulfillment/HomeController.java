@@ -59,6 +59,7 @@ public class HomeController {
 	public static String rowCount;
 	public List<MainPage> data = new ArrayList<MainPage>();
 	public List<MappingModel> mappingData = new ArrayList<MappingModel>();
+	public List<MultiValMappingModel> multiMappingData = new ArrayList<MultiValMappingModel>();
     public File dataFile;
 
 	/**
@@ -526,6 +527,11 @@ public class HomeController {
 			//Else go to mapping page
 			logger.info("Entering Multimapping ");
             System.out.println("---------------"+thresholdValue+" "+primBaseValue);
+        	String rowId=request.getParameter("rowId" );
+			if(rowId==null || rowId.equals("")){
+				Map<String,String> mapSeqId= prtnrWSDL.getIdForSeq((String)session.getAttribute("projectId"));
+				rowId=mapSeqId.get(rowNo);
+			}
 			//ThresholdController tc= new ThresholdController();
 			//List<SiebelObjectBO> listSiebelObject = tc.fetchSiebelObjects(request);
 			String subprojectId=(String)session.getAttribute("projectId");//tg.getsubprojects(siebelTableNameValue);
@@ -547,7 +553,14 @@ public class HomeController {
 
 				//List<MappingModel> mappingData1=tg.getSavedMappingDBData((String)session.getAttribute("projectId"),mappingData,tableName);
 				
-				List<MultiValMappingModel> multivalmapping=prtnrWSDL.getSavedMappingMultiValueDBData((String)session.getAttribute("projectId"), siebelTableNameValue);
+				List<MultiValMappingModel> multivalmapping=prtnrWSDL.getSavedMappingMultiValueDBData(rowId, siebelTableNameValue);
+				List<String> hdrValues = new ArrayList<String>();
+				//Siebel Entity
+				hdrValues.add(siebelTableNameValue);
+				//Siebel Base Table
+				hdrValues.add(primBaseValue);
+				//SFDC Entity
+				hdrValues.add(sfdcObjectName);
 				//List<String>childTables=tg.getSavedChild((String)session.getAttribute("projectId"),tableName);
 
 				//List<Object> myChildList=siObj.fetchColumns(request, primBaseValue,thresholdValue,childTables);
@@ -564,13 +577,11 @@ public class HomeController {
 					field.add(mappingData.get(count).getSfdcFieldTable());
 
 				}*/
-				modelChild.addAttribute("sfdcObj",mappingData.get(0).getSfdcObjectName());
+				//modelChild.addAttribute("sfdcObj",mappingData.get(0).getSfdcObjectName());
 				//modelChild.addAttribute("mappingField",field);
 				modelChild.addAttribute("mappingData",multivalmapping);
-				
-				modelChild.addAttribute("lookUpFieldList",lookupObjList);
-				modelChild.addAttribute("jnObjParentList",jnObjParentList);
-				modelChild.addAttribute("jnObjChildList",jnObjChildList);
+				modelChild.addAttribute("rowId", rowId);
+				modelChild.addAttribute("hdrValues",hdrValues);
 				
 			/*	if(mappingData1.isEmpty()){
 					modelChild.addAttribute("mappingData",mappingData);}
@@ -652,11 +663,12 @@ public class HomeController {
 		List<SfdcObjectBO> objList=new ArrayList<SfdcObjectBO>(); 
 		HttpSession session = request.getSession(true);
 		String userValue = request.getParameter("objectName");
+		String selectedSFDCChildObj=request.getParameter("selectedSFDCChildObj");
 		System.out.println("uservalues in bean is"+userValue);
 		TargetPartner targetPartner= new TargetPartner(request.getSession());	
-		return targetPartner.getJuncOjectListforPopup(userValue);
+		return targetPartner.getJuncOjectListforPopup(userValue,selectedSFDCChildObj);
 
-	} 
+	}  
 	
 	/**
 	 * @author pshanmukham
@@ -746,13 +758,101 @@ public class HomeController {
 	
 	
 	@RequestMapping(value = "multiValmappingSave", method = RequestMethod.POST)
-	//public ModelAndView save1(@ModelAttribute("data") List<MainPage> data, Locale locale, Model model) {
-
 	public ModelAndView multiValMappingSave(HttpServletRequest request, Map<String, Object> model) throws ConnectionException {	
-	String	rowCount= request.getParameter("rowCount");
-	
-	return new ModelAndView("vaporizer" , "data", data);
-	}
+		HttpSession session = request.getSession(true);
+		String	rowCount= request.getParameter("rowCount");
+		String rowId= request.getParameter("rowId");
+		PartnerWSDL partnerWSDL = new PartnerWSDL(request.getSession(),true);
+		multiMappingData.clear();
+		rowCount= request.getParameter("rowCount");
+		TargetPartner tp= new TargetPartner(session);
+		data = tp.getSavedDBData((String)session.getAttribute("projectId"), data);
+		for(int i=0;i<Integer.parseInt(rowCount);i++){
+			MultiValMappingModel mapModel=new MultiValMappingModel();
+			if (rowId != null) {
+				mapModel.setSfdcRowId(rowId);
+			} else
+				mapModel.setSfdcRowId("");
+			if(request.getParameter("sfdcId"+i)!=null){
+				mapModel.setId(request.getParameter("sfdcId"+i));}
+			else
+				mapModel.setId("");
+			if(request.getParameter("sblFieldNmdropdown"+i)!=null){
+				mapModel.setSiebelField(request.getParameter("sblFieldNmdropdown"+i));
+			}
+			
+			if(request.getParameter("relationtyperow"+i)!=null){
+				mapModel.setRelationType(request.getParameter("relationtyperow"+i));
+			}
+			
+			if(request.getParameter("childentityrow"+i)!=null){
+				mapModel.setChildEntity(request.getParameter("childentityrow"+i));	
+			}
+			
+			if(request.getParameter("childtablerow"+i)!=null){
+				mapModel.setChildTable(request.getParameter("childtablerow"+i));	
+			}
+			
+			if(request.getParameter("childFieldrow"+i)!=null){
+				mapModel.setChildField(request.getParameter("childFieldrow"+i));	
+			}
+			if(request.getParameter("intertablerow"+i)!=null){
+				mapModel.setInterTable(request.getParameter("intertablerow"+i));
+			}
+			
+			if(request.getParameter("interparentrow"+i)!=null){
+				mapModel.setInterParentColumn(request.getParameter("interparentrow"+i));
+			}
+			
+			if(request.getParameter("interchildrow"+i)!=null){
+				mapModel.setInterChildColumn(request.getParameter("interchildrow"+i));
+			}
+			
+			if(request.getParameter("sfdcchildrow"+i)!=null){
+				mapModel.setSfdcChildObject(request.getParameter("sfdcchildrow"+i));
+			}
+			if(request.getParameter("lookUpFieldropdown"+i)!=null){
+				mapModel.setLookupField(request.getParameter("lookUpFieldropdown"+i));
+			}
+			
+			if(request.getParameter("lookUpRltnNmerow"+i)!=null){
+				mapModel.setLookupRelationName(request.getParameter("lookUpRltnNmerow"+i));
+			}
+			if(request.getParameter("lookUpExtrnlrow"+i)!=null){
+				mapModel.setLookupExternalId(request.getParameter("lookUpExtrnlrow"+i));
+			}
+			if(request.getParameter("JuncObjrow"+i)!=null){
+				mapModel.setJunctionObject(request.getParameter("JuncObjrow"+i));
+			}
+			if(request.getParameter("JuncObjParentFieldropdown"+i)!=null){
+				mapModel.setJunctionObjParentField(request.getParameter("JuncObjParentFieldropdown"+i));
+			}
+			if(request.getParameter("parntRltnNmerow"+i)!=null){
+				mapModel.setParentRelationName(request.getParameter("parntRltnNmerow"+i));
+			}
+			if(request.getParameter("parntlookUpExtrnlrow"+i)!=null){
+				mapModel.setParentExternalId(request.getParameter("parntlookUpExtrnlrow"+i));
+			}
+			if(request.getParameter("JuncObjChildFieldropdown"+i)!=null){
+				mapModel.setJunctionObjectChildField(request.getParameter("JuncObjChildFieldropdown"+i));	
+			}
+		
+			if(request.getParameter("childRltnNmerow"+i)!=null){
+				mapModel.setChildRelationName(request.getParameter("childRltnNmerow"+i));
+			}
+			
+			if(request.getParameter("childlookUpExtrnlrow"+i)!=null){
+				mapModel.setChildExternalId(request.getParameter("childlookUpExtrnlrow"+i));	
+			}
+			
+			multiMappingData.add(mapModel);
+			
+		}
+		if(partnerWSDL.login()){
+			partnerWSDL.saveMappingMultiValuedDataIntoDB(multiMappingData);
+		}
+		return new ModelAndView("vaporizer" , "data", data);
+		}
 	
 	
 
