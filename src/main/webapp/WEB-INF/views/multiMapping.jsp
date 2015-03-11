@@ -264,7 +264,7 @@
 				.append(
 
 						"<tr id=row"+rowNum+" style='border-bottom: 3px'>"
-								+ "<td><input name='"+checkFlag+"' id='"+checkFlag+"'  type='checkbox' checked='checked'></td>"
+								/*+  "<td><input name='"+checkFlag+"' id='"+checkFlag+"'  type='checkbox' checked='checked'></td>" */
 								+ "<td><select name=sblFieldNmdropdown"+rowNum+" id=sblFieldNmdropdown"+rowNum+" class='sblFldColFrgnUpdate'>"
 								+ "<c:if test='${not empty sbllFlddNmList}'>"
 								+ "<c:forEach items="${sbllFlddNmList}" var="field" varStatus="status">"
@@ -659,7 +659,7 @@
 							<br />
 							<thread>
 							<tr>
-								<th class="table_header_details" style="float: center;">Select</th>
+								<!-- <th class="table_header_details" style="float: center;">Select</th> -->
 								<th class="table_header_details" style="float: center;">Siebel
 									Field</th>
 								<th class="table_header_details" style="float: center;">Relationship
@@ -722,7 +722,7 @@
 							<c:if test="${not empty mappingData}" var="mapping">
 									<c:forEach items="${mappingData}" var="mapping" varStatus="status"> 
 										<tr id="row${mapping.mappingSeq}" style="border-bottom: 3px">
-											<td>
+										<%-- 	<td>
 												<c:choose>
 												<c:when test="${mapping.checkFlag}">
 												<input name="select${mapping.mappingSeq}" type='checkbox' checked="checked">
@@ -731,7 +731,7 @@
 												<input name="select${mapping.mappingSeq}" type='checkbox'>
 												</c:otherwise>
 												</c:choose>
-											</td>
+											</td> --%>
 											<td>
 													<select name="sblFieldNmdropdown${mapping.mappingSeq}"
 														id="sblFieldNmdropdown${mapping.mappingSeq}" class='sblFldColFrgnUpdate'>
