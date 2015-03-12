@@ -1621,7 +1621,7 @@ public List<MultiValMappingModel> getSavedMappingMultiValueDBData(String rowId ,
                      mappingModel1.setJoinCondition((String)contact.getField("Join_Condition__c"));
                      mappingModel1.setSfdcChildObject((String)contact.getField("SFDC_Child_Object__c"));
                      mappingModel1.setLookupField((String)contact.getField("Lookup_Field__c"));
-                     if(mappingModel1.getLookupField()!=null && mappingModel1.getSfdcChildObject()!=null){
+                     if( mappingModel1.getSfdcChildObject()!=null){
                     	 mappingModel1.setLookupObjList(getLookupObjFieldList(mappingModel1.getSfdcChildObject()));
                      }
                      mappingModel1.setLookupRelationName((String)contact.getField("Lookup_Relationship_Name__c"));

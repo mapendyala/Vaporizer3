@@ -785,6 +785,9 @@
 											<td align="center">
 													<select name="lookUpFieldropdown${mapping.mappingSeq}"
 														id="lookUpFieldropdown${mapping.mappingSeq}" class='lookupFieldUpdate' <c:if test="${mapping.relationType=='M:M'}"><c:out value="disabled='disabled'"/></c:if>>
+														  <c:if test="${mapping.lookupField==null}">
+														  <option></option>
+														  </c:if>
 															<c:if test="${not empty mapping.lookupObjList}">
 																<c:forEach items="${mapping.lookupObjList}" var="field" varStatus="status">
 																	<c:set var="temp" value="${field}" />
