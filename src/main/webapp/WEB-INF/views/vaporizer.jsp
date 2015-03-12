@@ -63,15 +63,17 @@ var sfdcObjectForExtarction="";
 		 $("#masterTable tbody")
 				.append(
 						
-						"<tr style='height:45px; width:45px;'>"
+						"<tr align='center' style='height:45px; width:45px;'>"
 								+ "<td><input name="+migrateId+" type='checkbox'></td>"
 								+ "<td><input name= "+seqId+" hidden value="+rowNum+">"+rowNum+"</td>"
-								+ "<td><input size='20' name="+objName+" id = "+objName+" placeholder='Click on Search' readonly style='margin-left:35px;'/><button type='button'id="+srchObj+" style='display: inline;' onclick='getPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
+								+ "<td width='180px'><input size='15' name="+objName+" id = "+objName+" placeholder='Click on Search' readonly /><button type='button'id="+srchObj+" style='display: inline;' onclick='getPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
 								+ "<td><input name="+primTable+" id="+primTable+" readonly style='margin-left:35px;'/></td>"
 								+ "<td><input type='text' id ="+thresholdId+" name="+thresholdId+" onchange='makeReadonly("+rowNum+")' style='margin-left:15px;'></td>"
 								+ "<td><a href='#' onclick='submitForm("+rowNum+")' style='margin-left:15px;'>Select</a></td>" 
-								+ "<td><input id="+SFDCObjName+" name="+SFDCObjName+" readonly='true' style='margin-left:35px;'/><button type='button'id="+srchSFDCObj+" style='display: inline;' onclick='getSFDCPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
+								+ "<td width='220px'><input id="+SFDCObjName+" name="+SFDCObjName+" readonly='true' /><button type='button'id="+srchSFDCObj+" style='display: inline;' onclick='getSFDCPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
 								+ "<td><a href='#' onclick='submit("+rowId+")' style='margin-left:15px;'>Select</a></td>"
+								+ "<td><a href='#' onclick='submitForm("+rowNum+",\"multiMap\")' style='margin-left:15px;'>Select</a></td>"
+								+ "<td><a href='#' onclick='submitDependant("+rowNum+",\"dependantEntity\")' style='margin-left:15px;'>Select</a></td>"
 								+ "<td><c:out value='Selected'/></td>"
 								+ "<td>"
 								+ "<input class='btn btn-inverse' type='button' name='Extract' value='E' onclick='extract("+rowNum+")'/>"
