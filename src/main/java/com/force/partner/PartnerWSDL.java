@@ -930,7 +930,13 @@ System.out.println("records "+records);
 
 	public void saveDataDB(List<MainPage> data, HttpServletRequest request,
 			String projId) throws ConnectionException {
-		HttpSession session = request.getSession(true);
+		
+		String projectId=projId;
+		if(request!=null){
+			HttpSession session = request.getSession(true);
+			projectId=(String) session.getAttribute("projectId");
+		}
+		
 
 		login();
 		List<SObject> lstCreate= new ArrayList<SObject>();
@@ -950,7 +956,7 @@ System.out.println("records "+records);
 				contact.setField("Prim_Base_Table__c",
 						mainPage.getPrimBaseTable());
 				contact.setField("Project__c",
-						((String) session.getAttribute("projectId")));
+						projectId);
 				contact.setField("SFDC_Object__c", mainPage.getSfdcObject());
 				contact.setField("Siebel_Object__c", mainPage.getSiebelObject());
 				contact.setField("Threshold__c", mainPage.getThreshold());
@@ -970,7 +976,7 @@ System.out.println("records "+records);
 					updateContact.setField("Prim_Base_Table__c",
 							mainPage.getPrimBaseTable());
 					updateContact.setField("Project__c",
-							((String) session.getAttribute("projectId")));
+							projectId);
 					updateContact.setField("SFDC_Object__c",
 							mainPage.getSfdcObject());
 					updateContact.setField("Siebel_Object__c",
@@ -1852,12 +1858,14 @@ public List<MultiValMappingModel> getSavedMappingMultiValueDBData(String rowId ,
 
 	}
 	
-	public void saveMappingMultiValuedDataIntoDB(List<MultiValMappingModel> data)
+	public void saveMappingMultiValuedDataIntoDB(List<MultiValMappingModel> data,List<MainPage> mainPageData , String projId)
 			throws ConnectionException {
 		List<SObject> lstContactUpdate= new ArrayList<SObject>();
 		List<SObject> lstContactInsert= new ArrayList<SObject>();
+		List<MainPage> mainPageList=new ArrayList<MainPage>();
 		SObject[] contactUpdate = new SObject[data.size()];
 		SObject[] contactInsert = new SObject[data.size()];
+		TargetPartner target=new TargetPartner();
 		for (Iterator<MultiValMappingModel> iterator = data.iterator(); iterator
 				.hasNext();) {
 			MultiValMappingModel mappingModel = (MultiValMappingModel) iterator.next();
@@ -1910,6 +1918,26 @@ public List<MultiValMappingModel> getSavedMappingMultiValueDBData(String rowId ,
 						mappingModel.getId());  
 				lstContactUpdate.add(contact);
 			}
+			if(mappingModel.getChildEntity()!=null && mappingModel.getChildEntity().trim().length()>0 && mappingModel.getSfdcChildObject()!=null && mappingModel.getSfdcChildObject().trim().length()>0){
+				boolean needInsert=true;
+				for (MainPage mainpage : mainPageData) {
+					
+					if(mainpage.getSiebelObject().equals(mappingModel.getChildEntity()) && mainpage.getSfdcObject().equals(mappingModel.getSfdcChildObject())){
+						needInsert=false;
+					}
+				}
+				if(needInsert){
+					MainPage mainpage=new MainPage();
+					mainpage.setSiebelObject(mappingModel.getChildEntity());
+					mainpage.setSfdcObject(mappingModel.getSfdcChildObject());
+					mainpage.setPrimBaseTable(mappingModel.getChildTable());
+					mainpage.setSequence(mainPageData.size()+1+"");
+					mainpage.setSfdcId("");
+					mainPageList.add(mainpage);
+					mainPageData.add(mainpage);
+				}
+			}
+	
 		}
 		
 		
@@ -1928,6 +1956,9 @@ public List<MultiValMappingModel> getSavedMappingMultiValueDBData(String rowId ,
 				System.out.println(saveResults[j].isSuccess());
 				// System.out.println(saveResults[j].getErrors()[j].getMessage());
 			}
+		}
+		if(mainPageList.size()>0){
+			saveDataDB(mainPageList, null, projId);
 		}
 		
 	}

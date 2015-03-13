@@ -849,7 +849,7 @@ public class HomeController {
 			
 		}
 		if(partnerWSDL.login()){
-			partnerWSDL.saveMappingMultiValuedDataIntoDB(multiMappingData);
+			partnerWSDL.saveMappingMultiValuedDataIntoDB(multiMappingData,data,(String)session.getAttribute("projectId"));
 		}
 		return new ModelAndView("vaporizer" , "data", data);
 		}
