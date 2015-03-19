@@ -787,6 +787,7 @@ System.out.println("records "+records);
 				contact.setType("Single_Valued_Screen__c");
 				contact.setField("Foreign_Key_Table__c",
 						mappingModel.getFrgnKeyrow());
+				contact.setField("Mapping_Type__c","UserDefined");
 				contact.setField("Join_Name__c",
 						mappingModel.getJoinNamerow());
 				contact.setField("Mapping_Staging_Table__c",
@@ -823,6 +824,7 @@ System.out.println("records "+records);
 				contact.setType("Single_Valued_Screen__c");
 				contact.setField("Foreign_Key_Table__c",
 						mappingModel.getFrgnKeyrow());
+				contact.setField("Mapping_Type__c","UserDefined");
 				contact.setField("Mapping_Staging_Table__c",
 						mappingModel.getSfdcRowId());
 				contact.setField("Join_Name__c",
@@ -1253,7 +1255,7 @@ System.out.println("records "+records);
 			// SOQL query to use
 			// String subprojectId="a0PG000000AtiEAMAZ";
 			String soqlQuery1 = "Select Id,  Foreign_Key_Table__c, SFDC_Field_Description__c, SFDC_Field_Name__c, Siebel_Field_Description__c, Siebel_Field_Name__c,"
-					+ "Column_Name__c,Lov_Mapping__c,Select__c,Join_Condition__C,Join_Name__c,LookUpField__c,LookUpObject__c,Lookup_External_Id_Field__c,Lookup_Relationship_Name__c from Single_Valued_Screen__c where  Mapping_Staging_Table__c='"+ rowId + "'";
+					+ "Column_Name__c,Lov_Mapping__c,Select__c,Join_Condition__C,Join_Name__c,LookUpField__c,LookUpObject__c,Lookup_External_Id_Field__c,Lookup_Relationship_Name__c from Single_Valued_Screen__c where  Mapping_Staging_Table__c='"+ rowId + "' and Mapping_Type__c = 'UserDefined'";
 			// Make the query call and get the query results
 			QueryResult qr1 = partnerConnection.query(soqlQuery1);
 			boolean done1 = false;
