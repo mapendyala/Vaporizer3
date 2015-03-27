@@ -3,6 +3,7 @@
 <%@ page session="false"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html>
@@ -104,6 +105,7 @@
 			var slctdSblFldId = $(this).attr('id');
 			var parentRow = $(this).parent().parent().attr("id");
 			var rowNum = $(this).closest('tr').index();
+		//	alert("parentRow::"+parentRow+"rowNum::"+rowNum);
 			 $.ajax({
 					type : "GET",
 					url : "getFieldColumnVal",
@@ -138,7 +140,7 @@
 		
 	
 	});
-	
+
 	
 	function addRow() {
 		
@@ -147,6 +149,9 @@
 		}else{
 			rowNum = 0;
 		}
+
+		//alert("rowNum::"+rowNum);
+		
 		$("#rowCount").val(rowNum + 1);
 		var checkFlag = "select" + rowNum;
 		var siebleBaseTable = "siebleBaseTable" + rowNum;
@@ -183,7 +188,15 @@
 							+ "<input type='hidden' id='"+sfdcId+"' name='"+sfdcId+"'></tr>"); 
  
 	}
-	
+
+	function submitForm()	  
+	  {		
+		  var page = "preMapData";
+		  $("#pageName").val(page);
+		  $("#mainForm").submit(); 
+				 
+	  }
+
 </script>
 <title>Vaporizer</title>
 </head>
@@ -236,7 +249,7 @@
 					</div>
 				</div>
 				<button class="btn btn-primary" id="addRow" onclick="addRow()">[+]</button>
-				<form:form method="post" action="mappingSave" modelAttribute="data">
+				<form:form method="post" id="mainForm" action="mappingSave" modelAttribute="data">
 					<div class="mappingContainer" style="width: 100%;">
 					<input type='hidden' id="siebelEntity" name="siebelEntity" value=${sblObjName} />
 						<table id="masterTable" style="width: 100%;">
@@ -257,8 +270,9 @@
 								<th class="table_header_details" style="float: center;">Lookup External Id Field</th>
 							</tr>
 							</thread>
-
-						 	<c:if test="${not empty mappingData}" var="mapping">
+							 <c:set var="seq" value="${1}" />
+							 <c:if test="${not empty mappingData}" var="mapping">
+							 <% //out.println("Inside Mapped Data List");%>
 								<c:forEach items="${mappingData}" var="mapping" varStatus="status"> 
 									 <tr id="row${mapping.mappingSeq}">
 										<td>
@@ -280,7 +294,7 @@
 														temp: [<c:out value="${temp}" />]
                                 						temp1: [<c:out value="${temp1}" />]
 														<c:choose>
-															<c:when test="${temp == temp1}">
+															<c:when test="${fn:containsIgnoreCase(temp, temp1)}">
 												                <option value='${temp1}' selected>${temp1}</option>
 												            </c:when>
 												            <c:otherwise>
@@ -303,7 +317,7 @@
 														<c:set var="temp2" value="${field.name}" />
                                 						<c:set var="temp3" value="${mapping.slfrcdropdown}" />
 														<c:choose>
-															<c:when test="${temp2 == temp3}">
+															<c:when test="${fn:containsIgnoreCase(temp2, temp3)}">
 												                <option value='${field.name}' selected>${field.label}</option>
 												            </c:when>
 												            <c:otherwise>
@@ -331,13 +345,157 @@
 										<td><input type="text" style="margin-left: 35px;" id="lookUpExtrnlrow${mapping.mappingSeq}" name="lookUpExtrnlrow${mapping.mappingSeq}" value="${mapping.lookUpExternalId}"/></td>
 										<input type='hidden' id="sfdcId${mapping.mappingSeq}" name="sfdcId${mapping.mappingSeq}" value="${mapping.id}" />
 									 </tr> 
+									<c:set var="seq" value="${mapping.mappingSeq}" />
+								</c:forEach>
+							</c:if>						 	 
+							<!--  Predefined Mapping List -->
+							<c:if test="${not empty preMapDataList}" var="preMapData">
+							<% //out.println("Inside Predefined Mapping List");%>
+								<c:forEach items="${preMapDataList}" var="preMapData" varStatus="status"> 
+									 <tr id="row${seq}">
+										<td>
+										<input name="select${seq}" type='checkbox' checked="checked">
+										</td>
+										<!-- Siebel Field Name : Drop Down  --> 
+										<td><select name="sblFieldNmdropdown${seq}"
+											id="sblFieldNmdropdown${seq}" class='sblFldColFrgnUpdate'>
+												<c:if test="${not empty sbllFlddNmList}">
+													<c:forEach items="${sbllFlddNmList}" var="field" varStatus="status">
+														<c:set var="temp" value="${field}" />
+                                						<c:set var="temp1" value="${preMapData.siebelFldName}" />
+														temp: [<c:out value="${temp}" />]
+                                						temp1: [<c:out value="${temp1}" />]
+														<c:choose>
+															<c:when test="${fn:containsIgnoreCase(temp, temp1)}">
+												                <option value='${temp1}' selected>${temp1}</option>
+												            </c:when>
+												            <c:otherwise>
+												                <option value='${field}'>${field}</option>
+												            </c:otherwise>
+											            </c:choose>
+													</c:forEach>
+												</c:if>
+										</select></td>	
+										<!-- Join name -->
+										<td><input type="text" style="margin-left: 35px;" id="joinNamerow${seq}" name="joinNamerow${seq}" value="${preMapData.joinName}" /></td>
+										<!-- Foreign Key Table -->
+										<td><input type="text" style="margin-left: 35px;" id="frgnKeyrow${seq}" name="frgnKeyrow${seq}" value="${preMapData.frKeyTblName}" /></td>
+										<!-- TODO : To load the column name value dynamically -->
+										<td><input type="text" style='margin-left: 35px;' id="clmnNmrow${seq}" name="clmnNmrow${seq}" value="${preMapData.sblColName}" /></td>
+										<td><textarea style='margin-left: 35px;' id="joinConditionrow${seq}" name="joinConditionrow${seq}" cols="40">${preMapData.joinCondition}</textarea></td>
+										<td style="padding:5px;"><select name="slfrcdropdown${seq}" id="slfrcdropdown${seq}" class='slsFrcFldUpdate'>
+												<c:if test="${not empty mappingField}">
+													<c:forEach items="${mappingField}" var="field" varStatus="status">
+														<c:set var="temp2" value="${field.name}" />
+                                						<c:set var="temp3" value="${preMapData.sfdcFldName}" />
+														<c:choose>
+															<c:when test="${fn:containsIgnoreCase(temp2, temp3)}">
+												                <option value='${field.name}' selected>${field.label}</option>
+												            </c:when>
+												            <c:otherwise>
+												                <option value='${field.name}'>${field.label}</option>
+												            </c:otherwise>
+											            </c:choose>
+													</c:forEach>
+												</c:if>
+										</select></td>
+										<!-- Look Up Field -->
+										<td style="margin-left: 35px;padding-left : 25px;">										
+										<c:choose>
+										<c:when test="${preMapData.lookupObjName}">
+										<input name="lookUpFieldrow${seq}" id="lookUpFieldrow${seq}" type='checkbox' checked="checked">
+										</c:when>
+										<c:otherwise>
+										<input name="lookUpFieldrow${seq}" id="lookUpFieldrow${seq}" type='checkbox'>
+										</c:otherwise>
+										</c:choose>
+										</td>
+										<!-- Look Up Object -->
+										<td><input type="text" style="margin-left: 35px;" id="lookUpObjrow${seq}" name="lookUpObjrow${seq}" value="${preMapData.lookupObjName}" /></td>
+										<!-- Lookup Relationship Name -->
+										<td><input type="text" style="margin-left: 35px;" id="lookUpRltnNmerow${seq}" name="lookUpRltnNmerow${seq}" value="${preMapData.lookupRltName}"/></td>
+										<!-- Lookup External Id Field -->
+										<td><input type="text" style="margin-left: 35px;" id="lookUpExtrnlrow${seq}" name="lookUpExtrnlrow${seq}" value="${preMapData.lookupExtrnlName}"/></td>
+									</tr> 
+									<c:set var="seq" value="${seq + 1}" />
+								</c:forEach>
+							</c:if> 
+							<!-- Mapped Saved Data List -->
+							<c:if test="${not empty mappedSavedData}" var="preMapData">
+							<% //out.println("Inside Mapped Saved Data List");%>
+								<c:forEach items="${mappedSavedData}" var="preMapData" varStatus="status"> 
+									 <tr id="row${seq}">
+										<td>
+										<input name="select${seq}" type='checkbox' checked="checked">
+										</td>
+										<!-- Siebel Field Name : Drop Down  --> 
+										<td><select name="sblFieldNmdropdown${seq}"
+											id="sblFieldNmdropdown${seq}" class='sblFldColFrgnUpdate'>
+												<c:if test="${not empty sbllFlddNmList}">
+													<c:forEach items="${sbllFlddNmList}" var="field" varStatus="status">
+														<c:set var="temp" value="${field}" />
+                                						<c:set var="temp1" value="${preMapData.sblFldName}" />
+														temp: [<c:out value="${temp}" />]
+                                						temp1: [<c:out value="${temp1}" />]
+														<c:choose>
+															<c:when test="${fn:containsIgnoreCase(temp, temp1)}">
+												                <option value='${temp1}' selected>${temp1}</option>
+												            </c:when>
+												            <c:otherwise>
+												                <option value='${field}'>${field}</option>
+												            </c:otherwise>
+											            </c:choose>
+													</c:forEach>
+												</c:if>
+										</select></td>	
+										<!-- Join name -->
+										<td><input type="text" style="margin-left: 35px;" id="joinNamerow${seq}" name="joinNamerow${seq}" value="${preMapData.joinName}" /></td>
+										<!-- Foreign Key Table -->
+										<td><input type="text" style="margin-left: 35px;" id="frgnKeyrow${seq}" name="frgnKeyrow${seq}" value="${preMapData.frgnKeyName}" /></td>
+										<!-- TODO : To load the column name value dynamically -->
+										<td><input type="text" style='margin-left: 35px;' id="clmnNmrow${seq}" name="clmnNmrow${seq}" value="${preMapData.clmnName}" /></td>
+										<td><textarea style='margin-left: 35px;' id="joinConditionrow${seq}" name="joinConditionrow${seq}" cols="40">${preMapData.joinCondition}</textarea></td>
+										<td style="padding:5px;"><select name="slfrcdropdown${seq}" id="slfrcdropdown${seq}" class='slsFrcFldUpdate'>
+												<c:if test="${not empty mappingField}">
+													<c:forEach items="${mappingField}" var="field" varStatus="status">
+														<c:set var="temp2" value="${field.name}" />
+                                						<c:set var="temp3" value="${preMapData.sfdcFldName}" />
+														<c:choose>
+															<c:when test="${fn:containsIgnoreCase(temp2, temp3)}">
+												                <option value='${field.name}' selected>${field.label}</option>
+												            </c:when>
+												            <c:otherwise>
+												                <option value='${field.name}'>${field.label}</option>
+												            </c:otherwise>
+											            </c:choose>
+													</c:forEach>
+												</c:if>
+										</select></td>
+										<!-- Look Up Field -->
+										<td style="margin-left: 35px;padding-left : 25px;">										
+										<c:choose>
+										<c:when test="${preMapData.lookupFieldName}">
+										<input name="lookUpFieldrow${seq}" id="lookUpFieldrow${seq}" type='checkbox' checked="checked">
+										</c:when>
+										<c:otherwise>
+										<input name="lookUpFieldrow${seq}" id="lookUpFieldrow${seq}" type='checkbox'>
+										</c:otherwise>
+										</c:choose>
+										</td>
+										<!-- Look Up Object -->
+										<td><input type="text" style="margin-left: 35px;" id="lookUpObjrow${seq}" name="lookUpObjrow${seq}" value="${preMapData.lookupObjName}" /></td>
+										<!-- Lookup Relationship Name -->
+										<td><input type="text" style="margin-left: 35px;" id="lookUpRltnNmerow${seq}" name="lookUpRltnNmerow${seq}" value="${preMapData.lookupRltnName}"/></td>
+										<!-- Lookup External Id Field -->
+										<td><input type="text" style="margin-left: 35px;" id="lookUpExtrnlrow${seq}" name="lookUpExtrnlrow${seq}" value="${preMapData.lookupExtrnlName}"/></td>
+									</tr> 
+									<c:set var="seq" value="${seq + 1}" />
 								</c:forEach>
 							</c:if> 
 						</table>
 						<div id="row">
 						<!-- TODO:  Understand the below usage -->
-							 <input id="rowCount" name='rowCount' type="hidden"
-								value="${mappingData.size()}"> 
+							<input id="rowCount" name='rowCount' type="hidden" value="${seq}"> 
 								<!-- <input id="rowCount" name='rowCount' type="hidden"
 								value=""> -->
 						</div>
@@ -355,21 +513,35 @@
 									name="Extract" value="Done" /> <!-- <button id="cancel" type="button" style="float: right;"
 						class="btn btn-block btn-inverse">Done</button> --> <!-- <button id="cancel" type="submit" style="float: right;"
 						class="btn btn-block btn-inverse">Done</button> -->
-						<input class="btn btn-block btn-inverse" type="button" name="Load" value="Load Pre-Defined Mapping" onclick="" />
-
 								</td>
 							</tr>
 
 
 						</table>
+						
+						<input id="rowId" name='rowId' type="hidden" value="${rowId}">
+						<input id="pageName" name='pageName' type="hidden">
 
-					</div>
+					</div>				
+			
+			</div>
+		  
+		  <div class="buttonContainer">
+				<table style="border: 0">
+					<tr>
+						<td colspan="2"
+							style="float: right; width: 350px; padding: 50px; padding-top: 10px; padding-bottom: 10px;">						
+						<input class="btn btn-block btn-inverse" type="button" name="Load" value="Load Pre-Defined Mapping Objects" onclick="javascript:submitForm();" />
+						</form:form>
+						</td>
+					</tr>					
+					</table>
 			</div>
 
-<input id="rowId" name='rowId' type="hidden" value="${rowId}">
 
-			</form:form>
 		</div>
+		
+		 
 </body>
 <script type="text/javascript">
 	$("#cancel").click(function() {
