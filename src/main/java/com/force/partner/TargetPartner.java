@@ -31,8 +31,10 @@ import com.force.api.ForceApi;
 import com.force.api.QueryResult;
 import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.MappingModel;
+import com.force.example.fulfillment.order.model.PreMapData;
 import com.force.utility.SfdcObjectBO;
 import com.force.utility.UtilityClass;
+import com.sforce.soap.partner.DescribeSObjectResult;
 import com.sforce.soap.partner.sobject.SObject;
 import com.sforce.ws.ConnectionException;
 import com.sforce.ws.bind.XmlObject;
@@ -393,7 +395,7 @@ public class TargetPartner {
 		return sobjectResults;
 	}
 
-	public String getsubprojects(String siebelTableName) {
+	/*public String getsubprojects(String siebelTableName) {
 		String subprojectId = null;
 		String parentProjectId = "a0PG000000AtiE5";
 		try {
@@ -435,8 +437,8 @@ public class TargetPartner {
 		// Project__c where Parent_Project__c='a0PG000000AtiE5' and
 		// Name='Account_PreDefined_Mapping'];
 	}
-
-	public JSONObject getRelatedSiebelTable(String subprojectId) {
+*/
+	/*public JSONObject getRelatedSiebelTable(String subprojectId) {
 		JSONObject tableData = new JSONObject();
 		try {
 			//partnerConnection.setQueryOptions(250);
@@ -485,7 +487,7 @@ public class TargetPartner {
 		// Project__c where Parent_Project__c='a0PG000000AtiE5' and
 		// Name='Account_PreDefined_Mapping'];
 	}
-	
+	*/
 	
 	
 
@@ -804,8 +806,8 @@ public class TargetPartner {
 
              if (ProjectId == null)
                   ProjectId = "a0PG000000Atg1U";
-          mappingFileURL=  new PartnerWSDL(session).getFile(file, "19SepDemoFile.csv", "application/vnd.ms-excel", ProjectId, null);
-          String SDlFileURl= new PartnerWSDL(session).getFile(mappingFile, "195SepDemoMappingFile.sdl", "application/vnd.ms-excel", ProjectId, mappingFileURL);
+          mappingFileURL=  new PartnerWSDL(session,true).getFile(file, "19SepDemoFile.csv", "application/vnd.ms-excel", ProjectId, null);
+          String SDlFileURl= new PartnerWSDL(session,true).getFile(mappingFile, "195SepDemoMappingFile.sdl", "application/vnd.ms-excel", ProjectId, mappingFileURL);
           System.out.println("filr path : " +mappingFileURL+":::::::"+SDlFileURl);
 
         } catch (Exception e) {
@@ -1326,5 +1328,81 @@ public ArrayList<String> getFieldTarget(JSONObject tableData){
 			return field;
 		
 		}
+
+	public List<SfdcObjectBO> getJuncOjectListforPopup(String ObjectName,
+			String selectedSFDCChildObj) {
+		List<SfdcObjectBO> objList = new ArrayList<SfdcObjectBO>();
+
+		try {
+			PartnerWSDL prtnrWSDL1 = new PartnerWSDL(session, false);
+			prtnrWSDL1.login();
+			List<DescribeSObjectResult> sobjectResults = prtnrWSDL1
+					.getJuncNames(selectedSFDCChildObj);
+			if (sobjectResults != null) {
+				for (int i = 0; i < sobjectResults.size(); i++) {
+					SfdcObjectBO Sob = new SfdcObjectBO();
+					if (sobjectResults.get(i).getName().contains(ObjectName)) {
+						Sob.setObjName(sobjectResults.get(i).getName());
+						objList.add(Sob);
+					}
+				}
+
+			}
+
+		} catch (Exception ce) {
+			ce.printStackTrace();
+		}
+		System.out.println("\nQuery execution completed.");
+		return objList;
+	}
+
+	public List<PreMapData> getPredefinedMapData(String sObjectName) throws Exception {
+		
+			// SOQL query to use
+			System.out.println(">>>>>"+sObjectName);
+			String soqlQuery = "Select Name,Siebel_Field_Name__c,SFDC_Field_Name__c,SFDC_Object_Name__c,Mapping_Type__c FROM Single_Valued_Screen__c where Mapping_Type__c ='PreDefined' and SFDC_Object_Name__c  = '"+ sObjectName +"'";
+			// Make the query call and get the query results
+			QueryResult<Map> qr = getForceApi().query(soqlQuery);
+			List<PreMapData> field=new ArrayList<PreMapData>();
+			 
+			boolean done = false;
+
+			while (!done) {
+				
+				List<Map> records = qr.getRecords();
+				System.out.println("records size::" + records.size());
+								
+				// Process the query results
+				for (int i = 0; i < records.size(); i++) {
+					Map contact = records.get(i);
+					PreMapData preMapData = new PreMapData();
+					String name = (String) contact.get("Name");				
+					String siebelFldName = (String) contact.get("Siebel_Field_Name__c");					
+					String sfdcFldName = (String) contact.get("SFDC_Field_Name__c");					
+					String sfdcObjName = (String) contact.get("SFDC_Object_Name__c");					
+					String mapTypeName = (String) contact.get("Mapping_Type__c");
+					
+//					System.out.println("name:: "+name+" siebelFldName:: "+siebelFldName+" sfdcObjName:: "+sfdcObjName);
+					
+					preMapData.setName(name);
+					preMapData.setSiebelFldName(siebelFldName);
+					preMapData.setSfdcFldName(sfdcFldName);
+					preMapData.setSfdcObjName(sfdcObjName);
+					preMapData.setMapTypeName(mapTypeName);				
+								
+					field.add(preMapData);
+				}
+//				Collections.sort(data, MainPage.SequenceComparator);
+			//	System.out.println("dataaaa  " + data);
+				if (qr.isDone()) {
+					done = true;
+				} else {
+					//qr = partnerConnection.queryMore(qr.getQueryLocator());
+				}
+
+			}			
+			return field;					
+	}
+
 
 }
