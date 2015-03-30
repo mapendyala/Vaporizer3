@@ -105,7 +105,6 @@
 			var slctdSblFldId = $(this).attr('id');
 			var parentRow = $(this).parent().parent().attr("id");
 			var rowNum = $(this).closest('tr').index();
-		//	alert("parentRow::"+parentRow+"rowNum::"+rowNum);
 			 $.ajax({
 					type : "GET",
 					url : "getFieldColumnVal",
@@ -140,7 +139,7 @@
 		
 	
 	});
-
+	
 	
 	function addRow() {
 		
@@ -149,9 +148,6 @@
 		}else{
 			rowNum = 0;
 		}
-
-		//alert("rowNum::"+rowNum);
-		
 		$("#rowCount").val(rowNum + 1);
 		var checkFlag = "select" + rowNum;
 		var siebleBaseTable = "siebleBaseTable" + rowNum;
@@ -289,12 +285,12 @@
 											id="sblFieldNmdropdown${mapping.mappingSeq}" class='sblFldColFrgnUpdate'>
 												<c:if test="${not empty sbllFlddNmList}">
 													<c:forEach items="${sbllFlddNmList}" var="field" varStatus="status">
-														<c:set var="temp" value="${field}" />
-                                						<c:set var="temp1" value="${mapping.sblFieldNmdropdown}" />
-														temp: [<c:out value="${temp}" />]
-                                						temp1: [<c:out value="${temp1}" />]
+														<c:set var="temp1" value="${field}" />
+                                						<c:set var="temp2" value="${mapping.sblFieldNmdropdown}" />
+														temp: [<c:out value="${temp1}" />]
+                                						temp1: [<c:out value="${temp2}" />]
 														<c:choose>
-															<c:when test="${fn:containsIgnoreCase(temp, temp1)}">
+															<c:when test="${fn:containsIgnoreCase(temp1, temp2)}">
 												                <option value='${temp1}' selected>${temp1}</option>
 												            </c:when>
 												            <c:otherwise>
@@ -314,10 +310,10 @@
 										<td style="padding:5px;"><select name="slfrcdropdown${mapping.mappingSeq}" id="slfrcdropdown${mapping.mappingSeq}" class='slsFrcFldUpdate'>
 												<c:if test="${not empty mappingField}">
 													<c:forEach items="${mappingField}" var="field" varStatus="status">
-														<c:set var="temp2" value="${field.name}" />
-                                						<c:set var="temp3" value="${mapping.slfrcdropdown}" />
+														<c:set var="temp3" value="${field.name}" />
+                                						<c:set var="temp4" value="${mapping.slfrcdropdown}" />
 														<c:choose>
-															<c:when test="${fn:containsIgnoreCase(temp2, temp3)}">
+															<c:when test="${fn:containsIgnoreCase(temp3, temp4)}">
 												                <option value='${field.name}' selected>${field.label}</option>
 												            </c:when>
 												            <c:otherwise>
@@ -361,13 +357,13 @@
 											id="sblFieldNmdropdown${seq}" class='sblFldColFrgnUpdate'>
 												<c:if test="${not empty sbllFlddNmList}">
 													<c:forEach items="${sbllFlddNmList}" var="field" varStatus="status">
-														<c:set var="temp" value="${field}" />
-                                						<c:set var="temp1" value="${preMapData.siebelFldName}" />
-														temp: [<c:out value="${temp}" />]
-                                						temp1: [<c:out value="${temp1}" />]
+														<c:set var="temp5" value="${field}" />
+                                						<c:set var="temp6" value="${preMapData.siebelFldName}" />
+														temp: [<c:out value="${temp5}" />]
+                                						temp1: [<c:out value="${temp6}" />]
 														<c:choose>
-															<c:when test="${fn:containsIgnoreCase(temp, temp1)}">
-												                <option value='${temp1}' selected>${temp1}</option>
+															<c:when test="${fn:containsIgnoreCase(temp5, temp6)}">
+												                <option value='${temp5}' selected>${temp5}</option>
 												            </c:when>
 												            <c:otherwise>
 												                <option value='${field}'>${field}</option>
@@ -386,10 +382,10 @@
 										<td style="padding:5px;"><select name="slfrcdropdown${seq}" id="slfrcdropdown${seq}" class='slsFrcFldUpdate'>
 												<c:if test="${not empty mappingField}">
 													<c:forEach items="${mappingField}" var="field" varStatus="status">
-														<c:set var="temp2" value="${field.name}" />
-                                						<c:set var="temp3" value="${preMapData.sfdcFldName}" />
+														<c:set var="temp7" value="${field.name}" />
+                                						<c:set var="temp8" value="${preMapData.sfdcFldName}" />
 														<c:choose>
-															<c:when test="${fn:containsIgnoreCase(temp2, temp3)}">
+															<c:when test="${fn:containsIgnoreCase(temp7, temp8)}">
 												                <option value='${field.name}' selected>${field.label}</option>
 												            </c:when>
 												            <c:otherwise>
@@ -433,13 +429,13 @@
 											id="sblFieldNmdropdown${seq}" class='sblFldColFrgnUpdate'>
 												<c:if test="${not empty sbllFlddNmList}">
 													<c:forEach items="${sbllFlddNmList}" var="field" varStatus="status">
-														<c:set var="temp" value="${field}" />
-                                						<c:set var="temp1" value="${preMapData.sblFldName}" />
-														temp: [<c:out value="${temp}" />]
-                                						temp1: [<c:out value="${temp1}" />]
+														<c:set var="temp9" value="${field}" />
+                                						<c:set var="temp10" value="${preMapData.sblFldName}" />
+														temp: [<c:out value="${temp9}" />]
+                                						temp1: [<c:out value="${temp10}" />]
 														<c:choose>
-															<c:when test="${fn:containsIgnoreCase(temp, temp1)}">
-												                <option value='${temp1}' selected>${temp1}</option>
+															<c:when test="${fn:containsIgnoreCase(temp9, temp10)}">
+												                <option value='${temp9}' selected>${temp9}</option>
 												            </c:when>
 												            <c:otherwise>
 												                <option value='${field}'>${field}</option>
@@ -458,10 +454,10 @@
 										<td style="padding:5px;"><select name="slfrcdropdown${seq}" id="slfrcdropdown${seq}" class='slsFrcFldUpdate'>
 												<c:if test="${not empty mappingField}">
 													<c:forEach items="${mappingField}" var="field" varStatus="status">
-														<c:set var="temp2" value="${field.name}" />
-                                						<c:set var="temp3" value="${preMapData.sfdcFldName}" />
+														<c:set var="temp11" value="${field.name}" />
+                                						<c:set var="temp12" value="${preMapData.sfdcFldName}" />
 														<c:choose>
-															<c:when test="${fn:containsIgnoreCase(temp2, temp3)}">
+															<c:when test="${fn:containsIgnoreCase(temp11, temp12)}">
 												                <option value='${field.name}' selected>${field.label}</option>
 												            </c:when>
 												            <c:otherwise>
@@ -513,6 +509,7 @@
 									name="Extract" value="Done" /> <!-- <button id="cancel" type="button" style="float: right;"
 						class="btn btn-block btn-inverse">Done</button> --> <!-- <button id="cancel" type="submit" style="float: right;"
 						class="btn btn-block btn-inverse">Done</button> -->
+
 								</td>
 							</tr>
 
@@ -522,8 +519,7 @@
 						<input id="rowId" name='rowId' type="hidden" value="${rowId}">
 						<input id="pageName" name='pageName' type="hidden">
 
-					</div>				
-			
+					</div>
 			</div>
 		  
 		  <div class="buttonContainer">
@@ -540,8 +536,6 @@
 
 
 		</div>
-		
-		 
 </body>
 <script type="text/javascript">
 	$("#cancel").click(function() {
