@@ -215,7 +215,8 @@ public class HomeController {
 	    }
 
 	@RequestMapping(value = "mappingSave", method = RequestMethod.POST)
-	public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> model, Model modelChild) throws ConnectionException {	
+public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> model, Model modelChild) throws ConnectionException {	
+		
 		String page = request.getParameter("pageName");
 		
 		if(page.equals("preMapData")) {
@@ -322,6 +323,7 @@ public class HomeController {
 			
 		}
 		else {
+			
 		HttpSession session = request.getSession(true);
 		String rowId= request.getParameter("rowId");
 		System.out.println("------mappingSave entry-----");
@@ -331,7 +333,6 @@ public class HomeController {
 		TargetPartner tp= new TargetPartner(session);
 		data = tp.getSavedDBData((String)session.getAttribute("projectId"), data);
 		List<MappingModel> mapModel = new ArrayList<MappingModel>();
-		
 		for(int i=0;i<Integer.parseInt(rowCount);i++){
 			String siebelCheckFlag="select"+i;
 			MappingModel mappingModel = new MappingModel();
@@ -394,29 +395,30 @@ public class HomeController {
 			
 			mapModel.add(mappingModel);
 		}
+		
 		/*** Start -logic for removing duplicates**/
-		if(mapModel!=null && mapModel.size()>0) {
+		
+		Set<MappingModel> set = new TreeSet<MappingModel>(new Comparator<MappingModel>() {
 			
-			Set<MappingModel> set = new TreeSet<MappingModel>(new Comparator<MappingModel>() {
-				
-				@Override
-				public int compare(MappingModel o1, MappingModel o2) {
-					// TODO Auto-generated method stub
-					if(o1.getSblFieldNmdropdown()!=null && o2.getSblFieldNmdropdown()!=null){
-						if(o1.getSblFieldNmdropdown().equalsIgnoreCase(o2.getSblFieldNmdropdown())){
-			        		return 0;
-			        	}
-					} 
-		        	return 1;
-				}				
-			});
-			
-			set.addAll(mapModel);
-	
-			mappingData = new ArrayList<MappingModel> (set);
-		}
+			@Override
+			public int compare(MappingModel o1, MappingModel o2) {
+				// TODO Auto-generated method stub
+				if(o1.getSblFieldNmdropdown()!=null && o2.getSblFieldNmdropdown()!=null){
+					if(o1.getSblFieldNmdropdown().equalsIgnoreCase(o2.getSblFieldNmdropdown())){
+		        		return 0;
+		        	}
+				} 
+	        	return 1;
+			}				
+		});
+		
+		set.addAll(mapModel);
+
+		mappingData = new ArrayList<MappingModel> (set);
 		
 		/*** End -logic for removing duplicates**/
+		
+		
 		if(partnerWSDL.login()){
 			partnerWSDL.saveMappingSingleValuedDataIntoDB(mappingData);
 		}
@@ -659,6 +661,7 @@ public class HomeController {
 				modelChild.addAttribute("sblObjName",siebelTableNameValue);
 				modelChild.addAttribute("hdrValues",hdrValues);
 				modelChild.addAttribute("rowId", rowId);
+				
 				if(session.getAttribute("mappedSavedData")!=null){					
 					session.removeAttribute("mappedSavedData");
 				}
@@ -1005,8 +1008,7 @@ public class HomeController {
 		return new ModelAndView("vaporizer" , "data", data);
 		}
 	
-	
-		@RequestMapping(value = "savePreMapData", method = RequestMethod.POST)
+	@RequestMapping(value = "savePreMapData", method = RequestMethod.POST)
 	public ModelAndView savePreMapData(HttpServletRequest request, Map<String, Object> model,Model modelChild) throws ConnectionException {
 		
 		System.out.println("In savePreMapData");
@@ -1018,7 +1020,7 @@ public class HomeController {
 		String primBaseValue = (String)session.getAttribute("primBaseValue");
 				
 		TargetPartner tp= new TargetPartner(session); 
-		PartnerWSDL prtnrWSDL = new PartnerWSDL(session,false);
+		PartnerWSDL prtnrWSDL = new PartnerWSDL(session,true);
 		
 		logger.info("Welcome to single valued mapping ");
 		
@@ -1065,12 +1067,7 @@ public class HomeController {
 				String sfdcFldName = (String) request.getParameter("lookUpSfdcFldrow"+lookUpFieldrow);					
 				String sfdcObjName = (String) request.getParameter("lookUpSfdcObjrow"+lookUpFieldrow);					
 				String mapTypeName = (String) request.getParameter("lookUpMapTyperow"+lookUpFieldrow); 
-				
-				/*String joinName = (String) request.getParameter("lookUpJoinNamerow"+lookUpFieldrow);
-				String frKeyTblName = (String) request.getParameter("lookUpFrKeyTblrow"+lookUpFieldrow);
-				String SblColName = (String) request.getParameter("lookUpSblColNamerow"+lookUpFieldrow);
-				String joinCondition = (String) request.getParameter("lookUpJoinConditionrow"+lookUpFieldrow);
-				*/
+								
 				String lookupRltName="";
 				String lookupObjName="";
 				String lookupExtrnlName="";
@@ -1123,12 +1120,6 @@ public class HomeController {
 			modelChild.addAttribute("mappingField",sfdcObjList);
 			modelChild.addAttribute("preMapDataList",preMapDataList);
 			
-			
-			/*
-			 * if(mappingDataSaved.isEmpty()){
-			 * modelChild.addAttribute("mappingData",mappingData);} else 
-			 */
-			
 			if(session.getAttribute("mappedSavedData")!=null){	
 //				System.out.println("Mapped Saved Data exists in session");				
 				modelChild.addAttribute("mappedSavedData", session.getAttribute("mappedSavedData"));
@@ -1143,6 +1134,5 @@ public class HomeController {
 		return new ModelAndView("mapping", "data", data);
 		
 	}
-	
 
 }
