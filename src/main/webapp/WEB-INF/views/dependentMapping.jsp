@@ -218,7 +218,7 @@
 									name="Extract" value="Done" onclick="getDropdown()" /> <!-- <button id="cancel" type="button" style="float: right;"
 						class="btn btn-block btn-inverse">Done</button> --> <!-- <button id="cancel" type="submit" style="float: right;"
 						class="btn btn-block btn-inverse">Done</button> -->
-								
+
 								</td>
 							</tr>
 

@@ -158,7 +158,7 @@ String password;
 			partnerConnection.setQueryOptions(250);
 			if (projectId == null)
 				projectId = "a0PG000000B23yKMAR";
-				System.out.println("hereeeeeeeee");
+System.out.println("hereeeeeeeee");
 			// SOQL query to use
 			String soqlQuery = " Select Name, Parent_Project__c, Type__c from Project__c where id= '"
 					+ projectId + "'";
@@ -1079,7 +1079,7 @@ System.out.println("records "+records);
 	public Map<String,String> getIdForSeq(String projectId) {
 		Map<String,String> mapOfIdSeq= new HashMap<String, String>();
 		try {
-			
+			System.out.println("projectId:: "+projectId);
 			// SOQL query to use
 			String soqlQuery = "Select Id, Sequence__c from Mapping_Staging_Table__c where Project__c ='"
 					+ projectId + "'";
@@ -1256,8 +1256,7 @@ System.out.println("records "+records);
 			List<MappingModel> mappingData) {
 		
 		List<MappingModel> refinedList = new ArrayList<MappingModel>();
-		try {			
-			
+		try {
 			partnerConnection.setQueryOptions(250);
 			// SOQL query to use
 			// String subprojectId="a0PG000000AtiEAMAZ";
