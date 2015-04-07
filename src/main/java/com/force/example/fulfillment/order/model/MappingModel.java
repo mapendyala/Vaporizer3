@@ -1,5 +1,8 @@
 package com.force.example.fulfillment.order.model;
 
+
+import java.util.Set;
+
 public class MappingModel {
 	public String siebleBaseTable;
 	public String siebleBaseTableColumn;
@@ -24,7 +27,14 @@ public class MappingModel {
 	public String lookUpRelationShipName;
 	public String lookUpExternalId;
 	public String sfdcRowId;
+	public Set<String> lstExternalIds;
 	
+	public Set<String> getLstExternalIds() {
+		return lstExternalIds;
+	}
+	public void setLstExternalIds(Set<String> lstExternalIds) {
+		this.lstExternalIds = lstExternalIds;
+	}
 	public String getSfdcRowId() {
 		return sfdcRowId;
 	}

@@ -71,13 +71,26 @@
 								var lookupfldrow = "lookUpField"+parentRow;
 								$("#lookUpField"+parentRow).attr("checked", true);
 								if(fieldColmnRsponse[2] != null && fieldColmnRsponse[2].length > 0){
-									$("#lookUpExtrnl"+parentRow).val(fieldColmnRsponse[2][0].label);
+									var mySelect = $("#lookUpExtrnl"+parentRow);
+									for( var i=0;i<fieldColmnRsponse[2].length ;i++)
+									{
+										var text=fieldColmnRsponse[2][i].label;
+										
+										mySelect.append(
+										        $('<option></option>').val(text).html(text)
+										    );
+							        }
+									//$("#lookUpExtrnl"+parentRow).val(fieldColmnRsponse[2][0].label);
 									/* $("#lookUpExtrnl"+parentRow).attr("readonly", true); */
 								}else{
-									$("#lookUpExtrnl"+parentRow).val("");
+									alert('called1');
+									$("#lookUpExtrnl"+parentRow+" option").remove();
+									//$("#"+lookupfldrow+" option").remove();
+									//$("#lookUpExtrnl"+parentRow).val("");
 									/* $("#lookUpExtrnl"+parentRow).attr("readonly", true); */
 								}
 							}else{
+								var lookupfldrow = "lookUpField"+parentRow;
 								$("#lookUpField"+parentRow).attr();	
 								$("#lookUpRltnNme"+parentRow).val("");
 								/* $("#lookUpRltnNme"+parentRow).attr("disabled", "disabled");  */
@@ -86,6 +99,8 @@
 								$("#lookUpExtrnl"+parentRow).val("");
 								/* $("#lookUpExtrnl"+parentRow).attr("disabled", "disabled"); */
 								$("#lookUpField"+parentRow).attr("checked", false);
+								alert($("#lookUpExtrnl"+parentRow+" option").size());
+								$("#lookUpExtrnl"+parentRow+" option").remove();
 							}
 						},
 				 		error: function(errorThrown){
@@ -180,8 +195,13 @@
 							+ "<td style='margin-left: 35px; padding-left:25px;'><input name=lookUpFieldrow"+rowNum+" id=lookUpFieldrow"+rowNum+"  type='checkbox'></td>"
 							+ "<td style='margin-left: 35px;'><input type='text' style='margin-left: 35px;' name=lookUpObjrow"+rowNum+" id=lookUpObjrow"+rowNum+"></td>"
 							+ "<td style='margin-left: 35px;'><input type='text' style='margin-left: 35px;' name=lookUpRltnNmerow"+rowNum+" id=lookUpRltnNmerow"+rowNum+"></td>"
-							+ "<td style='margin-left: 35px;'><input type='text' style='margin-left: 35px;' name=lookUpExtrnlrow"+rowNum+" id=lookUpExtrnlrow"+rowNum+"></td>"
-							+ "<input type='hidden' id='"+sfdcId+"' name='"+sfdcId+"'></tr>"); 
+							+ "<td style='margin-left: 35px;'><select style='margin-left: 35px;' name=lookUpExtrnlrow"+rowNum+" id=lookUpExtrnlrow"+rowNum+">"
+							
+							+ "</select></td>"
+							+ "<input type='hidden' id='"+sfdcId+"' name='"+sfdcId+"'></tr>");
+
+							/* <input type='text' style='margin-left: 35px;' name=lookUpExtrnlrow"+rowNum+" id=lookUpExtrnlrow"+rowNum+"> */
+							 
  
 	}
 
@@ -338,7 +358,14 @@
 										<!-- Lookup Relationship Name -->
 										<td><input type="text" style="margin-left: 35px;" id="lookUpRltnNmerow${mapping.mappingSeq}" name="lookUpRltnNmerow${mapping.mappingSeq}" value="${mapping.lookUpRelationShipName}"/></td>
 										<!-- Lookup External Id Field -->
-										<td><input type="text" style="margin-left: 35px;" id="lookUpExtrnlrow${mapping.mappingSeq}" name="lookUpExtrnlrow${mapping.mappingSeq}" value="${mapping.lookUpExternalId}"/></td>
+										<td><select style="margin-left: 35px;" id="lookUpExtrnlrow${mapping.mappingSeq}" name="lookUpExtrnlrow${mapping.mappingSeq}" value="${mapping.lookUpExternalId}">
+												<c:if test="${not empty mapping.lstExternalIds}">
+													<c:forEach items="${mapping.lstExternalIds}" var="field" varStatus="status">
+												       		<option value='${field}' selected>${field}</option>
+													</c:forEach>
+												</c:if>
+										</select></td>
+										<%-- <td><input type="text" style="margin-left: 35px;" id="lookUpExtrnlrow${mapping.mappingSeq}" name="lookUpExtrnlrow${mapping.mappingSeq}" value="${mapping.lookUpExternalId}"/></td> --%>
 										<input type='hidden' id="sfdcId${mapping.mappingSeq}" name="sfdcId${mapping.mappingSeq}" value="${mapping.id}" />
 									 </tr> 
 									<c:set var="seq" value="${mapping.mappingSeq}" />

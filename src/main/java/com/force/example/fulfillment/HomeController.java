@@ -537,7 +537,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				
 			}
 		}
-		
+		System.out.println("lookUpFlds "+lookUpFlds);
 		return lookUpFlds;
 	}
 
@@ -634,7 +634,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				
 				List<MappingModel> mappingDataSaved = prtnrWSDL
 						.getSavedMappingSingleValueDBData(
-								rowId,mappingData);
+								rowId,mappingData,sfdcObjectName);
 				SiebelObjectController siObj=new SiebelObjectController();
 				//Gets the list of SFDC Field names
 				List<MappingSFDC> sfdcObjList = prtnrWSDL1.getSFDCFieldList((String)sfdcObjectName);
