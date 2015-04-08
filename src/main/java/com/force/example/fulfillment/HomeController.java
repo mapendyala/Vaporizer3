@@ -1029,7 +1029,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 			
 			List<MappingModel> mappingDataSaved = prtnrWSDL
 					.getSavedMappingSingleValueDBData(
-							rowId,mappingData);
+							rowId,mappingData,sfdcObjectName);
 			SiebelObjectController siObj=new SiebelObjectController();
 			//Gets the list of SFDC Field names
 			List<MappingSFDC> sfdcObjList = prtnrWSDL.getSFDCFieldList((String)sfdcObjectName);
