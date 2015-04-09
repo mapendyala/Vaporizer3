@@ -225,7 +225,7 @@
 	width: 100%;
 	height: 100%;
 	z-index: 9999;
-	background: url(images/loader-64x/Preloader_2.gif) center no-repeat #fff;
+	background: url(resources/images/ajax-loader.gif) center no-repeat #fff;
 }
 </style>
 
