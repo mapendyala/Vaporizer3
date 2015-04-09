@@ -83,7 +83,7 @@
 									//$("#lookUpExtrnl"+parentRow).val(fieldColmnRsponse[2][0].label);
 									/* $("#lookUpExtrnl"+parentRow).attr("readonly", true); */
 								}else{
-									alert('called1');
+									
 									$("#lookUpExtrnl"+parentRow+" option").remove();
 									//$("#"+lookupfldrow+" option").remove();
 									//$("#lookUpExtrnl"+parentRow).val("");
@@ -99,7 +99,7 @@
 								$("#lookUpExtrnl"+parentRow).val("");
 								/* $("#lookUpExtrnl"+parentRow).attr("disabled", "disabled"); */
 								$("#lookUpField"+parentRow).attr("checked", false);
-								alert($("#lookUpExtrnl"+parentRow+" option").size());
+								
 								$("#lookUpExtrnl"+parentRow+" option").remove();
 							}
 						},
@@ -159,11 +159,12 @@
 	function addRow() {
 		
 		if ($("#rowCount").val() != '') {
-			rowNum = Number($("#rowCount").val());
+			rowNum = Number($("#rowCount").val())+1;
 		}else{
 			rowNum = 0;
 		}
-		$("#rowCount").val(rowNum + 1);
+		
+		$("#rowCount").val(rowNum);
 		var checkFlag = "select" + rowNum;
 		var siebleBaseTable = "siebleBaseTable" + rowNum;
 		var siebleBaseTableColumn = "siebleBaseTableColumn" + rowNum;
