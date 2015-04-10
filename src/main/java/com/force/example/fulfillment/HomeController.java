@@ -79,7 +79,7 @@ public class HomeController {
 		JSONObject authParams = getOAuthToken();
 		
 		session.setAttribute("authParams", authParams);
-		String projectId = "a0PG000000CHllHMAT";
+		String projectId = "a0PG000000CIFgnMAH";
 		if(request.getParameter("projectId") != null){
 			projectId = request.getParameter("projectId");
 		}
@@ -537,7 +537,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				
 			}
 		}
-		
+		System.out.println("lookUpFlds "+lookUpFlds);
 		return lookUpFlds;
 	}
 
@@ -635,7 +635,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				
 				List<MappingModel> mappingDataSaved = prtnrWSDL
 						.getSavedMappingSingleValueDBData(
-								rowId,mappingData);
+								rowId,mappingData,sfdcObjectName);
 				SiebelObjectController siObj=new SiebelObjectController();
 				//Gets the list of SFDC Field names
 				List<MappingSFDC> sfdcObjList = prtnrWSDL1.getSFDCFieldList((String)sfdcObjectName);
@@ -1030,7 +1030,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 			
 			List<MappingModel> mappingDataSaved = prtnrWSDL
 					.getSavedMappingSingleValueDBData(
-							rowId,mappingData);
+							rowId,mappingData,sfdcObjectName);
 			SiebelObjectController siObj=new SiebelObjectController();
 			//Gets the list of SFDC Field names
 			List<MappingSFDC> sfdcObjList = prtnrWSDL.getSFDCFieldList((String)sfdcObjectName);

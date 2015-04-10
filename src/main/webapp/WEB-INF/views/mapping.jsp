@@ -71,13 +71,26 @@
 								var lookupfldrow = "lookUpField"+parentRow;
 								$("#lookUpField"+parentRow).attr("checked", true);
 								if(fieldColmnRsponse[2] != null && fieldColmnRsponse[2].length > 0){
-									$("#lookUpExtrnl"+parentRow).val(fieldColmnRsponse[2][0].label);
+									var mySelect = $("#lookUpExtrnl"+parentRow);
+									for( var i=0;i<fieldColmnRsponse[2].length ;i++)
+									{
+										var text=fieldColmnRsponse[2][i].label;
+										
+										mySelect.append(
+										        $('<option></option>').val(text).html(text)
+										    );
+							        }
+									//$("#lookUpExtrnl"+parentRow).val(fieldColmnRsponse[2][0].label);
 									/* $("#lookUpExtrnl"+parentRow).attr("readonly", true); */
 								}else{
-									$("#lookUpExtrnl"+parentRow).val("");
+									
+									$("#lookUpExtrnl"+parentRow+" option").remove();
+									//$("#"+lookupfldrow+" option").remove();
+									//$("#lookUpExtrnl"+parentRow).val("");
 									/* $("#lookUpExtrnl"+parentRow).attr("readonly", true); */
 								}
 							}else{
+								var lookupfldrow = "lookUpField"+parentRow;
 								$("#lookUpField"+parentRow).attr();	
 								$("#lookUpRltnNme"+parentRow).val("");
 								/* $("#lookUpRltnNme"+parentRow).attr("disabled", "disabled");  */
@@ -86,6 +99,8 @@
 								$("#lookUpExtrnl"+parentRow).val("");
 								/* $("#lookUpExtrnl"+parentRow).attr("disabled", "disabled"); */
 								$("#lookUpField"+parentRow).attr("checked", false);
+								
+								$("#lookUpExtrnl"+parentRow+" option").remove();
 							}
 						},
 				 		error: function(errorThrown){
@@ -144,11 +159,12 @@
 	function addRow() {
 		
 		if ($("#rowCount").val() != '') {
-			rowNum = Number($("#rowCount").val());
+			rowNum = Number($("#rowCount").val())+1;
 		}else{
 			rowNum = 0;
 		}
-		$("#rowCount").val(rowNum + 1);
+		
+		$("#rowCount").val(rowNum);
 		var checkFlag = "select" + rowNum;
 		var siebleBaseTable = "siebleBaseTable" + rowNum;
 		var siebleBaseTableColumn = "siebleBaseTableColumn" + rowNum;
@@ -180,8 +196,13 @@
 							+ "<td style='margin-left: 35px; padding-left:25px;'><input name=lookUpFieldrow"+rowNum+" id=lookUpFieldrow"+rowNum+"  type='checkbox'></td>"
 							+ "<td style='margin-left: 35px;'><input type='text' style='margin-left: 35px;' name=lookUpObjrow"+rowNum+" id=lookUpObjrow"+rowNum+"></td>"
 							+ "<td style='margin-left: 35px;'><input type='text' style='margin-left: 35px;' name=lookUpRltnNmerow"+rowNum+" id=lookUpRltnNmerow"+rowNum+"></td>"
-							+ "<td style='margin-left: 35px;'><input type='text' style='margin-left: 35px;' name=lookUpExtrnlrow"+rowNum+" id=lookUpExtrnlrow"+rowNum+"></td>"
-							+ "<input type='hidden' id='"+sfdcId+"' name='"+sfdcId+"'></tr>"); 
+							+ "<td style='margin-left: 35px;'><select style='margin-left: 35px;' name=lookUpExtrnlrow"+rowNum+" id=lookUpExtrnlrow"+rowNum+">"
+							
+							+ "</select></td>"
+							+ "<input type='hidden' id='"+sfdcId+"' name='"+sfdcId+"'></tr>");
+
+							/* <input type='text' style='margin-left: 35px;' name=lookUpExtrnlrow"+rowNum+" id=lookUpExtrnlrow"+rowNum+"> */
+							 
  
 	}
 
@@ -195,8 +216,34 @@
 
 </script>
 <title>Vaporizer</title>
+<style type="text/css">
+.no-js #loader { display: none;  }
+.js #loader { display: block; position: absolute; left: 100px; top: 0; }
+.se-pre-con {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background: url(resources/images/ajax-loader.gif) center no-repeat #fff;
+}
+</style>
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
+ 
+<script type="text/javascript">
+	$(window).load(function() {
+		
+		// Animate loader off screen
+		$(".se-pre-con").fadeOut("slow");;
+	});
+	</script>
 </head>
 <body>
+<div class="se-pre-con"></div>
 	<div class="container">
 
 		<div class="mainContent">
@@ -382,7 +429,14 @@
 										<!-- Lookup Relationship Name -->
 										<td><input type="text" style="margin-left: 35px;" id="lookUpRltnNmerow${mapping.mappingSeq}" name="lookUpRltnNmerow${mapping.mappingSeq}" value="${mapping.lookUpRelationShipName}"/></td>
 										<!-- Lookup External Id Field -->
-										<td><input type="text" style="margin-left: 35px;" id="lookUpExtrnlrow${mapping.mappingSeq}" name="lookUpExtrnlrow${mapping.mappingSeq}" value="${mapping.lookUpExternalId}"/></td>
+										<td><select style="margin-left: 35px;" id="lookUpExtrnlrow${mapping.mappingSeq}" name="lookUpExtrnlrow${mapping.mappingSeq}" value="${mapping.lookUpExternalId}">
+												<c:if test="${not empty mapping.lstExternalIds}">
+													<c:forEach items="${mapping.lstExternalIds}" var="field" varStatus="status">
+												       		<option value='${field}' selected>${field}</option>
+													</c:forEach>
+												</c:if>
+										</select></td>
+										<%-- <td><input type="text" style="margin-left: 35px;" id="lookUpExtrnlrow${mapping.mappingSeq}" name="lookUpExtrnlrow${mapping.mappingSeq}" value="${mapping.lookUpExternalId}"/></td> --%>
 										<input type='hidden' id="sfdcId${mapping.mappingSeq}" name="sfdcId${mapping.mappingSeq}" value="${mapping.id}" />
 									 </tr> 
 									<c:set var="seq" value="${mapping.mappingSeq}" />

@@ -19,7 +19,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -1253,7 +1255,7 @@ System.out.println("records "+records);
 	}
 	
 	public List<MappingModel> getSavedMappingSingleValueDBData(String rowId,
-			List<MappingModel> mappingData) {
+			List<MappingModel> mappingData,String sfdcObjectName) {
 		
 		List<MappingModel> refinedList = new ArrayList<MappingModel>();
 		try {
@@ -1282,6 +1284,7 @@ System.out.println("records "+records);
 				if(mappingData == null){
 					mappingData = new ArrayList<MappingModel>();
 				}
+				List<MappingSFDC> externlFldLst = getExternalIdList(sfdcObjectName);
 				// Process the query results
 				for (int i = 0; i < records1.length; i++) {
 					int j = i+1;
@@ -1294,7 +1297,15 @@ System.out.println("records "+records);
 					String reltnShpNme = (String)contact.getField("Lookup_Relationship_Name__c");
 					String extrnlId = (String)contact.getField("Lookup_External_Id_Field__c");
 					String slsfrcDrpDwnSlctd = (String)contact.getField("SFDC_Field_Name__c");
-
+					
+					
+					Set<String> lstExternalIds= new LinkedHashSet<String>();
+					lstExternalIds.add(extrnlId);
+					if(externlFldLst!=null && externlFldLst.size()>0)
+						for(MappingSFDC externalFld: externlFldLst ){
+							lstExternalIds.add(externalFld.getLabel());
+						}
+					mappingModel1.setLstExternalIds(lstExternalIds);
 					mappingModel1.setCheckFlag(Boolean.parseBoolean((String)contact.getField("Select__c")));
 					mappingModel1.setLookUpFlag(Boolean.parseBoolean((String)contact.getField("LookUpField__c")));
 					mappingModel1.setSblFieldNmdropdown((String)contact.getField("Siebel_Field_Name__c"));

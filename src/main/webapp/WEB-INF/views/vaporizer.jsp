@@ -54,9 +54,9 @@ var sfdcObjectForExtarction="";
 		var srchObj = "searchObject"+(rowNum);
 		var srchSFDCObj = "searchFDCObject"+(rowNum);
 		var primTable = "prim"+(rowNum);
-		var thresholdId = "thresh"+(rowNum);
+		
 		var SFDCObjName = "SFDCObjName"+(rowNum);
-		var migrateId = "migrate"+(rowNum);
+		
 		var seqId = "seq"+(rowNum);
 		var rowId=rowNum;
 		
@@ -64,17 +64,15 @@ var sfdcObjectForExtarction="";
 				.append(
 						
 						"<tr align='center' style='height:45px; width:45px;'>"
-								+ "<td><input name="+migrateId+" type='checkbox'></td>"
+								
 								+ "<td><input name= "+seqId+" hidden value="+rowNum+">"+rowNum+"</td>"
 								+ "<td width='180px'><input size='15' name="+objName+" id = "+objName+" placeholder='Click on Search' readonly /><button type='button'id="+srchObj+" style='display: inline;' onclick='getPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
 								+ "<td><input name="+primTable+" id="+primTable+" readonly style='margin-left:35px;'/></td>"
-								+ "<td><input type='text' id ="+thresholdId+" name="+thresholdId+" onchange='makeReadonly("+rowNum+")' style='margin-left:15px;'></td>"
-								+ "<td><a href='#' onclick='submitForm("+rowNum+")' style='margin-left:15px;'>Select</a></td>" 
 								+ "<td width='220px'><input id="+SFDCObjName+" name="+SFDCObjName+" readonly='true' /><button type='button'id="+srchSFDCObj+" style='display: inline;' onclick='getSFDCPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
 								+ "<td><a href='#' onclick='submit("+rowId+")' style='margin-left:15px;'>Select</a></td>"
 								+ "<td><a href='#' onclick='submitForm("+rowNum+",\"multiMap\")' style='margin-left:15px;'>Select</a></td>"
-								+ "<td><a href='#' onclick='submitDependant("+rowNum+",\"dependantEntity\")' style='margin-left:15px;'>Select</a></td>"
-								+ "<td><c:out value='Selected'/></td>"
+								
+								
 								+ "<td>"
 								+ "<input class='btn btn-inverse' type='button' name='Extract' value='E' onclick='extract("+rowNum+")'/>"
 								/* + "<input class='btn btn-inverse' type='button' name='transform' value='T' hidden = 'true' style='margin-left:10px;'/>"
@@ -131,20 +129,7 @@ var sfdcObjectForExtarction="";
 	
 	
 		
-	 function makeReadonly(rowNum){
-		 var thresholdId = "thresh"+(rowNum);
-		var threshold = $("#"+thresholdId).val();
-		var primTableId = "prim"+(rowNum);
-		var primBaseTable =  $("#"+primTableId).val();
-		$.ajax({
-			type : "POST",
-			url : "set/Threshold",
-		 	data : {threshold:threshold, primBaseName:primBaseTable}
-			});
-		$("#"+thresholdId).attr('readonly',true);
-	}
-	
-
+	 
 	 function validateUploadForm()
 		{
 			 var fileName=$("#fileNameID").val();
@@ -272,15 +257,7 @@ var sfdcObjectForExtarction="";
 				});
 			} 
 	  
-	  function submitForm(rowNum)
-	  
-	  {		
-		  var page = "child";
-		  $("#rowNo").val(rowNum); 
-		  $("#pageName").val(page);
-		  $("#mainForm").submit(); 
-				 
-	  }
+	
 	  
  function submit(rowNum)
 	  
@@ -440,15 +417,6 @@ function submitForm(rowNum, page){
 					 "GET"); 
 	 }
 	
-	function submitDependant(rowNum)
-	 
-	 {		
-		  var page = "dependantEntity";
-		  $("#rowNo").val(rowNum); 
-		  $("#pageName").val(page);
-		  $("#mainForm").submit(); 
-				 
-	 }
 		
 	</script>
 
@@ -486,19 +454,14 @@ function submitForm(rowNum, page){
 				
 			<thead>
 				  <tr align="center">
-				    <th class="table_header_details" style="float: center;">Migrate?</th>
+				    
 				    <th class="table_header_details" style="float: center;">Sequence</th>
 				    <th class="table_header_details" style="float: center;">Siebel Object</th>
 				    <th class="table_header_details" style="float: center;">Prim. Base Table</th>
-				    <th class="table_header_details" style="float: center;">Threshold</th>
-				    <!-- <th class="table_header_details" style="float: center;">Child Base Tables</th> -->
-				    <th class="table_header_details" style="float: center;">Joined Tables</th>
 				    <th class="table_header_details" style="float: center;">SFDC Object</th>
-				    <!-- <th class="table_header_details" style="float: center;">Mapping</th>-->
 				    <th class="table_header_details" style="float: center;">Single Value Field Mapping</th>
 				    <th class="table_header_details" style="float: center;">Multi Value Field Mapping</th>
-				    <th class="table_header_details" style="float: center;">Dependant Entities</th>
-				    <th class="table_header_details" style="float: center;">Status</th>
+				    
 				    <th class="table_header_details" style="float: center;">Add Ons</th>
 				    <th hidden="true" class="table_header_details" style="float: center;">ID</th>
 				  </tr>
@@ -509,26 +472,16 @@ function submitForm(rowNum, page){
 				   <c:forEach items="${data}" var="mainPage"> 
 				    
 				<tr style="height: 45px; width: 45px;" align="center">
-								<td>
-								<c:choose>
-								<c:when test="${mainPage.migrate == true}">
-								<input name="migrate${mainPage.sequence}" type='checkbox' checked="checked">
-								</c:when>
-								<c:otherwise>
-								<input name="migrate${mainPage.sequence}" type='checkbox'>
-								</c:otherwise>
-								</c:choose>
-								</td>
 								<td><input type="hidden" name="seq${mainPage.sequence}" value="${mainPage.sequence}">${mainPage.sequence}</td>
 								<td width="180px"><input name="objectName${mainPage.sequence}" id="objectName${mainPage.sequence}" value="${mainPage.siebelObject}" size='15' placeholder='Click on Search' readonly style=''/><button type='button' style='display: inline;' onclick="getPopup(${mainPage.sequence})"><span class='glyphicon glyphicon-search'></span></button></td>
 								<td><input value="${mainPage.primBaseTable}" id="prim${mainPage.sequence}" name="prim${mainPage.sequence}" readonly style='margin-left:35px;'/></td>
-								<td><input type='text' id="thresh${mainPage.sequence}" name="thresh${mainPage.sequence}" value="${mainPage.threshold}" onchange='makeReadonly(${mainPage.sequence})' style='margin-left:15px;'></td>
-								<td><a href="#" onclick='submitForm(${mainPage.sequence})' style='margin-left:15px;'>Select</a></td>
+								
+								
 								<td width="220px"><input name="SFDCObjName${mainPage.sequence}" id="SFDCObjName${mainPage.sequence}" value="${mainPage.sfdcObject}" readonly /><button type='button' style='display: inline;'><span class='glyphicon glyphicon-search'></span></button></td>
 								<td><a href='#' onclick='submit("${mainPage.sequence}$${mainPage.sfdcId}")' style='margin-left:15px;'>Select</a></td>
 								<td><a href='#' onclick='submitForm(${mainPage.sequence},"multiMap")' style='margin-left:15px;'>Select</a></td>
-								<td><a href='#' onclick='submitDependant(${mainPage.sequence},"dependantEntity")' style='margin-left:15px;'>Select</a></td>
-								<td><c:out value='Selected'/></td>
+								
+								
 								<td>
 								<input class='btn btn-inverse' type='button' name='Extract' value='E' onclick="extract(${mainPage.sequence})" />
 								<!-- <input class='btn btn-inverse' type='button' name='transform' value='T' hidden="true" style='margin-left:5px;'/>

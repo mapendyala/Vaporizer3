@@ -502,7 +502,7 @@ public class SiebelObjectController {
 			if(joinNameMap.isEmpty()){
 				PartnerWSDL prtnrWSDL = new PartnerWSDL(request.getSession(),true);
 				prtnrWSDL.login();
-				prtnrWSDL.getSavedMappingSingleValueDBData(rowId,null);
+				prtnrWSDL.getSavedMappingSingleValueDBData(rowId,null,sfdcObject);
 				joinNameMap =  SiebelObjectController.joinNmRowNumMap;
 				colNameMap =  SiebelObjectController.colNmRowNmMap;
 				joinCndtnMap =  SiebelObjectController.joinCndtnRowNmMap;
