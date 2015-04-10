@@ -621,6 +621,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 			String rowId=request.getParameter("rowId" );
 			session.setAttribute("rowId", rowId);
 			session.setAttribute("rowNo", rowNo);
+			
 			if(rowId==null || rowId.equals("")){
 				Map<String,String> mapSeqId= prtnrWSDL.getIdForSeq((String)session.getAttribute("projectId"));
 				rowId=mapSeqId.get(rowNo);
@@ -1072,13 +1073,17 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				String joinCondition = clmNmLst.get(2);
 				String frKeyTblName = clmNmLst.get(3);
 				
-				/*if(lookUpLst.size()>0){
+				if(lookUpLst!=null && lookUpLst.size()>0){
 				
 				lookupRltName = String.valueOf(lookUpLst.get(0));
 				lookupObjName = String.valueOf(lookUpLst.get(1));
 				lookupExtrnlName = String.valueOf(lookUpLst.get(2));
 				
-				}*/
+				System.out.println("lookupRltName:: "+lookupRltName);
+				System.out.println("lookupObjName:: "+lookupObjName);
+				System.out.println("lookupExtrnlName:: "+lookupExtrnlName);
+				
+				}
 				
 				
 //				System.out.println("lookupRltName:: "+lookupRltName);

@@ -267,9 +267,53 @@
 							</tr>
 							</thread>
 							 <c:set var="seq" value="${1}" />
+							 <c:set var="sblFldFlag1" value="false" />
+							 <c:set var="sfdcFldFlag1" value="false" />
 							 <c:if test="${not empty mappingData}" var="mapping">
 							 <% //out.println("Inside Mapped Data List");%>
 								<c:forEach items="${mappingData}" var="mapping" varStatus="status"> 
+								
+								<c:if test="${not empty sbllFlddNmList}">
+									<c:forEach items="${sbllFlddNmList}" var="field" varStatus="status">
+										<c:set var="temp1" value="${field}" />
+	                           			<c:set var="temp2" value="${mapping.sblFieldNmdropdown}" />
+	                           			<%--
+	                           			<c:out value="${temp1}" />
+							    		<c:out value="${temp2}" />
+							    		
+							    		 --%>
+									 	
+									 	<c:choose>
+											<c:when test="${temp1 == temp2}">
+								                <c:set var="sblFldFlag1" value="true" />
+								            </c:when>
+								         </c:choose>
+								     </c:forEach>
+							     </c:if>
+							     
+							     <% //out.println("::SFDC field name::"); %>
+							    <br><br>
+						     	<c:if test="${not empty mappingField}">
+									<c:forEach items="${mappingField}" var="field" varStatus="status">
+										<c:set var="temp3" value="${fn.toUpperCase(field.name)}" />
+                            			<c:set var="temp4" value="${fn.toUpperCase(mapping.slfrcdropdown)}" />
+                            			 
+                            			<%-- <c:out value="${temp3}" />
+							    		<c:out value="${temp4}" />
+										 --%>
+										<c:choose>
+											<c:when test="${temp3 == temp4}">
+								                <c:set var="sfdcFldFlag1" value="true" />
+								            </c:when>
+								         </c:choose>
+								        </c:forEach>
+								</c:if>
+							     
+							    	<%-- <c:out value="${sblFldFlag1}" />
+							    	<c:out value="${sfdcFldFlag1}" />
+							     	 --%>
+							     	<c:if test="${(sblFldFlag1 == 'true') && (sfdcFldFlag1 == 'true')}">
+							     	
 									 <tr id="row${mapping.mappingSeq}">
 										<td>
 										<c:choose>
@@ -287,11 +331,11 @@
 													<c:forEach items="${sbllFlddNmList}" var="field" varStatus="status">
 														<c:set var="temp1" value="${field}" />
                                 						<c:set var="temp2" value="${mapping.sblFieldNmdropdown}" />
-														temp: [<c:out value="${temp1}" />]
-                                						temp1: [<c:out value="${temp2}" />]
+													<%-- temp: [<c:out value="${temp1}" />]
+                                						temp1: [<c:out value="${temp2}" />]  --%>
 														<c:choose>
-															<c:when test="${fn:containsIgnoreCase(temp1, temp2)}">
-												                <option value='${temp1}' selected>${temp1}</option>
+															<c:when test="${temp1 == temp2}">
+												                <option value='${temp2}' selected>${temp2}</option>
 												            </c:when>
 												            <c:otherwise>
 												                <option value='${field}'>${field}</option>
@@ -310,10 +354,10 @@
 										<td style="padding:5px;"><select name="slfrcdropdown${mapping.mappingSeq}" id="slfrcdropdown${mapping.mappingSeq}" class='slsFrcFldUpdate'>
 												<c:if test="${not empty mappingField}">
 													<c:forEach items="${mappingField}" var="field" varStatus="status">
-														<c:set var="temp3" value="${field.name}" />
-                                						<c:set var="temp4" value="${mapping.slfrcdropdown}" />
+														<c:set var="temp3" value="${fn.toUpperCase(field.name)}" />
+                                						<c:set var="temp4" value="${fn.toUpperCase(mapping.slfrcdropdown)}" />
 														<c:choose>
-															<c:when test="${fn:containsIgnoreCase(temp3, temp4)}">
+															<c:when test="${temp3 == temp4}">
 												                <option value='${field.name}' selected>${field.label}</option>
 												            </c:when>
 												            <c:otherwise>
@@ -342,12 +386,54 @@
 										<input type='hidden' id="sfdcId${mapping.mappingSeq}" name="sfdcId${mapping.mappingSeq}" value="${mapping.id}" />
 									 </tr> 
 									<c:set var="seq" value="${mapping.mappingSeq}" />
+									
+									</c:if>
+									
 								</c:forEach>
 							</c:if>						 	 
 							<!--  Predefined Mapping List -->
+							 <c:set var="sblFldFlag2" value="false" />
+							 <c:set var="sfdcFldFlag2" value="false" />
 							<c:if test="${not empty preMapDataList}" var="preMapData">
 							<% //out.println("Inside Predefined Mapping List");%>
 								<c:forEach items="${preMapDataList}" var="preMapData" varStatus="status"> 
+								
+								<c:if test="${not empty sbllFlddNmList}">
+									<c:forEach items="${sbllFlddNmList}" var="field" varStatus="status">
+										<c:set var="temp5" value="${field}" />
+	                           			<c:set var="temp6" value="${preMapData.siebelFldName}" />
+	                           			<%-- 
+	                           			<c:out value="${temp5}" />
+							    		<c:out value="${temp6}" /> --%>
+									 	
+									 	<c:choose>
+											<c:when test="${temp5 == temp6}">
+								                <c:set var="sblFldFlag2" value="true" />
+								            </c:when>
+								         </c:choose>
+								     </c:forEach>
+							     </c:if>
+							     <% //out.println("::SFDC field name::"); %>
+							    
+						     	<c:if test="${not empty mappingField}">
+									<c:forEach items="${mappingField}" var="field" varStatus="status">
+										<c:set var="temp7" value="${fn.toUpperCase(field.name)}" />
+                            			<c:set var="temp8" value="${fn.toUpperCase(preMapData.sfdcFldName)}" />
+                            			<%-- <c:out value="${temp7}" />
+							    		<c:out value="${temp8}" /> --%>
+										<c:choose>
+											<c:when test="${temp7 == temp8}">
+								                <c:set var="sfdcFldFlag2" value="true" />
+								            </c:when>
+								         </c:choose>
+								        </c:forEach>
+								</c:if>
+							     
+							     	<%-- <c:out value="${sblFldFlag2}" />
+							     	<c:out value="${sfdcFldFlag2}" />
+							     	 --%>
+							     	<c:if test="${(sblFldFlag2 == 'true') && (sfdcFldFlag2 == 'true')}">
+							     	
 									 <tr id="row${seq}">
 										<td>
 										<input name="select${seq}" type='checkbox' checked="checked">
@@ -359,11 +445,11 @@
 													<c:forEach items="${sbllFlddNmList}" var="field" varStatus="status">
 														<c:set var="temp5" value="${field}" />
                                 						<c:set var="temp6" value="${preMapData.siebelFldName}" />
-														temp: [<c:out value="${temp5}" />]
-                                						temp1: [<c:out value="${temp6}" />]
+													<%--	temp: [<c:out value="${temp5}" />]
+                                						temp1: [<c:out value="${temp6}" />] --%>
 														<c:choose>
-															<c:when test="${fn:containsIgnoreCase(temp5, temp6)}">
-												                <option value='${temp5}' selected>${temp5}</option>
+															<c:when test="${temp5 == temp6}">
+												                <option value='${temp6}' selected>${temp6}</option>
 												            </c:when>
 												            <c:otherwise>
 												                <option value='${field}'>${field}</option>
@@ -382,10 +468,10 @@
 										<td style="padding:5px;"><select name="slfrcdropdown${seq}" id="slfrcdropdown${seq}" class='slsFrcFldUpdate'>
 												<c:if test="${not empty mappingField}">
 													<c:forEach items="${mappingField}" var="field" varStatus="status">
-														<c:set var="temp7" value="${field.name}" />
-                                						<c:set var="temp8" value="${preMapData.sfdcFldName}" />
+														<c:set var="temp7" value="${fn.toUpperCase(field.name)}" />
+                                						<c:set var="temp8" value="${fn.toUpperCase(preMapData.sfdcFldName)}" />
 														<c:choose>
-															<c:when test="${fn:containsIgnoreCase(temp7, temp8)}">
+															<c:when test="${temp7 == temp8}">
 												                <option value='${field.name}' selected>${field.label}</option>
 												            </c:when>
 												            <c:otherwise>
@@ -414,12 +500,52 @@
 										<td><input type="text" style="margin-left: 35px;" id="lookUpExtrnlrow${seq}" name="lookUpExtrnlrow${seq}" value="${preMapData.lookupExtrnlName}"/></td>
 									</tr> 
 									<c:set var="seq" value="${seq + 1}" />
+									
+									</c:if>
 								</c:forEach>
 							</c:if> 
 							<!-- Mapped Saved Data List -->
+							 <c:set var="sblFldFlag3" value="false" />
+							 <c:set var="sfdcFldFlag3" value="false" />
 							<c:if test="${not empty mappedSavedData}" var="preMapData">
 							<% //out.println("Inside Mapped Saved Data List");%>
 								<c:forEach items="${mappedSavedData}" var="preMapData" varStatus="status"> 
+								
+								<c:if test="${not empty sbllFlddNmList}">
+									<c:forEach items="${sbllFlddNmList}" var="field" varStatus="status">
+										<c:set var="temp9" value="${field}" />
+	                           			<c:set var="temp10" value="${preMapData.sblFldName}" />
+	                           			<%-- <c:out value="${temp9}" />
+							    		<c:out value="${temp10}" /> --%>
+									 	<c:choose>
+											<c:when test="${temp9 == temp10}">
+								                <c:set var="sblFldFlag3" value="true" />
+								            </c:when>
+								         </c:choose>
+								     </c:forEach>
+							     </c:if>
+							     
+							     <% //out.println("::SFDC field name::"); %>
+							    <br><br>
+						     	<c:if test="${not empty mappingField}">
+									<c:forEach items="${mappingField}" var="field" varStatus="status">
+										<c:set var="temp11" value="${fn.toUpperCase(field.name)}" />
+                            			<c:set var="temp12" value="${fn.toUpperCase(preMapData.sfdcFldName)}" />
+                            			<%-- <c:out value="${temp11}" />
+							    		<c:out value="${temp12}" /> --%>
+										<c:choose>
+											<c:when test="${temp11 == temp12}">
+								                <c:set var="sfdcFldFlag3" value="true" />
+								            </c:when>
+								         </c:choose>
+								        </c:forEach>
+								</c:if>
+							     
+							       	<%-- <c:out value="${sblFldFlag3}" />
+							     	<c:out value="${sfdcFldFlag3}" /> --%>
+							     	
+							     	<c:if test="${(sblFldFlag3 == 'true') && (sfdcFldFlag3 == 'true')}">
+							     	
 									 <tr id="row${seq}">
 										<td>
 										<input name="select${seq}" type='checkbox' checked="checked">
@@ -431,11 +557,11 @@
 													<c:forEach items="${sbllFlddNmList}" var="field" varStatus="status">
 														<c:set var="temp9" value="${field}" />
                                 						<c:set var="temp10" value="${preMapData.sblFldName}" />
-														temp: [<c:out value="${temp9}" />]
-                                						temp1: [<c:out value="${temp10}" />]
+														<%-- temp: [<c:out value="${temp9}" />]
+                                						temp1: [<c:out value="${temp10}" />] --%>
 														<c:choose>
-															<c:when test="${fn:containsIgnoreCase(temp9, temp10)}">
-												                <option value='${temp9}' selected>${temp9}</option>
+															<c:when test="${temp9 == temp10}">
+												                <option value='${temp10}' selected>${temp10}</option>
 												            </c:when>
 												            <c:otherwise>
 												                <option value='${field}'>${field}</option>
@@ -454,10 +580,10 @@
 										<td style="padding:5px;"><select name="slfrcdropdown${seq}" id="slfrcdropdown${seq}" class='slsFrcFldUpdate'>
 												<c:if test="${not empty mappingField}">
 													<c:forEach items="${mappingField}" var="field" varStatus="status">
-														<c:set var="temp11" value="${field.name}" />
-                                						<c:set var="temp12" value="${preMapData.sfdcFldName}" />
+														<c:set var="temp11" value="${fn.toUpperCase(field.name)}" />
+                                						<c:set var="temp12" value="${fn.toUpperCase(preMapData.sfdcFldName)}" />
 														<c:choose>
-															<c:when test="${fn:containsIgnoreCase(temp11, temp12)}">
+															<c:when test="${temp11 == temp12}">
 												                <option value='${field.name}' selected>${field.label}</option>
 												            </c:when>
 												            <c:otherwise>
@@ -486,6 +612,8 @@
 										<td><input type="text" style="margin-left: 35px;" id="lookUpExtrnlrow${seq}" name="lookUpExtrnlrow${seq}" value="${preMapData.lookupExtrnlName}"/></td>
 									</tr> 
 									<c:set var="seq" value="${seq + 1}" />
+									
+									</c:if>
 								</c:forEach>
 							</c:if> 
 						</table>
