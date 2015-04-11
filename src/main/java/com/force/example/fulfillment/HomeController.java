@@ -1014,7 +1014,8 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 		String primBaseValue = (String)session.getAttribute("primBaseValue");
 				
 		TargetPartner tp= new TargetPartner(session); 
-		PartnerWSDL prtnrWSDL = new PartnerWSDL(session,true);
+		PartnerWSDL prtnrWSDL = new PartnerWSDL(session,false);
+		prtnrWSDL.login();
 		
 		logger.info("Welcome to single valued mapping ");
 		
@@ -1025,7 +1026,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 //		String subprojectId=tp.getsubprojects(siebelTableNameValue);
 //		if(null != subprojectId){
 			
-			prtnrWSDL.login();
+			
 //			JSONObject tableName = tp.getRelatedSiebelTable(subprojectId);// gives
 			
 			List<MappingModel> mappingDataSaved = prtnrWSDL
