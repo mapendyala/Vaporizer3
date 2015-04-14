@@ -216,6 +216,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 			
 //			System.out.println("Inside preMapData");
 			
+			
 			HttpSession session = request.getSession(true);
 //			System.out.println("In loadMapData method");
 			TargetPartner tp= new TargetPartner(session); 
@@ -231,6 +232,12 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 			String lookupRltnName;
 			String lookupExtrnlName;
 			List<Mapping> mapSavedData = new ArrayList<Mapping>();
+			
+			if(session.getAttribute("mappedSavedData")!=null){	
+//				System.out.println("Removing mappingSavedData");
+				session.removeAttribute("mappedSavedData");
+			}
+			
 			try {
 				
 				String sObjectName = request.getParameter("siebelEntity");
@@ -300,9 +307,11 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 //				Collections.sort(mapSavedData, Mapping.SequenceComparator);
 				
 				if(session.getAttribute("mappedSavedData")==null){
+//					System.out.println("Creating mappingSavedData");
 					session.setAttribute("mappedSavedData", mapSavedData);
 					modelChild.addAttribute("mappedSavedData",mapSavedData);
-				}
+				}			
+				
 				
 				modelChild.addAttribute("mappingData",preMapDatas);
 				
@@ -656,9 +665,6 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				modelChild.addAttribute("hdrValues",hdrValues);
 				modelChild.addAttribute("rowId", rowId);
 				
-				if(session.getAttribute("mappedSavedData")!=null){					
-					session.removeAttribute("mappedSavedData");
-				}
 				/*
 				 * if(mappingDataSaved.isEmpty()){
 				 * modelChild.addAttribute("mappingData",mappingData);} else
