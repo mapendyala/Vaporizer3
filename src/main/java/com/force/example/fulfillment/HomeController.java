@@ -7,7 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -1123,11 +1125,51 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 			modelChild.addAttribute("hdrValues",hdrValues);
 			modelChild.addAttribute("rowId", rowId);
 			modelChild.addAttribute("mappingField",sfdcObjList);
-			modelChild.addAttribute("preMapDataList",preMapDataList);
+//			modelChild.addAttribute("preMapDataList",preMapDataList);
+			
 			
 			if(session.getAttribute("mappedSavedData")!=null){	
-//				System.out.println("Mapped Saved Data exists in session");				
-				modelChild.addAttribute("mappedSavedData", session.getAttribute("mappedSavedData"));
+				System.out.println("Mapped Saved Data exists in session");				
+			/*
+				List<PreMapData> mergeList = new ArrayList<PreMapData>();
+				mergeList.addAll(preMapDataList);
+				mergeList.addAll((Collection<? extends PreMapData>) session.getAttribute("mappedSavedData"));
+				
+				Set<PreMapData> set = new HashSet<PreMapData>(mergeList);
+				List<PreMapData> mergeListWithoutDuplicates = new ArrayList<PreMapData>();
+				mergeListWithoutDuplicates.addAll(set);
+				
+				modelChild.addAttribute("preMapDataList",mergeListWithoutDuplicates);
+				*/
+								
+//				modelChild.addAttribute("preMapDataList",preMapDataList);
+				
+				
+				List<Mapping> mapSavedData = (List<Mapping>)session.getAttribute("mappedSavedData");
+				
+				if(mapSavedData!=null && mapSavedData.size()>0) {
+					
+												
+				for(int j=0; j < mapSavedData.size(); j++){
+					
+					for(int k=0; k < preMapDataList.size(); k++) {						
+									
+  						if(preMapDataList.get(k).getSiebelFldName().equals(mapSavedData.get(j).getSblFldName())){
+							
+							preMapDataList.remove(preMapDataList.get(k));
+							
+						}
+						
+						
+					}
+					
+				}
+				
+				}
+				
+				modelChild.addAttribute("preMapDataList",preMapDataList);
+				modelChild.addAttribute("mappedSavedData", session.getAttribute("mappedSavedData"));	
+				
 			}
 			else {
 				modelChild.addAttribute("mappingData",mappingDataSaved);

@@ -126,9 +126,6 @@ var sfdcObjectForExtarction="";
 	 }
 	
 	
-	
-	
-		
 	 
 	 function validateUploadForm()
 		{
