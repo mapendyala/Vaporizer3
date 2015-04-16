@@ -359,7 +359,10 @@
 							    	<%-- <c:out value="${sblFldFlag1}" />
 							    	<c:out value="${sfdcFldFlag1}" />
 							     	 --%>
+							     	
 							     	<c:if test="${(sblFldFlag1 == 'true') && (sfdcFldFlag1 == 'true')}">
+							     	<c:set var="sblFldFlag1" value="false" />
+							 		<c:set var="sfdcFldFlag1" value="false" />
 							     	
 									 <tr id="row${mapping.mappingSeq}">
 										<td>
@@ -376,13 +379,13 @@
 											id="sblFieldNmdropdown${mapping.mappingSeq}" class='sblFldColFrgnUpdate'>
 												<c:if test="${not empty sbllFlddNmList}">
 													<c:forEach items="${sbllFlddNmList}" var="field" varStatus="status">
-														<c:set var="temp1" value="${field}" />
-                                						<c:set var="temp2" value="${mapping.sblFieldNmdropdown}" />
+														<c:set var="temp5" value="${field}" />
+                                						<c:set var="temp6" value="${mapping.sblFieldNmdropdown}" />
 													<%-- temp: [<c:out value="${temp1}" />]
                                 						temp1: [<c:out value="${temp2}" />]  --%>
 														<c:choose>
-															<c:when test="${temp1 == temp2}">
-												                <option value='${temp2}' selected>${temp2}</option>
+															<c:when test="${temp5 == temp6}">
+												                <option value='${temp6}' selected>${temp6}</option>
 												            </c:when>
 												            <c:otherwise>
 												                <option value='${field}'>${field}</option>
@@ -401,10 +404,10 @@
 										<td style="padding:5px;"><select name="slfrcdropdown${mapping.mappingSeq}" id="slfrcdropdown${mapping.mappingSeq}" class='slsFrcFldUpdate'>
 												<c:if test="${not empty mappingField}">
 													<c:forEach items="${mappingField}" var="field" varStatus="status">
-														<c:set var="temp3" value="${field.name}" />
-                                						<c:set var="temp4" value="${mapping.slfrcdropdown}" />
+														<c:set var="temp7" value="${field.name}" />
+                                						<c:set var="temp8" value="${mapping.slfrcdropdown}" />
 														<c:choose>
-															<c:when test="${temp3 == temp4}">
+															<c:when test="${temp7 == temp8}">
 												                <option value='${field.name}' selected>${field.label}</option>
 												            </c:when>
 												            <c:otherwise>
@@ -440,11 +443,11 @@
 										<input type='hidden' id="sfdcId${mapping.mappingSeq}" name="sfdcId${mapping.mappingSeq}" value="${mapping.id}" />
 									 </tr> 
 									<c:set var="seq" value="${mapping.mappingSeq}" />
-									
-									</c:if>
-									
+									</c:if>	
 								</c:forEach>
-							</c:if>						 	 
+								
+								</c:if>
+												 	 
 							<!--  Predefined Mapping List -->
 							 <c:set var="sblFldFlag2" value="false" />
 							 <c:set var="sfdcFldFlag2" value="false" />
@@ -454,14 +457,14 @@
 								
 								<c:if test="${not empty sbllFlddNmList}">
 									<c:forEach items="${sbllFlddNmList}" var="field" varStatus="status">
-										<c:set var="temp5" value="${field}" />
-	                           			<c:set var="temp6" value="${preMapData.siebelFldName}" />
+										<c:set var="temp9" value="${field}" />
+	                           			<c:set var="temp10" value="${preMapData.siebelFldName}" />
 	                           			<%-- 
 	                           			<c:out value="${temp5}" />
 							    		<c:out value="${temp6}" /> --%>
 									 	
 									 	<c:choose>
-											<c:when test="${temp5 == temp6}">
+											<c:when test="${temp9 == temp10}">
 								                <c:set var="sblFldFlag2" value="true" />
 								            </c:when>
 								         </c:choose>
@@ -471,12 +474,12 @@
 							    
 						     	<c:if test="${not empty mappingField}">
 									<c:forEach items="${mappingField}" var="field" varStatus="status">
-										<c:set var="temp7" value="${field.name}" />
-                            			<c:set var="temp8" value="${preMapData.sfdcFldName}" />
+										<c:set var="temp11" value="${field.name}" />
+                            			<c:set var="temp12" value="${preMapData.sfdcFldName}" />
                             			<%-- <c:out value="${temp7}" />
 							    		<c:out value="${temp8}" /> --%>
 										<c:choose>
-											<c:when test="${temp7 == temp8}">
+											<c:when test="${temp11 == temp12}">
 								                <c:set var="sfdcFldFlag2" value="true" />
 								            </c:when>
 								         </c:choose>
@@ -486,8 +489,11 @@
 							     	<%-- <c:out value="${sblFldFlag2}" />
 							     	<c:out value="${sfdcFldFlag2}" />
 							     	 --%>
-							     	<c:if test="${(sblFldFlag2 == 'true') && (sfdcFldFlag2 == 'true')}">
 							     	
+							     	<c:if test="${(sblFldFlag2 == 'true') && (sfdcFldFlag2 == 'true')}">
+							    	<c:set var="sblFldFlag2" value="false" />
+							 		<c:set var="sfdcFldFlag2" value="false" /> 	
+							 		
 									 <tr id="row${seq}">
 										<td>
 										<input name="select${seq}" type='checkbox' checked="checked">
@@ -497,13 +503,13 @@
 											id="sblFieldNmdropdown${seq}" class='sblFldColFrgnUpdate'>
 												<c:if test="${not empty sbllFlddNmList}">
 													<c:forEach items="${sbllFlddNmList}" var="field" varStatus="status">
-														<c:set var="temp5" value="${field}" />
-                                						<c:set var="temp6" value="${preMapData.siebelFldName}" />
+														<c:set var="temp13" value="${field}" />
+                                						<c:set var="temp14" value="${preMapData.siebelFldName}" />
 													<%--	temp: [<c:out value="${temp5}" />]
                                 						temp1: [<c:out value="${temp6}" />] --%>
 														<c:choose>
-															<c:when test="${temp5 == temp6}">
-												                <option value='${temp6}' selected>${temp6}</option>
+															<c:when test="${temp13 == temp14}">
+												                <option value='${temp14}' selected>${temp14}</option>
 												            </c:when>
 												            <c:otherwise>
 												                <option value='${field}'>${field}</option>
@@ -522,10 +528,10 @@
 										<td style="padding:5px;"><select name="slfrcdropdown${seq}" id="slfrcdropdown${seq}" class='slsFrcFldUpdate'>
 												<c:if test="${not empty mappingField}">
 													<c:forEach items="${mappingField}" var="field" varStatus="status">
-														<c:set var="temp7" value="${field.name}" />
-                                						<c:set var="temp8" value="${preMapData.sfdcFldName}" />
+														<c:set var="temp15" value="${field.name}" />
+                                						<c:set var="temp16" value="${preMapData.sfdcFldName}" />
 														<c:choose>
-															<c:when test="${temp7 == temp8}">
+															<c:when test="${temp15 == temp16}">
 												                <option value='${field.name}' selected>${field.label}</option>
 												            </c:when>
 												            <c:otherwise>
@@ -554,8 +560,8 @@
 										<td><input type="text" style="margin-left: 35px;" id="lookUpExtrnlrow${seq}" name="lookUpExtrnlrow${seq}" value="${preMapData.lookupExtrnlName}"/></td>
 									</tr> 
 									<c:set var="seq" value="${seq + 1}" />
+									</c:if>	
 									
-									</c:if>
 								</c:forEach>
 							</c:if> 
 							<!-- Mapped Saved Data List -->
@@ -567,12 +573,12 @@
 								
 								<c:if test="${not empty sbllFlddNmList}">
 									<c:forEach items="${sbllFlddNmList}" var="field" varStatus="status">
-										<c:set var="temp9" value="${field}" />
-	                           			<c:set var="temp10" value="${preMapData.sblFldName}" />
+										<c:set var="temp17" value="${field}" />
+	                           			<c:set var="temp18" value="${preMapData.sblFldName}" />
 	                           			<%-- <c:out value="${temp9}" />
 							    		<c:out value="${temp10}" /> --%>
 									 	<c:choose>
-											<c:when test="${temp9 == temp10}">
+											<c:when test="${temp17 == temp18}">
 								                <c:set var="sblFldFlag3" value="true" />
 								            </c:when>
 								         </c:choose>
@@ -583,12 +589,12 @@
 							    
 						     	<c:if test="${not empty mappingField}">
 									<c:forEach items="${mappingField}" var="field" varStatus="status">
-										<c:set var="temp11" value="${field.name}" />
-                            			<c:set var="temp12" value="${preMapData.sfdcFldName}" />
+										<c:set var="temp19" value="${field.name}" />
+                            			<c:set var="temp20" value="${preMapData.sfdcFldName}" />
                             			<%-- <c:out value="${temp11}" />
 							    		<c:out value="${temp12}" /> --%>
 										<c:choose>
-											<c:when test="${temp11 == temp12}">
+											<c:when test="${temp19 == temp20}">
 								                <c:set var="sfdcFldFlag3" value="true" />
 								            </c:when>
 								         </c:choose>
@@ -597,8 +603,10 @@
 							     
 							       	<%-- <c:out value="${sblFldFlag3}" />
 							     	<c:out value="${sfdcFldFlag3}" /> --%>
-							     	
+							     
 							     	<c:if test="${(sblFldFlag3 == 'true') && (sfdcFldFlag3 == 'true')}">
+						     		<c:set var="sblFldFlag3" value="false" />
+						 			<c:set var="sfdcFldFlag3" value="false" />
 							     	
 									 <tr id="row${seq}">
 										<td>
@@ -609,13 +617,13 @@
 											id="sblFieldNmdropdown${seq}" class='sblFldColFrgnUpdate'>
 												<c:if test="${not empty sbllFlddNmList}">
 													<c:forEach items="${sbllFlddNmList}" var="field" varStatus="status">
-														<c:set var="temp9" value="${field}" />
-                                						<c:set var="temp10" value="${preMapData.sblFldName}" />
+														<c:set var="temp21" value="${field}" />
+                                						<c:set var="temp22" value="${preMapData.sblFldName}" />
 														<%-- temp: [<c:out value="${temp9}" />]
                                 						temp1: [<c:out value="${temp10}" />] --%>
 														<c:choose>
-															<c:when test="${temp9 == temp10}">
-												                <option value='${temp10}' selected>${temp10}</option>
+															<c:when test="${temp21 == temp22}">
+												                <option value='${temp22}' selected>${temp22}</option>
 												            </c:when>
 												            <c:otherwise>
 												                <option value='${field}'>${field}</option>
@@ -634,10 +642,10 @@
 										<td style="padding:5px;"><select name="slfrcdropdown${seq}" id="slfrcdropdown${seq}" class='slsFrcFldUpdate'>
 												<c:if test="${not empty mappingField}">
 													<c:forEach items="${mappingField}" var="field" varStatus="status">
-														<c:set var="temp11" value="${field.name}" />
-                                						<c:set var="temp12" value="${preMapData.sfdcFldName}" />
+														<c:set var="temp23" value="${field.name}" />
+                                						<c:set var="temp24" value="${preMapData.sfdcFldName}" />
 														<c:choose>
-															<c:when test="${temp11 == temp12}">
+															<c:when test="${temp23 == temp24}">
 												                <option value='${field.name}' selected>${field.label}</option>
 												            </c:when>
 												            <c:otherwise>
@@ -666,8 +674,8 @@
 										<td><input type="text" style="margin-left: 35px;" id="lookUpExtrnlrow${seq}" name="lookUpExtrnlrow${seq}" value="${preMapData.lookupExtrnlName}"/></td>
 									</tr> 
 									<c:set var="seq" value="${seq + 1}" />
+									</c:if>	
 									
-									</c:if>
 								</c:forEach>
 							</c:if> 
 						</table>

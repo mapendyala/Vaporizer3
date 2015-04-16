@@ -542,8 +542,10 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				
 				SiebelObjectController.relationShpNmRowNmMap.put(Integer.parseInt(rowNum), relationShpName);
 				SiebelObjectController.salesFrcNmRowNmMap.put(Integer.parseInt(rowNum), slsfrcFldValSlctd);
-				if(externlFldLst.get(0).getName() != null && !externlFldLst.get(0).getName().equals("")){
-					SiebelObjectController.externalIdRowNmMap.put(Integer.parseInt(rowNum), externlFldLst.get(0).getName());
+				if(externlFldLst!=null){
+					if(externlFldLst.get(0).getName() != null && !externlFldLst.get(0).getName().equals("")){
+						SiebelObjectController.externalIdRowNmMap.put(Integer.parseInt(rowNum), externlFldLst.get(0).getName());
+					}
 				}
 				
 			}
