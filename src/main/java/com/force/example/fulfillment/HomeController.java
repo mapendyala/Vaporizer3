@@ -426,6 +426,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 		if(partnerWSDL.login()){
 			partnerWSDL.saveMappingSingleValuedDataIntoDB(mappingData);
 		}
+		partnerWSDL.saveExtractionQryDB(request, request.getParameter("mappingSfdcId"), request.getParameter("extractionQuery"));
 		return new ModelAndView("vaporizer" , "data", data);
 		}
 
@@ -502,7 +503,16 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 */	
 	}
 
-
+	@RequestMapping(value="/getextractQuery", method = RequestMethod.GET)
+	@ResponseBody public String  getExtractionQuery(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("rowId")String rowId,@RequestParam("sblBaseTbl")String sblBaseTbl,
+			@RequestParam("sblTblNmVal")String sblTblNmVal, @RequestParam("sfdcObject")String sfdcObject){
+		System.out.println("In Home controller getExtractionQuery data method");
+		SiebelObjectController sblObjCntrlr = new SiebelObjectController();
+		String extractionQuery = sblObjCntrlr.getextractionQuery(request, rowId, sblBaseTbl, sblTblNmVal, sfdcObject);
+		
+		return extractionQuery;
+	}
 
 	@RequestMapping(value="/getFieldColumnVal", method = RequestMethod.GET)
 	@ResponseBody public List<String> retrieveColumnAndFieldVal(HttpServletRequest request, @RequestParam("sblFldValSlctd")String sblFldValSlctd, @RequestParam("rowNum") String rowNum) throws ConnectionException{
@@ -511,7 +521,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 		HttpSession session = request.getSession(true);
 		SiebelObjectController siObj=new SiebelObjectController();
 		// Toget the foreign key, column name thru ajax call.
-		List<String> clmNmLst = siObj.fetchColumndAndFrgnKeyName(request, (String)session.getAttribute("siebelTableNameValue"), sblFldValSlctd, rowNum);
+		List<String> clmNmLst = siObj.fetchColumndAndFrgnKeyName(request, (String)session.getAttribute("siebelTableNameValue"), sblFldValSlctd, rowNum, null);
 
 		return clmNmLst;
 	}
@@ -572,6 +582,14 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 	}
 */
 
+	@RequestMapping(value = "checkFieldsMapped",method = RequestMethod.GET)
+	@ResponseBody public String checkFieldsSelected(HttpServletRequest request, @RequestParam("sfdcId")String sfdcId) {
+		PartnerWSDL prtnrWSDL1 = new PartnerWSDL(request.getSession(),false);
+		prtnrWSDL1.login();
+		String recrdsExist = prtnrWSDL1.checkFieldsSelctedFrEntity(sfdcId);
+		
+		return recrdsExist;
+	}
 	
 	@RequestMapping(value = "saveData",method = RequestMethod.POST)
 	public ModelAndView getSiebelFielddata(HttpServletRequest request, Map<String, Object> model, Model modelChild) throws ConnectionException {
@@ -655,13 +673,17 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				// To get the list of siebel field names for a siebel entity.
 				List<String> sblFldList = new ArrayList<String>();
 				sblFldList = siObj.fetchFieldNameList(request, siebelTableNameValue);
+				String extractionQry = tg.getSavedExtractionQry(request.getParameter("SfdcId"+rowNo));
+				// retrieve query for Business Component Search Expression :
+				String sqlQry = siObj.fetchSqlQryForBizSearchCompExp(request, siebelTableNameValue);
+				
 				List<String> hdrValues = new ArrayList<String>();
-				//Siebel Entity
-				hdrValues.add(siebelTableNameValue);
-				//Siebel Base Table
-				hdrValues.add(primBaseValue);
-				//SFDC Entity
-				hdrValues.add(sfdcObjectName);
+				hdrValues.add(siebelTableNameValue);//Siebel Entity
+				hdrValues.add(primBaseValue);//Siebel Base Table
+				hdrValues.add(sfdcObjectName);//SFDC Entity
+				hdrValues.add(sqlQry);// Business Search Qry
+				hdrValues.add(extractionQry);// ExtractionQuery
+				
 				modelChild.addAttribute("sfdcObj",sfdcObjectName);
 				modelChild.addAttribute("mappingField",sfdcObjList);
 				modelChild.addAttribute("sbllFlddNmList",sblFldList);
@@ -1076,7 +1098,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				String lookupRltName="";
 				String lookupObjName="";
 				String lookupExtrnlName="";
-				List<String> clmNmLst = siObj.fetchColumndAndFrgnKeyName(request, (String)session.getAttribute("siebelTableNameValue"), siebelFldName, String.valueOf(i).toString());
+				List<String> clmNmLst = siObj.fetchColumndAndFrgnKeyName(request, (String)session.getAttribute("siebelTableNameValue"), siebelFldName, String.valueOf(i).toString(),null);
 				List<Object> lookUpLst = this.retrieveLookUpFieldInfo(request, sfdcFldName, String.valueOf(i).toString());
 				
 				String joinName = clmNmLst.get(0);

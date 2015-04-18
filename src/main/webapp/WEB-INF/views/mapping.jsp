@@ -47,6 +47,59 @@
 	var primBaseTable;
 
 	$(document).ready(function() {
+		var txtLngth = $("#searchQry").val().length;
+		$("#searchQry").attr('rows',(Number(txtLngth)/50)+1);
+	/* 	$("#searchQry").attr('size',txtLngth);  */
+	
+		$('#submitForm').click(function(){
+			 var msg = "Please ensure to click on Generate Extraction Query button if any changes are made to the field mappings.Do you wish to navigate to main page ? ";
+			 var div = $("<div>" + msg + "</div>");
+	            div.dialog({
+	                title: "Confirmation required",
+	                buttons: [
+	                    {
+	                        text: "Yes",
+	                        click: function () {
+	                        	div.dialog("close");
+	                        	$('#mapForm').submit();
+	                        }
+	                    },
+	                    {
+	                        text: "No",
+	                        click: function () {
+	                            div.dialog("close");
+	                        }
+	                    }
+	                ]
+	            });
+			
+		});
+	
+		$('#generateExtractQuery').click(function(){
+			var rowId = $('#rowId').attr('value');
+			var sblBaseTbl = $('#sblBaseTbl').html();
+			var sblTblNmVal = $('#sblEntity').html();
+			var sfdcObject = $('#sfdcEntity').html();
+			 $.ajax({
+					type : "GET",
+					url : "getextractQuery",
+					timeout: 40000,
+				 	data :
+				 		{
+				 		rowId:rowId,sblBaseTbl:sblBaseTbl,sblTblNmVal:sblTblNmVal,sfdcObject:sfdcObject
+				 		},
+				 		contentType : 'application/text',
+				 		success : function(response) {
+							if(response != null && response.length != 0){
+								$("#extractionQuery").val(response);
+							}
+						},
+				 		error: function(errorThrown){
+				 			alert("Error while constructing extraction query.");
+				 			$("#extractionQuery").val("");
+				 	    } 
+			 });  
+		});
 		
 		$('body').delegate('.slsFrcFldUpdate', 'change', function() {
 			var slctdSlsFrcFldOption = $(this).attr('value');
@@ -250,23 +303,14 @@
 			<div class="credential_container">
 				<div>
 					<div class="table_header_details">Vaporizer</div>
-					<div>
-						<br />
-						<tr>
-							<td colspan="2"
-								style="float: right; width: 350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">Field
-								Mapping</td>
-						</tr>
-
-						<div class="sampleContainer" style="width: 250px;">
-						
-							<table class="table" style="margin: 2px;">
+					<div style="width: 350px !Important;  height:20px;padding-top:15px;padding-left:5px">Field Mapping</div>
+					<div class="sampleContainer" style="width: 250px; float:left;"><table class="table" style="margin: 2px;">
 								<tr>
 									<br />
 									<td style="width: 65px; text-align: left;" align="left">Siebel
 										Entity</td>
 
-									<td style="width: 45px; text-align: left;" align="left">${hdrValues[0]}</td>
+									<td style="width: 45px; text-align: left;" align="left" id="sblEntity">${hdrValues[0]}</td>
 					
 
 								</tr>
@@ -274,7 +318,7 @@
 									<br />
 									<td style="width: 45px; text-align: left;" align="left">Siebel Base table</td>
 
-									<td style="width: 45px; text-align: left;" align="left">${hdrValues[1]}</td>
+									<td style="width: 45px; text-align: left;" align="left" id="sblBaseTbl">${hdrValues[1]}</td>
 
 
 								</tr>
@@ -282,16 +326,19 @@
 									<td style="width: 65px; text-align: left;" align="left">SFDC
 										Entity</td>
 
-									<td style="width: 45px; text-align: left;" align="left">${hdrValues[2]}</td>
+									<td style="width: 45px; text-align: left;" align="left" id="sfdcEntity">${hdrValues[2]}</td>
 								</tr>
 
 
 							</table>
-						</div>
-
 					</div>
-				</div>
-				<button class="btn btn-primary" id="addRow" onclick="addRow()">[+]</button>
+					<div style="float:left; height:100px; margin-left:20%;margin-top:5%">Business Component Search Expression</div>
+					<div style="float:left; height:100px; margin-left:1%;margin-top:5%">
+					<%-- <span  style="border: grey 1px solid;padding:4px;">${hdrValues[3]}</span> --%>
+					<textarea readonly="true" id="searchQry" cols="50">${hdrValues[3]}</textarea>
+					</div>
+				</div> <br/>
+				<div style="clear:both;"><button class="btn btn-primary" id="addRow" onclick="addRow()">[+]</button> </div>
 				<form:form method="post" id="mainForm" action="mappingSave" modelAttribute="data">
 					<div class="mappingContainer" style="width: 100%;">
 					<input type='hidden' id="siebelEntity" name="siebelEntity" value=${sblObjName} />
@@ -701,6 +748,11 @@
 						class="btn btn-block btn-inverse">Done</button> -->
 
 								</td>
+								<td colspan="2"
+									style="float: right; width: 350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
+									<input class="btn btn-block btn-inverse" type="button" id="generateExtractQuery"
+									name="GenerateExtract" value="Generate Extraction Query" />
+								</td>
 							</tr>
 
 
@@ -710,6 +762,9 @@
 						<input id="pageName" name='pageName' type="hidden">
 
 					</div>
+					<div class="mappingContainer" style="width: 100%;padding: 50px;">
+					<textarea  id="extractionQuery" name="extractionQuery" contenteditable="true" cols="200" rows="3" draggable="true">${hdrValues[4]}</textarea>
+					</div>	
 			</div>
 		  
 		  <div class="buttonContainer">

@@ -1253,6 +1253,27 @@ System.out.println("records "+records);
 		System.out.println("\nQuery execution completed.");
 		return mappingData;
 	}
+
+	public String checkFieldsSelctedFrEntity(String rowId){
+		String recrdsExist = null;		
+		try {
+			partnerConnection.setQueryOptions(250);
+			String soqlQuery1 = "Select Id,  Foreign_Key_Table__c, SFDC_Field_Description__c, SFDC_Field_Name__c, Siebel_Field_Description__c, Siebel_Field_Name__c,"
+				+ "Column_Name__c,Lov_Mapping__c,Select__c,Join_Condition__C,Join_Name__c,LookUpField__c,LookUpObject__c,Lookup_External_Id_Field__c,Lookup_Relationship_Name__c from Single_Valued_Screen__c where  Mapping_Staging_Table__c='"+ rowId + "' and Mapping_Type__c = 'UserDefined'";
+				// Make the query call and get the query results
+				QueryResult qr1 = partnerConnection.query(soqlQuery1);
+					SObject[] records1 = qr1.getRecords();
+					if(records1 != null && records1.length > 0){
+						recrdsExist = "present";
+						return recrdsExist;
+					}else{
+						return null;
+					}
+		} catch (ConnectionException ce) {
+			ce.printStackTrace();
+		}
+		return recrdsExist;		
+	}
 	
 	public List<MappingModel> getSavedMappingSingleValueDBData(String rowId,
 			List<MappingModel> mappingData,String sfdcObjectName) {
@@ -1278,6 +1299,7 @@ System.out.println("records "+records);
 				SiebelObjectController.salesFrcNmRowNmMap = new HashMap<Integer, String>();
 				SiebelObjectController.externalIdRowNmMap = new HashMap<Integer, String>();
 				SiebelObjectController.rowNumJoinNameMap = new HashMap<Integer, String>();
+				SiebelObjectController.fieldNamesMap = new HashMap<String,Integer>();
 			 
 			while (!done1) {
 				SObject[] records1 = qr1.getRecords();
@@ -1297,6 +1319,7 @@ System.out.println("records "+records);
 					String reltnShpNme = (String)contact.getField("Lookup_Relationship_Name__c");
 					String extrnlId = (String)contact.getField("Lookup_External_Id_Field__c");
 					String slsfrcDrpDwnSlctd = (String)contact.getField("SFDC_Field_Name__c");
+					String sblFieldNmdropdown = (String)contact.getField("Siebel_Field_Name__c"); 
 					
 					
 					Set<String> lstExternalIds= new LinkedHashSet<String>();
@@ -1326,6 +1349,7 @@ System.out.println("records "+records);
 					}
 					SiebelObjectController.colNmRowNmMap.put(j, colName);
 					SiebelObjectController.joinCndtnRowNmMap.put(j, joinCond);
+					SiebelObjectController.fieldNamesMap.put(sblFieldNmdropdown,j);
 					if(reltnShpNme != null && !reltnShpNme.trim().equals("")){
 						SiebelObjectController.relationShpNmRowNmMap.put(j, reltnShpNme);
 					}
@@ -1629,6 +1653,12 @@ System.out.println("records "+records);
 		    ce.printStackTrace();  
 		  }
 		  SiebelObjectController.sfdcFldRowNmList = mpngSFDCLookUpList;
+		  Collections.sort(mpngSFDCList, new Comparator<MappingSFDC>() {
+			  @Override
+			  public int compare(MappingSFDC o1, MappingSFDC o2) {
+				  return o1.getLabel().compareTo(o2.getLabel());
+			  }
+		  });
 		  return mpngSFDCList;
 		}
 	
@@ -2051,7 +2081,37 @@ public List<MultiValMappingModel> getSavedMappingMultiValueDBData(String rowId ,
 		return juncObjResults;// juncObjResults;
 	}
 	
-	
+	public void saveExtractionQryDB(HttpServletRequest request,String sfdcId, String extrctionQry) throws ConnectionException {
+			
+			String projectId=null;
+			if(request!=null){
+				HttpSession session = request.getSession(true);
+				projectId=(String) session.getAttribute("projectId");
+			}
+			login();
+			
+			List<SObject> lstUpdate= new ArrayList<SObject>();
+			
+					String sqlQuery = "Select Id from Mapping_Staging_Table__c where Id ='"
+							+ sfdcId + "'";
+					QueryResult qr = partnerConnection.query(sqlQuery);
+					SObject[] records = qr.getRecords();
+						SObject updateContact = new SObject();
+						updateContact.setType("Mapping_Staging_Table__c");
+						updateContact.setId(sfdcId);
+						updateContact.setField("Extraction_Query__c",
+								extrctionQry);
+						lstUpdate.add(updateContact);
+			if(lstUpdate != null && lstUpdate.size()>0){
+				SObject[] updateContacts = lstUpdate.toArray(new SObject[lstUpdate.size()]);
+				SaveResult[] saveUpdateResults = partnerConnection
+						.update(updateContacts);
+				for (int j = 0; j < saveUpdateResults.length; j++) {
+					System.out.println(saveUpdateResults[j].isSuccess());
+					System.out.println(saveUpdateResults[j].getErrors());
+				}
+			}
+		}
 	
 	
 

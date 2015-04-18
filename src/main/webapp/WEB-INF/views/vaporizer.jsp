@@ -125,7 +125,19 @@ var sfdcObjectForExtarction="";
 		});  
 	 }
 	
-	
+	// been removed ??
+	/*  function makeReadonly(rowNum){
+		 var thresholdId = "thresh"+(rowNum);
+		var threshold = $("#"+thresholdId).val();
+		var primTableId = "prim"+(rowNum);
+		var primBaseTable =  $("#"+primTableId).val();
+		$.ajax({
+			type : "POST",
+			url : "set/Threshold",
+		 	data : {threshold:threshold, primBaseName:primBaseTable}
+			});
+		$("#"+thresholdId).attr('readonly',true);
+	} */
 	 
 	 function validateUploadForm()
 		{
@@ -393,25 +405,26 @@ function submitForm(rowNum, page){
 		var sfdcId = $("#"+"SfdcId"+(rowNum)).val();
 		var siebelObjName = $("#objectName" +(rowNum)).val();
 		var baseTable = $("#prim" +(rowNum)).val();
-	/* /* 	 $.ajax({
+		var data= "sfdcId="+sfdcId+"&siebelObjName="+siebelObjName+"&baseTable="+baseTable+"&sfdcObject="+sfdcObjectForExtarction+"&format=csv ";
+		
+		 $.ajax({
 				type : "GET",
-				url : "getextractData",
-				data : {sfdcId:sfdcId, siebelObjName:siebelObjName, baseTable:baseTable, sfdcObject:sfdcObjectForExtarction},
-				success : function(response){
-					if(response!="")
-				 	$("#datafileUrl").val(response);
-					else
-						{
-						alert("No location generated");
-						}
-			
-				}  
-				});  */  
-				var data= "sfdcId="+sfdcId+"&siebelObjName="+siebelObjName+"&baseTable="+baseTable+"&sfdcObject="+sfdcObjectForExtarction+"&format=csv ";
-
-			 $.download('getextractData',
-					data,
-					 "GET"); 
+				url : "checkFieldsMapped",
+			 	data :
+			 		{
+			 		sfdcId:sfdcId
+			 		},
+			 		success : function(response) {
+			 			if(response == 'present'){
+			 				$.download('getextractData',data,"GET"); 
+			 			}else{
+			 				alert("No mapping exists for the entity. Please create mapping before Extracting");
+			 			}
+					},
+			 		error: function(errorThrown){
+			 			 alert("No mapping exists for the entity. Please create mapping before Extracting")
+			 	    } 
+		 }); 
 	 }
 	
 		
