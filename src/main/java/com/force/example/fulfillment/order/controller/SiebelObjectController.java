@@ -58,6 +58,7 @@ public class SiebelObjectController {
 	public static Map<String,List> lookUpRelationMap=new HashMap<String, List>();
 	public static Map<String,List> juncRelationMap=new HashMap<String, List>();
 	public static Map<String,Integer> fieldNamesMap = new HashMap();
+	public static Map<Integer,String> joinCndtnRowNmMapFinal = new HashMap<Integer,String>();
 	
 	@RequestMapping(value="/SiebelObject", method=RequestMethod.POST)
 
@@ -534,7 +535,7 @@ public class SiebelObjectController {
 							simlrRowNumber = dupJoinNm;
 							if(srchQryAlias == null){
 							joinCondition = joinCndtnRowNmMap.get(simlrRowNumber);
-							joinCndtnRowNmMap.put(rowNumber, joinCondition);
+							joinCndtnRowNmMap.put(simlrRowNumber, joinCondition);
 							}
 						}
 						fieldNameList.add(joinNameUi);
@@ -690,17 +691,23 @@ public class SiebelObjectController {
 			if(!(colNameMap != null && colNameMap.size() > 0)){
 				return null;
 			}
+			
 			Iterator colNmItrtr1 = colNameMap.entrySet().iterator();
 			while (colNmItrtr1.hasNext()) {
 				String asCondition = null;
 
 				Map.Entry pair = (Map.Entry)colNmItrtr1.next();
 		        String colmVal = (String)  pair.getValue();
+		        
+   
 		        if(columnNamesQry == null){
 		        	columnNamesQry = colmVal;
 		        }else{
 		        	columnNamesQry =  columnNamesQry + "," + colmVal;
 		        }
+		        
+		        
+		        
 		        //shifted to a new method
 			       /* Integer rowNumKey = (Integer)pair.getKey();
 			        if((reltnShpMap.containsKey(rowNumKey) && reltnShpMap.get(rowNumKey) != null && !reltnShpMap.get(rowNumKey).equals("")) &&
@@ -740,11 +747,13 @@ public class SiebelObjectController {
 			
 			
 			/*********---------- End *************/
-			// Set<String> keys = joinNameMap.keySet();
-			Set<Integer> keys = joinCndtnMap.keySet();
-			for(Integer key: keys){
+			
+			
+			Set<String> keys = joinNameMap.keySet();
+			//Set<Integer> keys = joinCndtnMap.keySet();
+			for(String key: keys){
 	            System.out.println(key);
-	            String joinCondition = joinCndtnMap.get(/*joinNameMap.get(key)*/key);
+	            String joinCondition = joinCndtnMap.get(joinNameMap.get(key));
 	            
 	            if(joinCondition != null && joinCondition != ""){
 	            	joinCond = joinCond + " " + joinCondition;
@@ -816,7 +825,7 @@ public class SiebelObjectController {
 						}
 					}// If field does not have a join name then append T0 before column name.
 					else{
-						cnvrtdColnmList.add("T0."+reqdColJnNmCndList.get(1));
+						cnvrtdColnmList.add(reqdColJnNmCndList.get(1));
 					}
 				}
 			}
@@ -945,8 +954,12 @@ public class SiebelObjectController {
 					System.out.println("extraction query is"+extractionQry);
 					mySet=st.executeQuery(extractionQry.toString());
 					
+					rsmd = mySet.getMetaData();
+							
+					int numOfCols = rsmd.getColumnCount();
+					
 					FileWriter fileWriter = new FileWriter(file);
-					for(int i=1; i<headers.size()+1 ; i++){
+					for(int i=1; i<numOfCols ; i++){
 						System.out.println(">>>>>"+(String)headers.get(i));
 						fileWriter.append(sfdcObject+"#"+(String)headers.get(i));
 						fileWriter.append(COMMA_DELIMITER);

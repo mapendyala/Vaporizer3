@@ -337,7 +337,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 		TargetPartner tp= new TargetPartner(session);
 		data = tp.getSavedDBData((String)session.getAttribute("projectId"), data);
 		List<MappingModel> mapModel = new ArrayList<MappingModel>();
-		for(int i=0;i<Integer.parseInt(rowCount);i++){
+		for(int i=1;i<Integer.parseInt(rowCount);i++){
 			String siebelCheckFlag="select"+i;
 			MappingModel mappingModel = new MappingModel();
 			if(request.getParameter("sfdcId"+i)!=null){
@@ -1098,7 +1098,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				String lookupRltName="";
 				String lookupObjName="";
 				String lookupExtrnlName="";
-				List<String> clmNmLst = siObj.fetchColumndAndFrgnKeyName(request, (String)session.getAttribute("siebelTableNameValue"), siebelFldName, String.valueOf(i).toString(),null);
+				List<String> clmNmLst = siObj.fetchColumndAndFrgnKeyName(request, (String)session.getAttribute("siebelTableNameValue"), siebelFldName, String.valueOf(i+1).toString(),null);
 				List<Object> lookUpLst = this.retrieveLookUpFieldInfo(request, sfdcFldName, String.valueOf(i).toString());
 				
 				String joinName = clmNmLst.get(0);
