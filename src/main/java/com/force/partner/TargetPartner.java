@@ -14,12 +14,10 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
@@ -29,15 +27,14 @@ import com.force.api.DescribeGlobal;
 import com.force.api.DescribeSObject;
 import com.force.api.ForceApi;
 import com.force.api.QueryResult;
+import com.force.example.fulfillment.order.controller.SiebelObjectController;
 import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.MappingModel;
+import com.force.example.fulfillment.order.model.MappingSFDC;
 import com.force.example.fulfillment.order.model.PreMapData;
 import com.force.utility.SfdcObjectBO;
 import com.force.utility.UtilityClass;
 import com.sforce.soap.partner.DescribeSObjectResult;
-import com.sforce.soap.partner.sobject.SObject;
-import com.sforce.ws.ConnectionException;
-import com.sforce.ws.bind.XmlObject;
 
 @SuppressWarnings("rawtypes")
 public class TargetPartner {
@@ -1503,6 +1500,7 @@ public class TargetPartner {
 		// Make the query call and get the query results
 		QueryResult<Map> qr = getForceApi().query(soqlQuery);
 		List<PreMapData> field = new ArrayList<PreMapData>();
+		List<String> siebelFieldLst = SiebelObjectController.sblFieldNamesLst;
 
 		boolean done = false;
 
@@ -1524,14 +1522,14 @@ public class TargetPartner {
 				String mapTypeName = (String) contact.get("Mapping_Type__c");
 
 				// System.out.println("name:: "+name+" siebelFldName:: "+siebelFldName+" sfdcObjName:: "+sfdcObjName);
-
-				preMapData.setName(name);
-				preMapData.setSiebelFldName(siebelFldName);
-				preMapData.setSfdcFldName(sfdcFldName);
-				preMapData.setSfdcObjName(sfdcObjName);
-				preMapData.setMapTypeName(mapTypeName);
-
-				field.add(preMapData);
+				if(siebelFieldLst.contains(siebelFldName)){
+					preMapData.setName(name);
+					preMapData.setSiebelFldName(siebelFldName);
+					preMapData.setSfdcFldName(sfdcFldName);
+					preMapData.setSfdcObjName(sfdcObjName);
+					preMapData.setMapTypeName(mapTypeName);
+					field.add(preMapData);
+				}
 			}
 			// Collections.sort(data, MainPage.SequenceComparator);
 			// System.out.println("dataaaa  " + data);

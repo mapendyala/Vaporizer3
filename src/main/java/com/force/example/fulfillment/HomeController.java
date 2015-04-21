@@ -673,6 +673,9 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				// To get the list of siebel field names for a siebel entity.
 				List<String> sblFldList = new ArrayList<String>();
 				sblFldList = siObj.fetchFieldNameList(request, siebelTableNameValue);
+				//caching the sieble field dropdwon values for future use.
+				SiebelObjectController.sblFieldNamesLst = sblFldList;
+				
 				String extractionQry = tg.getSavedExtractionQry(request.getParameter("SfdcId"+rowNo));
 				// retrieve query for Business Component Search Expression :
 				String sqlQry = siObj.fetchSqlQryForBizSearchCompExp(request, siebelTableNameValue);

@@ -59,6 +59,7 @@ public class SiebelObjectController {
 	public static Map<String,List> juncRelationMap=new HashMap<String, List>();
 	public static Map<String,Integer> fieldNamesMap = new HashMap();
 	public static Map<Integer,String> joinCndtnRowNmMapFinal = new HashMap<Integer,String>();
+	public static List<String> sblFieldNamesLst = new ArrayList<String>();
 	
 	@RequestMapping(value="/SiebelObject", method=RequestMethod.POST)
 
