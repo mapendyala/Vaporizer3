@@ -222,7 +222,9 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 			HttpSession session = request.getSession(true);
 //			System.out.println("In loadMapData method");
 			TargetPartner tp= new TargetPartner(session); 
-			String selectName;
+			
+			String id;
+			String selectName;			
 			String sblFldName;
 			String joinName;
 			String frgnKeyName;
@@ -253,6 +255,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 						Mapping mapping = new Mapping();
 						
 						selectName = request.getParameter("select"+i);
+						id = request.getParameter("sfdcId"+i);
 						sblFldName = request.getParameter("sblFieldNmdropdown"+i);
 						joinName = request.getParameter("joinNamerow"+i);
 						frgnKeyName = request.getParameter("frgnKeyrow"+i);
@@ -268,6 +271,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 //						System.out.println("name:: "+selectName+" siebelFldName:: "+sblFldName+" lookupFieldName:: "+lookupFieldName+" sfdcFldName:: "+sfdcFldName+" frKeyTblName:: "+frgnKeyName+" sblColName:: "+clmnName+" joinCondition:: "+joinCondition);
 						
 						mapping.setSelectName(selectName);
+						mapping.setId(id);
 						mapping.setSblFldName(sblFldName);
 						mapping.setJoinName(joinName);
 						mapping.setFrgnKeyName(frgnKeyName);
@@ -344,6 +348,9 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				mappingModel.setId(request.getParameter("sfdcId"+i));}
 			else
 				mappingModel.setId("");
+			
+			System.out.println("Mapping model ID:: "+mappingModel.getId());
+			
 			if (rowId != null) {
 				mappingModel.setSfdcRowId(rowId);
 			} else
@@ -397,32 +404,9 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 			else
 				mappingModel.setLookUpExternalId("");
 			
-			mapModel.add(mappingModel);
-		}
-		
-		/*** Start -logic for removing duplicates**/
-		
-		Set<MappingModel> set = new TreeSet<MappingModel>(new Comparator<MappingModel>() {
-			
-			@Override
-			public int compare(MappingModel o1, MappingModel o2) {
-				// TODO Auto-generated method stub
-				if(o1.getSblFieldNmdropdown()!=null && o2.getSblFieldNmdropdown()!=null){
-					if(o1.getSblFieldNmdropdown().equalsIgnoreCase(o2.getSblFieldNmdropdown())){
-		        		return 0;
-		        	}
-				} 
-	        	return 1;
-			}				
-		});
-		
-		set.addAll(mapModel);
-
-		mappingData = new ArrayList<MappingModel> (set);
-		
-		/*** End -logic for removing duplicates**/
-		
-		
+			mappingData.add(mappingModel);
+		}		
+				
 		if(partnerWSDL.login()){
 			partnerWSDL.saveMappingSingleValuedDataIntoDB(mappingData);
 		}

@@ -719,6 +719,7 @@
 										<td><input type="text" style="margin-left: 35px;" id="lookUpRltnNmerow${seq}" name="lookUpRltnNmerow${seq}" value="${preMapData.lookupRltnName}"/></td>
 										<!-- Lookup External Id Field -->
 										<td><input type="text" style="margin-left: 35px;" id="lookUpExtrnlrow${seq}" name="lookUpExtrnlrow${seq}" value="${preMapData.lookupExtrnlName}"/></td>
+										<input type='hidden' id="sfdcId${seq}" name="sfdcId${seq}" value="${preMapData.id}" />
 									</tr> 
 									<c:set var="seq" value="${seq + 1}" />
 									</c:if>	
@@ -740,6 +741,11 @@
 						<table style="border: 0">
 
 							<tr>
+							
+							<td colspan="2"
+							style="float: right; width: 350px; padding: 50px; padding-top: 10px; padding-bottom: 10px;">						
+								<input class="btn btn-block btn-inverse" type="button" name="Load" value="Load Pre-Defined Mapping Objects" onclick="javascript:submitForm();" />
+							</td>
 								<td colspan="2"
 									style="float: right; width: 350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
 									<input class="btn btn-block btn-inverse" type="submit"
@@ -764,20 +770,14 @@
 					</div>
 					<div class="mappingContainer" style="width: 100%;padding: 50px;">
 					<textarea  id="extractionQuery" name="extractionQuery" contenteditable="true" cols="200" rows="3" draggable="true">${hdrValues[4]}</textarea>
-					</div>	
+					</div>
+					</form:form>	
 			</div>
 		  
-		  <div class="buttonContainer">
-				<table style="border: 0">
-					<tr>
-						<td colspan="2"
-							style="float: right; width: 350px; padding: 50px; padding-top: 10px; padding-bottom: 10px;">						
-						<input class="btn btn-block btn-inverse" type="button" name="Load" value="Load Pre-Defined Mapping Objects" onclick="javascript:submitForm();" />
-						</form:form>
-						</td>
-					</tr>					
-					</table>
-			</div>
+		  
+						
+			
+						
 
 
 		</div>

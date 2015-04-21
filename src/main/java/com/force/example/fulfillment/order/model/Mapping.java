@@ -6,6 +6,7 @@ import java.util.Comparator;
 public class Mapping implements Comparable<Mapping> {
 	
 	String selectName;
+	String id;
 	String sblFldName;
 	String joinName;
 	String frgnKeyName;
@@ -82,6 +83,13 @@ public class Mapping implements Comparable<Mapping> {
 	}
 	public void setLookupExtrnlName(String lookupExtrnlName) {
 		this.lookupExtrnlName = lookupExtrnlName;
+	}
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 	public static final Comparator<Mapping> SequenceComparator= new Comparator<Mapping>() {
