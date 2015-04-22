@@ -767,89 +767,90 @@ public class SiebelObjectController {
 			extractionQry2 = extractionQry2.append(" SIEBEL.").append(baseTable).append(" T0").append(joinCond);
 			// Construction of WHERE Query :
 			String bizSrchQry = fetchSqlQryForBizSearchCompExp(request, siebelTableNameValue);
-			List opnBrcBrckt = new ArrayList();
-			List clsBrcBrckt = new ArrayList();
-			
-			for(int i=0; i<bizSrchQry.length(); i++){
-				if(bizSrchQry.charAt(i)=='['){
-					opnBrcBrckt.add(i);
-				}else if(bizSrchQry.charAt(i)==']'){
-					clsBrcBrckt.add(i);
-				}
-			}
-			
-			//List of Field Names from the Business Specification Search Query
-			List<String> fieldNamesList = new ArrayList<String>();
-			List<String> cnvrtdColnmList = new ArrayList<String>();
-			List<String> cnvtrdJoinCndLst = new ArrayList<String>();
-			// Holding join names 
-			List<String> cnvrtdJoinNmLst = new ArrayList<String>();
-			for(int i=0;i<opnBrcBrckt.size(); i++){
-				int opnBrckIndx = (Integer) opnBrcBrckt.get(i);
-				int clsBrckIndx = (Integer) clsBrcBrckt.get(i);
-				fieldNamesList.add(bizSrchQry.substring(opnBrckIndx+1, clsBrckIndx));
-			}
-			
-			Integer aliasNumber = null;
-			//Field Names to be changed to Column Names.
-			for(String fieldName : fieldNamesList){
-				// If the field is already present in the mapping screen Then retrieve the corresponding column name.
-				if(sblFieldNamesMap.containsValue(fieldName)){
-					Integer exstngFldRowNum = sblFieldNamesMap.get(fieldName);
-					String exstngColNm = colNameMap.get(exstngFldRowNum);
-					cnvrtdColnmList.add(exstngColNm);
-				}// If the field is not selected then generate the join name, join condition.
-				else{
-					Integer exstngCnt = sblFieldNamesMap.size();
-					if(aliasNumber != null){
-						aliasNumber = aliasNumber + 1;
-					}else{
-						aliasNumber = exstngCnt + 1;
+			if(bizSrchQry != null){
+				List opnBrcBrckt = new ArrayList();
+				List clsBrcBrckt = new ArrayList();
+				
+				for(int i=0; i<bizSrchQry.length(); i++){
+					if(bizSrchQry.charAt(i)=='['){
+						opnBrcBrckt.add(i);
+					}else if(bizSrchQry.charAt(i)==']'){
+						clsBrcBrckt.add(i);
 					}
-					List<String> reqdColJnNmCndList = fetchColumndAndFrgnKeyName(request, siebelTableNameValue, fieldName, aliasNumber.toString(), aliasNumber);
-					if(reqdColJnNmCndList.get(0) != null && reqdColJnNmCndList.get(0) != ""){
-						if(cnvrtdJoinNmLst.contains(reqdColJnNmCndList.get(0))){
-							int index = cnvrtdJoinNmLst.indexOf(reqdColJnNmCndList.get(0));
-							String colName = cnvrtdColnmList.get(index);
-							String colNameAlias = colName.substring(0,colName.indexOf("."));
-							String currentColname = reqdColJnNmCndList.get(1); 
-							String currentColNameWithPrevAlias = colNameAlias.concat(currentColname.substring(currentColname.indexOf(".")));
-							cnvrtdColnmList.add(currentColNameWithPrevAlias);
-							
-						}else{
-							cnvrtdJoinNmLst.add(reqdColJnNmCndList.get(0));
-							cnvrtdColnmList.add(reqdColJnNmCndList.get(1));
-							// If the join name is not present then the join condition will be built else, its not required to save the same join condition again
-							if(reqdColJnNmCndList.get(2) != null && reqdColJnNmCndList.get(2) != ""){
-								cnvtrdJoinCndLst.add(" "+ reqdColJnNmCndList.get(2));
-							}
-						}
-					}// If field does not have a join name then append T0 before column name.
+				}
+				
+				//List of Field Names from the Business Specification Search Query
+				List<String> fieldNamesList = new ArrayList<String>();
+				List<String> cnvrtdColnmList = new ArrayList<String>();
+				List<String> cnvtrdJoinCndLst = new ArrayList<String>();
+				// Holding join names 
+				List<String> cnvrtdJoinNmLst = new ArrayList<String>();
+				for(int i=0;i<opnBrcBrckt.size(); i++){
+					int opnBrckIndx = (Integer) opnBrcBrckt.get(i);
+					int clsBrckIndx = (Integer) clsBrcBrckt.get(i);
+					fieldNamesList.add(bizSrchQry.substring(opnBrckIndx+1, clsBrckIndx));
+				}
+				
+				Integer aliasNumber = null;
+				//Field Names to be changed to Column Names.
+				for(String fieldName : fieldNamesList){
+					// If the field is already present in the mapping screen Then retrieve the corresponding column name.
+					if(sblFieldNamesMap.containsValue(fieldName)){
+						Integer exstngFldRowNum = sblFieldNamesMap.get(fieldName);
+						String exstngColNm = colNameMap.get(exstngFldRowNum);
+						cnvrtdColnmList.add(exstngColNm);
+					}// If the field is not selected then generate the join name, join condition.
 					else{
-						cnvrtdColnmList.add(reqdColJnNmCndList.get(1));
+						Integer exstngCnt = sblFieldNamesMap.size();
+						if(aliasNumber != null){
+							aliasNumber = aliasNumber + 1;
+						}else{
+							aliasNumber = exstngCnt + 1;
+						}
+						List<String> reqdColJnNmCndList = fetchColumndAndFrgnKeyName(request, siebelTableNameValue, fieldName, aliasNumber.toString(), aliasNumber);
+						if(reqdColJnNmCndList.get(0) != null && reqdColJnNmCndList.get(0) != ""){
+							if(cnvrtdJoinNmLst.contains(reqdColJnNmCndList.get(0))){
+								int index = cnvrtdJoinNmLst.indexOf(reqdColJnNmCndList.get(0));
+								String colName = cnvrtdColnmList.get(index);
+								String colNameAlias = colName.substring(0,colName.indexOf("."));
+								String currentColname = reqdColJnNmCndList.get(1); 
+								String currentColNameWithPrevAlias = colNameAlias.concat(currentColname.substring(currentColname.indexOf(".")));
+								cnvrtdColnmList.add(currentColNameWithPrevAlias);
+								
+							}else{
+								cnvrtdJoinNmLst.add(reqdColJnNmCndList.get(0));
+								cnvrtdColnmList.add(reqdColJnNmCndList.get(1));
+								// If the join name is not present then the join condition will be built else, its not required to save the same join condition again
+								if(reqdColJnNmCndList.get(2) != null && reqdColJnNmCndList.get(2) != ""){
+									cnvtrdJoinCndLst.add(" "+ reqdColJnNmCndList.get(2));
+								}
+							}
+						}// If field does not have a join name then append T0 before column name.
+						else{
+							cnvrtdColnmList.add(reqdColJnNmCndList.get(1));
+						}
 					}
 				}
-			}
-			
-			// replace all fields with column names
-			String convrtdFldColNmQry = bizSrchQry;
-			for(int i=0; i<cnvrtdColnmList.size(); i++ ){
-				convrtdFldColNmQry = convrtdFldColNmQry.replace(fieldNamesList.get(i), cnvrtdColnmList.get(i));
-			}
-			// remove all [ ] () in the query
-			String[] replaceAllStr = {"[","]"};
-			for(String str : replaceAllStr){
-				convrtdFldColNmQry = convrtdFldColNmQry.replace(str, "");
-			}
-			
-			// append join conditions if any field has a join name.
-			if(cnvtrdJoinCndLst != null && cnvtrdJoinCndLst.size() > 0){
-				for(String joinCnd : cnvtrdJoinCndLst){
-					extractionQry2.append(joinCnd);
+				
+				// replace all fields with column names
+				String convrtdFldColNmQry = bizSrchQry;
+				for(int i=0; i<cnvrtdColnmList.size(); i++ ){
+					convrtdFldColNmQry = convrtdFldColNmQry.replace(fieldNamesList.get(i), cnvrtdColnmList.get(i));
 				}
-			}
-			extractionQry2.append(" WHERE " + convrtdFldColNmQry);
-			
+				// remove all [ ] () in the query
+				String[] replaceAllStr = {"[","]"};
+				for(String str : replaceAllStr){
+					convrtdFldColNmQry = convrtdFldColNmQry.replace(str, "");
+				}
+				
+				// append join conditions if any field has a join name.
+				if(cnvtrdJoinCndLst != null && cnvtrdJoinCndLst.size() > 0){
+					for(String joinCnd : cnvtrdJoinCndLst){
+						extractionQry2.append(joinCnd);
+					}
+				}
+				extractionQry2.append(" WHERE " + convrtdFldColNmQry);
+		}
 			System.out.println("EXtraction Query 2  :"  + extractionQry2.toString());
 
 		    return extractionQry2.toString() ;
