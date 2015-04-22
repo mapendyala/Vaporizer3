@@ -173,12 +173,17 @@
 			var slctdSblFldId = $(this).attr('id');
 			var parentRow = $(this).parent().parent().attr("id");
 			var rowNum = $(this).closest('tr').index();
+			var sfdcidVal = $('#sfdcId'+rowNum).attr('value');
+			if(Number(sfdcidVal.length) > 0){
+				var joinNameValue = $('#joinNamerow'+(Number(sfdcidVal.length)-1)).attr('value');
+				alert("Please reselect other rows using the join name "+ joinNameValue + " if they are using the join condition of this row");
+			}
 			 $.ajax({
 					type : "GET",
 					url : "getFieldColumnVal",
 				 	data :
 				 		{
-				 		sblFldValSlctd:slctdSblFldOption ,
+				 		sblFldValSlctd:slctdSblFldOption,
 				 		rowNum:rowNum
 				 		},
 				 		contentType : 'application/text',
