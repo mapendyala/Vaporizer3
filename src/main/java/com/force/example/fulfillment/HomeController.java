@@ -1057,6 +1057,9 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 			// To get the list of siebel field names for a siebel entity.
 			List<String> sblFldList = new ArrayList<String>();
 			sblFldList = siObj.fetchFieldNameList(request, siebelTableNameValue);
+			// retrieve query for Business Component Search Expression :
+			String sqlQry = siObj.fetchSqlQryForBizSearchCompExp(request, siebelTableNameValue);
+			
 			List<PreMapData> preMapDataList = new ArrayList<PreMapData>();
 			
 			List<String> hdrValues = new ArrayList<String>();
@@ -1066,6 +1069,8 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 			hdrValues.add(primBaseValue);
 			//SFDC Entity
 			hdrValues.add(sfdcObjectName);
+			hdrValues.add(sqlQry);// Business Search Qry
+			hdrValues.add(SiebelObjectController.extractionQuery);
 			
 			// Fetch the PreDefined Map data.			
 			String[] lookUpFieldrows = request.getParameterValues("lookUpFieldrow");
