@@ -248,8 +248,8 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				List<PreMapData> preMapDatas = tp.getPredefinedMapData(sObjectName);
 				
 				int rowCount = Integer.parseInt(request.getParameter("rowCount"));
-				
-				for(int i=0; i<=rowCount;i++){
+				//TODO : Temporary Work Around.-- Need to removed
+				for(int i=0; i<=rowCount+1;i++){
 					if(request.getParameter("select"+i)!=null && !request.getParameter("select"+i).trim().equals("")){
 						
 						Mapping mapping = new Mapping();
@@ -341,72 +341,75 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 		TargetPartner tp= new TargetPartner(session);
 		data = tp.getSavedDBData((String)session.getAttribute("projectId"), data);
 		List<MappingModel> mapModel = new ArrayList<MappingModel>();
-		for(int i=1;i<Integer.parseInt(rowCount);i++){
-			String siebelCheckFlag="select"+i;
-			MappingModel mappingModel = new MappingModel();
-			if(request.getParameter("sfdcId"+i)!=null){
-				mappingModel.setId(request.getParameter("sfdcId"+i));}
-			else
-				mappingModel.setId("");
-			
-			System.out.println("Mapping model ID:: "+mappingModel.getId());
-			
-			if (rowId != null) {
-				mappingModel.setSfdcRowId(rowId);
-			} else
-				mappingModel.setSfdcRowId("");
-			if(request.getParameter(siebelCheckFlag)!=null){
-				mappingModel.setCheckFlag(true);
-			}else
-				mappingModel.setCheckFlag(false);
-			if(request.getParameter("lookUpFieldrow"+i)!=null){
-				mappingModel.setLookUpFlag(true);
-			}else
-				mappingModel.setLookUpFlag(false);
-			if(request.getParameter("sblFieldNmdropdown"+i)!=null){
-				mappingModel.setSblFieldNmdropdown(request.getParameter("sblFieldNmdropdown"+i));}
-			else
-				mappingModel.setSblFieldNmdropdown("");
-			if(request.getParameter("joinNamerow"+i)!=null){
-				mappingModel.setJoinNamerow(request.getParameter("joinNamerow"+i));}
-			else
-				mappingModel.setJoinNamerow("");
-			if(request.getParameter("frgnKeyrow"+i)!=null){
-				mappingModel.setFrgnKeyrow(request.getParameter("frgnKeyrow"+i));}
-			else
-				mappingModel.setFrgnKeyrow("");
-			if(request.getParameter("clmnNmrow"+i)!=null){
-				mappingModel.setClmnNmrow(request.getParameter("clmnNmrow"+i));}
-			else
-				mappingModel.setClmnNmrow("");
-			if(request.getParameter("slfrcdropdown"+i)!=null){
-				mappingModel.setSlfrcdropdown(request.getParameter("slfrcdropdown"+i));}
-			else
-				mappingModel.setSlfrcdropdown("");
-			if(request.getParameter("lookUpObjrow"+i)!=null){
-				mappingModel.setLookUpObject(request.getParameter("lookUpObjrow"+i));}
-			else
-				mappingModel.setLookUpObject("");
-			if(request.getParameter("joinConditionrow"+i)!=null){
-				mappingModel.setJoinCondition(request.getParameter("joinConditionrow"+i));}
-			else
-				mappingModel.setJoinCondition("");
-			if(request.getParameter("siebelEntity")!=null){
-				mappingModel.setSiebelEntity(request.getParameter("siebelEntity"));}
-			else
-				mappingModel.setSiebelEntity("");
-			if(request.getParameter("lookUpRltnNmerow"+i)!=null){
-				mappingModel.setLookUpRelationShipName(request.getParameter("lookUpRltnNmerow"+i));}
-			else
-				mappingModel.setLookUpRelationShipName("");
-			if(request.getParameter("lookUpExtrnlrow"+i)!=null){
-				mappingModel.setLookUpExternalId(request.getParameter("lookUpExtrnlrow"+i));}
-			else
-				mappingModel.setLookUpExternalId("");
-			
-			mappingData.add(mappingModel);
-		}		
+		//TODO : Temporary Work Around.-- Need to removed
+		for(int i=1;i<Integer.parseInt(rowCount)+2;i++){
+				if(request.getParameter("select"+i)!=null && !request.getParameter("select"+i).trim().equals("")){
+				String siebelCheckFlag="select"+i;
+				MappingModel mappingModel = new MappingModel();
+				if(request.getParameter("sfdcId"+i)!=null){
+					mappingModel.setId(request.getParameter("sfdcId"+i));}
+				else
+					mappingModel.setId("");
 				
+				System.out.println("Mapping model ID:: "+mappingModel.getId());
+				
+				if (rowId != null) {
+					mappingModel.setSfdcRowId(rowId);
+				} else
+					mappingModel.setSfdcRowId("");
+				if(request.getParameter(siebelCheckFlag)!=null){
+					mappingModel.setCheckFlag(true);
+				}else
+					mappingModel.setCheckFlag(false);
+				if(request.getParameter("lookUpFieldrow"+i)!=null){
+					mappingModel.setLookUpFlag(true);
+				}else
+					mappingModel.setLookUpFlag(false);
+				if(request.getParameter("sblFieldNmdropdown"+i)!=null){
+					mappingModel.setSblFieldNmdropdown(request.getParameter("sblFieldNmdropdown"+i));}
+				else
+					mappingModel.setSblFieldNmdropdown("");
+				if(request.getParameter("joinNamerow"+i)!=null){
+					mappingModel.setJoinNamerow(request.getParameter("joinNamerow"+i));}
+				else
+					mappingModel.setJoinNamerow("");
+				if(request.getParameter("frgnKeyrow"+i)!=null){
+					mappingModel.setFrgnKeyrow(request.getParameter("frgnKeyrow"+i));}
+				else
+					mappingModel.setFrgnKeyrow("");
+				if(request.getParameter("clmnNmrow"+i)!=null){
+					mappingModel.setClmnNmrow(request.getParameter("clmnNmrow"+i));}
+				else
+					mappingModel.setClmnNmrow("");
+				if(request.getParameter("slfrcdropdown"+i)!=null){
+					mappingModel.setSlfrcdropdown(request.getParameter("slfrcdropdown"+i));}
+				else
+					mappingModel.setSlfrcdropdown("");
+				if(request.getParameter("lookUpObjrow"+i)!=null){
+					mappingModel.setLookUpObject(request.getParameter("lookUpObjrow"+i));}
+				else
+					mappingModel.setLookUpObject("");
+				if(request.getParameter("joinConditionrow"+i)!=null){
+					mappingModel.setJoinCondition(request.getParameter("joinConditionrow"+i));}
+				else
+					mappingModel.setJoinCondition("");
+				if(request.getParameter("siebelEntity")!=null){
+					mappingModel.setSiebelEntity(request.getParameter("siebelEntity"));}
+				else
+					mappingModel.setSiebelEntity("");
+				if(request.getParameter("lookUpRltnNmerow"+i)!=null){
+					mappingModel.setLookUpRelationShipName(request.getParameter("lookUpRltnNmerow"+i));}
+				else
+					mappingModel.setLookUpRelationShipName("");
+				if(request.getParameter("lookUpExtrnlrow"+i)!=null){
+					mappingModel.setLookUpExternalId(request.getParameter("lookUpExtrnlrow"+i));}
+				else
+					mappingModel.setLookUpExternalId("");
+				
+				mappingData.add(mappingModel);
+			}		
+			
+		}			
 		if(partnerWSDL.login()){
 			partnerWSDL.saveMappingSingleValuedDataIntoDB(mappingData);
 		}
