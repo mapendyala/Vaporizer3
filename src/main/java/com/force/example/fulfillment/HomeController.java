@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -222,6 +223,8 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 			HttpSession session = request.getSession(true);
 //			System.out.println("In loadMapData method");
 			TargetPartner tp= new TargetPartner(session); 
+			PartnerWSDL prtnrWSDL = new PartnerWSDL(request.getSession(),true);
+			prtnrWSDL.login();
 			
 			String id;
 			String selectName;			
@@ -231,10 +234,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 			String clmnName;
 			String joinCondition;
 			String sfdcFldName;
-			String lookupFieldName;
-			String lookupObjName;
-			String lookupRltnName;
-			String lookupExtrnlName;
+						
 			List<Mapping> mapSavedData = new ArrayList<Mapping>();
 			
 			if(session.getAttribute("mappedSavedData")!=null){	
@@ -246,11 +246,18 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				
 				String sObjectName = request.getParameter("siebelEntity");
 				List<PreMapData> preMapDatas = tp.getPredefinedMapData(sObjectName);
-				
 				int rowCount = Integer.parseInt(request.getParameter("rowCount"));
+				
 				//TODO : Temporary Work Around.-- Need to removed
 				for(int i=0; i<=rowCount+1;i++){
+				/*for(int i=0; i<=rowCount;i++){*/
 					if(request.getParameter("select"+i)!=null && !request.getParameter("select"+i).trim().equals("")){
+						
+						Boolean lookUpFlag = false;
+						String lookupFieldName="";
+						String lookupObjName="";
+						String lookupRltnName="";
+						String lookupExtrnlName="";
 						
 						Mapping mapping = new Mapping();
 						
@@ -267,6 +274,21 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 						lookupRltnName = request.getParameter("lookUpRltnNmerow"+i);
 						lookupExtrnlName = request.getParameter("lookUpExtrnlrow"+i);
 						
+						if(lookupObjName!=null && !lookupObjName.trim().equals("")) {
+							
+							lookUpFlag = true;
+						}
+						
+						Set<String> lstExternalIds= new LinkedHashSet<String>();
+						
+						List<MappingSFDC> externlFldLst = prtnrWSDL.getExternalIdList(lookupObjName);
+						
+						if(externlFldLst!=null && externlFldLst.size()>0)
+							for(MappingSFDC externalFld: externlFldLst ){
+								lstExternalIds.add(externalFld.getLabel());
+								System.out.println("Saving mapped saved Data externalFld.getLabel():: "+externalFld.getLabel());
+							}
+						
 //						System.out.println("....Pre existing values exists in mapping page....");
 //						System.out.println("name:: "+selectName+" siebelFldName:: "+sblFldName+" lookupFieldName:: "+lookupFieldName+" sfdcFldName:: "+sfdcFldName+" frKeyTblName:: "+frgnKeyName+" sblColName:: "+clmnName+" joinCondition:: "+joinCondition);
 						
@@ -282,6 +304,8 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 						mapping.setLookupObjName(lookupObjName);
 						mapping.setLookupRltnName(lookupRltnName);
 						mapping.setLookupExtrnlName(lookupExtrnlName);
+						mapping.setLstExternalIds(lstExternalIds);
+						mapping.setLookUpFlag(lookUpFlag);
 						
 						mapSavedData.add(mapping);
 						
@@ -343,7 +367,8 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 		List<MappingModel> mapModel = new ArrayList<MappingModel>();
 		//TODO : Temporary Work Around.-- Need to removed
 		for(int i=1;i<Integer.parseInt(rowCount)+2;i++){
-				if(request.getParameter("select"+i)!=null && !request.getParameter("select"+i).trim().equals("")){
+		/*for(int i=1;i<Integer.parseInt(rowCount);i++){*/
+			if(request.getParameter("select"+i)!=null && !request.getParameter("select"+i).trim().equals("")){
 				String siebelCheckFlag="select"+i;
 				MappingModel mappingModel = new MappingModel();
 				if(request.getParameter("sfdcId"+i)!=null){
@@ -407,9 +432,8 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 					mappingModel.setLookUpExternalId("");
 				
 				mappingData.add(mappingModel);
-			}		
-			
-		}			
+		 }		
+		}		
 		if(partnerWSDL.login()){
 			partnerWSDL.saveMappingSingleValuedDataIntoDB(mappingData);
 		}
@@ -1075,6 +1099,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 			hdrValues.add(sqlQry);// Business Search Qry
 			hdrValues.add(SiebelObjectController.extractionQuery);
 			
+				
 			// Fetch the PreDefined Map data.			
 			String[] lookUpFieldrows = request.getParameterValues("lookUpFieldrow");
 			int i=0;
@@ -1093,6 +1118,8 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				String lookupRltName="";
 				String lookupObjName="";
 				String lookupExtrnlName="";
+				Boolean lookUpFlag = false;
+				Set<String> lstExternalIds= new LinkedHashSet<String>();
 				List<String> clmNmLst = siObj.fetchColumndAndFrgnKeyName(request, (String)session.getAttribute("siebelTableNameValue"), siebelFldName, String.valueOf(i+1).toString(),null);
 				List<Object> lookUpLst = this.retrieveLookUpFieldInfo(request, sfdcFldName, String.valueOf(i).toString());
 				
@@ -1107,9 +1134,19 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				lookupObjName = String.valueOf(lookUpLst.get(1));
 				lookupExtrnlName = String.valueOf(lookUpLst.get(2));
 				
+				lookUpFlag = true;
+				
 				System.out.println("lookupRltName:: "+lookupRltName);
 				System.out.println("lookupObjName:: "+lookupObjName);
 				System.out.println("lookupExtrnlName:: "+lookupExtrnlName);
+				
+				List<MappingSFDC> externlFldLst = prtnrWSDL.getExternalIdList(lookupObjName);
+				
+				if(externlFldLst!=null && externlFldLst.size()>0)
+					for(MappingSFDC externalFld: externlFldLst ){
+						lstExternalIds.add(externalFld.getLabel());
+						System.out.println("Saving premapped saved Data externalFld.getLabel():: "+externalFld.getLabel());
+					}
 				
 				}
 				
@@ -1128,6 +1165,8 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				pMapData.setLookupRltName(lookupRltName);
 				pMapData.setLookupObjName(lookupObjName);
 				pMapData.setLookupExtrnlName(lookupExtrnlName);
+				pMapData.setLstExternalIds(lstExternalIds);
+				pMapData.setLookUpFlag(lookUpFlag);
 							
 				preMapDataList.add(pMapData);
 //				System.out.println("....Request values to mapping page....");
