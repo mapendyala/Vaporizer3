@@ -371,50 +371,6 @@
 							 <c:if test="${not empty mappingData}" var="mapping">
 							 <% //out.println("Inside Mapped Data List");%>
 								<c:forEach items="${mappingData}" var="mapping" varStatus="status"> 
-								
-								<c:if test="${not empty sbllFlddNmList}">
-									<c:forEach items="${sbllFlddNmList}" var="field" varStatus="status">
-										<c:set var="temp1" value="${field}" />
-	                           			<c:set var="temp2" value="${mapping.sblFieldNmdropdown}" />
-	                           			<%--
-	                           			<c:out value="${temp1}" />
-							    		<c:out value="${temp2}" />
-							    		
-							    		 --%>
-									 	
-									 	<c:choose>
-											<c:when test="${temp1 == temp2}">
-								                <c:set var="sblFldFlag1" value="true" />
-								            </c:when>
-								         </c:choose>
-								     </c:forEach>
-							     </c:if>
-							     
-							     <% //out.println("::SFDC field name::"); %>
-							    
-						     	<c:if test="${not empty mappingField}">
-									<c:forEach items="${mappingField}" var="field" varStatus="status">
-										<c:set var="temp3" value="${field.name}" />
-                            			<c:set var="temp4" value="${mapping.slfrcdropdown}" />
-                            			 
-                            			<%-- <c:out value="${temp3}" />
-							    		<c:out value="${temp4}" />
-										 --%>
-										<c:choose>
-											<c:when test="${temp3 == temp4}">
-								                <c:set var="sfdcFldFlag1" value="true" />
-								            </c:when>
-								         </c:choose>
-								        </c:forEach>
-								</c:if>
-							     
-							    	<%-- <c:out value="${sblFldFlag1}" />
-							    	<c:out value="${sfdcFldFlag1}" />
-							     	 --%>
-							     	
-							     	<c:if test="${(sblFldFlag1 == 'true') && (sfdcFldFlag1 == 'true')}">
-							     	<c:set var="sblFldFlag1" value="false" />
-							 		<c:set var="sfdcFldFlag1" value="false" />
 							     	
 									 <tr id="row${mapping.mappingSeq}">
 										<td>
@@ -495,7 +451,7 @@
 										<input type='hidden' id="sfdcId${mapping.mappingSeq}" name="sfdcId${mapping.mappingSeq}" value="${mapping.id}" />
 									 </tr> 
 									<c:set var="seq" value="${mapping.mappingSeq}" />
-									</c:if>	
+									
 								</c:forEach>
 								
 								</c:if>
@@ -596,7 +552,7 @@
 										<!-- Look Up Field -->
 										<td style="margin-left: 35px;padding-left : 25px;">										
 										<c:choose>
-										<c:when test="${preMapData.lookupObjName}">
+										<c:when test="${preMapData.lookUpFlag}">
 										<input name="lookUpFieldrow${seq}" id="lookUpFieldrow${seq}" type='checkbox' checked="checked">
 										</c:when>
 										<c:otherwise>
@@ -607,9 +563,17 @@
 										<!-- Look Up Object -->
 										<td><input type="text" style="margin-left: 35px;" id="lookUpObjrow${seq}" name="lookUpObjrow${seq}" value="${preMapData.lookupObjName}" /></td>
 										<!-- Lookup Relationship Name -->
-										<td><input type="text" style="margin-left: 35px;" id="lookUpRltnNmerow${seq}" name="lookUpRltnNmerow${seq}" value="${preMapData.lookupRltName}"/></td>
+										<td><input type="text" style="margin-left: 35px;" id="lookUpRltnNmerow${seq}" name="lookUpRltnNmerow${seq}" value="${preMapData.lookupRltName}"/></td>													
 										<!-- Lookup External Id Field -->
-										<td><input type="text" style="margin-left: 35px;" id="lookUpExtrnlrow${seq}" name="lookUpExtrnlrow${seq}" value="${preMapData.lookupExtrnlName}"/></td>
+										<td><select style="margin-left: 35px;" id="lookUpExtrnlrow${seq}" name="lookUpExtrnlrow${seq}" value="">
+												<c:if test="${not empty preMapData.lstExternalIds}">
+													<c:forEach items="${preMapData.lstExternalIds}" var="field" varStatus="status">
+												       		<option value='${field}' selected>${field}</option>
+													</c:forEach>
+												</c:if>
+										</select></td>
+										
+										<%-- <td><input type="text" style="margin-left: 35px;" id="lookUpExtrnlrow${seq}" name="lookUpExtrnlrow${seq}" value="${preMapData.lookupExtrnlName}"/></td> --%>
 									</tr> 
 									<c:set var="seq" value="${seq + 1}" />
 									</c:if>	
@@ -710,7 +674,7 @@
 										<!-- Look Up Field -->
 										<td style="margin-left: 35px;padding-left : 25px;">										
 										<c:choose>
-										<c:when test="${preMapData.lookupFieldName}">
+										<c:when test="${preMapData.lookUpFlag}">
 										<input name="lookUpFieldrow${seq}" id="lookUpFieldrow${seq}" type='checkbox' checked="checked">
 										</c:when>
 										<c:otherwise>
@@ -722,8 +686,16 @@
 										<td><input type="text" style="margin-left: 35px;" id="lookUpObjrow${seq}" name="lookUpObjrow${seq}" value="${preMapData.lookupObjName}" /></td>
 										<!-- Lookup Relationship Name -->
 										<td><input type="text" style="margin-left: 35px;" id="lookUpRltnNmerow${seq}" name="lookUpRltnNmerow${seq}" value="${preMapData.lookupRltnName}"/></td>
-										<!-- Lookup External Id Field -->
-										<td><input type="text" style="margin-left: 35px;" id="lookUpExtrnlrow${seq}" name="lookUpExtrnlrow${seq}" value="${preMapData.lookupExtrnlName}"/></td>
+										<!-- Lookup External Id Field -->										
+										<td><select style="margin-left: 35px;" id="lookUpExtrnlrow${seq}" name="lookUpExtrnlrow${seq}" value="">
+												<c:if test="${not empty preMapData.lstExternalIds}">
+													<c:forEach items="${preMapData.lstExternalIds}" var="field" varStatus="status">
+												       		<option value='${field}' selected>${field}</option>
+													</c:forEach>
+												</c:if>
+										</select></td>
+										
+										<%--<td><input type="text" style="margin-left: 35px;" id="lookUpExtrnlrow${seq}" name="lookUpExtrnlrow${seq}" value="${preMapData.lookupExtrnlName}"/></td> --%>
 										<input type='hidden' id="sfdcId${seq}" name="sfdcId${seq}" value="${preMapData.id}" />
 									</tr> 
 									<c:set var="seq" value="${seq + 1}" />

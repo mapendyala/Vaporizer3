@@ -1,5 +1,7 @@
 package com.force.example.fulfillment.order.model;
 
+import java.util.Set;
+
 
 
 public class PreMapData  {
@@ -21,7 +23,21 @@ public class PreMapData  {
 	public String lookupObjName;
 	public String lookupRltName;
 	public String lookupExtrnlName;
+	public Set<String> lstExternalIds;
+	public Boolean lookUpFlag;
 	
+	public Boolean getLookUpFlag() {
+		return lookUpFlag;
+	}
+	public void setLookUpFlag(Boolean lookUpFlag) {
+		this.lookUpFlag = lookUpFlag;
+	}
+	public Set<String> getLstExternalIds() {
+		return lstExternalIds;
+	}
+	public void setLstExternalIds(Set<String> lstExternalIds) {
+		this.lstExternalIds = lstExternalIds;
+	}
 	public String getLookupFldName() {
 		return lookupFldName;
 	}
