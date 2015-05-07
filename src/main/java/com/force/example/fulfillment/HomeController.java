@@ -7,16 +7,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
-
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,7 +35,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.force.api.DescribeSObject;
 import com.force.example.fulfillment.order.controller.SiebelObjectController;
 import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.Mapping;
@@ -96,7 +90,30 @@ public class HomeController {
 		session.setAttribute("targetOrgConn", TargetOrgConn);
 		return new ModelAndView("vaporizer", "data", data);
 	}
-
+	@RequestMapping(value = "/talend", method = RequestMethod.GET)
+	public ModelAndView talendHome(Locale locale, Model model, HttpServletRequest request) {
+		// TODO!!!
+		logger.info("Welcome home! the client locale is "+ locale.toString());
+		System.out.println("here");
+		HttpSession session = request.getSession(true);
+		
+		JSONObject authParams = getOAuthToken();
+		
+		session.setAttribute("authParams", authParams);
+		String projectId = "a0PG000000CIFgnMAH";
+		if(request.getParameter("projectId") != null){
+			projectId = request.getParameter("projectId");
+		}
+		session.setAttribute("projectId", projectId);
+		TargetPartner tp= new TargetPartner(session);
+		data = tp.getSavedDBData(projectId, data);
+		JSONObject middleWareConn= tp.getMiddleWareData(projectId);
+		System.out.println("middleWareConn "+middleWareConn);
+		session.setAttribute("middleWareConn", middleWareConn);
+		JSONObject TargetOrgConn= tp.getTargetOrgDetails(projectId);
+		session.setAttribute("targetOrgConn", TargetOrgConn);
+		return new ModelAndView("talendJobMigration", "data", data);
+	}
 	/*Added by Subhojitcg*/
 
 
