@@ -192,10 +192,11 @@ public class HomeController {
 	 */
 	 @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
 	    public @ResponseBody
-	    String uploadFileHandler(@RequestParam("name") String name,
+	    String uploadFileHandler(
 	            @RequestParam("file") MultipartFile file) {
 	 
 	        if (!file.isEmpty()) {
+	        	String name=file.getOriginalFilename();
 	            try {
 	                byte[] bytes = file.getBytes();
 	 
@@ -206,6 +207,7 @@ public class HomeController {
 	                    dir.mkdirs();
 	                else
 	                	FileUtils.cleanDirectory(dir);
+	                
 	 
 	                // Create the file on server
 	                File serverFile = new File(dir.getAbsolutePath()
@@ -223,7 +225,7 @@ public class HomeController {
 	               return "You failed to upload " + name + " => " + e.getMessage();
 	            }
 	        } else {
-	            return "You failed to upload " + name	                    + " because the file was empty.";
+	            return "You failed to upload  because the file was empty.";
 	        }
 	    }
 

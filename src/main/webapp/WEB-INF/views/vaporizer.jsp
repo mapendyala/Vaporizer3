@@ -141,17 +141,17 @@ var sfdcObjectForExtarction="";
 	 
 	 function validateUploadForm()
 		{
-			 var fileName=$("#fileNameID").val();
-		      if(fileName!="")
+			/*  var fileName=$("#fileNameID").val();
+		      if(fileName!="") */
 		    	  {
 		    	  $("#csvUploadID").innerHTML = 'Uploading...';
 		    	  
 		    	  }
-		      else
+		    /*   else
 		    	  {
 		    	  alert("Please enter file Name.");
 		    	  return false;
-		    	  }
+		    	  } */
 		}
 	
 	
@@ -433,9 +433,7 @@ function submitForm(rowNum, page){
 <title>Vaporizer</title>
 </head>
 <body>
-<div id="statusBlock">
 
-</div>
 
 	<div id="dialog" class="container">
 		<h6>${error}</h6>
@@ -526,7 +524,7 @@ function submitForm(rowNum, page){
 							<form id="uploadForm" method="POST" onsubmit="return validateUploadForm();" target="formSending" action="uploadFile" enctype="multipart/form-data">
 							<table>
 							<tr>
-							<td> <input type="text" id="fileNameID" placeholder="Enter file name" name="name"></td>
+						<!-- 	<td> <input type="text" id="fileNameID" placeholder="Enter file name" name="name"></td> -->
 							<td><input id="fileID" type="file" name="file"></td>
 							<td></td>
 							</tr>
@@ -538,6 +536,8 @@ function submitForm(rowNum, page){
 							<iframe name="formSending" style="height: 50px;width:100%;border: 0px none;font-family:verdana;"></iframe>
 							</td>
 							</tr>
+							
+					
 							</table>
 							</form>
 							
@@ -546,8 +546,10 @@ function submitForm(rowNum, page){
 							style="float: right; padding: 50px;width:350px !Important; padding-top: 10px; padding-bottom: 10px;">
 							<input class="btn btn-block btn-inverse" type="button"
 							name="Extract" value="Migrate To SFDC" id="dataloadtoSFDC" onclick='initiateDataLoad()'/> 
+							<div id="statusBlock"></div>
 						</td>
 					</tr>
+					
 					<tr>
 						<td colspan="2"
 							style="float: right; width:350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
