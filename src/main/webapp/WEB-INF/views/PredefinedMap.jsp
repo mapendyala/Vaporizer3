@@ -66,7 +66,7 @@
 
 							<tr>
 								<td 
-									style="float: right; width: 350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
+									style="float: center; width: 350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
 									<input class="btn btn-block btn-inverse" type="submit"
 									name="Extract" value="Done" /> <!-- <button id="cancel" type="button" style="float: right;"
 						class="btn btn-block btn-inverse" onclick="javascript:history.go(-1);">Back</button> --> <!-- <button id="cancel" type="submit" style="float: right;"

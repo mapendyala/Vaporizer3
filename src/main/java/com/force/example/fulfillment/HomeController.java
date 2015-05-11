@@ -242,7 +242,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 			HttpSession session = request.getSession(true);
 //			System.out.println("In loadMapData method");
 			TargetPartner tp= new TargetPartner(session); 
-			PartnerWSDL prtnrWSDL = new PartnerWSDL(request.getSession(),true);
+			PartnerWSDL prtnrWSDL = new PartnerWSDL(request.getSession(),false);
 			prtnrWSDL.login();
 			
 			String id;
@@ -254,7 +254,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 			String joinCondition;
 			String sfdcFldName;
 						
-			List<Mapping> mapSavedData = new ArrayList<Mapping>();
+			List<MappingModel> mapSavedData = new ArrayList<MappingModel>();
 			
 			if(session.getAttribute("mappedSavedData")!=null){	
 //				System.out.println("Removing mappingSavedData");
@@ -267,9 +267,8 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				List<PreMapData> preMapDatas = tp.getPredefinedMapData(sObjectName);
 				int rowCount = Integer.parseInt(request.getParameter("rowCount"));
 				
-				//TODO : Temporary Work Around.-- Need to removed
-				for(int i=0; i<=rowCount+1;i++){
-				/*for(int i=0; i<=rowCount;i++){*/
+				for(int i=0; i<=rowCount;i++){
+				
 					if(request.getParameter("select"+i)!=null && !request.getParameter("select"+i).trim().equals("")){
 						
 						Boolean lookUpFlag = false;
@@ -277,8 +276,10 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 						String lookupObjName="";
 						String lookupRltnName="";
 						String lookupExtrnlName="";
+						List<MappingSFDC> externlFldLst = new ArrayList<MappingSFDC>();
+						Set<String> lstExternalIds= new LinkedHashSet<String>();
 						
-						Mapping mapping = new Mapping();
+						MappingModel mapping = new MappingModel();
 						
 						selectName = request.getParameter("select"+i);
 						id = request.getParameter("sfdcId"+i);
@@ -296,33 +297,34 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 						if(lookupObjName!=null && !lookupObjName.trim().equals("")) {
 							
 							lookUpFlag = true;
-						}
-						
-						Set<String> lstExternalIds= new LinkedHashSet<String>();
-						
-						List<MappingSFDC> externlFldLst = prtnrWSDL.getExternalIdList(lookupObjName);
-						
-						if(externlFldLst!=null && externlFldLst.size()>0)
-							for(MappingSFDC externalFld: externlFldLst ){
-								lstExternalIds.add(externalFld.getLabel());
-								System.out.println("Saving mapped saved Data externalFld.getLabel():: "+externalFld.getLabel());
-							}
+														
+							
+							externlFldLst = prtnrWSDL.getExternalIdList(lookupObjName);
+							
+							if(externlFldLst!=null && externlFldLst.size()>0)
+								for(MappingSFDC externalFld: externlFldLst ){
+									lstExternalIds.add(externalFld.getLabel());
+									System.out.println("Saving mapped saved Data externalFld.getLabel():: "+externalFld.getLabel());
+								}
+							
+						}				
 						
 //						System.out.println("....Pre existing values exists in mapping page....");
 //						System.out.println("name:: "+selectName+" siebelFldName:: "+sblFldName+" lookupFieldName:: "+lookupFieldName+" sfdcFldName:: "+sfdcFldName+" frKeyTblName:: "+frgnKeyName+" sblColName:: "+clmnName+" joinCondition:: "+joinCondition);
+						if(selectName!=null && !selectName.trim().equals("")) 
+							mapping.setCheckFlag(true);
 						
-						mapping.setSelectName(selectName);
 						mapping.setId(id);
-						mapping.setSblFldName(sblFldName);
-						mapping.setJoinName(joinName);
-						mapping.setFrgnKeyName(frgnKeyName);
-						mapping.setClmnName(clmnName);
+						mapping.setMappingSeq(i);
+						mapping.setSblFieldNmdropdown(sblFldName);
+						mapping.setJoinNamerow(joinName);
+						mapping.setFrgnKeyrow(frgnKeyName);
+						mapping.setClmnNmrow(clmnName);
 						mapping.setJoinCondition(joinCondition);
-						mapping.setSfdcFldName(sfdcFldName);
-						mapping.setLookupFieldName(lookupFieldName);
-						mapping.setLookupObjName(lookupObjName);
-						mapping.setLookupRltnName(lookupRltnName);
-						mapping.setLookupExtrnlName(lookupExtrnlName);
+						mapping.setSlfrcdropdown(sfdcFldName);
+						mapping.setLookUpObject(lookupObjName);
+						mapping.setLookUpRelationShipName(lookupRltnName);
+						mapping.setLookUpExternalId(lookupExtrnlName);
 						mapping.setLstExternalIds(lstExternalIds);
 						mapping.setLookUpFlag(lookUpFlag);
 						
@@ -331,30 +333,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 					}
 				}
 				
-				/*** Start -logic for removing duplicates**/
-				/*
-					Set<Mapping> set = new TreeSet<Mapping>(new Comparator<Mapping>() {
-					
-					@Override
-					public int compare(Mapping o1, Mapping o2) {
-						// TODO Auto-generated method stub
-						if(o1.getSblFldName()!=null && o2.getSblFldName()!=null){
-							if(o1.getSblFldName().equalsIgnoreCase(o2.getSblFldName())){
-				        		return 0;
-				        	}
-						}
-			        	return 1;
-					}				
-				});
-				set.addAll(mapSavedData);
-
-				final ArrayList refinedList = new ArrayList(set);
-				*/
-				
-				/*** End -logic for removing duplicates**/
-				
-//				Collections.sort(mapSavedData, Mapping.SequenceComparator);
-				
+								
 				if(session.getAttribute("mappedSavedData")==null){
 //					System.out.println("Creating mappingSavedData");
 					session.setAttribute("mappedSavedData", mapSavedData);
@@ -383,9 +362,8 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 		rowCount= request.getParameter("rowCount");
 		TargetPartner tp= new TargetPartner(session);
 		data = tp.getSavedDBData((String)session.getAttribute("projectId"), data);
-		List<MappingModel> mapModel = new ArrayList<MappingModel>();
 		//TODO : Temporary Work Around.-- Need to removed
-		for(int i=1;i<Integer.parseInt(rowCount)+2;i++){
+		for(int i=0;i<Integer.parseInt(rowCount)+1;i++){
 		/*for(int i=1;i<Integer.parseInt(rowCount);i++){*/
 			if(request.getParameter("select"+i)!=null && !request.getParameter("select"+i).trim().equals("")){
 				String siebelCheckFlag="select"+i;
@@ -395,8 +373,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				else
 					mappingModel.setId("");
 				
-				System.out.println("Mapping model ID:: "+mappingModel.getId());
-				
+								
 				if (rowId != null) {
 					mappingModel.setSfdcRowId(rowId);
 				} else
@@ -1106,7 +1083,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 			// retrieve query for Business Component Search Expression :
 			String sqlQry = siObj.fetchSqlQryForBizSearchCompExp(request, siebelTableNameValue);
 			
-			List<PreMapData> preMapDataList = new ArrayList<PreMapData>();
+			List<MappingModel> preMapDataList = new ArrayList<MappingModel>();
 			
 			List<String> hdrValues = new ArrayList<String>();
 			//Siebel Entity
@@ -1121,13 +1098,16 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				
 			// Fetch the PreDefined Map data.			
 			String[] lookUpFieldrows = request.getParameterValues("lookUpFieldrow");
-			int i=0;
+			List<MappingModel> mapSavedData = (List<MappingModel>)session.getAttribute("mappedSavedData");
+			int i=0;	
+			int l=1;
+			int mapSavedDataSize=0;
 			
 			if(lookUpFieldrows!=null && lookUpFieldrows.length>0) {
 				
 			for (String lookUpFieldrow : lookUpFieldrows){
 				
-				PreMapData pMapData = new PreMapData();
+				MappingModel pMapData = new MappingModel();
 				String name = lookUpFieldrow;				
 				String siebelFldName = (String) request.getParameter("lookUpSiebelFldrow"+lookUpFieldrow);					
 				String sfdcFldName = (String) request.getParameter("lookUpSfdcFldrow"+lookUpFieldrow);					
@@ -1161,29 +1141,40 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				
 				List<MappingSFDC> externlFldLst = prtnrWSDL.getExternalIdList(lookupObjName);
 				
-				if(externlFldLst!=null && externlFldLst.size()>0)
+				if(externlFldLst!=null && externlFldLst.size()>0){
+					
 					for(MappingSFDC externalFld: externlFldLst ){
 						lstExternalIds.add(externalFld.getLabel());
 						System.out.println("Saving premapped saved Data externalFld.getLabel():: "+externalFld.getLabel());
 					}
+				}
 				
 				}
 				
+				if(mapSavedData!=null && mapSavedData.size()>0) {
+					
+					mapSavedDataSize = mapSavedData.size();
+					
+					System.out.println("mapSavedDataSize:: "+mapSavedDataSize);
+//					mapSavedDataSize = mapSavedDataSize -1;
+					pMapData.setMappingSeq(mapSavedDataSize+l);
+					l++;
+				}
+				else {					
+					pMapData.setMappingSeq(i);
+				}
 				
-//				System.out.println("lookupRltName:: "+lookupRltName);
-				
-				pMapData.setName(name);
-				pMapData.setSiebelFldName(siebelFldName);
-				pMapData.setSfdcFldName(sfdcFldName);
-				pMapData.setSfdcObjName(sfdcObjName);
-				pMapData.setMapTypeName(mapTypeName);
-				pMapData.setJoinName(joinName);
-				pMapData.setFrKeyTblName(frKeyTblName);
-				pMapData.setSblColName(SblColName);
+				pMapData.setCheckFlag(true);
+				pMapData.setId(null);
+				pMapData.setSblFieldNmdropdown(siebelFldName);
+				pMapData.setJoinNamerow(joinName);
+				pMapData.setFrgnKeyrow(frKeyTblName);
+				pMapData.setClmnNmrow(SblColName);
 				pMapData.setJoinCondition(joinCondition);
-				pMapData.setLookupRltName(lookupRltName);
-				pMapData.setLookupObjName(lookupObjName);
-				pMapData.setLookupExtrnlName(lookupExtrnlName);
+				pMapData.setSlfrcdropdown(sfdcFldName);
+				pMapData.setLookUpObject(lookupObjName);
+				pMapData.setLookUpRelationShipName(lookupRltName);
+				pMapData.setLookUpExternalId(null);
 				pMapData.setLstExternalIds(lstExternalIds);
 				pMapData.setLookUpFlag(lookUpFlag);
 							
@@ -1202,28 +1193,11 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 			modelChild.addAttribute("hdrValues",hdrValues);
 			modelChild.addAttribute("rowId", rowId);
 			modelChild.addAttribute("mappingField",sfdcObjList);
-//			modelChild.addAttribute("preMapDataList",preMapDataList);
 			
 			
 			if(session.getAttribute("mappedSavedData")!=null){	
 				System.out.println("Mapped Saved Data exists in session");				
-			/*
-				List<PreMapData> mergeList = new ArrayList<PreMapData>();
-				mergeList.addAll(preMapDataList);
-				mergeList.addAll((Collection<? extends PreMapData>) session.getAttribute("mappedSavedData"));
-				
-				Set<PreMapData> set = new HashSet<PreMapData>(mergeList);
-				List<PreMapData> mergeListWithoutDuplicates = new ArrayList<PreMapData>();
-				mergeListWithoutDuplicates.addAll(set);
-				
-				modelChild.addAttribute("preMapDataList",mergeListWithoutDuplicates);
-				*/
-								
-//				modelChild.addAttribute("preMapDataList",preMapDataList);
-				
-				
-				List<Mapping> mapSavedData = (List<Mapping>)session.getAttribute("mappedSavedData");
-				
+									
 				if(mapSavedData!=null && mapSavedData.size()>0) {
 					
 												
@@ -1231,7 +1205,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 					
 					for(int k=0; k < preMapDataList.size(); k++) {						
 									
-  						if(preMapDataList.get(k).getSiebelFldName().equals(mapSavedData.get(j).getSblFldName())){
+  						if(preMapDataList.get(k).getSblFieldNmdropdown().equals(mapSavedData.get(j).getSblFieldNmdropdown())){
 							
 							preMapDataList.remove(preMapDataList.get(k));
 							
@@ -1240,21 +1214,21 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 						
 					}
 					
-				}
+				}				
+				   preMapDataList.addAll(mapSavedData);
 				
 				}
 				
-				modelChild.addAttribute("preMapDataList",preMapDataList);
-				modelChild.addAttribute("mappedSavedData", session.getAttribute("mappedSavedData"));	
+				modelChild.addAttribute("mappingData",preMapDataList);
 				
 			}
 			else {
-				modelChild.addAttribute("mappingData",mappingDataSaved);
+				preMapDataList.addAll(mappingDataSaved);
+				modelChild.addAttribute("mappingData",preMapDataList);		
 			}		
 			
 			modelChild.addAttribute("MappingId",rowId);
 
-//		}		
 		return new ModelAndView("mapping", "data", data);
 		
 	}
