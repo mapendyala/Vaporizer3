@@ -34,7 +34,7 @@ import com.force.utility.UtilityClass;
 
 @Controller
 @RequestMapping(value = "/canvasui")
-@SessionAttributes("data")
+
 public class CanvasUIController {
 
 	private static final String SIGNED_REQUEST = "signedRequestJson";
