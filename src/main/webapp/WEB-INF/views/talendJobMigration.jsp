@@ -38,10 +38,18 @@
 	
 <script type="text/javascript">
 
-function callTalenJob()
+function callTalenJob(obj)
 {
 	
-	var jobURL="https://sfdc2siebel.herokuapp.com/services/Siebel_to_SFDC_Contact?method=runJob";
+	var jobURL="";
+	if(obj==="Account")
+	 jobURL="https://talendjobsaccount.herokuapp.com/services/SIebel_to_SFDC_Account?method=runJob";
+	if(obj==="Contact")
+	 jobURL="https://talendjobscontact.herokuapp.com/services/Siebel_to_SFDC_Contact?method=runJob";
+	if(obj==="Lead")
+		 jobURL="https://talendjobslead.herokuapp.com/services/Siebel_to_SFDC_Lead?method=runJob";
+	if(obj==="Opportunity")
+		 jobURL="https://talendjobsopportunity.herokuapp.com/services/Siebel_to_SFDC_Opportunity?method=runJob";	
 
 	window.open(jobURL,"JobRunning", "width=300, height=200");
 	}
@@ -95,7 +103,7 @@ function callTalenJob()
 							     <td>1</td> 
 							      <td>Account</td> 
 							       <td>Account</td> 
-							        <td><input class='btn btn-inverse' type='button' name='Extract' value='Run Talend Job' onclick='callTalenJob()'/>
+							        <td><input class='btn btn-inverse' type='button' name='Extract' value='Run Talend Job' onclick='callTalenJob("Account")'/>
 							        </td>			     
 							        
 							        </tr>
@@ -104,7 +112,7 @@ function callTalenJob()
 							     <td>2</td> 
 							      <td>Contact</td> 
 							       <td>Contact</td> 
-							        <td><input class='btn btn-inverse' disabled="disabled" type='button' name='Extract' value='Run Talend Job' onclick='callTalenJob(Account)'/></td>			     
+							        <td><input class='btn btn-inverse' type='button' name='Extract' value='Run Talend Job' onclick='callTalenJob("Contact")'/></td>			     
 							        
 							        </tr>
 							        	    
@@ -112,7 +120,7 @@ function callTalenJob()
 							     <td>3</td> 
 							      <td>Opportunity</td> 
 							       <td>Opportunity</td> 
-							        <td><input class='btn btn-inverse' disabled="disabled" type='button' name='Extract' value='Run Talend Job' onclick='callTalenJob(Account)'/></td>			     
+							        <td><input class='btn btn-inverse'  type='button' name='Extract' value='Run Talend Job' onclick='callTalenJob("Opportunity")'/></td>			     
 							        
 							        </tr>
 							        	    
@@ -120,7 +128,7 @@ function callTalenJob()
 							     <td>4</td> 
 							      <td>Lead</td> 
 							       <td>Lead</td> 
-							        <td><input class='btn btn-inverse' disabled="disabled" type='button' name='Extract' value='Run Talend Job' onclick='callTalenJob(Account)'/></td>			     
+							        <td><input class='btn btn-inverse'  type='button' name='Extract' value='Run Talend Job' onclick='callTalenJob("Lead")'/></td>			     
 							        
 							        </tr>
 							        	    
