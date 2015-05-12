@@ -470,7 +470,7 @@ function submitForm(rowNum, page){
 				    <th class="table_header_details" style="float: center;">Single Value Field Mapping</th>
 				    <th class="table_header_details" style="float: center;">Multi Value Field Mapping</th>
 				    
-				    <th class="table_header_details" style="float: center;">Add Ons</th>
+				    <th class="table_header_details" style="float: center;">Extract data</th>
 				    <th hidden="true" class="table_header_details" style="float: center;">ID</th>
 				  </tr>
 				 </thead> 
