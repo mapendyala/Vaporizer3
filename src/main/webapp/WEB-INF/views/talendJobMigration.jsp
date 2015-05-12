@@ -38,7 +38,7 @@
 	
 <script type="text/javascript">
 
-function callTalenJob()
+function callTalenJob(obj)
 {
 	
 	var jobURL="";
