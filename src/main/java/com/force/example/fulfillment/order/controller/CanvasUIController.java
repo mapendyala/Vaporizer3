@@ -34,11 +34,12 @@ import com.force.utility.UtilityClass;
 
 @Controller
 @RequestMapping(value = "/canvasui")
-
+@SessionAttributes("data")
 public class CanvasUIController {
 
 	private static final String SIGNED_REQUEST = "signedRequestJson";
 	private CanvasContext cc = new CanvasContext();
+	
 	public List<MainPage> data = new ArrayList<MainPage>();
 
 	@Autowired
@@ -54,7 +55,7 @@ public class CanvasUIController {
 		
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView postSignedRequest(Model model,
 			@RequestParam(value = "signed_request") String signedRequest,
 			HttpServletRequest request) {
@@ -110,7 +111,7 @@ public class CanvasUIController {
 		return new ModelAndView("vaporizer", "data", data);
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
+	/*@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getOrdersPage(Model model,
 			@ModelAttribute("data") List<MainPage> data,
 			HttpServletRequest request) {
@@ -120,7 +121,7 @@ public class CanvasUIController {
 		TargetPartner targetPartner= new TargetPartner(session);
 		data = targetPartner.getSavedDBData((String) session.getAttribute("projectId"), data);
 		return new ModelAndView("vaporizer", "data", data);
-	}
+	}*/
 
 	private static final String getConsumerSecret() {
 		String secret = System.getenv("OAUTH_CLIENT_SECRET");
