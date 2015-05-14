@@ -113,7 +113,7 @@ var sfdcObjectForExtarction="";
 				if(str.indexOf("Error")>-1){
 					alert("inside1");
 					$("#statusBlock").html('<h4> Data Loading Status : Failed</h4>');
-					$("#statusBlock").append("<h4>  "+str+"</h4>" );
+					$("#statusBlock").append("<h4>  "+str.split("_")[1]+"</h4>" );
 				}
 				else{
 					alert("inside2 ");
