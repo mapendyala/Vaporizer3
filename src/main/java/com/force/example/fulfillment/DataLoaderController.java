@@ -117,7 +117,7 @@ public class DataLoaderController {
     	}
     	catch(Exception ex){
     		System.out.println("ERRor"+ex.getMessage());
-    		return "Error:_"+ex.getMessage();
+    		return "Error:_"+"Error Occored during Dataload";
     	}
     	//example.runSample("Account", "subhchakraborty@deloitte.com.vaporizer", "May@2013", "DataFile.csv","C:\\Users\\subhchakraborty\\Downloads\\Sep.sdl");
         
