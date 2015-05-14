@@ -116,7 +116,7 @@ var sfdcObjectForExtarction="";
 					$("#statusBlock").append("<h4>  "+str+"</h4>" );
 				}
 				else{
-					alert("inside2");
+					alert("inside2 ");
 				var strList=str.split("_");
 				var total=+strList[0] + +strList[1];
 				var successNo=strList[0];
