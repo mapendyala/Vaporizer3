@@ -110,6 +110,7 @@ public class DataLoaderController {
     	System.out.println("Done");
     	
     	String message=example.runSample(objectName, userId, pwd, finalData);
+    	System.out.println("$$$$$$"+message);
     	if((message!=null)&&(message.contains("_"))){
     		System.out.println("$$$$$$"+message);
     		return	message;
