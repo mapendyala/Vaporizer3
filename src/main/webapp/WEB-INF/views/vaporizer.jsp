@@ -110,7 +110,7 @@ var sfdcObjectForExtarction="";
 			success : function(response) {
 				var str=response;
 				alert(str.indexOf("Error")+"   "+str);
-				if(str.indexOf("Error")>0){
+				if(str.indexOf("Error")>-1){
 					
 					$("#statusBlock").html('<h4> Data Loading Status : Failed</h4>');
 					$("#statusBlock").append("<h4> No Of Record  : "+total+"</h4>" +
