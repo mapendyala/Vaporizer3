@@ -116,7 +116,7 @@ var sfdcObjectForExtarction="";
 					$("#statusBlock").append("<h4> No Of Record  : "+total+"</h4>" +
 					"<h6> Success : "+str+"</h6>");
 				}
-				else}
+				else{
 				var strList=str.split("_");
 				var total=+strList[0] + +strList[1];
 				var successNo=strList[0];
