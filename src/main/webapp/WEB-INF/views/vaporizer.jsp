@@ -109,9 +109,9 @@ var sfdcObjectForExtarction="";
 			contentType : 'application/text',
 			success : function(response) {
 				var str=response;
-				alert(str.indexOf("Error")+"   "+str);
+				//alert(str.indexOf("Error")+"   "+str);
 				if(str.indexOf("Error")>-1){
-					alert("inside1");
+					//alert("inside1");
 					$("#statusBlock").html('<h4> Data Loading Status : Failed</h4>');
 					$("#statusBlock").append("<h4>  "+str.split("_")[1]+"</h4>" );
 				}

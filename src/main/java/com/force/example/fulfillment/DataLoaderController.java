@@ -117,7 +117,7 @@ public class DataLoaderController {
     
     	}
     	else
-    	return	"Error Occored during Dataload";
+    	return	"Error_Error Occored during Dataload";
     	}
     	catch(Exception ex){
     		System.out.println("ERRor"+ex.toString()+" "+ex.getStackTrace()[0].toString());
