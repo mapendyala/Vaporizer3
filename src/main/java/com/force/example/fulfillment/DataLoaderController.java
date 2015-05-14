@@ -39,8 +39,9 @@ public class DataLoaderController {
     	
     	
     }
-    public String dataUploadController(File dataFileUrl,String userId,String pwd,String objectName) throws IOException, AsyncApiException, ConnectionException
+    public String dataUploadController(File dataFileUrl,String userId,String pwd,String objectName) 
     {
+    	try{
     	DataLoaderController example = new DataLoaderController();
     	DataFileVal=dataFileUrl;
     	FileReader fr = new FileReader(DataFileVal);
@@ -62,7 +63,8 @@ public class DataLoaderController {
                 	objectName=cellElement[0].split("#")[0];
                 	for(int j=0;j<cellElement.length;j++){
                 		System.out.println(cellElement[j]);
-                		fileWriter.append(String.valueOf((cellElement[j].split("#")[1]).split(objectName)[1]));
+                		System.out.println(cellElement[j].split(objectName+"#"+objectName)[1]);
+                		fileWriter.append(String.valueOf(cellElement[j].split(objectName+"#"+objectName)[1]));
                 		System.out.println(String.valueOf((cellElement[j].split("#")[1]).split(objectName)[1]));
                 		if(j+1!=cellElement.length)
                 		   fileWriter.append(",");
@@ -109,7 +111,11 @@ public class DataLoaderController {
     	
         
     return	example.runSample(objectName, userId, pwd, finalData);
-    	
+    	}
+    	catch(Exception ex){
+    		System.out.println("ERRor"+ex.getMessage());
+    		return "Error:_"+ex.getMessage();
+    	}
     	//example.runSample("Account", "subhchakraborty@deloitte.com.vaporizer", "May@2013", "DataFile.csv","C:\\Users\\subhchakraborty\\Downloads\\Sep.sdl");
         
     }
@@ -133,7 +139,8 @@ public class DataLoaderController {
      */
     public String runSample(String sobjectType, String userName,
               String password, File sampleFileName)
-            throws AsyncApiException, ConnectionException, IOException {
+            {
+    	try{
         BulkConnection connection = getBulkConnection(userName, password);
         JobInfo job = createJob(sobjectType, connection);
         List<BatchInfo> batchInfoList = createBatchesFromCSVFile(connection, job,
@@ -141,6 +148,11 @@ public class DataLoaderController {
         closeJob(connection, job.getId());
         awaitCompletion(connection, job, batchInfoList);
       return  checkResults(connection, job, batchInfoList);
+    	}
+    	catch(Exception ex){
+    		
+    		return ex.getMessage();
+    	}
     }
 
 
@@ -150,7 +162,8 @@ public class DataLoaderController {
      */
     private String checkResults(BulkConnection connection, JobInfo job,
             List<BatchInfo> batchInfoList)
-          throws AsyncApiException, IOException {
+           {
+    	try{
       // batchInfoList was populated when batches were created and submitted
   	int noOfSuccess=0;
   	int noOfFailure=0;
@@ -186,7 +199,12 @@ public class DataLoaderController {
           checkI++;  
       }
       return (String.valueOf(noOfSuccess)+"_"+String.valueOf(noOfFailure));
-  }
+    	}
+    	catch(Exception ex){
+    		return ex.getMessage();
+    		
+    	}
+    	}
 
 
 
@@ -267,7 +285,8 @@ public class DataLoaderController {
      * Create the BulkConnection used to call Bulk API operations.
      */
     private BulkConnection getBulkConnection(String userName, String password)
-          throws ConnectionException, AsyncApiException {
+           {
+    	try{
         ConnectorConfig partnerConfig = new ConnectorConfig();
         partnerConfig.setUsername(userName);
         partnerConfig.setPassword(password);
@@ -294,6 +313,11 @@ public class DataLoaderController {
         config.setTraceMessage(false);
         BulkConnection connection = new BulkConnection(config);
         return connection;
+    	}
+    	catch(Exception ex){
+    		return null;
+    		
+    	}
     }
 
 
@@ -311,7 +335,8 @@ public class DataLoaderController {
      */
     private List<BatchInfo> createBatchesFromCSVFile(BulkConnection connection,
           JobInfo jobInfo, File csvFileName)
-            throws IOException, AsyncApiException {
+             {
+    	try{
         List<BatchInfo> batchInfos = new ArrayList<BatchInfo>();
         FileReader fr=new FileReader(csvFileName);
         BufferedReader rdr = new BufferedReader(fr );
@@ -356,6 +381,10 @@ public class DataLoaderController {
             tmpFile.delete();
         }
         return batchInfos;
+    	}
+    	catch(Exception ex){
+    	return null;	
+    	}
     }
 
     /**
@@ -375,7 +404,8 @@ public class DataLoaderController {
      */
     private void createBatch(FileOutputStream tmpOut, File tmpFile,
       List<BatchInfo> batchInfos, BulkConnection connection, JobInfo jobInfo)
-              throws IOException, AsyncApiException {
+              {
+    	try{
         tmpOut.flush();
         tmpOut.close();
         FileInputStream tmpInputStream = new FileInputStream(tmpFile);
@@ -388,6 +418,10 @@ public class DataLoaderController {
         } finally {
             tmpInputStream.close();
         }
+    	}
+    	catch(Exception ex){
+    		
+    	}
     }
 
 
