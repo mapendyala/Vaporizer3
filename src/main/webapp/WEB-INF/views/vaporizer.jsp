@@ -109,14 +109,14 @@ var sfdcObjectForExtarction="";
 			contentType : 'application/text',
 			success : function(response) {
 				var str=response;
-				alert(str.indexOf("Error")+"   "+str);
+				//alert(str.indexOf("Error")+"   "+str);
 				if(str.indexOf("Error")>-1){
-					alert("inside1");
+					//alert("inside1");
 					$("#statusBlock").html('<h4> Data Loading Status : Failed</h4>');
 					$("#statusBlock").append("<h4>  "+str.split("_")[1]+"</h4>" );
 				}
 				else{
-					alert("inside2 ");
+					//alert("inside2 ");
 				var strList=str.split("_");
 				var total=+strList[0] + +strList[1];
 				var successNo=strList[0];
