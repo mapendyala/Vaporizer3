@@ -322,6 +322,7 @@ public class DataLoaderController {
         return connection;
     	}
     	catch(Exception ex){
+    		System.out.println("getBulkConnection"+ex.toString()+" "+ex.getStackTrace()[0].toString());
     		return null;
     		
     	}
@@ -390,6 +391,7 @@ public class DataLoaderController {
         return batchInfos;
     	}
     	catch(Exception ex){
+    		System.out.println("createBatchesFromCSVFile"+ex.toString()+" "+ex.getStackTrace()[0].toString());
     	return null;	
     	}
     }
@@ -427,6 +429,7 @@ public class DataLoaderController {
         }
     	}
     	catch(Exception ex){
+    		System.out.println("createBatch"+ex.toString()+" "+ex.getStackTrace()[0].toString());
     		
     	}
     }
