@@ -109,7 +109,12 @@ var sfdcObjectForExtarction="";
 			contentType : 'application/text',
 			success : function(response) {
 				var str=response;
-				
+				if(str.indexOf("Error")>0){
+					
+					$("#statusBlock").html('<h4> Data Loading Status : Failed</h4>');
+					$("#statusBlock").append("<h4> No Of Record  : "+total+"</h4>" +
+					"<h6> Success : "+str+"</h6>");
+				}
 				var strList=str.split("_");
 				var total=+strList[0] + +strList[1];
 				var successNo=strList[0];

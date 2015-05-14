@@ -109,8 +109,11 @@ public class DataLoaderController {
      
     	System.out.println("Done");
     	
-        
-    return	example.runSample(objectName, userId, pwd, finalData);
+    	String message=example.runSample(objectName, userId, pwd, finalData);
+    	if(message.contains("_"))
+    return	message;
+    	else
+    	return	"Error Occored during Dataload";
     	}
     	catch(Exception ex){
     		System.out.println("ERRor"+ex.getMessage());
