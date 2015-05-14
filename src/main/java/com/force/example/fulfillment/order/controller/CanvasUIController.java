@@ -55,7 +55,7 @@ public class CanvasUIController {
 		
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView postSignedRequest(Model model,
 			@RequestParam(value = "signed_request") String signedRequest,
 			HttpServletRequest request) {
