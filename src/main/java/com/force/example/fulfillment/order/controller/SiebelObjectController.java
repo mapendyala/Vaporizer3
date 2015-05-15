@@ -963,7 +963,7 @@ public class SiebelObjectController {
 					
 					FileWriter fileWriter = new FileWriter(file);
 					// Fix for the last header miss in csv.
-					for(int i=1; i<numOfCols+1 ; i++){
+					for(int i=1; i<headers.size()+1 ; i++){
 						System.out.println(">>>>>"+(String)headers.get(i));
 						fileWriter.append(sfdcObject+"#"+(String)headers.get(i));
 						fileWriter.append(COMMA_DELIMITER);
@@ -971,7 +971,7 @@ public class SiebelObjectController {
 					fileWriter.append(NEW_LINE_SEPARATOR);
 					
 					while(mySet.next()){
-						for(int i=1 ; i < SiebelObjectController.colNmRowNmMap.size()+1 ; i++){
+						for(int i=1 ; i < numOfCols+1 ; i++){
 							String value = mySet.getString(i);
 							System.out.println(value);
 							if(value == null ){

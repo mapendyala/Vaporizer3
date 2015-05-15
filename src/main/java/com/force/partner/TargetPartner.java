@@ -63,7 +63,7 @@ public class TargetPartner {
 		try {
 			// partnerConnection.setQueryOptions(250);
 			if (projectId == null)
-				projectId = "a0PG000000CHjXCMA1";
+				projectId = "a0PG000000CIFgnMAH";
 
 			// SOQL query to use
 			String soqlQuery = " Select Name, Parent_Project__c, Type__c from Project__c where id= '"
@@ -297,7 +297,7 @@ public class TargetPartner {
 		try {
 			// partnerConnection.setQueryOptions(250);
 			if (projectId == null)
-				projectId = "a0PG000000CHjXCMA1";
+				projectId = "a0Qj0000002gAmlEAE";
 
 			// SOQL query to use
 			String soqlQuery = " Select Salesforce_Password__c, Salesforce_Token__c, Salesforce_Username__c from Project__c where id= '"
