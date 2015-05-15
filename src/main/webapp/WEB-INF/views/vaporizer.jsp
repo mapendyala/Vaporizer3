@@ -114,6 +114,11 @@ var sfdcObjectForExtarction="";
 					//alert("inside1");
 					$("#statusBlock").html('<h4> Data Loading Status : Failed</h4>');
 					$("#statusBlock").append("<h4>  "+str.split("_")[1]+"</h4>" );
+					$("#statusBlock").append("<h6>Please check below points before procced:</h6>" );
+					$("#statusBlock").append("<h6>1.Check Login credintial for Target org.</h6>" );
+					$("#statusBlock").append("<h6>2.First and last Column of CSV should not be blank</h6>" );
+					$("#statusBlock").append("<h6>3.Check the format of the data.</h6>" );
+					
 				}
 				else{
 					//alert("inside2 ");
