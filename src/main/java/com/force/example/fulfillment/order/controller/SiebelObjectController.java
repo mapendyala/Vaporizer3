@@ -60,7 +60,8 @@ public class SiebelObjectController {
 	public static Map<String,Integer> fieldNamesMap = new HashMap();
 	public static Map<Integer,String> joinCndtnRowNmMapFinal = new HashMap<Integer,String>();
 	public static List<String> sblFieldNamesLst = new ArrayList<String>();
-	public static String extractionQuery = null;
+	//vremoving it as its caching previous extraction query.
+	// public static String extractionQuery = null;
 	
 	@RequestMapping(value="/SiebelObject", method=RequestMethod.POST)
 
@@ -853,7 +854,7 @@ public class SiebelObjectController {
 				extractionQry2.append(" WHERE " + convrtdFldColNmQry);
 		}
 			System.out.println("EXtraction Query 2  :"  + extractionQry2.toString());
-			extractionQuery = extractionQry2.toString();
+		//	extractionQuery = extractionQry2.toString();
 		    return extractionQry2.toString() ;
 	    }
 

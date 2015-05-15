@@ -258,34 +258,36 @@ public class TargetPartner {
 	
 	public String getSavedExtractionQry(String sfdcId) {
 		String extractionQry = "";
-		try {
-			// SOQL query to use
-			System.out.println(">>>>>"+sfdcId);
-			String soqlQuery = "Select Extraction_Query__c from Mapping_Staging_Table__c where Id ='" + sfdcId + "'";
-			// Make the query call and get the query results
-			 QueryResult<Map> qr = getForceApi().query(soqlQuery);
-			//QueryResult qr = partnerConnection.query(soqlQuery);
-			boolean done = false;
+		if(sfdcId != null ){
+			try {
+				// SOQL query to use
+				System.out.println(">>>>>"+sfdcId);
+				String soqlQuery = "Select Extraction_Query__c from Mapping_Staging_Table__c where Id ='" + sfdcId + "'";
+				// Make the query call and get the query results
+				 QueryResult<Map> qr = getForceApi().query(soqlQuery);
+				//QueryResult qr = partnerConnection.query(soqlQuery);
+				boolean done = false;
 
-			while (!done) {
-				
-				List<Map> records = qr.getRecords();
-				// Process the query results
-				for (int i = 0; i < records.size(); i++) {
-					Map contact = records.get(i);
-					extractionQry = (String)contact.get("Extraction_Query__c");
-				}
-				if (qr.isDone()) {
-					done = true;
-				} else {
-					//qr = partnerConnection.queryMore(qr.getQueryLocator());
+				while (!done) {
+					
+					List<Map> records = qr.getRecords();
+					// Process the query results
+					for (int i = 0; i < records.size(); i++) {
+						Map contact = records.get(i);
+						extractionQry = (String)contact.get("Extraction_Query__c");
+					}
+					if (qr.isDone()) {
+						done = true;
+					} else {
+						//qr = partnerConnection.queryMore(qr.getQueryLocator());
+					}
+
 				}
 
+			} catch (Exception ce) {
+				//ce.printStackTrace();
+				System.out.println("Newly added object or no mappings for this entity.");
 			}
-
-		} catch (Exception ce) {
-			//ce.printStackTrace();
-			System.out.println("Newly added object or no mappings for this entity.");
 		}
 		System.out.println("\nQuery execution completed.");
 		return extractionQry;

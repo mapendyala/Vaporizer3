@@ -683,7 +683,9 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				//caching the sieble field dropdwon values for future use.
 				SiebelObjectController.sblFieldNamesLst = sblFldList;
 				
+				session.setAttribute("sfdcID_Current", request.getParameter("SfdcId"+rowNo));
 				String extractionQry = tg.getSavedExtractionQry(request.getParameter("SfdcId"+rowNo));
+				
 				// retrieve query for Business Component Search Expression :
 				String sqlQry = siObj.fetchSqlQryForBizSearchCompExp(request, siebelTableNameValue);
 				
@@ -1084,7 +1086,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 			String sqlQry = siObj.fetchSqlQryForBizSearchCompExp(request, siebelTableNameValue);
 			
 			List<MappingModel> preMapDataList = new ArrayList<MappingModel>();
-			
+			String extractionQry = tp.getSavedExtractionQry((String)(session.getAttribute("sfdcID_Current")));
 			List<String> hdrValues = new ArrayList<String>();
 			//Siebel Entity
 			hdrValues.add(siebelTableNameValue);
@@ -1093,7 +1095,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 			//SFDC Entity
 			hdrValues.add(sfdcObjectName);
 			hdrValues.add(sqlQry);// Business Search Qry
-			hdrValues.add(SiebelObjectController.extractionQuery);
+			hdrValues.add(extractionQry);
 			
 				
 			// Fetch the PreDefined Map data.			
