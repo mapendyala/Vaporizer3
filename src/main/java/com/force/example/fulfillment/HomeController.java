@@ -66,7 +66,7 @@ public class HomeController {
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView home(Locale locale, Model model, HttpServletRequest request) {
 		// TODO!!!
 		logger.info("Welcome home! the client locale is "+ locale.toString());
@@ -76,7 +76,7 @@ public class HomeController {
 		JSONObject authParams = getOAuthToken();
 		
 		session.setAttribute("authParams", authParams);
-		String projectId = "a0PG000000CIFgnMAH";
+		String projectId ="a0Qj0000002yeYcEAI";// "a0Qj0000002yeVnEAI";
 		if(request.getParameter("projectId") != null){
 			projectId = request.getParameter("projectId");
 		}
@@ -683,9 +683,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				//caching the sieble field dropdwon values for future use.
 				SiebelObjectController.sblFieldNamesLst = sblFldList;
 				
-				session.setAttribute("sfdcID_Current", request.getParameter("SfdcId"+rowNo));
 				String extractionQry = tg.getSavedExtractionQry(request.getParameter("SfdcId"+rowNo));
-				
 				// retrieve query for Business Component Search Expression :
 				String sqlQry = siObj.fetchSqlQryForBizSearchCompExp(request, siebelTableNameValue);
 				
@@ -794,10 +792,10 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 		PostMethod post = new PostMethod("https://login.salesforce.com/services/oauth2/token");
         //post.addParameter("code", code);
         post.addParameter("grant_type", "password");
-        post.addParameter("client_id", "3MVG98XJQQAccJQftNctCshPH7OHgKw4QQrOUSQbbp.dJK7pBXpbwdKGtE2u3U_mCSIWrd9RbAafS6PpwaveH");
-        post.addParameter("client_secret", "5595747085030222154");
-        post.addParameter("username","rachitjain@deloitte.com.vaporizer");
-        post.addParameter("password","deloitte@1");
+        post.addParameter("client_id", "3MVG9fMtCkV6eLhc_WnVzbnDuhPZtqZQ8CgV3jiq6QK_Qk7Fx_PMxCB06mjK_rEKMSq._FCWfgOI4i9u4W4bl");
+        post.addParameter("client_secret", "3411408257383623635");
+        post.addParameter("username","akomanduri@deloitte.com.vap.demo");
+        post.addParameter("password","Vaporizer@123");
  
                 try {
                  httpClient.executeMethod(post);
@@ -1043,6 +1041,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 		if(partnerWSDL.login()){
 			partnerWSDL.saveMappingMultiValuedDataIntoDB(multiMappingData,data,(String)session.getAttribute("projectId"));
 		}
+		data = tp.getSavedDBData((String)session.getAttribute("projectId"), data);
 		return new ModelAndView("vaporizer" , "data", data);
 		}
 	
@@ -1086,7 +1085,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 			String sqlQry = siObj.fetchSqlQryForBizSearchCompExp(request, siebelTableNameValue);
 			
 			List<MappingModel> preMapDataList = new ArrayList<MappingModel>();
-			String extractionQry = tp.getSavedExtractionQry((String)(session.getAttribute("sfdcID_Current")));
+			
 			List<String> hdrValues = new ArrayList<String>();
 			//Siebel Entity
 			hdrValues.add(siebelTableNameValue);
@@ -1095,7 +1094,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 			//SFDC Entity
 			hdrValues.add(sfdcObjectName);
 			hdrValues.add(sqlQry);// Business Search Qry
-			hdrValues.add(extractionQry);
+			//hdrValues.add(SiebelObjectController.extractionQuery);
 			
 				
 			// Fetch the PreDefined Map data.			

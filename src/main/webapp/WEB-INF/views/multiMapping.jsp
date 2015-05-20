@@ -279,9 +279,8 @@
 								+ "<td><input  name='interparentrow"+rowNum+"' id='interparentrow"+rowNum+"' style='margin-left:35px;'/></td>"
 								+ "<td><input  name='interchildrow"+rowNum+"' id='interchildrow"+rowNum+"' style='margin-left:35px;'/></td>"
 								
-								/* + "<td> <table> <tr> <td> <input  name='sfdcchildrow"+rowNum+"' id='sfdcchildrow"+rowNum+"' style='margin-left:35px;'/> </td> <td><button type='button'id='sfdcChildBut"+rowNum+"' style='display: inline;margin-right:35px;' onclick='getSFDCPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td></tr></table></td>" */
 								+ "<td> <input  name='sfdcchildrow"+rowNum+"' id='sfdcchildrow"+rowNum+"' style='margin-left:35px;'/></td><td> <button type='button'id='sfdcChildBut"+rowNum+"' style='display: inline;margin-right:35px;' onclick='getSFDCPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
-								+ "<td align='center'><select name='lookUpFieldropdown"+rowNum+"' id=lookUpFieldropdown"+rowNum+" class='lookupFieldUpdate'>"
+								/* + "<td align='center'><select name='lookUpFieldropdown"+rowNum+"' id=lookUpFieldropdown"+rowNum+" class='lookupFieldUpdate'>"
 								+ "<c:if test='${not empty lookUpFieldList}'>"
 								+ "<c:forEach items="${lookUpFieldList}" var="field" varStatus="status">"
 								+ " <option value='${field.name}'>${field.label}</option>"
@@ -289,7 +288,6 @@
 								+ "<td style='margin-left: 35px;'><input type='text' style='margin-left: 35px;' name='lookUpRltnNmerow"+rowNum+"' id='lookUpRltnNmerow"+rowNum+"'></td>"
 								+ "<td style='margin-left: 35px;'><input type='text' style='margin-left: 35px;' name=lookUpExtrnlrow"+rowNum+" id=lookUpExtrnlrow"+rowNum+"></td>"
 								
-								/* + "<td><table><tr><td><input  name='JuncObjrow"+rowNum+"' id='JuncObjrow"+rowNum+"' style='margin-left:35px;'/></td><td><button type='button'id='JuncObjrowBut"+rowNum+"' style='display: inline;margin-right:35px;' onclick='getJuncObjPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td></tr></table></td>" */
 								+ "<td> <input  name='JuncObjrow"+rowNum+"' id='JuncObjrow"+rowNum+"' style='margin-left:35px;'/> </td><td><button type='button'id='JuncObjrowBut"+rowNum+"' style='display: inline;margin-right:35px;' onclick='getJuncObjPopup("+rowNum+")'><span class='glyphicon glyphicon-search'></span></button></td>"
 								+ "<td align='center'><select name='JuncObjParentFieldropdown"+rowNum+"' id=JuncObjParentFieldropdown"+rowNum+" class='JuncObjParentFieldUpdate'>"
 								+ "<c:if test='${not empty lookUpFieldList}'>"
@@ -307,7 +305,7 @@
 								+ "</c:forEach></c:if></select></td>"
 								+ "<td style='margin-left: 35px;'><input type='text' style='margin-left: 35px;' name='childRltnNmerow"+rowNum+"' id='childRltnNmerow"+rowNum+"'></td>"
 								+ "<td style='margin-left: 35px;'><input type='text' style='margin-left: 35px;' name='childlookUpExtrnlrow"+rowNum+"' id='childlookUpExtrnlrow"+rowNum+"'></td>"
-								
+								 */
 								
 								
 							/* 	+ "<td><select name='"+dropdown+"' id='"+dropdown+"'>"
@@ -680,7 +678,7 @@
 									Condition</th> -->
 								<th colspan="2" class="table_header_details" style="float: center;">SFDC
 									Child Object</th>
-								<th class="table_header_details" style="float: center;">Look Up
+								<!-- <th class="table_header_details" style="float: center;">Look Up
 									 Field</th>
 								<th class="table_header_details" style="float: center;">Look Up
 									 Relationship Name</th>
@@ -699,7 +697,7 @@
 								<th class="table_header_details" style="float: center;">Child
 									 Relationship Name</th>
 								<th class="table_header_details" style="float: center;">Child Look Up
-									 External ID</th>
+									 External ID</th> -->
 								<!-- <th class="table_header_details" style="float: center;">SFDC
 									Field Description</th>
 								<th class="table_header_details" style="float: center;">Lov
@@ -782,7 +780,7 @@
 											</td><td>	
 												<button type="button" id="sfdcChildBut${mapping.mappingSeq}" style='display: inline;margin-right:35px;' onclick="getSFDCPopup(${mapping.mappingSeq})"><span class='glyphicon glyphicon-search'></span></button>
 											</td>
-											<td align="center">
+											<%-- <td align="center">
 													<select name="lookUpFieldropdown${mapping.mappingSeq}"
 														id="lookUpFieldropdown${mapping.mappingSeq}" class='lookupFieldUpdate' <c:if test="${mapping.relationType=='M:M'}"><c:out value="disabled='disabled'"/></c:if>>
 														  <c:if test="${mapping.lookupField==null}">
@@ -792,8 +790,8 @@
 																<c:forEach items="${mapping.lookupObjList}" var="field" varStatus="status">
 																	<c:set var="temp" value="${field}" />
 			                                						<c:set var="temp1" value="${mapping.lookupField}" />
-																<%-- 	temp: [<c:out value="${temp}" />]
-			                                						temp1: [<c:out value="${temp1}" />] --%>
+																	temp: [<c:out value="${temp}" />]
+			                                						temp1: [<c:out value="${temp1}" />]
 																	<c:choose>
 																		<c:when test="${temp.name== temp1}">
 															                <option value='${temp1}' selected>${temp.label}</option>
@@ -826,8 +824,8 @@
 																<c:forEach items="${mapping.jnObjParentList}" var="field" varStatus="status">
 																	<c:set var="temp" value="${field}" />
 			                                						<c:set var="temp1" value="${mapping.junctionObjParentField}" />
-																<%-- 	temp: [<c:out value="${temp}" />]
-			                                						temp1: [<c:out value="${temp1}" />] --%>
+																	temp: [<c:out value="${temp}" />]
+			                                						temp1: [<c:out value="${temp1}" />]
 																	<c:choose>
 																		<c:when test="${temp.name == temp1}">
 															                <option value='${temp1}' selected>${temp.label}</option>
@@ -854,8 +852,8 @@
 																<c:forEach items="${mapping.jnObjChildList}" var="field" varStatus="status">
 																	<c:set var="temp" value="${field}" />
 			                                						<c:set var="temp1" value="${mapping.junctionObjectChildField}" />
-																<%-- 	temp: [<c:out value="${temp}" />]
-			                                						temp1: [<c:out value="${temp1}" />] --%>
+																	temp: [<c:out value="${temp}" />]
+			                                						temp1: [<c:out value="${temp1}" />]
 																	<c:choose>
 																		<c:when test="${temp.name == temp1}">
 															                <option value='${temp1}' selected>${temp.label}</option>
@@ -873,7 +871,7 @@
 											</td>
 											<td>
 											<input type="text" style="margin-left: 35px;" id="childlookUpExtrnlrow${mapping.mappingSeq}" name="childlookUpExtrnlrow${mapping.mappingSeq}" value="${mapping.childExternalId}" <c:if test="${mapping.relationType=='1:M'}"><c:out value="disabled='disabled'"/></c:if> />
-											</td>
+											</td> --%>
 										
 											<input type='hidden' id="sfdcId${mapping.mappingSeq}" name="sfdcId${mapping.mappingSeq}" value="${mapping.id}" />
 										
