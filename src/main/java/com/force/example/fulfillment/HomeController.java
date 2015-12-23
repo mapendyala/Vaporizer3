@@ -118,6 +118,32 @@ public class HomeController {
 
 
 
+    @RequestMapping(value = "/informatica", method = RequestMethod.GET)
+    public ModelAndView informaticaHome(Locale locale, Model model, HttpServletRequest request) {
+          // TODO!!!
+          logger.info("Welcome home! the client locale is "+ locale.toString());
+          System.out.println("here");
+          HttpSession session = request.getSession(true);
+          
+          JSONObject authParams = getOAuthToken();
+          
+          session.setAttribute("authParams", authParams);
+          String projectId = "a0PG000000CIFgnMAH";
+          if(request.getParameter("projectId") != null){
+                projectId = request.getParameter("projectId");
+          }
+          session.setAttribute("projectId", projectId);
+          TargetPartner tp= new TargetPartner(session);
+          data = tp.getSavedDBData(projectId, data);
+          JSONObject middleWareConn= tp.getMiddleWareData(projectId);
+          System.out.println("middleWareConn "+middleWareConn);
+          session.setAttribute("middleWareConn", middleWareConn);
+          JSONObject TargetOrgConn= tp.getTargetOrgDetails(projectId);
+          session.setAttribute("targetOrgConn", TargetOrgConn);
+          return new ModelAndView("informaticaMapping", "data", data);
+    }
+
+
 
 
 	@RequestMapping(value="/initiateDataloader", method=RequestMethod.GET,produces="text/plain")
