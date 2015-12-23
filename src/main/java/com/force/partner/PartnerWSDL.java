@@ -71,11 +71,11 @@ String password;
 		if(fromMiddleWare){
 			JSONObject middleWareConn=(JSONObject)session.getAttribute("middleWareConn");
 			username=middleWareConn.getString("username");
-			password=middleWareConn.getString("password");
+			password=middleWareConn.getString("password")+middleWareConn.getString("databaseUrl");
 		}else {
 			JSONObject middleWareConn=(JSONObject)session.getAttribute("targetOrgConn");
 			username=middleWareConn.getString("username");
-			password=middleWareConn.getString("password");
+			password=middleWareConn.getString("password")+middleWareConn.getString("token");
 		}
 		
 		

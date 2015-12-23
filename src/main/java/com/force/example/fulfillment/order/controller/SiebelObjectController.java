@@ -60,7 +60,8 @@ public class SiebelObjectController {
 	public static Map<String,Integer> fieldNamesMap = new HashMap();
 	public static Map<Integer,String> joinCndtnRowNmMapFinal = new HashMap<Integer,String>();
 	public static List<String> sblFieldNamesLst = new ArrayList<String>();
-	public static String extractionQuery = null;
+	//vremoving it as its caching previous extraction query.
+	// public static String extractionQuery = null;
 	
 	@RequestMapping(value="/SiebelObject", method=RequestMethod.POST)
 
@@ -853,7 +854,7 @@ public class SiebelObjectController {
 				extractionQry2.append(" WHERE " + convrtdFldColNmQry);
 		}
 			System.out.println("EXtraction Query 2  :"  + extractionQry2.toString());
-			extractionQuery = extractionQry2.toString();
+		//	extractionQuery = extractionQry2.toString();
 		    return extractionQry2.toString() ;
 	    }
 
@@ -963,7 +964,7 @@ public class SiebelObjectController {
 					
 					FileWriter fileWriter = new FileWriter(file);
 					// Fix for the last header miss in csv.
-					for(int i=1; i<numOfCols+1 ; i++){
+					for(int i=1; i<headers.size()+1 ; i++){
 						System.out.println(">>>>>"+(String)headers.get(i));
 						fileWriter.append(sfdcObject+"#"+(String)headers.get(i));
 						fileWriter.append(COMMA_DELIMITER);
@@ -971,7 +972,7 @@ public class SiebelObjectController {
 					fileWriter.append(NEW_LINE_SEPARATOR);
 					
 					while(mySet.next()){
-						for(int i=1 ; i < SiebelObjectController.colNmRowNmMap.size()+1 ; i++){
+						for(int i=1 ; i < numOfCols+1 ; i++){
 							String value = mySet.getString(i);
 							System.out.println(value);
 							if(value == null ){

@@ -39,6 +39,7 @@ public class CanvasUIController {
 
 	private static final String SIGNED_REQUEST = "signedRequestJson";
 	private CanvasContext cc = new CanvasContext();
+	
 	public List<MainPage> data = new ArrayList<MainPage>();
 
 	@Autowired
@@ -110,7 +111,7 @@ public class CanvasUIController {
 		return new ModelAndView("vaporizer", "data", data);
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
+	/*@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getOrdersPage(Model model,
 			@ModelAttribute("data") List<MainPage> data,
 			HttpServletRequest request) {
@@ -120,7 +121,7 @@ public class CanvasUIController {
 		TargetPartner targetPartner= new TargetPartner(session);
 		data = targetPartner.getSavedDBData((String) session.getAttribute("projectId"), data);
 		return new ModelAndView("vaporizer", "data", data);
-	}
+	}*/
 
 	private static final String getConsumerSecret() {
 		String secret = System.getenv("OAUTH_CLIENT_SECRET");

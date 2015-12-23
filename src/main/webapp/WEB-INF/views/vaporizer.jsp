@@ -109,7 +109,19 @@ var sfdcObjectForExtarction="";
 			contentType : 'application/text',
 			success : function(response) {
 				var str=response;
-				
+				//alert(str.indexOf("Error")+"   "+str);
+				if(str.indexOf("Error")>-1){
+					//alert("inside1");
+					$("#statusBlock").html('<h4> Data Loading Status : Failed</h4>');
+					$("#statusBlock").append("<h4>  "+str.split("_")[1]+"</h4>" );
+					$("#statusBlock").append("<h6>Please check below points before procced:</h6>" );
+					$("#statusBlock").append("<h6>1.Check Login credintial for Target org.</h6>" );
+					$("#statusBlock").append("<h6>2.First and last Column of CSV should not be blank</h6>" );
+					$("#statusBlock").append("<h6>3.Check the format of the data.</h6>" );
+					
+				}
+				else{
+					//alert("inside2 ");
 				var strList=str.split("_");
 				var total=+strList[0] + +strList[1];
 				var successNo=strList[0];
@@ -118,7 +130,7 @@ var sfdcObjectForExtarction="";
 				$("#statusBlock").append("<h4> No Of Record  : "+total+"</h4>" +
 				"<h6> Success : "+successNo+"</h6>"+"<h6> Failure : "+failureNo+"</h6>");
 				//$("#"+SFDCObjectId).val(response); 
-							
+		 }		
 					
 			}	
 				
@@ -470,7 +482,7 @@ function submitForm(rowNum, page){
 				    <th class="table_header_details" style="float: center;">Single Value Field Mapping</th>
 				    <th class="table_header_details" style="float: center;">Multi Value Field Mapping</th>
 				    
-				    <th class="table_header_details" style="float: center;">Add Ons</th>
+				    <th class="table_header_details" style="float: center;">Extract data</th>
 				    <th hidden="true" class="table_header_details" style="float: center;">ID</th>
 				  </tr>
 				 </thead> 
