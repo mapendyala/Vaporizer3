@@ -72,16 +72,7 @@
 		<div class="mainContent">
 			<div class="credential_container">
 				<div>
-					<div class="table_header_details">Data Migration Details</div>
-					<div>
-						<table class="table">
-							<tr>
-								<td class="oddTd">Name</td>
-							<td><%=request.getSession().getAttribute("projectName")%></td>
-							</tr>
-
-						</table>
-					</div>
+					<div class="table_header_details">Data Migration Details</div>					
 				</div>
 				
 			</div>
