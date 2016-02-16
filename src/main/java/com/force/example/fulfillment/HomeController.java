@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -733,7 +734,48 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				 */
 					modelChild.addAttribute("mappingData",mappingDataSaved);
 				modelChild.addAttribute("MappingId",rowId);
-
+				//start:subrat changes for transformation
+				Map<String,String> transformList = new LinkedHashMap<String,String>();
+				transformList.put("CONCAT","1");
+				transformList.put("INITCAP","0");
+				transformList.put("INSTR","3");
+				transformList.put("LENGTH","0");
+				transformList.put("LOWER","0");
+				transformList.put("LPAD","3");
+				transformList.put("LTRIM","2");
+				transformList.put("REPLACE","3");
+				transformList.put("REVERSE","0");
+				transformList.put("RPAD","3");
+				transformList.put("RPAD","3");
+				transformList.put("SUBSTR","3");
+				transformList.put("UPPER","0");
+				transformList.put("TO_CHAR","0");
+				transformList.put("TO_DATE","0");
+				transformList.put("REGEXP_LIKE","1");
+				transformList.put("REGEXP_REPLACE","0");
+				transformList.put("REGEXP_INSTR","0");
+				transformList.put("REGEXP_SUBSTR","0");
+				transformList.put("ADD_MONTHS","2");
+				transformList.put("EXTRACT","1");
+				transformList.put("LAST_DAY","0");
+				transformList.put("MONTHS_BETWEEN","2");
+				transformList.put("SYSDATE","0");
+				transformList.put("SYSTIMESTAMP","0");
+				transformList.put("TRUNC","0");
+				transformList.put("NVL","1");
+				transformList.put("FIRST_DAY","1");
+				transformList.put("to_binary_double","1");
+				transformList.put("to_binary_float","1");
+				transformList.put("TO_NUMBER","2");
+				transformList.put("GREATEST","2");
+				transformList.put("IN","2");
+				transformList.put("ISNULL","1");
+				transformList.put("LEAST","2");
+				transformList.put("CEIL","2");
+				transformList.put("FLOOR","2");
+				transformList.put("DECODE","2");
+				modelChild.addAttribute("transformationList",transformList);
+				//end:subrat changes for transformation
 			
 			return new ModelAndView("mapping", "data", data);
 		} 

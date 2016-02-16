@@ -286,6 +286,16 @@
 	z-index: 9999;
 	background: url(resources/images/ajax-loader.gif) center no-repeat #fff;
 }
+ #overlay { position: absolute;
+ 	 z-index: 3; 
+   	top: 450px; bottom: 0; 
+   	left: 2000px; right: 0;
+    width: 40%; height: 30%;
+     background-color: Black; 
+     display:none;
+     color:yellow;
+     }
+  
 </style>
 
 
@@ -363,6 +373,10 @@
 								<th class="table_header_details" style="float: center;">Lookup Object</th>
 								<th class="table_header_details" style="float: center;">Lookup Relationship Name</th>
 								<th class="table_header_details" style="float: center;">Lookup External Id Field</th>
+								<%--start:subrat changes for transformation --%>
+								<th class="table_header_details" style="float: center;">Transformation</th>
+								<th class="table_header_details" style="float: center;">Transformation Expression</th>
+								<%--end:subrat changes for transformation --%>
 							</tr>
 							</thread>
 							 <c:set var="seq" value="${1}" />
@@ -463,7 +477,21 @@
 										</c:choose>
 										</td>
 										<%-- <td><input type="text" style="margin-left: 35px;" id="lookUpExtrnlrow${mapping.mappingSeq}" name="lookUpExtrnlrow${mapping.mappingSeq}" value="${mapping.lookUpExternalId}"/></td> --%>
-										<input type='hidden' id="sfdcId${mapping.mappingSeq}" name="sfdcId${mapping.mappingSeq}" value="${mapping.id}" />
+									<input type='hidden' id="sfdcId${mapping.mappingSeq}" name="sfdcId${mapping.mappingSeq}" value="${mapping.id}" />
+									<%--start:subrat changes for transformation --%>
+									<td>
+									<select style="margin-left: 35px;" name="transformDropDown${mapping.mappingSeq}" id="transformDropDown${mapping.mappingSeq}" class='sblFldColFrgnUpdate1' onchange="pickValuefromUser(${mapping.mappingSeq})">
+  									<c:if test="${not empty transformationList}">
+													<c:forEach items="${transformationList}" var="field" varStatus="status">
+												       		<option value="${field.key},${field.value}" selected>${field.key}</option>
+													</c:forEach>
+									</c:if>
+									</select>
+									</td>
+									<td>
+									<input type="text" style='margin-left: 35px;' id="transformText${mapping.mappingSeq}" name="transformText${mapping.mappingSeq}" value="" />
+									</td>
+									<%--end:subrat changes for transformation --%>
 									 </tr> 																	
 								</c:forEach>								
 								</c:if>							
@@ -514,13 +542,12 @@
 					</div>
 					</form:form>	
 			</div>
-		  
-		  
-						
-			
-						
-
-
+	
+		</div>
+		<%--subrat changes for transformation --%>
+		<div id="overlay"> 
+		Please fill in the below data 
+		<br></br><input type="button" value="Close" onclick="closeModal()"/>
 		</div>
 </body>
 <script type="text/javascript">
@@ -528,5 +555,31 @@
 
 		window.location.href = "Done";
 	});
+	function closeModal(){
+		//$("#overlay .tempField").remove();
+		document.getElementById('overlay').style.display="none";	
+	}
+function pickValuefromUser(val){
+	
+	var temp="transformDropDown"+val;
+	var selectedDropdown=document.getElementById(temp).value;
+	var dropDownVal = selectedDropdown.split(",");
+	var operation = dropDownVal[0];
+	var expCount = dropDownVal[1];
+	if(expCount==0){
+		document.getElementById("transformText"+val).value=operation+"("+document.getElementById("clmnNmrow"+val).value+")";
+	}else{
+		
+		for(i=0;i<expCount;i++){
+			var count="exp"+i;
+		$("#overlay").append(
+				"</br>Enter exp"+i+"<input type='text' id='text"+i+"' class='tempField' /></br>"
+		)
+		}
+		document.getElementById('overlay').style.display="block";
+	
+	}
+	//alert(expCount+"+++++"+operation);
+}	
 </script>
 </html>
