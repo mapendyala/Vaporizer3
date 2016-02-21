@@ -41,7 +41,6 @@ import com.force.example.fulfillment.order.model.Mapping;
 import com.force.example.fulfillment.order.model.MappingModel;
 import com.force.example.fulfillment.order.model.MappingSFDC;
 import com.force.example.fulfillment.order.model.MultiValMappingModel;
-import com.force.example.fulfillment.order.model.Transformation;
 import com.force.utility.SfdcObjectBO;
 import com.sforce.soap.partner.DescribeGlobalResult;
 import com.sforce.soap.partner.DescribeGlobalSObjectResult;
@@ -2113,46 +2112,7 @@ public List<MultiValMappingModel> getSavedMappingMultiValueDBData(String rowId ,
 				}
 			}
 		}
-	//subrat changes for getting transformation objects .
-		public List<Transformation> getTransformationObj(){
-			List<Transformation> transformationList = new ArrayList<Transformation>();
-				try {
-					// SOQL query to use
-					String soqlQuery = "SELECT CreatedById,CreatedDate,Database_Name__c,Id,IsDeleted,LastModifiedById,LastModifiedDate,LastReferencedDate,LastViewedDate,Name,Number_of_Arguments__c,OwnerId,SystemModstamp,Transformation_Expression__c,Transformation__c FROM Transformations__c";
-					// Make the query call and get the query results
-					QueryResult qr = partnerConnection.query(soqlQuery);
-					//QueryResult qr = partnerConnection.query(soqlQuery);
-					boolean done = false;
-					
-					while (!done) {
-							SObject[] records = qr.getRecords();
-						// Process the query results
-						for (int i = 0; i < records.length; i++) {
-							Transformation trans = new Transformation();
-							SObject contact = records[i];
-							String transform = (String)contact.getField("Transformation__c");
-							trans.setTransformation(transform);
-							String transformExp = (String)contact.getField("Transformation_Expression__c");
-							trans.setExpression(transformExp);
-							String noOfArg = (String)contact.getField("Number_of_Arguments__c");
-							trans.setArgument(noOfArg);
-							String database = (String)contact.getField("Database_Name__c");
-							trans.setDatabaseName(database);
-							transformationList.add(trans);
-						}
-						if (qr.isDone()) {
-							done = true;
-						} else {
-							//qr = partnerConnection.queryMore(qr.getQueryLocator());
-						}
+	
+	
 
-					}
-
-				} catch (Exception ce) {
-					//ce.printStackTrace();
-					System.out.println("Newly added object or no mappings for this entity.");
-				}
-		
-			return transformationList;
-			}
-	}
+}

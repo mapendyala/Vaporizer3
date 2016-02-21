@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -43,7 +42,6 @@ import com.force.example.fulfillment.order.model.MappingModel;
 import com.force.example.fulfillment.order.model.MappingSFDC;
 import com.force.example.fulfillment.order.model.MultiValMappingModel;
 import com.force.example.fulfillment.order.model.PreMapData;
-import com.force.example.fulfillment.order.model.Transformation;
 import com.force.partner.PartnerWSDL;
 import com.force.partner.TargetPartner;
 import com.force.utility.SfdcObjectBO;
@@ -728,16 +726,14 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				modelChild.addAttribute("sblObjName",siebelTableNameValue);
 				modelChild.addAttribute("hdrValues",hdrValues);
 				modelChild.addAttribute("rowId", rowId);
-				List<Transformation> transformList = prtnrWSDL.getTransformationObj();
-			//	List<Transformation> transforList = tg.getTransformationObj(request.getParameter("SfdcId"+rowNo));
+				
 				/*
 				 * if(mappingDataSaved.isEmpty()){
 				 * modelChild.addAttribute("mappingData",mappingData);} else
 				 */
 					modelChild.addAttribute("mappingData",mappingDataSaved);
 				modelChild.addAttribute("MappingId",rowId);
-				modelChild.addAttribute("transformationList",transformList);
-				//end:subrat changes for transformation
+
 			
 			return new ModelAndView("mapping", "data", data);
 		} 

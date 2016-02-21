@@ -286,35 +286,6 @@
 	z-index: 9999;
 	background: url(resources/images/ajax-loader.gif) center no-repeat #fff;
 }
- html {
--webkit-background-size: cover;
--moz-background-size: cover;
--o-background-size: cover;
-background-size: cover;
-}
-.container-popup {
-position: relative;
-position: fixed;
-top: 0;
-right: 0;
-bottom: 0;
-left: 0;
-background: rgba(0,0,0,.8);
-z-index: 1;
-}
-.popup {
-width: 50%;
-height: 50%;
-background: gray;
-position: absolute;
-top: 560px;
-right: 0;
-bottom: 0;
-left: 1600px;
-margin: auto;
-z-index: 1;
-}
-  
 </style>
 
 
@@ -325,9 +296,7 @@ z-index: 1;
 	$(window).load(function() {
 		
 		// Animate loader off screen
-		$(".se-pre-con").fadeOut("slow");
-		$('.popup').hide();
-		$('.container-popup').hide();
+		$(".se-pre-con").fadeOut("slow");;
 	});
 	</script>
 </head>
@@ -394,10 +363,6 @@ z-index: 1;
 								<th class="table_header_details" style="float: center;">Lookup Object</th>
 								<th class="table_header_details" style="float: center;">Lookup Relationship Name</th>
 								<th class="table_header_details" style="float: center;">Lookup External Id Field</th>
-								<%--start:subrat changes for transformation --%>
-								<th class="table_header_details" style="float: center;">Transformation</th>
-								<th class="table_header_details" style="float: center;">Transformation Expression</th>
-								<%--end:subrat changes for transformation --%>
 							</tr>
 							</thread>
 							 <c:set var="seq" value="${1}" />
@@ -498,21 +463,7 @@ z-index: 1;
 										</c:choose>
 										</td>
 										<%-- <td><input type="text" style="margin-left: 35px;" id="lookUpExtrnlrow${mapping.mappingSeq}" name="lookUpExtrnlrow${mapping.mappingSeq}" value="${mapping.lookUpExternalId}"/></td> --%>
-									<input type='hidden' id="sfdcId${mapping.mappingSeq}" name="sfdcId${mapping.mappingSeq}" value="${mapping.id}" />
-									<%--start:subrat changes for transformation --%>
-									<td>
-									<select style="margin-left: 35px;" name="transformDropDown${mapping.mappingSeq}" id="transformDropDown${mapping.mappingSeq}" class='sblFldColFrgnUpdate1' onchange="pickValuefromUser(${mapping.mappingSeq})">
-  									<c:if test="${not empty transformationList}">
-													<c:forEach items="${transformationList}" var="field" varStatus="status">
-												       		<option value="${field.argument}|${field.expression}">${field.transformation}</option>
-													</c:forEach>
-									</c:if>
-									</select>
-									</td>
-									<td>
-									<input type="text" style='margin-left: 35px;' id="transformText${mapping.mappingSeq}" name="transformText${mapping.mappingSeq}" value="" />
-									</td>
-									<%--end:subrat changes for transformation --%>
+										<input type='hidden' id="sfdcId${mapping.mappingSeq}" name="sfdcId${mapping.mappingSeq}" value="${mapping.id}" />
 									 </tr> 																	
 								</c:forEach>								
 								</c:if>							
@@ -563,15 +514,13 @@ z-index: 1;
 					</div>
 					</form:form>	
 			</div>
-	
-		</div>
-		<%--subrat changes for transformation 
-		<div id="overlay"> 
-		Please fill in the below data 
-		<br></br><input type="button" value="Close" onclick="closeModal()"/>
-		</div>--%>
-		<div class="container-popup"></div>
-		<div class="popup">
+		  
+		  
+						
+			
+						
+
+
 		</div>
 </body>
 <script type="text/javascript">
@@ -579,60 +528,5 @@ z-index: 1;
 
 		window.location.href = "Done";
 	});
-	function closeModal(){
-		$(".popup").empty();
-		$('.popup').hide();
-		$('.container-popup').hide();
-	}
-	function pickValuefromUser(val){
-		
-		var temp="transformDropDown"+val;
-		var dropdown = document.getElementById(temp);
-		var label = dropdown.options[dropdown.selectedIndex].text;
-		var selectedDropdown=document.getElementById(temp).value;
-		var reqString = selectedDropdown.split("|");
-		//alert(reqString[0])
-		 var transform="TransformId"+val;
-		if(reqString[0]==1){
-			document.getElementById("transformText"+val).value=label+"("+document.getElementById("clmnNmrow"+val).value+")";
-		}else{
-			              var exp = reqString[1].substr(reqString[1].indexOf(',')+1,reqString[1].indexOf(')'))
-	                                              var finalExp = new Array();
-	                                              var expArr = exp.split(",");
-	                                              //alert(expArr.length)
-	                                           for( i =0; i <expArr.length; i++){
-	                                                             finalExp[i] = new Array(3);
-	                                                             //req check
-	                                                             if(expArr[i].indexOf('[')===-1)
-	                                                                           finalExp[i][0]="N";
-	                                                             else
-	                                                                           finalExp[i][0]="Y";
-	                                                             
-	                                                             //get field name
-	                                                            var fields = expArr[i].split(" as ")
-	                                                             fields[0] = fields[0].replace("[","");
-	                                                             finalExp[i][1] = fields[0].trim();
-	                                                             
-	                                                             
-	                                                             //get typr
-	                                                            fields[1] = fields[1].replace("]","");
-	                                                            fields[1] = fields[1].replace(")","");
-	                                                            finalExp[i][2]= fields[1].trim();
-																
-																$(".popup").append(
-					
-																"</br><label style='width: 70px; margin-right: 100px; margin-left: 20px;'>"+finalExp[i][1]+"</label><input type='text' id='text"+i+"' class='tempField' /></br>"
-					
-																)
-	                                      			      }
-	                                           $(".popup").append(
-	                                           "<input class='btn btn-block btn-inverse' style='width:20%;top:270px;position:absolute;margin-left:290px' onclick='closeModal()' type='button' value='Done' />"
-												) 
-			$('.container-popup').show();
-			$('.popup').show();
-		
-		}
-		
-	}	
 </script>
 </html>
