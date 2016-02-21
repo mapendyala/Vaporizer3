@@ -32,6 +32,7 @@ import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.MappingModel;
 import com.force.example.fulfillment.order.model.MappingSFDC;
 import com.force.example.fulfillment.order.model.PreMapData;
+import com.force.example.fulfillment.order.model.Transformation;
 import com.force.utility.SfdcObjectBO;
 import com.force.utility.UtilityClass;
 import com.sforce.soap.partner.DescribeSObjectResult;
@@ -132,7 +133,7 @@ public class TargetPartner {
 							.get("MiddleSalesforce_Token__c");
 					connData.put("username", username);
 					connData.put("password", password);
-					connData.put("databaseUrl", databaseUrl);
+					connData.put("databaseUrl", "PcqSImIrDe0koQf8jqP7amlVy");//change to databaseUrl --subrat
 
 				}
 				if (qr.isDone()) {
@@ -325,7 +326,7 @@ public class TargetPartner {
 					if (token == null) {
 						token = "";
 					}
-					connData.put("token", token);
+					connData.put("token", "PcqSImIrDe0koQf8jqP7amlVy"); //change to token later
 					connData.put("username", username);
 				}
 
