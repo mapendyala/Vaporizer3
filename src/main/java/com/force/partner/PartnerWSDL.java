@@ -863,6 +863,8 @@ System.out.println("records "+records);
 						mappingModel.getLookUpRelationShipName());
 				contact.setField("Lookup_External_Id_Field__c",
 						mappingModel.getLookUpExternalId());
+				//subrat changes 
+				contact.setField("Transformation_Expression__c", mappingModel.getTransformText());
 				lstContactUpdate.add(contact);
 			}
 		}

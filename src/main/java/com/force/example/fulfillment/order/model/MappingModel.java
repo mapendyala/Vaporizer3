@@ -28,7 +28,16 @@ public class MappingModel {
 	public String lookUpExternalId;
 	public String sfdcRowId;
 	public Set<String> lstExternalIds;
+	//subrat changes
+	public String transformText;
 	
+	
+	public String getTransformText() {
+		return transformText;
+	}
+	public void setTransformText(String transformText) {
+		this.transformText = transformText;
+	}
 	public Set<String> getLstExternalIds() {
 		return lstExternalIds;
 	}

@@ -390,6 +390,11 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 		rowCount= request.getParameter("rowCount");
 		TargetPartner tp= new TargetPartner(session);
 		data = tp.getSavedDBData((String)session.getAttribute("projectId"), data);
+		//subrat changes 
+		String prevExtractionQuery = request.getParameter("extractionQuery");
+		String tobeReplaced= prevExtractionQuery.substring(6, prevExtractionQuery.indexOf("FROM"));
+		String replaceWith ="";
+		//String prevExtractionQuery ="SELECT T1_1.OPTY_OU_ROLE_CD,T1_1.OU_NUM,T1_2.SOURCE_CD,T1_2.ANN_REV FROM SIEBEL.S_PARTY T0 INNER JOIN SIEBEL.S_ORG_EXT T1_1 ON T1_1.PAR_ROW_ID=T0.ROW_ID INNER JOIN SIEBEL.S_OPTY_ORG T1_1 ON T1_1.OU_ID=T0.ROW_ID INNER JOIN SIEBEL.S_ORG_EXT_FNX T1_2 ON T1_2.PAR_ROW_ID=T0.ROW_ID WHERE (T1_1.INT_ORG_FLG <>'Y' or T1_1.PRTNR_FLG <> 'N') AND T1_1.ACCNT_FLG <> 'N'";
 		//TODO : Temporary Work Around.-- Need to removed
 		for(int i=0;i<Integer.parseInt(rowCount)+1;i++){
 		/*for(int i=1;i<Integer.parseInt(rowCount);i++){*/
@@ -454,14 +459,29 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 					mappingModel.setLookUpExternalId(request.getParameter("lookUpExtrnlrow"+i));}
 				else
 					mappingModel.setLookUpExternalId("");
+				//subrat changes for transformation
+				if(request.getParameter("transformText"+i)!=null && request.getParameter("transformText"+i)!=""){
+					mappingModel.setTransformText(request.getParameter("transformText"+i));
+					replaceWith=replaceWith+request.getParameter("transformText"+i);
+				}else{
+					replaceWith=replaceWith+request.getParameter("clmnNmrow"+i);
+				}
 				
+				if(i!=(Integer.parseInt(rowCount)-1)){
+					replaceWith=replaceWith+",";
+				}
 				mappingData.add(mappingModel);
 		 }		
-		}		
+		}	
+		System.out.println("tobereplaced++++++++++++++++++++"+tobeReplaced);
+		System.out.println("replaceWith+++++++++++++++++++++"+replaceWith);
+		replaceWith = " "+replaceWith+" ";
+		String newQuery = prevExtractionQuery.replace(tobeReplaced, replaceWith);
+		
 		if(partnerWSDL.login()){
 			partnerWSDL.saveMappingSingleValuedDataIntoDB(mappingData);
 		}
-		partnerWSDL.saveExtractionQryDB(request, request.getParameter("mappingSfdcId"), request.getParameter("extractionQuery"));
+		partnerWSDL.saveExtractionQryDB(request, request.getParameter("mappingSfdcId"), newQuery);
 		return new ModelAndView("vaporizer" , "data", data);
 		}
 
