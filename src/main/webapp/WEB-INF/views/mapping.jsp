@@ -3,7 +3,7 @@
 <%@ page session="false"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html>
@@ -17,8 +17,10 @@
 <link rel="stylesheet"
 	href="<c:url value="/resources/css/vaporizer.css" />" type="text/css"
 	media="screen, projection">
-	
-<link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+
+<link
+	href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css"
+	rel="stylesheet" type="text/css" />
 
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet"
@@ -34,14 +36,16 @@
 <!-- Latest compiled and minified JavaScriptt --->
 <script
 	src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-	
-	<!-- Madhuri code -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+
+<!-- Madhuri code -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 
 <script type="text/javascript"
-	src="<c:url value="/resources/json.min.js" /> "></script>	
-	
+	src="<c:url value="/resources/json.min.js" /> "></script>
+
 <script type="text/javascript">
 	var rowNum = 1;
 	var primBaseTable;
@@ -275,8 +279,17 @@
 </script>
 <title>Vaporizer</title>
 <style type="text/css">
-.no-js #loader { display: none;  }
-.js #loader { display: block; position: absolute; left: 100px; top: 0; }
+.no-js #loader {
+	display: none;
+}
+
+.js #loader {
+	display: block;
+	position: absolute;
+	left: 100px;
+	top: 0;
+}
+
 .se-pre-con {
 	position: fixed;
 	left: 0px;
@@ -286,41 +299,45 @@
 	z-index: 9999;
 	background: url(resources/images/ajax-loader.gif) center no-repeat #fff;
 }
- html {
--webkit-background-size: cover;
--moz-background-size: cover;
--o-background-size: cover;
-background-size: cover;
+
+html {
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
 }
+
 .container-popup {
-position: relative;
-position: fixed;
-top: 0;
-right: 0;
-bottom: 0;
-left: 0;
-background: rgba(0,0,0,.8);
-z-index: 1;
+	position: relative;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background: rgba(0, 0, 0, .8);
+	z-index: 1;
 }
+
 .popup {
-width: 50%;
-height: 50%;
-background: gray;
-position: absolute;
-top: 560px;
-right: 0;
-bottom: 0;
-left: 1600px;
-margin: auto;
-z-index: 1;
+	width: 50%;
+	height: 50%;
+	background: gray;
+	position: absolute;
+	top: 360px;
+	right: 0;
+	bottom: 0;
+	left: 1200px;
+	margin: auto;
+	z-index: 1;
 }
-  
 </style>
 
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
- 
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+<script
+	src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
+
 <script type="text/javascript">
 	$(window).load(function() {
 		
@@ -332,195 +349,260 @@ z-index: 1;
 	</script>
 </head>
 <body>
-<div class="se-pre-con"></div>
+	<div class="se-pre-con"></div>
 	<div class="container">
 
 		<div class="mainContent">
 			<div class="credential_container">
 				<div>
 					<div class="table_header_details">Vaporizer</div>
-					<div style="width: 350px !Important;  height:20px;padding-top:15px;padding-left:5px">Field Mapping</div>
-					<div class="sampleContainer" style="width: 250px; float:left;"><table class="table" style="margin: 2px;">
-								<tr>
-									<br />
-									<td style="width: 65px; text-align: left;" align="left">Siebel
-										Entity</td>
+					<div
+						style="width: 350px !Important; height: 20px; padding-top: 15px; padding-left: 5px">Field
+						Mapping</div>
+					<div class="sampleContainer" style="width: 250px; float: left;">
+						<table class="table" style="margin: 2px;">
+							<tr>
+								<br />
+								<td style="width: 65px; text-align: left;" align="left">Siebel
+									Entity</td>
 
-									<td style="width: 45px; text-align: left;" align="left" id="sblEntity">${hdrValues[0]}</td>
-					
-
-								</tr>
-								<tr>
-									<br />
-									<td style="width: 45px; text-align: left;" align="left">Siebel Base table</td>
-
-									<td style="width: 45px; text-align: left;" align="left" id="sblBaseTbl">${hdrValues[1]}</td>
+								<td style="width: 45px; text-align: left;" align="left"
+									id="sblEntity">${hdrValues[0]}</td>
 
 
-								</tr>
-								<tr>
-									<td style="width: 65px; text-align: left;" align="left">SFDC
-										Entity</td>
+							</tr>
+							<tr>
+								<br />
+								<td style="width: 45px; text-align: left;" align="left">Siebel
+									Base table</td>
 
-									<td style="width: 45px; text-align: left;" align="left" id="sfdcEntity">${hdrValues[2]}</td>
-								</tr>
+								<td style="width: 45px; text-align: left;" align="left"
+									id="sblBaseTbl">${hdrValues[1]}</td>
 
 
-							</table>
+							</tr>
+							<tr>
+								<td style="width: 65px; text-align: left;" align="left">SFDC
+									Entity</td>
+
+								<td style="width: 45px; text-align: left;" align="left"
+									id="sfdcEntity">${hdrValues[2]}</td>
+							</tr>
+
+
+						</table>
 					</div>
-					<div style="float:left; height:100px; margin-left:20%;margin-top:5%">Business Component Search Expression</div>
-					<div style="float:left; height:100px; margin-left:1%;margin-top:5%">
-					<%-- <span  style="border: grey 1px solid;padding:4px;">${hdrValues[3]}</span> --%>
-					<textarea readonly="true" id="searchQry" cols="50">${hdrValues[3]}</textarea>
+					<div
+						style="float: left; height: 100px; margin-left: 20%; margin-top: 5%">Business
+						Component Search Expression</div>
+					<div
+						style="float: left; height: 100px; margin-left: 1%; margin-top: 5%">
+						<%-- <span  style="border: grey 1px solid;padding:4px;">${hdrValues[3]}</span> --%>
+						<textarea readonly="true" id="searchQry" cols="50">${hdrValues[3]}</textarea>
 					</div>
-				</div> <br/>
-				<div style="clear:both;"><button class="btn btn-primary" id="addRow" onclick="addRow()">[+]</button> </div>
-				<form:form method="post" id="mainForm" action="mappingSave" modelAttribute="data">
+				</div>
+				<br />
+				<div style="clear: both;">
+					<button class="btn btn-primary" id="addRow" onclick="addRow()">[+]</button>
+				</div>
+				<form:form method="post" id="mainForm" action="mappingSave"
+					modelAttribute="data">
 					<div class="mappingContainer" style="width: 100%;">
-					<input type='hidden' id="siebelEntity" name="siebelEntity" value=${sblObjName} />
+						<input type='hidden' id="siebelEntity" name="siebelEntity"
+							value=${sblObjName } />
 						<table id="masterTable" style="width: 100%;">
 							<br />
 							<br />
 							<thread>
 							<tr>
 								<th class="table_header_details" style="float: center;">Select</th>
-								<th class="table_header_details" style="float: center;">Siebel Field Name</th>
-								<th class="table_header_details" style="float: center;">Join Name</th>
-								<th class="table_header_details" style="float: center;">Foreign Key Table Name</th>
-								<th class="table_header_details" style="float: center;">Siebel Column</th>
-								<th class="table_header_details" style="float: center;">Join Condition</th>
-								<th class="table_header_details" style="float: center;">SFDC Field Name</th>
-								<th class="table_header_details" style="float: center;">Lookup Field</th>
-								<th class="table_header_details" style="float: center;">Lookup Object</th>
-								<th class="table_header_details" style="float: center;">Lookup Relationship Name</th>
-								<th class="table_header_details" style="float: center;">Lookup External Id Field</th>
+								<th class="table_header_details" style="float: center;">Siebel
+									Field Name</th>
+								<th class="table_header_details" style="float: center;">Join
+									Name</th>
+								<th class="table_header_details" style="float: center;">Foreign
+									Key Table Name</th>
+								<th class="table_header_details" style="float: center;">Siebel
+									Column</th>
+								<th class="table_header_details" style="float: center;">Join
+									Condition</th>
+								<th class="table_header_details" style="float: center;">SFDC
+									Field Name</th>
+								<th class="table_header_details" style="float: center;">Lookup
+									Field</th>
+								<th class="table_header_details" style="float: center;">Lookup
+									Object</th>
+								<th class="table_header_details" style="float: center;">Lookup
+									Relationship Name</th>
+								<th class="table_header_details" style="float: center;">Lookup
+									External Id Field</th>
 								<%--start:subrat changes for transformation --%>
 								<th class="table_header_details" style="float: center;">Transformation</th>
-								<th class="table_header_details" style="float: center;">Transformation Expression</th>
+								<th class="table_header_details" style="float: center;">Transformation
+									Expression</th>
 								<%--end:subrat changes for transformation --%>
 							</tr>
 							</thread>
-							 <c:set var="seq" value="${1}" />
-							 <c:set var="sblFldFlag1" value="false" />
-							 <c:set var="sfdcFldFlag1" value="false" />
-							 <c:if test="${not empty mappingData}" var="mapping">
-							 <% //out.println("Inside Mapped Data List");%>
-								<c:forEach items="${mappingData}" var="mapping" varStatus="status"> 
-							     	
-									 <tr id="row${mapping.mappingSeq}">
-										<td>
-										<c:choose>
-										<c:when test="${mapping.checkFlag}">
-										<input name="select${mapping.mappingSeq}" type='checkbox' checked="checked">
-										</c:when>
-										<c:otherwise>
-										<input name="select${mapping.mappingSeq}" type='checkbox'>
-										</c:otherwise>
-										</c:choose></td>
-										<!-- Siebel Field Name : Drop Down  --> 
-										<td><select name="sblFieldNmdropdown${mapping.mappingSeq}"
-											id="sblFieldNmdropdown${mapping.mappingSeq}" class='sblFldColFrgnUpdate'>
+							<c:set var="seq" value="${1}" />
+							<c:set var="sblFldFlag1" value="false" />
+							<c:set var="sfdcFldFlag1" value="false" />
+							<c:if test="${not empty mappingData}" var="mapping">
+								<%
+									//out.println("Inside Mapped Data List");
+								%>
+								<c:forEach items="${mappingData}" var="mapping"
+									varStatus="status">
+
+									<tr id="row${mapping.mappingSeq}">
+										<td><c:choose>
+												<c:when test="${mapping.checkFlag}">
+													<input name="select${mapping.mappingSeq}" type='checkbox'
+														checked="checked">
+												</c:when>
+												<c:otherwise>
+													<input name="select${mapping.mappingSeq}" type='checkbox'>
+												</c:otherwise>
+											</c:choose></td>
+										<!-- Siebel Field Name : Drop Down  -->
+										<td><select
+											name="sblFieldNmdropdown${mapping.mappingSeq}"
+											id="sblFieldNmdropdown${mapping.mappingSeq}"
+											class='sblFldColFrgnUpdate'>
 												<c:if test="${not empty sbllFlddNmList}">
-													<c:forEach items="${sbllFlddNmList}" var="field" varStatus="status">
+													<c:forEach items="${sbllFlddNmList}" var="field"
+														varStatus="status">
 														<c:set var="temp5" value="${field}" />
-                                						<c:set var="temp6" value="${mapping.sblFieldNmdropdown}" />
-													<%-- temp: [<c:out value="${temp1}" />]
+														<c:set var="temp6" value="${mapping.sblFieldNmdropdown}" />
+														<%-- temp: [<c:out value="${temp1}" />]
                                 						temp1: [<c:out value="${temp2}" />]  --%>
 														<c:choose>
 															<c:when test="${temp5 == temp6}">
-												                <option value='${temp6}' selected>${temp6}</option>
-												            </c:when>
-												            <c:otherwise>
-												                <option value='${field}'>${field}</option>
-												            </c:otherwise>
-											            </c:choose>
+																<option value='${temp6}' selected>${temp6}</option>
+															</c:when>
+															<c:otherwise>
+																<option value='${field}'>${field}</option>
+															</c:otherwise>
+														</c:choose>
 													</c:forEach>
 												</c:if>
-										</select></td>	
+										</select></td>
 										<!-- Join name -->
-										<td><input type="text" style="margin-left: 35px;" id="joinNamerow${mapping.mappingSeq}" name="joinNamerow${mapping.mappingSeq}" value="${mapping.joinNamerow}" /></td>
+										<td><input type="text" style="margin-left: 35px;"
+											id="joinNamerow${mapping.mappingSeq}"
+											name="joinNamerow${mapping.mappingSeq}"
+											value="${mapping.joinNamerow}" /></td>
 										<!-- Foreign Key Table -->
-										<td><input type="text" style="margin-left: 35px;" id="frgnKeyrow${mapping.mappingSeq}" name="frgnKeyrow${mapping.mappingSeq}" value="${mapping.frgnKeyrow}" /></td>
+										<td><input type="text" style="margin-left: 35px;"
+											id="frgnKeyrow${mapping.mappingSeq}"
+											name="frgnKeyrow${mapping.mappingSeq}"
+											value="${mapping.frgnKeyrow}" /></td>
 										<!-- TODO : To load the column name value dynamically -->
-										<td><input type="text" style='margin-left: 35px;' id="clmnNmrow${mapping.mappingSeq}" name="clmnNmrow${mapping.mappingSeq}" value="${mapping.clmnNmrow}" /></td>
-										<td><textarea style='margin-left: 35px;' id="joinConditionrow${mapping.mappingSeq}" name="joinConditionrow${mapping.mappingSeq}" cols="40">${mapping.joinCondition}</textarea></td>
-										<td style="padding:5px;"><select name="slfrcdropdown${mapping.mappingSeq}" id="slfrcdropdown${mapping.mappingSeq}" class='slsFrcFldUpdate'>
+										<td><input type="text" style='margin-left: 35px;'
+											id="clmnNmrow${mapping.mappingSeq}"
+											name="clmnNmrow${mapping.mappingSeq}"
+											value="${mapping.clmnNmrow}" /></td>
+										<td><textarea style='margin-left: 35px;'
+												id="joinConditionrow${mapping.mappingSeq}"
+												name="joinConditionrow${mapping.mappingSeq}" cols="40">${mapping.joinCondition}</textarea></td>
+										<td style="padding: 5px;"><select
+											name="slfrcdropdown${mapping.mappingSeq}"
+											id="slfrcdropdown${mapping.mappingSeq}"
+											class='slsFrcFldUpdate'>
 												<c:if test="${not empty mappingField}">
-													<c:forEach items="${mappingField}" var="field" varStatus="status">
+													<c:forEach items="${mappingField}" var="field"
+														varStatus="status">
 														<c:set var="temp7" value="${field.name}" />
-                                						<c:set var="temp8" value="${mapping.slfrcdropdown}" />
+														<c:set var="temp8" value="${mapping.slfrcdropdown}" />
 														<c:choose>
 															<c:when test="${temp7 == temp8}">
-												                <option value='${field.name}' selected>${field.label}</option>
-												            </c:when>
-												            <c:otherwise>
-												                <option value='${field.name}'>${field.label}</option>
-												            </c:otherwise>
-											            </c:choose>
+																<option value='${field.name}' selected>${field.label}</option>
+															</c:when>
+															<c:otherwise>
+																<option value='${field.name}'>${field.label}</option>
+															</c:otherwise>
+														</c:choose>
 													</c:forEach>
 												</c:if>
 										</select></td>
 										<!-- Look Up Field -->
-										<td style="margin-left: 35px;padding-left : 25px;">
-										<c:choose>
-										<c:when test="${mapping.lookUpFlag}">
-										<input name="lookUpFieldrow${mapping.mappingSeq}" id="lookUpFieldrow${mapping.mappingSeq}" type='checkbox' checked="checked">
-										</c:when>
-										<c:otherwise>
-										<input name="lookUpFieldrow${mapping.mappingSeq}" id="lookUpFieldrow${mapping.mappingSeq}" type='checkbox'>
-										</c:otherwise>
-										</c:choose></td>
+										<td style="margin-left: 35px; padding-left: 25px;"><c:choose>
+												<c:when test="${mapping.lookUpFlag}">
+													<input name="lookUpFieldrow${mapping.mappingSeq}"
+														id="lookUpFieldrow${mapping.mappingSeq}" type='checkbox'
+														checked="checked">
+												</c:when>
+												<c:otherwise>
+													<input name="lookUpFieldrow${mapping.mappingSeq}"
+														id="lookUpFieldrow${mapping.mappingSeq}" type='checkbox'>
+												</c:otherwise>
+											</c:choose></td>
 										<!-- Look Up Object -->
-										<td><input type="text" style="margin-left: 35px;" id="lookUpObjrow${mapping.mappingSeq}" name="lookUpObjrow${mapping.mappingSeq}" value="${mapping.lookUpObject}" /></td>
+										<td><input type="text" style="margin-left: 35px;"
+											id="lookUpObjrow${mapping.mappingSeq}"
+											name="lookUpObjrow${mapping.mappingSeq}"
+											value="${mapping.lookUpObject}" /></td>
 										<!-- Lookup Relationship Name -->
-										<td><input type="text" style="margin-left: 35px;" id="lookUpRltnNmerow${mapping.mappingSeq}" name="lookUpRltnNmerow${mapping.mappingSeq}" value="${mapping.lookUpRelationShipName}"/></td>
+										<td><input type="text" style="margin-left: 35px;"
+											id="lookUpRltnNmerow${mapping.mappingSeq}"
+											name="lookUpRltnNmerow${mapping.mappingSeq}"
+											value="${mapping.lookUpRelationShipName}" /></td>
 										<!-- Lookup External Id Field -->
-										<td>
-										<c:choose>
-										<c:when test="${not empty mapping.lookUpExternalId}">
-										<select style="margin-left: 35px;" id="lookUpExtrnlrow${mapping.mappingSeq}" name="lookUpExtrnlrow${mapping.mappingSeq}" value="${mapping.lookUpExternalId}">
-												<c:if test="${not empty mapping.lstExternalIds}">
-													<c:forEach items="${mapping.lstExternalIds}" var="field" varStatus="status">
-												       		<option value='${field}' selected>${field}</option>
-													</c:forEach>
-												</c:if>
-										</select>
-										</c:when>
-										<c:otherwise>
-										<select style="margin-left: 35px;" id="lookUpExtrnlrow${mapping.mappingSeq}" name="lookUpExtrnlrow${mapping.mappingSeq}" value="">
-												<c:if test="${not empty mapping.lstExternalIds}">
-													<c:forEach items="${mapping.lstExternalIds}" var="field" varStatus="status">
-												       		<option value='${field}' selected>${field}</option>
-													</c:forEach>
-												</c:if>
-										</select>
-										</c:otherwise>	
-										</c:choose>
-										</td>
+										<td><c:choose>
+												<c:when test="${not empty mapping.lookUpExternalId}">
+													<select style="margin-left: 35px;"
+														id="lookUpExtrnlrow${mapping.mappingSeq}"
+														name="lookUpExtrnlrow${mapping.mappingSeq}"
+														value="${mapping.lookUpExternalId}">
+														<c:if test="${not empty mapping.lstExternalIds}">
+															<c:forEach items="${mapping.lstExternalIds}" var="field"
+																varStatus="status">
+																<option value='${field}' selected>${field}</option>
+															</c:forEach>
+														</c:if>
+													</select>
+												</c:when>
+												<c:otherwise>
+													<select style="margin-left: 35px;"
+														id="lookUpExtrnlrow${mapping.mappingSeq}"
+														name="lookUpExtrnlrow${mapping.mappingSeq}" value="">
+														<c:if test="${not empty mapping.lstExternalIds}">
+															<c:forEach items="${mapping.lstExternalIds}" var="field"
+																varStatus="status">
+																<option value='${field}' selected>${field}</option>
+															</c:forEach>
+														</c:if>
+													</select>
+												</c:otherwise>
+											</c:choose></td>
 										<%-- <td><input type="text" style="margin-left: 35px;" id="lookUpExtrnlrow${mapping.mappingSeq}" name="lookUpExtrnlrow${mapping.mappingSeq}" value="${mapping.lookUpExternalId}"/></td> --%>
-									<input type='hidden' id="sfdcId${mapping.mappingSeq}" name="sfdcId${mapping.mappingSeq}" value="${mapping.id}" />
-									<%--start:subrat changes for transformation --%>
-									<td>
-									<select style="margin-left: 35px;" name="transformDropDown${mapping.mappingSeq}" id="transformDropDown${mapping.mappingSeq}" class='sblFldColFrgnUpdate1' onchange="pickValuefromUser(${mapping.mappingSeq})">
-  									<c:if test="${not empty transformationList}">
-													<c:forEach items="${transformationList}" var="field" varStatus="status">
-												       		<option value="${field.argument}|${field.expression}">${field.transformation}</option>
+										<input type='hidden' id="sfdcId${mapping.mappingSeq}"
+											name="sfdcId${mapping.mappingSeq}" value="${mapping.id}" />
+										<%--start:subrat changes for transformation --%>
+										<td><select style="margin-left: 35px;"
+											name="transformDropDown${mapping.mappingSeq}"
+											id="transformDropDown${mapping.mappingSeq}"
+											class='sblFldColFrgnUpdate1'
+											onchange="pickValuefromUser(${mapping.mappingSeq})">
+												<c:if test="${not empty transformationList}">
+													<c:forEach items="${transformationList}" var="field"
+														varStatus="status">
+														<option value="${field.argument}|${field.expression}">${field.transformation}</option>
 													</c:forEach>
-									</c:if>
-									</select>
-									</td>
-									<td>
-									<input type="text" style='margin-left: 35px;' id="transformText${mapping.mappingSeq}" name="transformText${mapping.mappingSeq}" value="" />
-									</td>
-									<%--end:subrat changes for transformation --%>
-									 </tr> 																	
-								</c:forEach>								
-								</c:if>							
+												</c:if>
+										</select></td>
+										<td><input type="text" style='margin-left: 35px;margin-right:75px'
+											id="transformText${mapping.mappingSeq}"
+											name="transformText${mapping.mappingSeq}" value="${mapping.transformText}" /></td>
+										<%--end:subrat changes for transformation --%>
+									</tr>
+								</c:forEach>
+							</c:if>
 						</table>
 						<div id="row">
-						<!-- TODO:  Understand the below usage -->
-							<input id="rowCount" name='rowCount' type="hidden" value="${mappingData.size()}"> 
-								<!-- <input id="rowCount" name='rowCount' type="hidden"
+							<!-- TODO:  Understand the below usage -->
+							<input id="rowCount" name='rowCount' type="hidden"
+								value="${mappingData.size()}">
+							<!-- <input id="rowCount" name='rowCount' type="hidden"
 								value=""> -->
 						</div>
 						<input id="mappingSfdcId" name='mappingSfdcId' type="hidden"
@@ -531,11 +613,13 @@ z-index: 1;
 						<table style="border: 0">
 
 							<tr>
-							
-							<td colspan="2"
-							style="float: right; width: 350px; padding: 50px; padding-top: 10px; padding-bottom: 10px;">						
-								<input class="btn btn-block btn-inverse" type="button" name="Load" value="Load Pre-Defined Mapping Objects" onclick="javascript:submitForm();" />
-							</td>
+
+								<td colspan="2"
+									style="float: right; width: 350px; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
+									<input class="btn btn-block btn-inverse" type="button"
+									name="Load" value="Load Pre-Defined Mapping Objects"
+									onclick="javascript:submitForm();" />
+								</td>
 								<td colspan="2"
 									style="float: right; width: 350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
 									<input class="btn btn-block btn-inverse" type="submit"
@@ -546,46 +630,85 @@ z-index: 1;
 								</td>
 								<td colspan="2"
 									style="float: right; width: 350px !Important; padding: 50px; padding-top: 10px; padding-bottom: 10px;">
-									<input class="btn btn-block btn-inverse" type="button" id="generateExtractQuery"
-									name="GenerateExtract" value="Generate Extraction Query" />
+									<input class="btn btn-block btn-inverse" type="button"
+									id="generateExtractQuery" name="GenerateExtract"
+									value="Generate Extraction Query" />
 								</td>
 							</tr>
 
 
 						</table>
-						
+
 						<input id="rowId" name='rowId' type="hidden" value="${rowId}">
 						<input id="pageName" name='pageName' type="hidden">
 
 					</div>
-					<div class="mappingContainer" style="width: 100%;padding: 50px;">
-					<textarea  id="extractionQuery" name="extractionQuery" contenteditable="true" cols="200" rows="3" draggable="true">${hdrValues[4]}</textarea>
+					<div class="mappingContainer" style="width: 100%; padding: 50px;">
+						<textarea id="extractionQuery" name="extractionQuery"
+							contenteditable="true" cols="200" rows="3" draggable="true">${hdrValues[4]}</textarea>
 					</div>
-					</form:form>	
+				</form:form>
 			</div>
-	
+
 		</div>
-		<%--subrat changes for transformation 
-		<div id="overlay"> 
-		Please fill in the below data 
-		<br></br><input type="button" value="Close" onclick="closeModal()"/>
-		</div>--%>
+		<%--subrat changes for transformation --%>
+		
 		<div class="container-popup"></div>
-		<div class="popup">
-		</div>
+		<div class="popup"></div>
 </body>
 <script type="text/javascript">
 	$("#cancel").click(function() {
 
 		window.location.href = "Done";
 	});
+	var mandCheck = new Array();
+	var createExp="";
+	var lengthOfloop=0;
+	var finalExp;
+	var openedRowId;
 	function closeModal(){
+		var checkPassed= "Y";
+		for(var i=0; i<mandCheck.length; i++){
+			console.log(document.getElementById(mandCheck[i]).value);
+			console.log(document.getElementById(mandCheck[i]).value.trim());
+			if(document.getElementById(mandCheck[i]).value.trim()==""){
+				checkPassed="N";
+				break;
+			}
+		}
+		if(checkPassed=="N"){
+			alert("Please fill mandatory fields to proceed");
+		}
+		else{
+		document.getElementById("transformText"+openedRowId).value = document.getElementById("expString").innerText;	
 		$(".popup").empty();
 		$('.popup').hide();
 		$('.container-popup').hide();
+		}
+	}
+	
+	function creatingExp(){
+		//var belowExpr = label+"("+document.getElementById("clmnNmrow"+val).value+"";
+		var varTypeflag="Y";
+		var expDisplayed=createExp;
+		for (i=0;i<lengthOfloop;i++){
+			if(document.getElementById('text'+i).value.trim() !=""){
+				if(finalExp[i][2].trim()=="int"){
+					if( isNaN(document.getElementById('text'+i).value)){
+						alert("Please enter a number for this parameter");
+						document.getElementById('text'+i).focus();
+						varTypeflag="N";
+					}
+				}
+			if(varTypeflag!="N")
+			expDisplayed=expDisplayed+","+document.getElementById('text'+i).value;
+			}
+		}
+		expDisplayed= expDisplayed+")";
+		document.getElementById('expString').innerHTML=expDisplayed;
 	}
 	function pickValuefromUser(val){
-		
+		openedRowId=val;
 		var temp="transformDropDown"+val;
 		var dropdown = document.getElementById(temp);
 		var label = dropdown.options[dropdown.selectedIndex].text;
@@ -595,11 +718,28 @@ z-index: 1;
 		 var transform="TransformId"+val;
 		if(reqString[0]==1){
 			document.getElementById("transformText"+val).value=label+"("+document.getElementById("clmnNmrow"+val).value+")";
-		}else{
+		}else if(reqString[0]=="0"){
+			
+           	  if(label=='SYSDATE'){
+           		  document.getElementById("transformText"+val).value=Date();
+           	  }else{
+           		  document.getElementById("transformText"+val).value=Math.floor(Date.now());
+           	  }
+            
+		}
+		
+		else{
 			              var exp = reqString[1].substr(reqString[1].indexOf(',')+1,reqString[1].indexOf(')'))
-	                                              var finalExp = new Array();
+	                                              finalExp = new Array();
 	                                              var expArr = exp.split(",");
-	                                              //alert(expArr.length)
+	                                              mandCheck = new Array();
+	                                              createExp = label+"("+document.getElementById("clmnNmrow"+val).value+"";
+	                                              lengthOfloop = expArr.length;
+	                                              $(".popup").append(
+															"<label style='align:center;margin-top:10px;margin-left:100px'>Please fill the parameters to create the  transformation expression for - <u>"+label+"</u></label></br>"
+														)
+	                                          
+	                                              
 	                                           for( i =0; i <expArr.length; i++){
 	                                                             finalExp[i] = new Array(3);
 	                                                             //req check
@@ -618,15 +758,27 @@ z-index: 1;
 	                                                            fields[1] = fields[1].replace("]","");
 	                                                            fields[1] = fields[1].replace(")","");
 	                                                            finalExp[i][2]= fields[1].trim();
-																
+	                                                           
+																if(finalExp[i][0]=="N"){
 																$(".popup").append(
 					
-																"</br><label style='width: 70px; margin-right: 100px; margin-left: 20px;'>"+finalExp[i][1]+"</label><input type='text' id='text"+i+"' class='tempField' /></br>"
+																"</br><label style='width: 30%; margin-right: 100px; margin-left: 20px;'>"+finalExp[i][1]+"</label><input type='text' id='text"+i+"' class='tempField' onBlur='creatingExp()' /></br>"
 					
-																)
+																)}
+																else{
+																	$(".popup").append(
+																			
+																			"</br><label style='width: 30%; margin-right: 100px; margin-left: 20px;'>"+finalExp[i][1]+"</label><input type='text' id='text"+i+"' class='tempField' onBlur='creatingExp()' /><span style='color: red;'> *</span></br>"
+								
+																			)	
+																			mandCheck.push("text"+i);		
+																}
 	                                      			      }
+	                                             
+	                                             
 	                                           $(".popup").append(
-	                                           "<input class='btn btn-block btn-inverse' style='width:20%;top:270px;position:absolute;margin-left:290px' onclick='closeModal()' type='button' value='Done' />"
+	                                           "<label style='margin-top:30px;margin-right:5px;margin-left:100px'>Transformation expression - </label><span style='color:blue' id='expString' ></span>"	   
+	                                           +"<input class='btn btn-block btn-inverse' style='width:20%;top:370px;position:absolute;margin-left:350px' onclick='closeModal()' type='button' value='Done' />"
 												) 
 			$('.container-popup').show();
 			$('.popup').show();

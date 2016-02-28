@@ -464,6 +464,7 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 					mappingModel.setTransformText(request.getParameter("transformText"+i));
 					replaceWith=replaceWith+request.getParameter("transformText"+i);
 				}else{
+					mappingModel.setTransformText("");
 					replaceWith=replaceWith+request.getParameter("clmnNmrow"+i);
 				}
 				
