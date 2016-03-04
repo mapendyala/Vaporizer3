@@ -5,6 +5,15 @@ public class Transformation {
 	public String transformation;
 	public String argument;
 	public String databaseName;
+	public String helpText;
+	
+	
+	public String getHelpText() {
+		return helpText;
+	}
+	public void setHelpText(String helpText) {
+		this.helpText = helpText;
+	}
 	public String getExpression() {
 		return expression;
 	}

@@ -320,13 +320,13 @@ html {
 
 .popup {
 	width: 50%;
-	height: 50%;
+	height: 60%;
 	background: gray;
 	position: absolute;
 	top: 360px;
 	right: 0;
 	bottom: 0;
-	left: 1200px;
+	left: 1450px;
 	margin: auto;
 	z-index: 1;
 }
@@ -586,7 +586,7 @@ html {
 												<c:if test="${not empty transformationList}">
 													<c:forEach items="${transformationList}" var="field"
 														varStatus="status">
-														<option value="${field.argument}|${field.expression}">${field.transformation}</option>
+														<option value="${field.argument}|${field.expression}|${field.helpText}">${field.transformation}</option>
 													</c:forEach>
 												</c:if>
 										</select></td>
@@ -686,26 +686,48 @@ html {
 		$('.container-popup').hide();
 		}
 	}
+	function closeModalForNExp(){
+		document.getElementById("transformText"+openedRowId).value = document.getElementById("expString").innerText;	
+		$(".popup").empty();
+		$('.popup').hide();
+		$('.container-popup').hide();
+	}
 	
 	function creatingExp(){
 		//var belowExpr = label+"("+document.getElementById("clmnNmrow"+val).value+"";
 		var varTypeflag="Y";
+		var isInt = "N";
 		var expDisplayed=createExp;
 		for (i=0;i<lengthOfloop;i++){
-			if(document.getElementById('text'+i).value.trim() !=""){
-				if(finalExp[i][2].trim()=="int"){
+			//if(document.getElementById('text'+i).value.trim() !=""){
+				 if(finalExp[i][2].trim()=="int"){isInt ="Y";
 					if( isNaN(document.getElementById('text'+i).value)){
 						alert("Please enter a number for this parameter");
 						document.getElementById('text'+i).focus();
 						varTypeflag="N";
 					}
-				}
-			if(varTypeflag!="N")
+				} 
+			if(varTypeflag!="N"){
+				if(isInt=="N"){
+					expDisplayed=expDisplayed+",'"+document.getElementById('text'+i).value+"'";		
+				}else{
 			expDisplayed=expDisplayed+","+document.getElementById('text'+i).value;
 			}
+				isInt="N";
+			}
+			//}
 		}
 		expDisplayed= expDisplayed+")";
 		document.getElementById('expString').innerHTML=expDisplayed;
+	}
+	function creatingExpForNParam(){
+		var expDisplayed=createExp;
+		for (i=0;i<lengthOfloop;i++){
+			expDisplayed=expDisplayed+",'"+document.getElementById('text'+i).value+"'";
+		}
+		expDisplayed= expDisplayed+")";
+		document.getElementById('expString').innerHTML=expDisplayed;
+		
 	}
 	function pickValuefromUser(val){
 		openedRowId=val;
@@ -714,6 +736,7 @@ html {
 		var label = dropdown.options[dropdown.selectedIndex].text;
 		var selectedDropdown=document.getElementById(temp).value;
 		var reqString = selectedDropdown.split("|");
+		var helpText=reqString[2];
 		//alert(reqString[0])
 		 var transform="TransformId"+val;
 		if(reqString[0]==1){
@@ -726,6 +749,37 @@ html {
            		  document.getElementById("transformText"+val).value=Math.floor(Date.now());
            	  }
             
+		}else if (reqString[0]=="n"){
+			var countOfParam = window.prompt("Enter the no of parameters you want to fill");
+			if(label=="IN"){
+				createExp=document.getElementById("clmnNmrow"+val).value+" "+selectedTransform+" (";
+			}
+			if(label =="DECODE" || label == "CONCAT"){
+				createExp = label+"("+document.getElementById("clmnNmrow"+val).value+"";
+			}else{
+				createExp=label+"(";
+			}
+			lengthOfloop=countOfParam;
+		
+		$(".popup").append(
+				"<label style='align:center;margin-top:10px;margin-left:100px' id ='headerdescription'>Please fill the parameters to create the  transformation expression for - <u>"+label+"</u></label></br>"
+				+"<label style='align:center;margin-top:10px;margin-left:100px;margin-right:120px' id='helpTextinDialog'>"+helpText+"</u></label></br>"
+					
+   			)
+   		 for( i =0; i <countOfParam; i++){
+      	   $(".popup").append(
+ 					
+						"</br><label style='width: 30%; margin-right: 100px; margin-left: 20px;'>Parameter Value</label><input type='text' id='text"+i+"' class='tempField' onBlur='creatingExpForNParam()' /></br>"
+
+						)
+         }	
+   		 $(".popup").append(
+                 "<label style='margin-top:30px;margin-right:5px;margin-left:100px'>Transformation expression - </label><span style='color:blue' id='expString' ></span>"	   
+                 +"<input class='btn btn-block btn-inverse' style='width:20%;top:370px;position:absolute;margin-left:350px' onclick='closeModalForNExp()' type='button' value='Done' />"
+					) 
+		$('.container-popup').show();
+		$('.popup').show();	
+   			
 		}
 		
 		else{
@@ -736,8 +790,10 @@ html {
 	                                              createExp = label+"("+document.getElementById("clmnNmrow"+val).value+"";
 	                                              lengthOfloop = expArr.length;
 	                                              $(".popup").append(
-															"<label style='align:center;margin-top:10px;margin-left:100px'>Please fill the parameters to create the  transformation expression for - <u>"+label+"</u></label></br>"
-														)
+															"<label style='align:center;margin-top:10px;margin-left:100px' id ='headerdescription'>Please fill the parameters to create the  transformation expression for - <u>"+label+"</u></label></br>"
+															+"<label style='align:center;margin-top:10px;margin-left:100px;margin-right:120px' id='helpTextinDialog'>"+helpText+"</u></label></br>"
+																
+	                                              )
 	                                          
 	                                              
 	                                           for( i =0; i <expArr.length; i++){

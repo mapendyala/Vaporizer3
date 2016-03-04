@@ -2121,7 +2121,7 @@ public List<MultiValMappingModel> getSavedMappingMultiValueDBData(String rowId ,
 			List<Transformation> transformationList = new ArrayList<Transformation>();
 				try {
 					// SOQL query to use
-					String soqlQuery = "SELECT CreatedById,CreatedDate,Database_Name__c,Id,IsDeleted,LastModifiedById,LastModifiedDate,LastReferencedDate,LastViewedDate,Name,Number_of_Arguments__c,OwnerId,SystemModstamp,Transformation_Expression__c,Transformation__c FROM Transformations__c";
+					String soqlQuery = "SELECT CreatedById,CreatedDate,Database_Name__c,Id,IsDeleted,LastModifiedById,LastModifiedDate,LastReferencedDate,LastViewedDate,Name,Number_of_Arguments__c,OwnerId,SystemModstamp,Transformation_Expression__c,Transformation__c,Help_Note__c FROM Transformations__c";
 					// Make the query call and get the query results
 					QueryResult qr = partnerConnection.query(soqlQuery);
 					//QueryResult qr = partnerConnection.query(soqlQuery);
@@ -2140,6 +2140,8 @@ public List<MultiValMappingModel> getSavedMappingMultiValueDBData(String rowId ,
 							String noOfArg = (String)contact.getField("Number_of_Arguments__c");
 							trans.setArgument(noOfArg);
 							String database = (String)contact.getField("Database_Name__c");
+							String helpText =(String)contact.getField("Help_Note__c");
+							trans.setHelpText(helpText);
 							trans.setDatabaseName(database);
 							transformationList.add(trans);
 						}

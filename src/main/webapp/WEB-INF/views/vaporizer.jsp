@@ -458,7 +458,7 @@ function submitForm(rowNum, page){
 						<table class="table">
 							<tr>
 								<td class="oddTd">Name</td>
-							<td><%=request.getSession().getAttribute("projectName")%></td>
+						 	<td> <!-- <%=request.getSession().getAttribute("projectName")%> --></td>
 							</tr>
 
 						</table>
