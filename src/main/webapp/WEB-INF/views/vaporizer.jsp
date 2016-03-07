@@ -75,8 +75,6 @@ var sfdcObjectForExtarction="";
 								
 								+ "<td>"
 								+ "<input class='btn btn-inverse' type='button' name='Extract' value='E' onclick='extract("+rowNum+")'/>"
-								/* + "<input class='btn btn-inverse' type='button' name='transform' value='T' hidden = 'true' style='margin-left:10px;'/>"
-				                + "<input class='btn btn-inverse' type='button' name='delete' value='-' hidden = 'true' style='margin-left:10px;'/>" */
 				                + "</td>"
 				                + "</tr>");
 		
