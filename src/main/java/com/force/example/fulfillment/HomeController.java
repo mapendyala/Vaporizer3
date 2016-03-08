@@ -37,6 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.force.example.fulfillment.order.controller.SiebelObjectController;
+import com.force.example.fulfillment.order.model.LovTransformation;
 import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.Mapping;
 import com.force.example.fulfillment.order.model.MappingModel;
@@ -750,11 +751,13 @@ public ModelAndView mappingSave(HttpServletRequest request, Map<String, Object> 
 				modelChild.addAttribute("hdrValues",hdrValues);
 				modelChild.addAttribute("rowId", rowId);
 				List<Transformation> transformList = prtnrWSDL.getTransformationObj();
+				List<LovTransformation> lovTransList = prtnrWSDL.getLovTransformationObj();
 			//	List<Transformation> transforList = tg.getTransformationObj(request.getParameter("SfdcId"+rowNo));
 				/*
 				 * if(mappingDataSaved.isEmpty()){
 				 * modelChild.addAttribute("mappingData",mappingData);} else
 				 */
+				modelChild.addAttribute("lovTransList",lovTransList);
 					modelChild.addAttribute("mappingData",mappingDataSaved);
 				modelChild.addAttribute("MappingId",rowId);
 				modelChild.addAttribute("transformationList",transformList);
