@@ -550,7 +550,6 @@ function submitForm(rowNum, page){
 					
 							</table>
 							</form>
-							
 						</td>
 						<td
 							style="float: right; padding: 50px;width:350px !Important; padding-top: 10px; padding-bottom: 10px;">

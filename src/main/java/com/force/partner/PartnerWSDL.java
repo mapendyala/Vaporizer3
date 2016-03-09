@@ -36,6 +36,7 @@ import org.json.JSONObject;
 import com.force.api.DescribeGlobal;
 import com.force.api.DescribeSObject;
 import com.force.example.fulfillment.order.controller.SiebelObjectController;
+import com.force.example.fulfillment.order.model.LovTransformation;
 import com.force.example.fulfillment.order.model.MainPage;
 import com.force.example.fulfillment.order.model.Mapping;
 import com.force.example.fulfillment.order.model.MappingModel;
@@ -2143,6 +2144,46 @@ public List<MultiValMappingModel> getSavedMappingMultiValueDBData(String rowId ,
 							String helpText =(String)contact.getField("Help_Note__c");
 							trans.setHelpText(helpText);
 							trans.setDatabaseName(database);
+							transformationList.add(trans);
+						}
+						if (qr.isDone()) {
+							done = true;
+						} else {
+							//qr = partnerConnection.queryMore(qr.getQueryLocator());
+						}
+
+					}
+
+				} catch (Exception ce) {
+					//ce.printStackTrace();
+					System.out.println("Newly added object or no mappings for this entity.");
+				}
+		
+			return transformationList;
+			}
+		
+		public List<LovTransformation> getLovTransformationObj(){
+			List<LovTransformation> transformationList = new ArrayList<LovTransformation>();
+				try {
+					// SOQL query to use
+					String soqlQuery = "SELECT LOV_Type__c,Source_Values__c,Target_Values__c FROM LOV_Master__c";
+					// Make the query call and get the query results
+					QueryResult qr = partnerConnection.query(soqlQuery);
+					//QueryResult qr = partnerConnection.query(soqlQuery);
+					boolean done = false;
+					
+					while (!done) {
+							SObject[] records = qr.getRecords();
+						// Process the query results
+						for (int i = 0; i < records.length; i++) {
+							LovTransformation trans = new LovTransformation();
+							SObject contact = records[i];
+							String lovtype = (String)contact.getField("LOV_Type__c");
+							trans.setLovType(lovtype);
+							String sourceVal = (String)contact.getField("Source_Values__c");
+							trans.setSourceVal(sourceVal);
+							String targetVal = (String)contact.getField("Target_Values__c");
+							trans.setTargetVal(targetVal);
 							transformationList.add(trans);
 						}
 						if (qr.isDone()) {

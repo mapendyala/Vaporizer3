@@ -440,6 +440,8 @@ html {
 								<th class="table_header_details" style="float: center;">Transformation</th>
 								<th class="table_header_details" style="float: center;">Transformation
 									Expression</th>
+								<th class="table_header_details" style="float: center;">LOV</th>
+								<th class="table_header_details" style="float: center;">LOV Type</th>	
 								<%--end:subrat changes for transformation --%>
 							</tr>
 							</thread>
@@ -590,10 +592,24 @@ html {
 													</c:forEach>
 												</c:if>
 										</select></td>
-										<td><input type="text" style='margin-left: 35px;margin-right:75px'
+										<td><input type="text" style='margin-left: 35px;'
 											id="transformText${mapping.mappingSeq}"
 											name="transformText${mapping.mappingSeq}" value="${mapping.transformText}" /></td>
 										<%--end:subrat changes for transformation --%>
+										
+									<td><input  style='margin-left: 35px;margin-right:75px' name="lovTransformation${mapping.mappingSeq}" type='checkbox'></td>	
+									<td><select style="margin-left: 35px;margin-right:75px"
+											name="lovtransformDropDown${mapping.mappingSeq}"
+											id="lovtransformDropDown${mapping.mappingSeq}"
+											class='sblFldColFrgnUpdate1'
+											onchange="">
+												<c:if test="${not empty lovTransList}">
+													<c:forEach items="${lovTransList}" var="field"
+														varStatus="status">
+														<option value="${field.targetVal}">${field.sourceVal}</option>
+													</c:forEach>
+												</c:if>
+										</select></td>
 									</tr>
 								</c:forEach>
 							</c:if>
