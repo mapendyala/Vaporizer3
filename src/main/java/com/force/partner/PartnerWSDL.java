@@ -2166,7 +2166,8 @@ public List<MultiValMappingModel> getSavedMappingMultiValueDBData(String rowId ,
 			List<LovTransformation> transformationList = new ArrayList<LovTransformation>();
 				try {
 					// SOQL query to use
-					String soqlQuery = "SELECT LOV_Type__c,Source_Values__c,Target_Values__c FROM LOV_Master__c";
+					String soqlQuery ="SELECT LOV_Type__c,Source_Field__c,Source_Object__c,Source_Values__c,Target_Values__c FROM LOV_Master__c WHERE LOV_Type__c = 'ACCOUNT_OWNERSHIP'";
+					//String soqlQuery = "SELECT LOV_Type__c,Source_Values__c,Target_Values__c FROM LOV_Master__c";
 					// Make the query call and get the query results
 					QueryResult qr = partnerConnection.query(soqlQuery);
 					//QueryResult qr = partnerConnection.query(soqlQuery);

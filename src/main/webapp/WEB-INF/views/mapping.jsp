@@ -597,12 +597,13 @@ html {
 											name="transformText${mapping.mappingSeq}" value="${mapping.transformText}" /></td>
 										<%--end:subrat changes for transformation --%>
 										
-									<td><input  style='margin-left: 35px;margin-right:75px' name="lovTransformation${mapping.mappingSeq}" type='checkbox'></td>	
+									<td><input  style='margin-left: 35px;margin-right:75px' name="lovTransformation${mapping.mappingSeq}" id="lovTransformation${mapping.mappingSeq}" type='checkbox'></td>	
 									<td><select style="margin-left: 35px;margin-right:75px"
 											name="lovtransformDropDown${mapping.mappingSeq}"
 											id="lovtransformDropDown${mapping.mappingSeq}"
 											class='sblFldColFrgnUpdate1'
-											onchange="">
+											onchange="checkCustomLov(${mapping.mappingSeq})">
+												<option value="custom">Custom_Vapouriser_LOV</option>
 												<c:if test="${not empty lovTransList}">
 													<c:forEach items="${lovTransList}" var="field"
 														varStatus="status">
@@ -701,6 +702,11 @@ html {
 		$('.popup').hide();
 		$('.container-popup').hide();
 		}
+	}
+	function closeWindow(){
+		$(".popup").empty();
+		$('.popup').hide();
+		$('.container-popup').hide();
 	}
 	function closeModalForNExp(){
 		document.getElementById("transformText"+openedRowId).value = document.getElementById("expString").innerText;	
@@ -857,6 +863,26 @@ html {
 		
 		}
 		
-	}	
+	}
+	function checkCustomLov(val){
+		var temp="lovtransformDropDown"+val;
+		var dropdown = document.getElementById(temp);
+		var label = dropdown.options[dropdown.selectedIndex].text;
+		var selectedDropdown=document.getElementById(temp).value;
+	
+		if(selectedDropdown=="custom"){
+			
+			$(".popup").append(
+					"<label style='align:center;margin-top:10px;margin-left:170px' id ='headerdescription'>Please fill the values for Custom LOV Transformation</label></br></br></br>"
+					+"</br><label style='width: 30%; margin-right: 100px; margin-left: 150px;'>Default Value</label><input type='text' id='text0' class='tempField'/></br>"
+					+ "</br><label style='30%; margin-right: 5px; margin-left: 150px;'>Source Value</label><label style='width: 30%; margin-left: 235px;'>Target Value</label></br>"
+				    +"<input style='width: 30%; margin-right: 90px; margin-left: 90px;' type='text' id='text1' class='tempField'/><input style='width: 30%; margin-left: 20px;' type='text' id='text2' class='tempField'/>"
+					+"<input class='btn btn-block btn-inverse' style='width:20%;top:370px;position:absolute;margin-left:280px' onclick='closeWindow()' type='button' value='Done' />"
+						) 
+			$('.container-popup').show();
+			$('.popup').show();
+			
+		}
+	}
 </script>
 </html>
