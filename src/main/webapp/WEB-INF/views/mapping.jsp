@@ -597,7 +597,10 @@ html {
 											name="transformText${mapping.mappingSeq}" value="${mapping.transformText}" /></td>
 										<%--end:subrat changes for transformation --%>
 										
-									<td><input  style='margin-left: 35px;margin-right:75px' name="lovTransformation${mapping.mappingSeq}" id="lovTransformation${mapping.mappingSeq}" type='checkbox'></td>	
+									<td><input  style='margin-left: 35px;margin-right:75px' onChange="toggleCheckBox(${mapping.mappingSeq})" name="lovTransformation${mapping.mappingSeq}" id="lovTransformation${mapping.mappingSeq}" type='checkbox'/>
+										<input id="lovValue${mapping.mappingSeq}" name='lovValue${mapping.mappingSeq}' type="hidden"/>	
+										<input id="lovCheck${mapping.mappingSeq}" name='lovCheck${mapping.mappingSeq}' type="hidden"/>	
+								</td>	
 									<td><select style="margin-left: 35px;margin-right:75px"
 											name="lovtransformDropDown${mapping.mappingSeq}"
 											id="lovtransformDropDown${mapping.mappingSeq}"
@@ -607,7 +610,7 @@ html {
 												<c:if test="${not empty lovTransList}">
 													<c:forEach items="${lovTransList}" var="field"
 														varStatus="status">
-														<option value="${field.targetVal}">${field.sourceVal}</option>
+														<option value="${field.sourceVal}|${field.targetVal}">${field.sourceVal}</option>
 													</c:forEach>
 												</c:if>
 										</select></td>
@@ -683,6 +686,7 @@ html {
 	var lengthOfloop=0;
 	var finalExp;
 	var openedRowId;
+	var countLov=1;
 	function closeModal(){
 		var checkPassed= "Y";
 		for(var i=0; i<mandCheck.length; i++){
@@ -704,9 +708,32 @@ html {
 		}
 	}
 	function closeWindow(){
+		var defaultVal = document.getElementById('text').value;
+		var fieldVal = document.getElementById('clmnNmrow'+openedRowId).value;
+		var lovExp='DECODE'+"("+fieldVal;
+		for (i=1 ; i<=countLov;i++){
+			var src = document.getElementById('textSource'+i).value;
+			var dest = document.getElementById('textTarget'+i).value;
+			lovExp= lovExp+","+src+","+dest;
+		}
+		lovExp=lovExp+","+defaultVal+")";
+		document.getElementById('lovValue'+openedRowId).value=lovExp;
+		if(	document.getElementById('lovTransformation'+openedRowId).checked){
+			document.getElementById('lovCheck'+openedRowId).value="checked";
+		}else{
+			document.getElementById('lovCheck'+openedRowId).value="unchecked";	
+		}
 		$(".popup").empty();
 		$('.popup').hide();
+		countLov=1;
 		$('.container-popup').hide();
+	}
+	function toggleCheckBox(val){
+		if(document.getElementById('lovTransformation'+val).checked){
+			document.getElementById('lovCheck'+val).value="checked";
+		}else{
+			document.getElementById('lovCheck'+val).value="unchecked";
+		}
 	}
 	function closeModalForNExp(){
 		document.getElementById("transformText"+openedRowId).value = document.getElementById("expString").innerText;	
@@ -864,21 +891,29 @@ html {
 		}
 		
 	}
+	function addRow(){
+		countLov=countLov+1;
+		$(".popup").append(
+		  "</br><input style='width: 30%; margin-right:90px; margin-left: 90px;' type='text' id='textSource"+countLov+"' class='tempField'/><input style='width: 30%; margin-left: 20px;' type='text' id='textTarget"+countLov+"' class='tempField'/>"
+		)
+	}
 	function checkCustomLov(val){
+		openedRowId=val;
 		var temp="lovtransformDropDown"+val;
 		var dropdown = document.getElementById(temp);
 		var label = dropdown.options[dropdown.selectedIndex].text;
 		var selectedDropdown=document.getElementById(temp).value;
 	
 		if(selectedDropdown=="custom"){
-			
 			$(".popup").append(
 					"<label style='align:center;margin-top:10px;margin-left:170px' id ='headerdescription'>Please fill the values for Custom LOV Transformation</label></br></br></br>"
-					+"</br><label style='width: 30%; margin-right: 100px; margin-left: 150px;'>Default Value</label><input type='text' id='text0' class='tempField'/></br>"
+					+"</br><button class='btn btn-primary' style='margin-left: 150px;' id='addRow' onclick='addRow()'>[+]</button><br><br>"
+					+"</br><label style='width: 30%; margin-right: 100px; margin-left: 150px;'>Default Value</label><input type='text' id='text' class='tempField'/></br>"
 					+ "</br><label style='30%; margin-right: 5px; margin-left: 150px;'>Source Value</label><label style='width: 30%; margin-left: 235px;'>Target Value</label></br>"
-				    +"<input style='width: 30%; margin-right: 90px; margin-left: 90px;' type='text' id='text1' class='tempField'/><input style='width: 30%; margin-left: 20px;' type='text' id='text2' class='tempField'/>"
+				    +"<input style='width: 30%; margin-right: 90px; margin-left: 90px;' type='text' id='textSource"+countLov+"' class='tempField'/><input style='width: 30%; margin-left: 20px;' type='text' id='textTarget"+countLov+"' class='tempField'/>"
 					+"<input class='btn btn-block btn-inverse' style='width:20%;top:370px;position:absolute;margin-left:280px' onclick='closeWindow()' type='button' value='Done' />"
-						) 
+			) 
+			
 			$('.container-popup').show();
 			$('.popup').show();
 			

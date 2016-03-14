@@ -2117,6 +2117,28 @@ public List<MultiValMappingModel> getSavedMappingMultiValueDBData(String rowId ,
 				}
 			}
 		}
+	//subrat changes for lov transformation 
+	public void saveCustomLovDB(HttpServletRequest request,int rowCount) throws ConnectionException {
+		String sourceObject = request.getParameter("sblEntity");
+		List<SObject> lstContactInsert= new ArrayList<SObject>();
+		for(int i=0;i<rowCount;i++){
+			
+			String sourceField = request.getParameter("clmnNmrow"+i);
+			String fieldId = request.getParameter("sfdcId"+i);
+			String lovSourceTarget = request.getParameter("lovtransformDropDown"+i);
+			String lovSrc[] = lovSourceTarget.split("|");
+			SObject contact = new SObject();
+			contact.setField("Source_Object__c",sourceObject);
+			contact.setField("Source_value__c",lovSrc[0]);
+			contact.setField("Target_Value_c", lovSrc[1]);
+			contact.setField("Field_Id__c", fieldId);
+			contact.setField("Source_Field__c", sourceField);
+			lstContactInsert.add(contact);
+		}
+		SObject[] contactInsert = new SObject[lstContactInsert.size()];
+		contactInsert = lstContactInsert.toArray(new SObject[lstContactInsert.size()]);
+		getPartnerConnection().create(contactInsert);
+	}
 	//subrat changes for getting transformation objects .
 		public List<Transformation> getTransformationObj(){
 			List<Transformation> transformationList = new ArrayList<Transformation>();
